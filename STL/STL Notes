@@ -1,0 +1,2470 @@
+STL IN C++
+https://www.techiedelight.com/data-structures-and-algorithms-interview-questions-stl/
+problem solving using STL
+https://www.go4expert.com/articles/cpp-stl-iterators-t34695/ best for brief concept description
+
+THIS POINTER WEBSITE FOR MAP ETC STL GOOD REF 
+
+VECTOR STL:
+1. Different ways to Initialize vector:
+vector<int> vec(5);
+for(int x: vec)
+cout<<x<<" ";   // 0 0 0 0 0
+
+vector<int> vec(5,125);   // 125 125 125 125 125
+
+//initialize vector using array
+int arr[] = {1,2,4,5,6};
+vector<int> vec(arr,arr+sizeof(arr)/sizeof(arr[0]));
+for(int x: vec)
+cout<<x<<" ";
+
+//using list
+list<int>  mylist = {1,2,3,4,5,6};
+vector<int> vec(mylist.begin(),mylist.end());
+for(int x: vec)
+cout<<x<<" ";
+
+//initiliase using another vector
+vector<int>vec2 (vec);
+for(int x: vec2)
+cout<<x<<" ";
+
+//initialiser list
+vector<int> vec = {1,2,3,4,5,6}; 
+vector<int> vec{1,2,3,4,5,6};
+1.  push_back:
+vector<int> vec{1,2,3,4,5,6};
+vec.push_back(25);
+for(int x: vec)
+cout<<x<<" "; //1 2 3 4 5 6 25
+c++ std::vector and Iterator Invalidation example:
+What is Iterator Invalidation?
+An Iterator becomes invalidate when the container it points to changes its shape internally i.e. move elements from one location to another and the initial iterator still points to old invalid location.
+Iterator invalidation in vector happens when,
+	An element is inserted to vector at any location
+	An element is deleted from vector.
+
+std::vector<int> vecArr;
+for(int i = 1; i <= 10; i++)
+vecArr.push_back(i);
+
+for(auto it = vecArr.begin(); it != vecArr.end(); it++)
+std::cout<<(*it)<<"  ";
+
+std::cout<<std::endl;
+
+// Erase and element with value 5.
+auto it = std::find(vecArr.begin(), vecArr.end(), 5);
+if(it != vecArr.end())
+vecArr.erase(it);
+
+// Now iterator 'it' is invalidated because it still points to
+// old location, which has been deleted. So, if you will try to
+// do the use the same iterator then it can show undefined
+// behavior.
+
+for(; it != vecArr.end(); it++)   // Unpredicted Behavior
+std::cout<<(*it)<<"  ";          // Unpredicted Behavior
+
+Now, how to fix this ?
+
+After calling the erase function update the value of iterator ‘it’ i.e. 
+
+2
+3
+4	// Erase and element with value 5.
+auto it = std::find(vecArr.begin(), vecArr.end(), 5);
+if(it != vecArr.end())
+   it = vecArr.erase(it);
+
+As, erase() function returns an iterator pointing to the new location of the element that followed the last element erased by the same function. Also, if the element deleted was the last element of the container then it returns the end of the container. 
+
+Iterator Invalidation Example on Element Insertion in vector:
+When a new element is inserted in vector then it internally shifts its elements and hence the old iterators become invalidated.
+Reasons for element shift are as follows,
+	If element is inserted in between then it shift all the right elements by 1.
+	If the new size of vector is more than its current capacity, then it relocates a bigger chunk of memory and copies all the elements there.
+Therefore, when a new element is inserted in vector then its old iterator can become invalidated. Using this old invalidated iterators can result in undefined behavior i.e.
+ TO fix above issue?
+After calling the insert function update the value of iterator ‘it’ i.e. by re-assigning it. 
+
+2
+3
+4
+5	// Insert an element in position 2,
+vecArr.insert ( it + 2, 1 , 200 ); 
+ 
+// Reinitialize the invalidated iterator to the begining.
+it = vecArr.begin();
+ 
+ 
+How to use vector efficiently in C++?
+1.) Vector will be more efficient if elements are inserted or removed from the back-end only.
+2 Set the storage of vector initially using reserve() member function.
+3.)  Instead of adding single element in multiple calls, large set of elements is added in single call
+
+Importance of Constructors while using User Defined Objects with std::vector   vvvvvvvvvvvvvvvvvimp
+For User Defined classes if Copy Constructor and Assignment Operator are public then only one can insert it’s object in std::vector.
+This is because of two reasons,
+	All STL contains always stores the copy of inserted objects not the actual one. So, whenever we insert any element or object in    container then it’s copy constructor is called to create a copy and then this copy is inserted in the container.
+	While insertion in std::vector it might be possible that storage relocation takes place internally due to insufficient space. In such cases assignment operator will be called on objects inside the container to copy them from one location to another.
+
+In the following pgm CC is private so it gives compilation error.
+#include<iostream>
+#include<vector>
+#include<list>
+#include<algorithm>
+
+using namespace std;
+class X
+{
+public:
+   X()
+   {
+      cout<<"default cc"<<endl;
+   }
+   
+   X& operator=(const X &ob)
+   {
+       cout<<"assignment "<<endl;
+   }
+   
+private:
+
+   X(const X &ob)
+   {
+       cout<<"CC"<<endl;
+   }
+};
+
+using namespace std;
+
+int main()
+{
+    X ob;
+    
+    vector<X>  vec;
+    
+    vec.push_back(ob);
+    
+    return 0;
+}
+
+Important Points about std::vector :
+1.) Ordered Collection:
+In std::vector all elements will remain in same order in which they are inserted.
+2.) Provides random access:
+Indexing is very fast in std::vector using opeartor [], just like arrays.
+3.) Performance:
+It Performs better if insertion and deletion is in end only and gives worst performance if insertion/deletion is at middle or at starting of vector.
+4.) Contains Copy:
+It always stores copy of the object not the same reference. So, if you are adding objects of user defined classes the you should define copy constructor and assignment opeartor in you class.
+ 
+Why Should I use std::vector ?
+std::vector give same kind of fast performance in indexing and iterations as arrays. But it dont have a Fixed Size limitaton like Arrays. You dont need to provide the fixed size for std::vector in advance. Just start inserting elements in std::vector and it will automatically expand its size.
+
+VECTOR BOOK NOTES STL
+ 
+ 
+
+
+
+
+
+
+
+
+INVALID ITERATORS:	 DONE IN BOOK NOTES!
+
+IN BRIEF ALL STL CONTAINERS:
+Header: <vector>
+Declaration: template < class T, class Alloc = allocator<T> > class vector;
+
+The instance of vector template class is a sequence container of a given data type. The elements are stored contiguously in memory. It stores the elements similar to a normal array but it can dynamically re-size the array by allocating and deallocating memory. To optimize the reallocation it allocates extra memory so that it does not need to reallocate memory every time an element is added. If you know the minimum number of elements it is better to allocate that by calling the reserve() method of the vector so that no reallocation is needed until the number of elements exceed the minimum number. Like array container, vector elements can be accessed directly using [] operator and offset on a regular pointer to it’s elements. Vector is very efficient in accessing its elements with array index. Adding elements at the end is efficient but inserting element in between is costly compared to other containers. This is because every time inserting an element require some elements to be moved. Also resizing has an overhead which is optimized by intelligent memory allocation.  
+Header: <list>
+Declaration: template < class T, class Alloc = allocator<T> > class list;
+
+List is a sequence container which stores the elements in a doubly linked list. The sequence of the elements is maintained by associating to each element of a link to the preceding element and another link to the following element. So each element size is increased by 2 pointers. But this has advantage of constant time to insert or remove elements when you have an iterator of the sequence. It also allows to iterate both direction with constant time. On the other hand you cannot access elements directly. You have to use iterator and move it to reach a desired position to access the element. 
+
+Header: <deque>
+Declaration: template < class T, class Alloc = allocator<T> > class deque;
+
+Template container class std::deque (double-ended-queue) is a sequence container and behaves similar to the std::vector class with the difference that deque can grow/shrink in both direction. You can add/remove elements to/from both the ends. Unlike vector it does not guarantee to store all the elements in contiguous memory location. That’s why accessing an element by using offset to a pointer to another element is not safe. This also makes the internal implementation of deque more complex than vector but it helps it to grow more efficiently in some scenarios, specially when having very long sequence and reallocation is expensive.
+
+Header: <forward_list>
+Declaration: template < class T, class Alloc = allocator<T> > class forward_list;
+
+forward_list container class is a sequence container which stores the elements in a singly-linked list. Each element may be stored in different and unrelated memory locations. The sequence of the elements is maintained by associating to each element of a link to the following element. So each element size is lesser by 1 pointers than list. It is similar to list with the difference that unlike list it does not allow traverse backwards. Each element hold the reference to the next element but not the previous element. Each element having only single link, insertion and removal of element is more efficient than list. Forward list is more efficient than other containers like array, vector and deque in terms of insertion, deletion, moving and the algorithm like sort which use those operations. 
+
+Unlike list, forward_list does not allow to access the elements directly. If you want to access to 7th elements you have to iterate from the beginning to the 7th element to access it. It is as efficient as a simple c-style singly-linked-list.  
+
+Header: <set>
+Declaration:
+Code:
+template < class T,                        // set::key_type/value_type
+           class Compare = less<T>,        // set::key_compare/value_compare
+           class Alloc = allocator<T>      // set::allocator_type
+           > class set;
+Set is an associative container and store the unique elements in a specific order. Internally the elements are stored in a binary search tree. The value of an element also identifies itself, means the value is itself the key. The elements cannot be modified once they are in the container but they can be removed or inserted to the container. Set containers are slower than unordered_set to access individual elements by their key but it allows direct iteration on their elements based on their order. It supports bi-directional iterator. 
+
+Unordered_set class (std::unordered_set)
+Header: <unordered_set>
+Declaration:
+Code:
+template < class Key,                        // unordered_set::key_type/value_type
+           class Hash = hash<Key>,           // unordered_set::hasher
+           class Pred = equal_to<Key>,       // unordered_set::key_equal
+           class Alloc = allocator<Key>      // unordered_set::allocator_type
+           > class unordered_set;
+unordered_set is an associative container and store the unique elements without any order. Internally the elements are stored in hash tables. The value of an element also identifies itself, means the value is itself the key. The elements cannot be modified once they are in the container but they can be removed or inserted in the container. unordered_set containers are faster than set to access individual elements by their key but slower in range iteration. It supports forward iterator.  
+
+Header: <set> and <unordered_set>
+Declaration:
+Code:
+template < class T,                        // multiset::key_type/value_type
+       class Compare = less<T>,        // multiset::key_compare/value_compare
+       class Alloc = allocator<T> >    // multiset::allocator_type
+       > class multiset;
+template < class Key,                         // unordered_multiset::key_type/value_type
+         class Hash = hash<Key>,            // unordered_multiset::hasher
+         class Pred = equal_to<Key>,        // unordered_multiset::key_equal
+         class Alloc = allocator<Key>       // unordered_multiset::allocator_type
+         > class unordered_multiset;
+Multiset and unordered_multiset are similar to set and unordered_set respectively with the property that they can contain duplicate values. These classes are also declared in the same headers <set> and <unordered_set>. For unordered multi-set, duplicate valued elements are stored in the same bucket .
+
+
+Maps:
+
+map, multimap, unordered_map and unordered_multimap (std::map, std::multimap, std::unordered_map and std::unordered_multimap)
+
+Header: <map> and <unordered_map>
+Declaration:
+Code:
+template < class Key,                                     // map::key_type
+           class T,                                       // map::mapped_type
+           class Compare = less<Key>,                     // map::key_compare
+           class Alloc = allocator<pair<const Key,T> >    // map::allocator_type
+           > class map;
+
+template < class Key,                                     // multimap::key_type
+           class T,                                       // multimap::mapped_type
+           class Compare = less<Key>,                     // multimap::key_compare
+           class Alloc = allocator<pair<const Key,T> >    // multimap::allocator_type
+           > class multimap;
+
+template < class Key,                                    // unordered_map::key_type
+           class T,                                      // unordered_map::mapped_type
+           class Hash = hash<Key>,                       // unordered_map::hasher
+           class Pred = equal_to<Key>,                   // unordered_map::key_equal
+           class Alloc = allocator< pair<const Key,T> >  // unordered_map::allocator_type
+           > class unordered_map;
+
+template < class Key,                                    // unordered_multimap::key_type
+           class T,                                      // unordered_multimap::mapped_type
+           class Hash = hash<Key>,                       // unordered_multimap::hasher
+           class Pred = equal_to<Key>,                   // unordered_multimap::key_equal
+           class Alloc = allocator< pair<const Key,T> >  // unordered_multimap::allocator_type
+           > class unordered_multimap;
+Maps are like set but the difference between sets and maps is that every element in the map is a key-value pair and the map elements are arranged and accessed on the basis of key and not the value. Key and value can be off different types. In case of sets value itself is treated as the key. Both sets and maps are implemented same way- binary search tree for ordered map and hash tables for unordered map. 
+Stack class (std::stack)
+
+
+Header: <stack>
+Declaration: template <class T, class Container = deque<T> > class stack;
+
+Container adapter class stack is designed for the LIFO(last-in first-out) context where elements are inserted and removed only at and from one end. The element last inserted will be removed first. Inserting an element is called push operation and removing an element is called pop operation. This is a container adapter and use some other container to store the elements. The underlying container types should support following operations:
+
+•	empty
+•	size
+•	back
+•	push_back
+•	pop_back
+vector, deque and list classes fulfills those requirement. Default container is deque. You can specify the container type while instantiation. Elements are inserted and removed from the back of the underlying container.
+Queue class (std::queue)
+
+
+Header: <queue>
+Declaration: template <class T, class Container = deque<T> > class queue;
+
+Container adapter class queue is designed for the FIFO(first-in first-out) context where elements are inserted at one end and removed from the other end. The element first inserted will be removed first and inserted last will be remove last. Inserting an element is called enque operation and removing an element is called dequeue operation. This is a container adapter and use some other container to store the elements. The underlying container types should support following operations:
+
+•	empty
+•	size
+•	back
+•	front
+•	push_back
+•	pop_front
+deque and list classes fulfills those requirement. Default container is deque. You can specify the container type while instantiation. Elements are inserted at the back of the container and remove from the front. 
+
+Priority_queue class (std::priority_queue)
+
+
+Header: <queue>
+Declaration:
+Code:
+template <class T, class Container = vector<T>,
+  class Compare = less<typename Container::value_type> > class priority_queue;
+Container adapter class priority_queue is designed such a way that it’s greatest element is always the first element according to a strict weak ordering criterion. Internally it maintains a heap structure where an element can be inserted at any moment and only the max heap element can be retrieved which is at the top of the priority_queue. This is a container adapter and use some other container to store the elements. The underlying container types should support following operations:
+
+•	empty
+•	size
+•	front
+•	push_back
+•	pop_back
+deque and vector classes fulfills those requirement. Default container is vector. You can specify the container type while instantiation. Elements are popped from the back of the specific container. Support of random access iterator is required to keep a heap structure internally all the time. This is done by the container adapter by automatically calling algorithm functions make_heap, push_heap and pop_heap when needed. 
+
+Common Functions
+
+
+STL containers are not only generic in terms of type of elements but also in terms of functionality. There are lot of functionality and members are common across the containers. Here are major examples:
+
+1.	All sequence containers support uniform initialization and assignment operator=().
+2.	Containers like vector, array, deque, and map support element access operator [] and function at() which take the index or a key value and return the element.
+3.	All the containers support begin(), end(), cbegin() and cend() member functions which return random access(for array, vector, deque), bidirectional(for list and ordered associative containers) or forward iterators (for forward_list and unordered associative containers) or the constant version of those iterators
+4.	Containers except forward_list and unordered associative containers support rbegin(), rend(), crbegin() and crend() which return random access (for array, vector, deque) and bidirectional (list and ordered associative containers) reverse iterators or constant versions of those iterators.
+5.	All the containers except the forward_list support size() member function which returns the number of elements in a container.
+6.	All containers support max_size() member function which return the number of maximum elements a container can hold.
+7.	All sequence containers except array support resize() member function which re-size the container so that it can hold a given number of elements.
+8.	All the containers support member function empty() which returns true if the container is empty, else return false.
+9.	All containers except array and forward_list, support emplace() (or emplace_after() ), insert( or insert_after() ) and erase( or erase_after() ) member functions which insert a new element or remove an existing element at the given position specified by the given iterator.
+10.	All containers except array support the clear() member function which remove all the elements and make the size of the container to 0.
+11.	All containers support swap() member function which replaces its elements with the elements of another given container of same type.
+12.	All sequence containers except array and forward_list support emplace_back(), push_back(), and pop_back() functions to insert a new element at the end of the container or remove the first element.
+13.	Sequence container except array and vectors support emplace_front(), push_front() and pop_front() functions to insert a new element at the front or remove the first element.
+ 
+
+
+
+
+
+Difference between set, multiset, unordered_set, unordered_multiset
+ 
+
+MULTIMAP: Same as map in addition it allows duplicate keys.
+Lower_bound: 
+The multimap::lower_bound(k) is a built-in function in C++ STL which returns an iterator pointing to the key in the container which is equivalent to k passed in the parameter.
+In case k is not present in the multimap container, the function returns an iterator pointing to the immediate next element which is just greater than k.
+ If the key passed in the parameter exceeds the maximum key in the container, then the iterator returned points to key+1 and element = 0.
+multimap<int, int> mp; 
+  
+    // insert elements in random order 
+    mp.insert({ 2, 30 }); 
+    mp.insert({ 1, 40 }); 
+    mp.insert({ 2, 60 }); 
+    mp.insert({ 2, 20 }); 
+    mp.insert({ 1, 50 }); 
+    mp.insert({ 4, 50 }); 
+  
+    // when 2 is present 
+    auto it = mp.lower_bound(2); 
+    cout << "The lower bound of key 2 is "; 
+    cout << (*it).first << " "
+         << (*it).second << endl; 
+  
+    // when 3 is not present 
+    it = mp.lower_bound(3); 
+    cout << "The lower bound of key 3 is "; 
+    cout << (*it).first << " "
+         << (*it).second << endl; 
+  
+    // when 5 exceeds 
+    it = mp.lower_bound(5); 
+    cout << "The lower bound of key 3 is "; 
+    cout << (*it).first << " "
+         << (*it).second << endl; 
+    return 0; 
+} 
+Output:
+The lower bound of key 2 is 2 30
+The lower bound of key 3 is 4 50
+The lower bound of key 3 is 6  0
+
+
+
+
+RANGE BASED FOR LOOPS C++11:
+
+
+SORTING ALGORITHMS:
+1. Sort:
+default (1)	template <class RandomAccessIterator>
+  void sort (RandomAccessIterator first, RandomAccessIterator last);
+custom (2)	template <class RandomAccessIterator, class Compare>
+  void sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp);
+
+     vector<int> vec = {5,6,1,2,12,8};
+     
+     sort(vec.begin(),vec.end());
+     
+     for(const int &x: vec)
+        cout<<x<<"  ";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+MAP STL:  #include<map>
+   map<string,int>  student;
+   
+   student["pavan"] = 99;
+   student["shutu"] = 100;
+   student["aarohi"] = 25;
+   
+   map<string,int>::iterator it = student.begin();
+   
+   while(it!=student.end())
+   {
+     cout<<it->first<<"    "<<it->second<<endl;
+     it++;
+   }
+
+   //print value corresponding to the key u want
+   cout<<student["pavan"]<<endl;
+
+//from above u can see map is always sorted based on keys . and keys are unique.
+
+
+FIND KEY:
+      iterator find (const key_type& k);
+const_iterator find (const key_type& k) const;
+
+
+
+INSERT:
+single element (1)	pair<iterator,bool> insert (const value_type& val);
+with hint (2)	iterator insert (iterator position, const value_type& val);
+range (3)	template <class InputIterator>
+  void insert (InputIterator first, InputIterator last);
+
+ 
+student.insert(make_pair("rama",23));
+student.insert(pair<string,int>("rama",23)); 
+mp.insert({ “raja”, 30 });
+
+
+
+
+
+// initialize container 
+    map<int, int> mp, mp1; 
+  
+    // insert elements in random order 
+    mp.insert({ 2, 30 }); 
+    mp.insert({ 1, 40 }); 
+  
+    // inserts all elements in range 
+    // [begin, end) in mp1 
+    mp1.insert(mp.begin(), mp.end()); 
+    
+    map<int,int>::iterator it = mp1.begin();
+    
+    while(it!=mp1.end())
+    {
+       cout<<it->first<<"   "<<it->second<<endl;
+       it++;
+    }
+
+DEFAULT CRITERIA IN INSERT IS LESS THAN>IF WE WANT WE CAN PROVIDE COMPARATOR AS FOLLOW
+
+    // initialize container 
+    map<int,char,ExterNal> mp;
+    
+    mp.insert(make_pair(2,'y'));
+	mp.insert(make_pair(12,'a'));
+	mp.insert(make_pair(3,'m'));
+	mp.insert(make_pair(65,'x'));
+
+	    map<int,char,ExterNal>::iterator it = mp.begin();
+
+        
+    while(it!=mp.end())
+    {
+       cout<<it->first<<"   "<<it->second<<endl;
+       it++;
+    }
+ 
+struct ExterNal
+{
+    bool operator()(const int& left,const int&right) const
+    {
+        return (left > right);
+    }
+};
+ 
+
+
+
+
+
+
+
+ITERATE MAP USING C++11 LOOPING
+
+1. FOR:
+
+    map<int,char> mp; 
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+        
+    for(pair<int,char> element:mp)
+    {
+       cout<<"first is "<<element.first<<endl;
+       cout<<"second is "<<element.second<<endl;
+       
+       cout<<endl<<endl;
+    } 
+
+2. FOR_EACH:
+    // initialize container 
+    map<int,char> mp; 
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+        
+    for_each(mp.begin(),mp.end(),
+            [](pair<int,char> element)
+            {
+                cout<<"first is "<<element.first<<endl;
+                cout<<"second is "<<element.second<<endl;
+                cout<<endl<<endl;
+            }
+    );
+
+IDENTIFY INSERTION SUCCESS OR FAILURE IN MAP:
+    map<int,char> mp; 
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+    
+    pair<map<int,char>::iterator,bool>  result;
+    
+    result = mp.insert(make_pair(2,'a'));
+    
+    if(result.second == false)
+      cout<<"insertion failed "<<endl;
+    else
+      cout<<"insertion done "<<endl;   //OUPUT INSERTION FAILED AS KEY 2 ALREADY EXISTS
+
+SUCCESS:
+
+    // initialize container 
+    map<int,char> mp; 
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+    
+    pair<map<int,char>::iterator,bool>  result;
+    
+    result = mp.insert(make_pair(222,'a'));
+    
+    if(result.second == false)
+      cout<<"insertion failed "<<endl;
+    else
+      cout<<"insertion done "<<"key is " <<result.first->first<<endl<<"value is "<<result.first->second<<endl;
+
+
+PRINT MAP IN REVERSE ORDER:
+
+    map<int,char> mp; 
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+    
+    map<int,char>::reverse_iterator ritr = mp.rbegin();
+    
+    while(ritr!=mp.rend())
+    {
+        cout<<ritr->first<<"::"<<ritr->second<<endl;
+        ritr++;
+    } 
+
+How check if a given key exists in a Map:
+COUNT:
+    map<int,char> mp;   
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'d'});
+    mp.insert({25,'n'});
+    
+    if(mp.count(2)>0)
+      cout<<"key is present "<<endl;
+    else
+       cout<<"key not present "<<endl;
+
+
+
+
+FIND:
+
+    if(mp.find(2)!=mp.end())
+      cout<<"key is present "<<endl;
+    else
+       cout<<"key not present "<<endl;
+
+SEARCH BY VALUE:
+
+    map<int,char> mp; 
+    
+    vector<int>  veckeys;
+    
+    mp.insert({2,'a'});
+    mp.insert({12,'m'});
+    mp.insert({4,'n'});
+    mp.insert({25,'n'});
+    
+    map<int,char>::iterator it = mp.begin();
+    
+    while(it!=mp.end())
+    {
+        if(it->second == 'n')
+           veckeys.push_back(it->first);
+           
+        it++;
+    }
+    
+    for(int&ele:veckeys)
+        cout<<ele<<" "; 
+
+operator [] works in Find or Create Mode i.e. when called with a key K, it will try to look for element with given key K and can go in below 2 directions i.e.
+	If any element is found with key K, then it will return the reference of its value.
+	But if there is no element in map with K, then it will create a new element in map with key K and assign default value of value_type in its value field. Then it will return the value of newly created element as reference.
+
+Map::Erase:
+(1)	iterator  erase (const_iterator position);
+(2)	size_type erase (const key_type& k);
+(3)	iterator  erase (const_iterator first, const_iterator last);
+
+mp.erase("rahul"); 
+
+    // initialize container 
+    map<string, int> mp;   
+    // insert elements in random order 
+    mp.insert({ "pavan", 30 }); 
+    mp.insert({ "rama", 40 }); 
+    mp.insert({ "ajit", 44 }); 
+    mp.insert({ "mohan", 49 });    
+    map<string,int>::iterator it = mp.begin();    
+    it = mp.find("mohan");
+    mp.erase(it);
+    it = mp.begin();
+
+    while(it!=mp.end())
+    {
+       cout<<it->first<<"   "<<it->second<<endl;
+       it++;
+    } 
+
+
+
+SET STL: 
+
+•	Sets are a type of associative containers in which each element has to be unique, because the value of the element identifies it. 
+•	The value of the element cannot be modified once it is added to the set, though it is possible to remove and add the modified value of that element. 
+•	Implemented using balanced binary search tree
+•	std::set internally store elements in balanced binary tree.
+•	By default std::set uses the operator < for comparing two elements and but if user passes the external sorting criteria i.e. comparator then it uses that instead of default operator <.
+•	std::set will keep the inserted elements in sorted order based on the assigned sorting criteria i.e. either by default criteria operator < or by passed comparator (if passed).
+
+
+INSERT:
+single element (1)	pair<iterator,bool> insert (const value_type& val);
+pair<iterator,bool> insert (value_type&& val);
+with hint (2)	iterator insert (const_iterator position, const value_type& val);
+iterator insert (const_iterator position, value_type&& val);
+range (3)	template <class InputIterator>
+  void insert (InputIterator first, InputIterator last);
+initializer list (4)	void insert (initializer_list<value_type> il);
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Different ways to iterate over the set
+
+    set<string>  myset;
+    
+    myset.insert("pavan");
+    myset.insert("rahul");
+    myset.insert("mahesh");
+    myset.insert("rajan");
+
+    for_each(myset.begin(),myset.end(),
+    [](const string&str ) { cout<< str<<endl;});
+
+    for(auto str: myset)
+        cout<<str<<endl;
+
+    for(const string &str: myset)
+        cout<<str<<endl;
+
+   //using iterator
+    set<string>::iterator it = myset.begin();
+    
+    while(it!=myset.end())
+    {
+        cout<<*it<<endl;
+        it++;
+    }
+
+Search an element in the set:
+Find 
+Count same as map
+
+MULTIMAP:
+
+What is the difference between C++ Map and Multimap
+
+•  The multimap stores pairs of (key,value) where both key and value can appear several times
+•  The map > will only store each value once for a specific key. To do that, it will have to be able to compare the values, not just the keys
+•  A std::map is an associative container, that allows you to have a unique key associated with your type value 
+ 
+
+
+
+
+
+
+
+
+Sequence containers: Sequence containers implement data structures which can be accessed sequentially.
+array
+(C++11)	static contiguous array 
+(class template)
+vector
+dynamic contiguous array 
+(class template)
+deque
+double-ended queue 
+(class template)
+forward_list
+(C++11)	singly-linked list 
+(class template)
+list
+doubly-linked list 
+(class template)
+
+Associative containers: Associative containers implement sorted data structures that can be quickly searched (O(log n) complexity).
+set
+collection of unique keys, sorted by keys 
+(class template)
+map
+collection of key-value pairs, sorted by keys, keys are unique 
+(class template)
+multiset
+collection of keys, sorted by keys 
+(class template)
+multimap
+collection of key-value pairs, sorted by keys 
+(class template)
+ 
+
+
+Unordered associative containers: Unordered associative containers implement unsorted (hashed) data structures that can be quickly searched (O(1)amortized, O(n) worst-case complexity).
+unordered_set
+(C++11)	collection of unique keys, hashed by keys 
+(class template)
+unordered_map
+(C++11)	collection of key-value pairs, hashed by keys, keys are unique 
+(class template)
+unordered_multiset
+(C++11)	collection of keys, hashed by keys 
+(class template)
+unordered_multimap
+(C++11)	collection of key-value pairs, hashed by keys 
+(class template)
+Container adaptors
+Container adaptors provide a different interface for sequential containers.
+stack
+adapts a container to provide stack (LIFO data structure) 
+(class template)
+queue
+adapts a container to provide queue (FIFO data structure) 
+(class template)
+priority_queue
+adapts a container to provide priority queue 
+(class template)
+ span
+A span is a non-owning view over a contiguous sequence of objects, the storage of which is owned by some other object.
+span
+(C++20)	a non-owning view over a contiguous sequence of objects 
+(class template)
+ 
+
+
+WHEN TO USE WHICH STL?
+  
+So what are the Thumb rules for using a specific container:
+1.	By default, you should use a vector. It has the simplest internal data structure and provides random access. Thus, data access is convenient and flexible, and data processing is often fast enough.
+2.	If you insert and/or remove elements often at the beginning and the end of a sequence, you should use a deque. You should also use a deque if it is important that the amount of internal memory used by the container shrinks when elements are removed. Also, because a vector usually uses one block of memory for its elements, a deque might be able to contain more elements because it uses several blocks.
+3.	If you insert, remove, and move elements often in the middle of a container, consider using a list. Lists provide special member functions to move elements from one container to another in constant time. Note, however, that because a list provides no random access, you might suffer significant performance penalties on access to elements inside the list if you have only the beginning of the list. Like all node-based containers, a list doesn’t invalidate iterators that refer to elements, as long as those elements are part of the container. Vectors invalidate all their iterators, pointers, and references whenever they exceed their capacity and part of their iterators, pointers, and references on insertions and deletions. Deques invalidate iterators, pointers, and references when they change their size, respectively.
+4.	If you need a container that handles exceptions so that each operation either succeeds or has no effect, you should use either a list (without calling assignment operations and sort() and, if comparing the elements may throw, without calling merge(), remove(), remove_if(), and unique();or an associative/unordered container (without calling the multiple-element insert operations and, if copying/assigning the comparison criterion may throw, without calling swap() or erase()).
+5.	If you often need to search for elements according to a certain criterion, use an unordered set or multiset that hashes according to this criterion. However, hash containers have no ordering, so if you need to rely on element order, you should use a set or a multiset that sorts elements according to the search criterion.
+6.	To process key/value pairs, use an unordered (multi)map or, if the element order matters, a (multi) map.
+7.	If you need an associative array, use an unordered map or, if the element order matters, a map.
+8.	If you need a dictionary, use an unordered multimap or, if the element order matters, a multimap.
+  
+
+https://alyssaq.github.io/stl-complexities/table ALL STL TIME COMPLEXITY
+
+
+
+
+Forward List :
+Forward lists are sequence containers that allow constant time insert and erase operations anywhere within the sequence.
+•	Forward list in STL implements singly linked list. 
+•	Insertion, removal and moving operations are very fast than other containers.
+•	Main disadvantage of forward list is that cannot be iterated backwards and its individual elements cannot be accessed directly.  
+•	Forward List is preferred over list when only forward traversal is required (same as singly linked list is preferred over doubly linked list) as we can save space. Some example cases are, chaining in hashing, adjacency list representation of graph, etc. 
+
+STL FUNCTIONS OF FORWARD LIST:
+#include<iostream>
+#include<vector>
+#include<string>
+#include<iterator>
+#include<forward_list>
+#include<algorithm>
+
+using namespace std;
+
+/*NOTES:Its type of sequential container C++11.
+Forward lists are sequence containers that allow constant time insert and erase operations anywhere within the sequence.   VVimp
+It uses forward iterator as we traverse in only one direction.
+
+1. Implemented using the singly linked list.
+2. Drawback:
+   a) Forward list cannot be iterated backwards a
+   b) Its individual elements cannot be accessed directly
+3. Its prfered over list when we need only forward traversal.So that we can save space whic would be 
+   needed in case of list to store prev element address as well.
+4. Frequently used for insertion and deletion which is faster than other containers.
+5. Compared to other base standard sequence containers (array, vector and deque), forward_list perform generally 
+   better in inserting, extracting and moving elements in any position within the container, and 
+   therefore also in algorithms that make intensive use of these, like sorting algorithms.*/
+
+
+int main()
+{
+		/* Constructor  */
+	forward_list<int>  first;     //default
+	forward_list<int>  second(3,25);     //3 ele each with 25 value
+	forward_list<int>  third(second);   //copy constructor
+	forward_list<int>  fourth (second.begin(),second.end());   //range initialisation
+	//forward_list<int>  fifth = {1,2,3,4,5,6};     //initiliser list
+	forward_list<int>  sixth(std::move(third));   //move constructor
+
+	/*assign function 
+	This function is used to assign values to forward list, its another variant is used to assign repeated elements
+	void assign( size_type count, const T& value );
+	void assign( InputIt first, InputIt last );
+	void assign( std::initializer_list<T> ilist );
+	*/
+
+	forward_list<int>::iterator it = first.begin();
+	first.assign(5,25);
+	//first.assign({1,2,3,4,5,6,7});
+	//for_each(first.begin(),first.end(),[](const int x){cout<<x<<endl;});
+
+	/*
+	push_front(type) :- Insert element at beginning.
+	This function used to insert new value at beginning of the list. The value from this
+	function copied to the address before to the current first element of container
+	*/
+	first.push_front(125);
+	cout << "The forward list after push_front operation : "; 
+    for (int&c : first)  
+        cout << c << " "; 
+
+	/*
+	emplace_front :Construct and insert element at beginning 
+	This function also used to insert elements at beginning of the container but there no copy operation. 
+	Here element directly inserts at the address before to the first element
+	*/
+	first.emplace_front(70); 
+	for_each(first.begin(),first.end(),[](const int x){cout<<x<<endl;});
+
+	//use following way:
+
+	//for(int& x :first)
+	//	cout<<x<<endl;
+
+
+	/*
+	pop_front() :- This function is used to delete the first element of list.
+	*/
+	first.pop_front();
+
+	/*
+	insert_after(): Using this function we can insert element at any position of the forward list. 
+	The arguments which we pass to this function will be copied to particular location.
+    emplace_after(): This also works same as insert_after() function. But element directly insert without any copy operation.
+    6. erase_after() This function is used to erase elements from a particular position in the forward list
+	*/
+
+	first.insert_after(first.begin(),256) ; 
+
+	forward_list<int>  mylist;
+	mylist.assign({1,2,3,4,5,6});
+	mylist.insert_after(next(mylist.begin(),2),789);
+       myflist.insert_after(myflist.begin(),3,756);
+
+	for(int&x : mylist)
+		cout<<x<<endl;
+
+	//vvvvimp following 
+	//remove() :- This function removes the particular element from the forward list mentioned in its argument.
+	//remove_if() :- This function removes according to the condition in its argument.
+
+	first.remove(2);
+
+	forward_list<int>  mylist;
+	mylist.assign({1,2,3,4,5,6});
+
+	cout<<"after deleting "<<endl;
+	mylist.erase_after(mylist.begin());    //1 3 4 5 6 
+
+	//splice_after() :- This function transfers elements from one forward list to 
+
+other.
+
+    forward_list<int>  myflist;
+    forward_list<int>  list = {11,22,33,44};
+    myflist.assign({1,2,3,4,5,6});
+    
+    myflist.insert_after(myflist.begin(),list.begin(),list.end());
+
+	   
+
+
+	return 0;
+}
+ 
+
+
+
+
+
+
+
+
+LIST STL:
+Constructors same as forward list:
+•	front() – return a reference to the first element in a list container .
+
+    list<int>  mylist = {1,2,3,4,5,6};
+    cout<<mylist.front()<<endl;
+
+•	back() - direct reference to the last element in the list container.
+cout<<mylist.back()<<endl;    //6
+
+•	push_front() :The list::push_front() is a built-in function in C++ STL which is used to insert an element at the front of a list container just before the current top element
+
+
+
+
+ ASSOCIATIVE CONTAINER: Associative containers implement sorted data structures that can be quickly searched (O(log n) complexity). 
+Unordered associative containers:
+
+Iterators: 
+Input Iterators in C++ 
+•	Input iterators are considered to be the weakest as well as the simplest among all the iterators available, based upon their functionality and what can be achieved using them. 
+•	They are the iterators that can be used in sequential input operations, where each value pointed by the iterator is read only once and then the iterator is incremented. 
+•	that input iterators are unidirectional and can only move in the forward direction.
+•	 input iterators are used only when we want to access elements and not when we have to assign elements to them
+Salient Features
+Usability: Input iterators can be used only with single-pass algorithms, i.e., algorithms in which we can go to all the locations in the range at most once, like when we have to search or find any element in the range, we go through the locations at most once.
+Equality / Inequality Comparison: An input iterator can be compared for equality with another iterator. Since, iterators point to some location, so the two iterators will be equal only when they point to the same position, otherwise not.
+        So, the following two expressions are valid if A and B are input iterators:
+A == B  // Checking for equality
+A != B  // Checking for inequality
+ Dereferencing: An input iterator can be dereferenced, using the operator * and -> as an rvalue to obtain the value stored at the position being pointed to by the iterator.
+So, the following two expressions are valid if A is an input iterator:
+*A       // Dereferencing using *
+A -> m   // Accessing a member element m
+Incrementable: An input iterator can be incremented, so that it refers to the next element in sequence, using operator ++().
+Swappable: The value pointed to by these iterators can be exchanged or swapped.
+
+
+
+APPLICATION:
+
+std::find: As we know this algorithm is used to find the presence of an element inside a container .
+
+<strong>// Definition of std::find()</strong>
+template
+InputIterator find (InputIterator first, InputIterator last,
+const T& val)
+{
+while (first!=last)
+{
+if (*first==val) return first;
+++first;
+}
+return last;
+}
+
+std::copy: As the name suggests, this algorithm is used to copy a range into another range. Now, as far as accessing elements are concerned, input iterators are fine,
+ but as soon as we have to assign elements in another container, then we cannot use these input iterators for this purpose. 
+
+OutputIterator copy(InputIterator first, InputIterator last, 
+                    OutputIterator result)  
+{ 
+    while (first != last)  
+    *result++ = *first++; 
+    return result; 
+}
+
+Limitations:
+1. used only for access and not for assigning value.
+2. Can be used only for single pass algorithm
+3. Cannot be decremented
+4. arithmetic ope not allowed.
+
+Output Iterators: Just like input iterators, they are also very limited in their functionality and can only be used in single-pass algorithm, but not for accessing elements, but for being assigned elements.
+Output iterators are considered to be the exact opposite of input iterators, as they perform the opposite function of input iterators. 
+They can be assigned values in a sequence, but cannot be used to access values, unlike input iterators which do the reverse of accessing values and cannot be assigned values. 
+So, we can say that input and output iterators are complementary to each other. 
+
+Salient Features:
+Usability: Just like input iterators, Output iterators can be used only with single-pass algorithms, i.e., algorithms in which we can go to all the locations in the range at most once, such that these locations can be dereferenced or assigned value only once.
+
+Equality / Inequality Comparison: Unlike input iterators, output iterators cannot be compared for equality with another iterator.
+So, the following two expressions are invalid if A and B are output iterators:
+A == B  // Invalid - Checking for equality
+A != B  // Invalid - Checking for inequality
+
+Dereferencing: An input iterator can be dereferenced as an rvalue, using operator * and ->, whereas an output iterator can be dereferenced as an lvalue to provide the location to store the value.
+So, the following two expressions are valid if A is an output iterator:
+*A = 1      // Dereferencing using *
+A -> m = 7   // Assigning a member element m
+
+Practical implementation:
+Std::Copy :  IN THIS input is InputIterator and output is OutputIterator 
+
+So, this is the practical implementation of input iterators, single-pass algorithms where only we have to move sequentially and access the elements and check for equality
+
+More such algorithms are std::equal, std::equal_range and std::count.
+
+FORWARD ITERATOR:
+
+Forward iterators are considered to be the combination of input as well as output iterators.  
+It provides support to the functionality of both of them. It permits values to be both accessed and modified 
+One important thing to be kept in mind is that bidirectional and random-access iterators are also valid forward Iterators .
+
+Salient Features:
+1. can be used in multi-pass algorithms
+2. Equality / Inequality Comparison: A forward iterator can be compared for equality with another iterator. Since, iterators point to some location, so the two iterators will be equal only when they point to the same position, otherwise not.
+So, the following two expressions are valid if A and B are forward iterators:
+A == B  // Checking for equality
+A != B  // Checking for inequality
+
+
+
+
+
+Practical implementation:
+std::replace: 
+// Definition of std::replace() 
+template void replace(ForwardIterator first, ForwardIterator last, 
+                      const T& old_value, const T& new_value) 
+{ 
+    while (first != last) { 
+        if (*first == old_value) // L1 
+            *first = new_value; // L2 
+        ++first; 
+    } 
+}
+ 
+std::reverse_copy: As the name suggests, this algorithm is used to copy a range into another range, but in reverse order. Now, as far as accessing elements and assigning elements are concerned, forward iterators are fine, but as soon as we have to decrement the iterator, then we cannot use these forward iterators for this purpose.
+
+// Definition of std::reverse_copy() 
+template OutputIterator reverse_copy(BidirectionalIterator first, 
+                                     BidirectionalIterator last, 
+                                     OutputIterator result) 
+{ 
+    while (first != last) 
+        *result++ = *--last; 
+    return result; 
+} 
+
+Bidirectional Iterators:
+Bidirectional iterators are iterators that can be used to access the sequence of elements in a range in both directions (towards the end and towards the beginning). They are similar to forward iterators, except that they can move in the backward direction also, unlike the forward iterators, which can move only in the forward direction. 
+It is to be noted that containers like list, map, multimap, set and multiset support bidirectional Iterators.
+Features:
+•	bidirectional iterators can also be used in multi-pass algorithms
+•	Equality / Inequality Comparison: A Bidirectional iterator can be compared for equality with another iterator. 
+•	Can be dereferenced to l and rvalue. similarly, bidirectional operators can also serve both the purposes 
+•	Incrementable and decrementable. Decrementable: This is the feature which differentiates a Bidirectional iterator from a forward iterator. Just like we can use operator ++() with bidirectional iterators for incrementing them, we can also decrement them.
+That is why, its name is bidirectional, which shows that it can move in both directions.
+
+Practical implementation:
+Reverse_copy :
+template 
+void random_shuffle(RandomAccessIterator first, 
+                    RandomAccessIterator last, 
+                    RandomNumberGenerator& gen) 
+{ 
+    iterator_traits::difference_type i, n; 
+    n = (last - first); 
+    for (i=n-1; i>0; --i)  
+    { 
+        swap (first[i],first[gen(i+1)]); 
+    } 
+}
+Note: As we know that Bidirectional iterator is higher in the hierarchy than forward iterator which is itself higher than input and output iterators, therefore, all these three types of iterators can be substituted by bidirectional iterators, without affecting the working of the algorithm.
+LIMITATION:
+1. can use == but cannot use >= or <=
+2. arithmetic operation cannot be used  A+2 or A+3
+3.Random access not allowed.
+Random-Access Iterators:: They are the most powerful iterators. They are not limited to moving sequentially, as their name suggests, they can randomly access any element inside the container. They are the ones whose functionality is same as pointers.
+Random-access iterators are iterators that can be used to access elements at an arbitrary offset position relative to the element they point to, offering the same functionality as pointers. Random-access iterators are the most complete iterators in terms of functionality. All pointer types are also valid random-access Iterators
+It is to be noted that containers like vector, deque support random-access Iterators.
+
+
+
+
+Features:
+All features of bidirectional + random access.
+
+Application:
+std::nth_element, std::sort, 
+TYPE OF CONTAINER AND ITERATORS SUPPORTED
+ 
+  
+Operations of iterators :-
+
+1. begin() :- This function is used to return the beginning position of the container.
+2. end() :- This function is used to return the after end position of the container.
+  
+
+
+
+
+
+
+
+
+
+ 
+Operations on Iterators:
+1. Advance:
+     vector<int>  v(10) ;    // create a vector of 10 0's
+    vector<int>::iterator i;  // defines an iterator i to the vector of integers
+    
+    i = v.begin();
+    /* i now points to the beginning of the vector v */
+    
+    advance(i,5);
+    /* i now points to the fifth element form the 
+    beginning of the vector v */
+    
+    advance(i,-1);
+    /* i  now points to the fourth element from the 
+    beginning of the vector */ 
+2. distance()
+   vector<int>  v(10) ;    // create a vector of 10 0's
+    vector<int>::iterator i, j;  // defines iterators i,j to the vector of integers  
+    
+    i = v.begin();
+    /* i now points to the beginning of the vector v */
+    
+    
+    j = v.end();
+    /* j now points to the end() of the vector v */
+    
+    cout << distance(i,j) << endl;
+    /* prints 10 , */
+ 
+
+
+https://www.geeksforgeeks.org/algorithms-library-c-stl/
+C++ STL ALGO
+STL:
+
+Non-modifying sequence operations
+
+std :: all_of  : Test condition on all elements in range
+
+vector<int> vec={1,2,3,-4,5,6};
+
+bool IsPositive = all_of(vec.begin(),vec.end(),[](intx){returnx>0;});
+
+if(IsPositive)
+cout<<"all are positive"<<endl;
+else
+cout<<"all are not positive"<<endl;
+
+any_of():This function checks for a given range if there’s even one element satisfying a given property mentioned in function. Returns true if at least one element satisfies the property else returns false.
+    vector<int> vec={1,2,3,-4,5,6};
+
+   bool IsPositive = any_of(vec.begin(),vec.end(),[](int x){return x<0;});
+
+   if(IsPositive)
+       cout<<"one ele is negative"<<endl;
+   else
+       cout<<"none of ele is negative"<<endl;
+
+none_of():This function returns true if none of elements satisfies the given condition else returns false.
+
+vector<int> vec={1,2,3,4,5,6};
+
+   bool IsPositive = none_of(vec.begin(),vec.end(),[](int x){return x<0;});
+
+   cout<<IsPositive<<endl;    //true as none of ele is negative
+
+Application:
+
+1.	Check if vector contains all even number 
+    vector<int> vec={8,2,12,4,18,6};
+
+   bool IsPositive = none_of(vec.begin(),vec.end(),[](int x){return x%2;});
+
+   if(IsPositive)
+     cout<<"all are even"<<endl;   //even
+     else
+     cout<<"all are not even"<<endl;
+
+2 .To check whether array contains all prime number or not
+
+for_each:
+vector<int> vec={1,3,7,5,13,63};
+
+    for_each(vec.begin(),vec.end(),[](const int x) {cout<<x<<endl;});
+
+std::find:
+Find value in rangeFind the element in the given range of numbers. Returns an iterator to the first element in the range [first,last) that compares equal to val. If no such element is found, the function returns last.
+
+    vector<int> vec={1,3,7,5,13,63};
+
+    vector<int>::iterator it;
+
+    it = find(vec.begin(),vec.end(),3);
+
+    if(it!=vec.end())
+       cout<<"element found at "<<it-vec.begin()+1<<endl;   //found at 2
+       else
+       cout<<"ele not found"<<endl;
+
+
+std::find_if:
+Return value :
+Returns an iterator to the first element in the range
+[first, last] for which pred(function) returns true. If
+no such element is found, the function returns last.
+
+    vector<int> vec={1,3,-7,5,-13,63};
+
+    vector<int>::iterator it;
+
+    it = find_if(vec.begin(),vec.end(),[](const int x){return x<0;});
+
+    if(it!=vec.end())
+       cout<<"ele "<<*it<< "found at "<< it-vec.begin()+1 <<"position "<<endl;
+       else
+       cout<<"not found "<<endl;
+
+
+
+std :: find_if_not:
+its equivalent to std::find_if_not is to use std::find_if with the negated predicate.
+
+
+std::vector<int> vec{ 10, 25, 40, 55 };
+
+// Iterator to store the position of element found
+std::vector<int>::iterator it;
+
+// std::find_if
+it = std::find_if(vec.begin(), vec.end(), IsOdd);
+std::cout << "The first odd value is " << *it << '\n';
+
+// Iterator to store the position of element found
+std::vector<int>::iterator ite;
+
+// std::find_if_not
+ite = std::find_if_not(vec.begin(), vec.end(), IsOdd);
+
+std::cout << "The first non-odd(or even) value is " << *ite << '\n';
+
+return 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+Data Structure Info vvvvvvvIMP
+SET:
+#include<iostream>
+#include<set>
+#include<string>
+#include<algorithm>
+using namespace std;
+
+
+
+int main()
+{
+	set<int> myset;
+
+	myset.insert(10);
+	myset.insert(5);
+	myset.insert(3);
+	myset.insert(1);
+
+	set<int>::iterator it = myset.begin();
+
+	for(it;it!=myset.end();it++)
+	{
+		cout<<*it<<" ";          //prints in sorted order 1 3 5 10
+	}
+
+	//search ele in the set and its position
+	set<int>::iterator itr = myset.find(5);
+
+	int index = distance(myset.begin(),itr);
+	if(itr!=myset.end())
+		cout<<"found element "<<*itr<<"at position "<<index+1<<endl;  //check this index !!
+
+	//check if insertion successful or not
+	pair<set<int>::iterator,bool>  pair;
+
+	pair = myset.insert(10); //10 already exists in the set .If you try to add it thrpws false!!
+
+	if(pair.second == false)
+		cout<<*pair.first<<"element already exists "<<endl;
+	else
+		cout<<"elemnt added "<<endl;
+
+	//erase element from the set
+	myset.erase(10);   //removes 10 from set
+	cout<<"after removig 10 set is "<<endl;
+	it = myset.begin();
+
+	for(it;it!=myset.end();it++)
+		cout<<*it<<" ";
+
+	auto ifind = myset.find(3);
+	myset.erase(ifind);
+
+	cout<<"after removing 3 set is "<<endl;
+	it = myset.begin();
+	for(it;it!=myset.end();it++)
+		cout<<*it<<" ";
+
+
+
+	return 0;
+}
+ 
+UNORDERED SET: DONE
+ 
+MAP:
+    map<string,int> mymap;    
+    mymap.insert(make_pair("pavan",1));
+    mymap.insert(make_pair("rahul",12));
+    mymap.insert(make_pair("mohan",19));
+    mymap.insert(make_pair("mahesh",25));    
+    map<string,int>::iterator it = mymap.begin();    
+    for(it;it!=mymap.end();it++)
+         cout<<it->first<<"---"<<it->second<<endl;
+
+NON MODIFYING ALGORITHMS
+SORT:default is less than
+1. sort is desending order
+sort(v.begin(),v.end(),greater<int>());
+2. to sort in particular order u can define own function
+Reverse , max_element,min_element,accumulate
+    vector<int> v = {1,1,2};    
+    vector<int>::iterator it = v.begin();    
+    cout<<"max ele in vector is "<<*max_element(v.begin(),v.end())<<endl;
+    cout<<"min ele in vector is "<<*min_element(v.begin(),v.end())<<endl;    
+    cout<<"sum of all ele of vectors "<<accumulate(v.begin(),v.end(),0)<<endl;
+
+
+count(first_iterator, last_iterator,x) – To count the occurrences of x in vector.
+Count_if: Returns the number of elements in the range [first,last) for which pred is true.
+    vector<int> v = {5,11,11,15,1,4,2};
+    int countele = count_if(v.begin(),v.end(),[](int x) { return x>10;});
+find(first_iterator, last_iterator, x) – Points to last address of vector 
+    if(find(v.begin(),v.end(),5)!=v.end())
+       cout<<"found "<<endl;
+    else
+       cout<<"not found "<<endl;
+
+Lower_bound:	Returns the iterator to the element if found else returns iterator to the next greater element.
+
+Transform unary operation examplem
+int increment(int x)
+{
+    return (x+1);
+}
+
+int main()
+{
+    vector<int> v = {1,3,3,5,7};
+    
+    transform(v.begin(),v.end(),v.begin(),increment);
+    
+    for(auto it=v.begin();it!=v.end();it++)
+        cout<<*it<<"   ";
+
+	return 0;
+}
+
+
+SET
+Sets are a type of associative containers in which each element has to be unique, because the value of the element identifies it. 
+The value of the element cannot be modified once it is added to the set, though it is possible to remove and add the modified value of that element.
+#include<iostream>
+#include<set>
+using namespace std;
+
+/*  STL FOR SET---NO DUPLIACTES ALLOWED*/
+
+
+int main()
+{
+	set<int> myset;
+
+	myset.insert(1);
+	myset.insert(3);
+	myset.insert(2);
+
+	set<int>::iterator it;
+
+	for(it=myset.begin();it!=myset.end();it++)
+	{
+		cout<<*it<<" ";
+	}
+
+	//assign ele from myset1 to myset2
+	set<int>myset2(myset.begin(),myset.end());
+
+	//find
+	it = myset.find(7);   //if not found gives iterator to end of set  log n faster
+
+	if(it == myset.end())
+		cout<<"n0"<<endl;
+
+	//insertion returns pair telling if it was successful or not
+	pair<set<int>::iterator,bool> ret;
+
+	ret = myset.insert(3);
+
+	if(ret.second == false)   //gives false as 3 is already in the set
+	{
+		it = ret.first; //iterator pointing to 3
+	}
+
+	//insert using iterator
+	myset.insert(it,25);  //WRONG AS U CANT DECIDE WHERE U WANT TO PUT 9!!!!!!
+
+	myset.erase(it);  //erase 3 from set
+
+	for(auto it=myset.begin();it!=myset.end();it++)
+	{
+		cout<<*it<<" ";
+	}
+
+	myset.erase(1);  //remove 1
+
+
+	return 0;
+}
+
+
+ TO SORT ASENDING ORDER
+	set<int,greater<int>> myset;
+
+	myset.insert(1);
+	myset.insert(3);
+	myset.insert(2);
+
+	set<int,greater<int>>::iterator it;
+
+	for(it=myset.begin();it!=myset.end();it++)
+	{
+		cout<<*it<<" ";
+	}
+ 
+Pair in C++ Standard Template Library (STL)
+The pair container is a simple container defined in <utility> header consisting of two data elements or objects.
+•	The first element is referenced as ‘first’ and the second element as ‘second’ and the order is fixed (first, second).
+•	Pair is used to combine together two values which may be different in type. Pair provides a way to store two heterogeneous objects as a single unit.
+•	Pair can be assigned, copied and compared. 
+•	To access the elements, we use variable name followed by dot operator followed by the keyword first or second.
+
+//CPP program to illustrate pair STL 
+#include <iostream> 
+#include <utility> 
+using namespace std; 
+  
+int main() 
+{ 
+    pair <int, char> PAIR1 ; 
+  
+    PAIR1.first = 100; 
+    PAIR1.second = 'G' ; 
+  
+    cout << PAIR1.first << " " ; 
+    cout << PAIR1.second << endl ; 
+  
+    return 0; 
+
+pair (data_type1, data_type2) Pair_name (value1, value2) ;
+Different ways to initialize pair:
+pair  g1;         //default
+pair  g2(1, 'a');  //initialized,  different data type
+pair  g3(1, 10);   //initialized,  same data type
+pair  g4(g3);    //copy of g3
+Another way to initialize a pair is by using the make_pair() function.
+g2 = make_pair(1, 'a');
+
+Note: If not initialized, the first value of the pair gets automatically initialized.
+
+Member Functions:
+make_pair() : This template function allows to create a value pair without writing the types explicitly.
+Syntax :
+Pair_name = make_pair (value1,value2);
+
+#include <iostream> 
+#include <utility> 
+using namespace std; 
+  
+int main() 
+{ 
+    pair <int, char> PAIR1 ; 
+    pair <string, double> PAIR2 ("GeeksForGeeks", 1.23) ; 
+    pair <string, double> PAIR3 ; 
+  
+    PAIR1.first = 100; 
+    PAIR1.second = 'G' ; 
+  
+    PAIR3 = make_pair ("GeeksForGeeks is Best",4.56); 
+  
+    cout << PAIR1.first << " " ; 
+    cout << PAIR1.second << endl ; 
+  
+    cout << PAIR2.first << " " ; 
+    cout << PAIR2.second << endl ; 
+  
+    cout << PAIR3.first << " " ; 
+    cout << PAIR3.second << endl ; 
+  
+    return 0; 
+} 
+
+operators(=, ==, !=, >=, <=) : We can use operators with pairs as well.
+•	using equal(=) : It assigns new object for a pair object.
+Syntax :
+pair& operator= (const pair& pr);
+This Assigns pr as the new content for the pair object. The first value is assigned the first value of pr and the second value is assigned the second value of pr .
+
+
+•	Comparison (==) operator with pair : For given two pairs say pair1 and pair2, the comparison operator compares the first value and second value of those two pairs i.e. if pair1.first is equal to pair2.first or not AND if pair1.second is equal to pair2.second or not .
+•	Not equal (!=) operator with pair : For given two pairs say pair1 and pair2, the != operator compares the first values of those two pairs i.e. if pair1.first is equal to pair2.first or not, if they are equal then it checks the second values of both.
+•	
+•	Logical( >=, <= )operators with pair : For given two pairs say pair1 and pair2, the =, >, can be used with pairs as well. It returns 0 or 1  by only comparing the first value of the pair
+
+    pair<int, int>pair1 = make_pair(7, 12); 
+    pair<int, int>pair2 = pair1;
+
+	//pair2 = pair2;     //wont work
+  
+    cout<<pair2.first<<endl;
+	cout<<pair2.second<<endl;
+  
+    return 0; 
+
+swap : This function swaps the contents of one pair object with the contents of another pair object. The pairs must be of same type.
+Syntax :
+pair1.swap(pair2) ;
+For two given pairs say pair1 and pair2 of same type, swap function will swap the pair1.first with pair2.first and pair1.second with pair2.second.
+
+TUPLE:
+1. get() :- get() is used to access the tuple values and modify them, it accepts the index and tuple name as arguments to access a particular tuple element.
+2. make_tuple() :- make_tuple() is used to assign tuple with values. The values passed should be in order with the values declared in tuple.
+// C++ code to demonstrate tuple, get() and make_pair() 
+#include<iostream> 
+#include<tuple> // for tuple 
+using namespace std; 
+int main() 
+{ 
+    // Declaring tuple 
+    tuple <char, int, float> geek; 
+  
+    // Assigning values to tuple using make_tuple() 
+    geek = make_tuple('a', 10, 15.5); 
+  
+    // Printing initial tuple values using get() 
+    cout << "The initial values of tuple are : "; 
+    cout << get<0>(geek) << " " << get<1>(geek); 
+    cout << " " << get<2>(geek) << endl; 
+  
+    // Use of get() to change values of tuple 
+    get<0>(geek) = 'b'; 
+    get<2>(geek) =  20.5; 
+  
+     // Printing modified tuple values 
+    cout << "The modified values of tuple are : "; 
+    cout << get<0>(geek) << " " << get<1>(geek); 
+    cout << " " << get<2>(geek) << endl; 
+  
+    return 0; 
+} 
+
+//C++ code to demonstrate tuple_size 
+#include<iostream> 
+#include<tuple> // for tuple_size and tuple 
+using namespace std; 
+int main() 
+{ 
+  
+    // Initializing tuple 
+    tuple <char,int,float> geek(20,'g',17.5); 
+  
+    // Use of size to find tuple_size of tuple 
+    cout << "The size of tuple is : "; 
+    cout << tuple_size<decltype(geek)>::value << endl; 
+  
+    return 0; 
+  
+} 
+
+tie() :- The work of tie() is to unpack the tuple values into seperate variables. There are two variants of tie(), with and without “ignore” , the “ignore” ignores a particular tuple element and stops it from getting unpacked.
+
+//tie function use
+	tuple<int,int,char> tuple1;
+
+	tuple1 = make_tuple(25,68,'Y');
+
+	int first,second;
+	char third;
+
+	tie(first,second,third) = tuple1;
+
+	cout<<"value1 "<<first<<endl;
+
+	cout<<"value2 "<<second<<endl;
+
+	cout<<"value3 "<<third<<endl;
+
+	//if u dont want particular value mentionas ignore
+
+	tie(first,ignore,second) = tuple1;
+
+	cout<<"value1 "<<first<<endl;
+	cout<<"value3 "<<third<<endl;
+
+tuple_cat() :- This function concatenates two tuples and returns a new tuple. 
+
+// C++ code to demonstrate working of tuple_cat() 
+#include<iostream> 
+#include<tuple> // for tuple_cat() and tuple 
+using namespace std; 
+int main() 
+{ 
+    // Initializing 1st tuple 
+    tuple <int,char,float> tup1(20,'g',17.5); 
+  
+    // Initializing 2nd tuple 
+    tuple <int,char,float> tup2(30,'f',10.5); 
+      
+    // Concatenating 2 tuples to return a new tuple 
+    auto tup3 = tuple_cat(tup1,tup2); 
+      
+    // Displaying new tuple elements 
+    cout << "The new tuple elements in order are : "; 
+    cout << get<0>(tup3) << " " << get<1>(tup3) << " "; 
+    cout << get<2>(tup3) << " " << get<3>(tup3) << " "; 
+    cout << get<4>(tup3) << " " << get<5>(tup3) << endl; 
+  
+    return 0; 
+} 
+
+VECTORS IN STL
+•	Vectors are same as dynamic arrays with the ability to resize itself automatically when an element is inserted or deleted, with their storage being handled automatically by the container. Vector elements are placed in contiguous storage so that they can be accessed and traversed using iterators. 
+•	In vectors, data is inserted at the end. Inserting at the end takes differential time, as sometimes there may be a need of extending the array. 
+•	Removing the last element takes only constant time because no resizing happens. Inserting and erasing at the beginning or in the middle is linear in time.
+SYNTAX for creating a vector is: vector< object_type > vector_name;
+
+
+MAP IN STL
+•	Maps are associative containers that store elements in a mapped fashion.
+•	Each element has a key value and a mapped value.
+•	No two mapped values can have same key values.
+
+map::begin()
+begin() function is used to return an iterator pointing to the first element of the map container. begin() function returns a bidirectional iterator to the first element of the container.
+
+CPP program to illustrate 
+// Implementation of begin() function 
+#include <iostream> 
+#include <map> 
+using namespace std; 
+  
+int main() 
+{ 
+    // declaration of map container 
+    map<char, int> mymap; 
+    mymap['a'] = 1; 
+    mymap['b'] = 2; 
+    mymap['c'] = 3; 
+  
+    // using begin() to print map 
+    for (auto it = mymap.begin(); 
+         it != mymap.end(); ++it) 
+        cout << it->first << " = "
+             << it->second << '\n'; 
+    return 0; 
+ 
+Maps are associative containers that store elements in a mapped fashion. Each element has a key value and a mapped value. No two mapped values can have same key values.
+map::size()
+In C++, size() function is used to return the total number of elements present in the map.
+
+MAP:
+std::map::find
+      iterator find (const key_type& k);
+const_iterator find (const key_type& k) const;
+Get iterator to element
+Searches the container for an element with a key equivalent to k and returns an iterator to it if found, otherwise it returns an iterator to map::end.
+
+    // declaration of map container 
+    map<char, int> mymap; 
+
+	mymap['A'] = 25;
+	mymap['B'] = 125;
+	mymap['C'] = 252;
+
+	map<char,int>::iterator it;
+
+	//find function
+	it = mymap.find('Z');
+
+	//if element present returns iterator to it else returns iterator to end of map
+	if(it!=mymap.end())
+		cout<<"found"<<endl;
+	else
+		cout<<"not found"<<endl;
+
+Print map using iterator
+
+    // declaration of map container 
+    map<char, int> mymap; 
+
+	mymap['A'] = 25;
+	mymap['B'] = 125;
+	mymap['C'] = 252;
+
+	map<char,int>::iterator it=mymap.begin();
+
+	//print key and element of map
+
+	for(it;it!=mymap.end();it++)
+	{
+		cout<<"key"<<it->first<<" "<<endl;
+		cout<<"value"<<it->second<<" "<<endl;
+	}
+
+INSERT DATA IN MAP
+
+    // declaration of map container 
+    map<char, int> mymap; 
+
+	mymap.insert(make_pair('A',25));
+
+	map<char,int>::iterator it=mymap.begin();
+
+	cout<<it->first<<endl;
+
+IF U USE PAIR THEN USE AS FOLLOWS:
+
+    // declaration of map container 
+    map<char, int> mymap; 
+
+	mymap.insert(pair<char,int>('A',25));
+
+	map<char,int>::iterator it=mymap.begin();
+
+	cout<<it->first<<endl;
+
+ERASE USING ITERATOR
+
+    map<char, int> mymap; 
+
+	mymap['A'] = 25;
+	mymap['C'] = 125;
+	mymap['B'] = 252;
+
+	map<char,int>::iterator it=mymap.begin();
+
+	mymap.erase(it);
+
+	cout<<"map after erase"<<endl;
+
+	for(it=mymap.begin();it!=mymap.end();it++)
+	{
+		cout<<it->first<<" "<<endl;
+	}
+
+ERASE USING KEY
+
+    // declaration of map container 
+    map<char, int> mymap; 
+
+	mymap['A'] = 25;
+	mymap['C'] = 125;
+	mymap['B'] = 252;
+
+	map<char,int>::iterator it=mymap.begin();
+
+	mymap.erase('B');
+
+	cout<<"map after erase"<<endl;
+
+	for(it=mymap.begin();it!=mymap.end();it++)
+	{
+		cout<<it->first<<" "<<endl;
+	}
+
+COUNT:
+// multimap::count
+#include <iostream>
+#include <map>
+
+int main ()
+{
+  std::multimap<char,int> mymm;
+
+  mymm.insert(std::make_pair('x',50));
+  mymm.insert(std::make_pair('y',100));
+  mymm.insert(std::make_pair('y',150));
+  mymm.insert(std::make_pair('y',200));
+  mymm.insert(std::make_pair('z',250));
+  mymm.insert(std::make_pair('z',300));
+
+  for (char c='x'; c<='z'; c++)
+  {
+    std::cout << "There are " << mymm.count(c) << " elements with key " << c << ":";
+    std::multimap<char,int>::iterator it;
+    for (it=mymm.equal_range(c).first; it!=mymm.equal_range(c).second; ++it)
+      std::cout << ' ' << (*it).second;
+    std::cout << '\n';
+  }
+
+  return 0;
+}
+
+
+VECTORS
+INSERT
+  vector<int> myvector;
+
+  myvector.push_back(100);
+  myvector.push_back(200);
+  myvector.push_back(300);
+
+  vector<int>::iterator it=myvector.begin();
+
+  for(it;it!=myvector.end();it++)
+  {
+	  cout<<*it<<endl;
+  }
+
+  cout<<"after insertion"<<endl;
+
+  it = myvector.begin();
+
+  myvector.insert(it+2,500);  //insert after 200   op 100 200 500 300 
+
+  for(auto it=myvector.begin();it!=myvector.end();it++)
+  {
+	  cout<<*it<<endl;
+  }
+
+ERASE
+
+// erasing from vector
+#include <iostream>
+#include <vector>
+
+int main ()
+{
+  std::vector<int> myvector;
+
+  // set some values (from 1 to 10)
+  for (int i=1; i<=10; i++) myvector.push_back(i);
+
+  // erase the 6th element
+  myvector.erase (myvector.begin()+5);
+
+  // erase the first 3 elements:
+  myvector.erase (myvector.begin(),myvector.begin()+3);
+
+  std::cout << "myvector contains:";
+  for (unsigned i=0; i<myvector.size(); ++i)
+    std::cout << ' ' << myvector[i];
+  std::cout << '\n';
+
+  return 0;
+}
+
+vector emplace() function in C++ STL
+The vector::emplace() is an STL in C++ which extends container by inserting new element at position. Reallocation happens only if there is a need of more space. Here the container size increases by one.
+Syntax:
+template 
+iterator vector_name.emplace (const_iterator position, element);
+Parameter:
+The function accepts two mandatory parameters which are specified as below:
+•	position – It specifies the iterator pointing to the position in the container where the new element is to be inserted.
+•	args – It specifies the element to be inserted to be inserted in the vector container.
+
+// C++ program to illustrate the 
+// vector::emplace() function 
+// insertion at thefront 
+#include <bits/stdc++.h> 
+using namespace std; 
+  
+int main() 
+{ 
+    vector<int> vec = { 10, 20, 30 }; 
+  
+    // insert element by emplace function 
+    // at front 
+    auto it = vec.emplace(vec.begin(), 15); 
+  
+    // print the elements of the vector 
+cout << "The vector elements are: ";  
+    for (auto it = vec.begin(); it != vec.end(); ++it) 
+        cout << *it << " "; 
+  
+    return 0; 
+
+
+
+
+
+
+// resizing of the vector 
+#include <iostream> 
+#include <vector> 
+  
+using namespace std; 
+  
+int main() 
+{ 
+    vector<int> vec; 
+  
+    // 5 elements are inserted 
+    // in the vector 
+    vec.push_back(1); 
+    vec.push_back(2); 
+    vec.push_back(3); 
+    vec.push_back(4); 
+    vec.push_back(5); 
+  
+    cout << "Contents of vector before resizing:" 
+         << endl; 
+      
+    // displaying the contents of the 
+    // vector before resizing 
+    for (int i = 0; i < vec.size(); i++) 
+        cout << vec[i] << " "; 
+  
+    cout << endl; 
+  
+    // vector is resized 
+    vec.resize(4); 
+  
+    cout << "Contents of vector after resizing:" 
+         << endl; 
+      
+    // displaying the contents of the 
+    // vector after resizing 
+    for (int i = 0; i < vec.size(); i++) 
+        cout << vec[i] << " "; 
+  
+    return 0; 
+} 
+
+size_type capacity() const;
+Return size of allocated storage capacity
+Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.
+
+
+
+
+void shrink_to_fit();
+Shrink to fit
+Requests the container to reduce its capacity to fit its size.
+
+  vector<int> myvector(100);
+  cout<<"capacity"<<myvector.capacity()<<endl;       //100
+
+  myvector.resize(10);
+  cout<<"capacity"<<myvector.capacity()<<endl;          //100 
+
+  myvector.shrink_to_fit();
+  cout<<"after shrink capacity"<<myvector.capacity()<<endl;   //10
+
+LINKED LIST
+void push_front (const value_type& val);
+Insert element at beginning
+Inserts a new element at the beginning of the list, right before its current first element. The content of val is copied (or moved) to the inserted element. 
+
+PUSH_FRONT
+
+  list<int> mylist;
+
+  mylist.push_front(25);
+  mylist.push_front(50);
+  mylist.push_front(75);
+
+  list<int>::iterator it=mylist.begin();
+
+  for(it;it!=mylist.end();it++)
+  {
+	  cout<<*it<<endl;      //op  75 50 25
+  }
+
+POP_FRONT
+
+  mylist.pop_front();
+
+  it=mylist.begin();
+
+  for(it;it!=mylist.end();it++)
+  {
+	  cout<<*it<<endl;      //op  75 50 25
+  }
+
+
+
+
+
+
+
+
+
+UNORDERED MAP 
+Unordered maps are associative containers that store elements formed by the combination of a key value and a mapped value, and which allows for fast retrieval of individual elements based on their keys 
+
+
+
+Internally, the elements in the unordered_map are not sorted in any particular order with respect to either their key or mapped values, but organized into buckets depending on their hash values to allow for fast access to individual elements directly by their key values (with a constant average time complexity on average).
+
+Create Hash table and print it
+
+Unordered_map provides a functionality of map i.e. it store the elements in key value pair and with unique key only. 
+
+#include<iostream>
+#include<unordered_map>
+#include<string>
+
+using namespace std;
+
+int main()
+{
+   unordered_map<string,int> mymap;
+
+   mymap["Mango"] = 120;
+   mymap.insert(make_pair("Guava",250));
+   mymap["Peru"] = 450;
+
+   unordered_map<string,int>::iterator it=mymap.begin();
+
+   while(it!=mymap.end())
+   {
+	   cout<<it->first<<":"<<it->second<<endl;
+	   it++;
+   }
+
+	return 0;
+}
+
+   for(auto it=mymap.begin();it!=mymap.end();it++)
+   {
+	   cout<<it->first<<":"<<it->second<<endl;
+   } 
+
+You can create a pair and use as follows
+
+   pair <string,int> mypair("banana",650);
+   mymap.insert(mypair);
+
+
+Another way to print is as follow by using iterator and while loop
+
+   unordered_map<string,int>::iterator it=mymap.begin();  //if u don’t initialize to begin it crashes
+
+   while(it!=mymap.end())
+   {
+	   cout<<it->first<<":"<<it->second<<endl;
+	   it++;
+   }
+
+ 
+
+CHECK WHY FOLLOWING NOT WORKING
+
+ for (auto x : umap) 
+      cout << x.first << " " << x.second << endl; 
+
+Printing value and pair
+
+   unordered_map<string,int>::iterator it=mymap.begin();
+
+   cout<<"key is"<<it->first<<endl;
+   cout<<"value is"<<it->second<<endl; 
+
+
+PRINTING ALL KEY AND VALUES 
+   unordered_map<string,int>::iterator it=mymap.begin();
+
+   while(it!=mymap.end())
+   {
+       cout<<"key is"<<it->first<<"    ";
+       cout<<"value is"<<it->second;
+
+	   cout<<endl;
+	   it++;
+   }
+
+KEY AND mapped VALUE
+
+unordered_map<Key,T>::iterator it;
+(*it).first;             // the key value (of type Key)
+(*it).second;            // the mapped value (of type T)
+
+Operator[] using this we have put value of banana in mango
+
+If k matches the key of an element in the container, the function returns a reference to its mapped value.
+
+unordered_map<string,int>::iterator it=mymap.begin();
+
+   int f = mymap["banana"];
+
+   mymap["Mango"] = f;
+
+   int newvalue = mymap["Mango"];
+
+   cout<<f<<endl;      //ouput 650
+
+cout<<mymap["Peru"]<<endl;   //550
+
+at()
+Returns a reference to the mapped value of the element with key k in the unordered_map.
+
+You can change existing value using at as follows
+
+   cout<<"before mango is"<<mymap["Mango"]<<endl;
+
+   mymap.at("Mango") = 1025;
+
+   cout<<"After mango is"<<mymap["Mango"]<<endl;
+
+find():Searches the container for an element with k as key and returns an iterator to it if found, otherwise it returns an iterator to unordered_map::end (the element past the end of the container). 
+
+   unordered_map<string,int>::iterator it=mymap.begin();
+
+   it = mymap.find("Jamun");
+
+   if(it == mymap.end())
+	   cout<<"not present"<<endl;
+   else
+   {
+	   cout<<it->first<<"is"<<it->second<<endl;
+   }
+
+Count():
+Count elements with a specific key
+Searches the container for elements whose key is k and returns the number of elements found. Because unordered_map containers do not allow for duplicate keys, this means that the function actually returns 1 if an element with that key exists in the container, and zero otherwise. 
+
+Insert()
+      unordered_map<string,int> mymap;
+   unordered_map<string,int> mymap2;
+
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+   mymap["Shruti"] = 12680;
+
+
+   mymap2.insert(mymap.begin(),mymap.end());
+
+   unordered_map<string,int>::iterator it=mymap2.begin();
+
+   while(it!=mymap2.end())
+   {
+	   cout<<it->first<<" "<<it->second<<endl;
+	   it++;
+   }
+  mymap2.insert(make_pair("Rajkumar",2563));
+
+
+Erase: Erase elements
+Removes from the unordered_map container either a single element or a range of elements ([first,last)).
+
+   unordered_map<string,int> mymap;
+   unordered_map<string,int> mymap2;
+
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+   mymap["Shruti"] = 12680;
+   mymap["Shubam"] = 12680;
+   mymap["Raj"] = 12680;
+
+   mymap.erase("Raj");
+
+   unordered_map<string,int>::iterator it;
+
+   it = mymap.find("Shubam");
+
+   if(it ==mymap.end())
+   {
+	   cout<<"deleted"<<endl;
+   }
+   else
+	   cout<<"found"<<it->first<<endl;
+
+ERASE BY SPECIFYING RANGE
+
+   unordered_map<string,int> mymap;
+   unordered_map<string,int> mymap2;
+
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+   mymap["Shruti"] = 12680;
+   mymap["Shubam"] = 12680;
+   mymap["Raj"] = 12680;
+
+   unordered_map<string,int>::iterator it=mymap.begin();
+while(it!=mymap.end())
+{
+	cout<<it->first<<endl;
+	it++;
+}
+   cout<<"after the earse"<<endl;
+
+   mymap.erase(mymap.find("Shruti"),mymap.end());
+   it=mymap.begin();
+   while(it!=mymap.end())
+{
+	cout<<it->first<<endl;
+	it++;
+}
+
+Clear():
+Clear content
+All the elements in the unordered_map container are dropped: their destructors are called, and they are removed from the container, leaving it with a size of 0.
+
+   unordered_map<string,int> mymap;
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+   mymap["Shruti"] = 12680;
+   mymap["Shubam"] = 12680;
+   mymap["Raj"] = 12680;
+
+   mymap.clear();
+
+   mymap["Ramanna"] = 25698;
+
+  cout<<"after the clear"<<endl;
+   for(auto it=mymap.begin();it!=mymap.end();it++)
+{
+	cout<<it->first<<endl;
+}
+
+Swap():
+Swap content
+Exchanges the content of the container by the content of ump, which is another unordered_map object containing elements of the same type. Sizes may differ.
+
+   unordered_map<string,int> mymap;
+   unordered_map<string,int> mymap2;
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+
+
+   mymap2["Shruti"] = 12680;
+   mymap2["Shubam"] = 12680;
+   mymap2["Raj"] = 12680;
+
+   mymap.swap(mymap2);
+
+  cout<<"after the swap"<<endl;
+   for(auto it=mymap.begin();it!=mymap.end();it++)
+{
+	cout<<it->first<<endl;
+}
+ 
+Bucket_count():
+Return number of buckets
+Returns the number of buckets in the unordered_map container.
+
+A bucket is a slot in the container's internal hash table to which elements are assigned based on the hash value of their key. 
+
+   cout<<mymap.bucket_count()<<endl;
+
+max_bucket_count():
+Return maximum number of buckets
+Returns the maximum number of buckets that the unordered_map container can have.
+
+Bucket_size();
+Return bucket size
+Returns the number of elements in bucket n.
+
+A bucket is a slot in the container's internal hash table to which elements are assigned based on the hash value of their key. 
+
+   unordered_map<string,int> mymap;
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+
+   int nbuckets = mymap.bucket_count();
+
+   cout<<"table has"<<nbuckets<<endl;
+
+   for(int i=0;i<nbuckets;i++)
+   {
+	   cout<<"bucket "<<i<<"has"<<mymap.bucket_size(i)<<endl;
+   }
+ 
+Buckets():
+Locate element's bucket
+Returns the bucket number where the element with key k is located. 
+   unordered_map<string,int> mymap;
+   mymap["Pavan"] = 120;
+   mymap["Rama"] = 1320;
+   mymap["Rajani"] = 10;
+
+   int nbuckets = mymap.bucket_count();
+
+   cout<<"table has"<<mymap.bucket("Pavan")<<endl;
+
+load_factor():
+Return load factor
+Returns the current load factor in the unordered_map container.
+
+max_load_factor():
+Get or set maximum load factor
+The first version (1) returns the current maximum load factor for the unordered_map container.
+The second version (2) sets z as the new maximum load factor for the unordered_map container.
+
+ALGORITHMS
+sort(startaddress, endaddress)
+ Internally this function is implemented as Quick-sort. The complexity of it is O(N*log(N)). 
+
+startaddress: the address of the first element of the array
+endaddress: the address of the next contiguous location of the last element of the array.
+So actually sort() sorts in the range of [startaddress,endaddress)
+	int a[]={7,6,25,4,3,2,1};
+	int size = sizeof(a)/sizeof(a[0]);
+
+	sort(a,a+2);   //op  6 7 25 4 3 2 1 we specify range in sort
+
+This sorts in the ascending order  iiiiiiiiiiiiiiimp
+
+How to sort in descending order? 
+sort() takes a third parameter that is used to specify the order in which elements are to be sorted. We can pass “greater()” function to sort in descending order. This function does comparison in a way that puts greater element before.
+
+#include <functional>  for this
+
+How to sort in particular order?
+// A C++ program to demonstrate STL sort() using 
+// our own comparator 
+#include<bits/stdc++.h> 
+using namespace std; 
+  
+// An interval has start time and end time 
+struct Interval 
+{ 
+    int start, end; 
+}; 
+  
+// Compares two intervals according to staring times. 
+bool compareInterval(Interval i1, Interval i2) 
+{ 
+    return (i1.start < i2.start); 
+} 
+  
+int main() 
+{ 
+    Interval arr[] =  { {6,8}, {1,9}, {2,4}, {4,7} }; 
+    int n = sizeof(arr)/sizeof(arr[0]); 
+  
+    // sort the intervals in increasing order of 
+    // start time 
+    sort(arr, arr+n, compareInterval); 
+  
+    cout << "Intervals sorted by start time : \n"; 
+    for (int i=0; i<n; i++) 
+       cout << "[" << arr[i].start << "," << arr[i].end 
+            << "] "; 
+  
+    return 0; 
+} 
+Output:
+Intervals sorted by start time : 
+[1,9] [2,4] [4,7] [6,8] 
+
+
+
