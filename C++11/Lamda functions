@@ -1,0 +1,66 @@
+/*
+What is a Lambda Function?
+
+Lambda functions are a kind of anonymous functions in C++. These are mainly used as callbacks in C++. Lambda function is like a normal function i.e.
+
+You can pass arguments to it
+It can return the result
+But it doesn’t have any name. Its mainly used when we have to create very small functions to pass as a callback to an another API
+*/
+
+1.print vector ele using lambda function.
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main()
+{
+    vector<int> vec = {1,2,3,4,5};
+    std::for_each(vec.begin(),vec.end(),[](const int &ele){
+        cout<<ele<<" ";
+    });
+    cout<<endl;
+}
+/*
+Here,
+[] is used to pass the outer scope elements
+(int x) shows argument x is passed
+*/
+
+2.How to pass outer scope elements inside lambda functions.
+
+Case 1: Using [=]
+
+    [=](int &x) {
+        // All outer scope elements has been passed by value
+    }
+Case 2: Using [&]
+
+    [&](int &x) {
+        // All outer scope elements has been passed by reference
+    }
+    
+    vector<int> vec = {1,2,3,4,5};
+    int var = 10;
+    
+    std::for_each(vec.begin(),vec.end(),[&](const int &ele){
+        cout<<ele<<" ";
+        var = 20;//passed as reference//can be modified
+    });
+    cout<<"var is "<<var<<endl; //20
+    
+    int main()
+{
+    vector<int> vec = {1,2,3,4,5};
+    int var = 10;
+    int var2 = 90;
+    
+    std::for_each(vec.begin(),vec.end(),[&var,var2](const int &ele){
+        cout<<ele<<" ";
+        var = 20;//passed as reference//can be modified
+        var2 = 0; //passed by value cannot modify
+    });
+    cout<<"var is "<<var<<endl; //20
+}
+
+3. Capturing Local Variables by value inside Lambda Function
