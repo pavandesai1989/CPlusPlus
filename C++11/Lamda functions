@@ -8,6 +8,50 @@ It can return the result
 But it doesn’t have any name. Its mainly used when we have to create very small functions to pass as a callback to an another API
 */
 
+/********** creating lambda functions ***************/
+int main()
+{
+    //create lambda function. You have not called it. So it wont print anything
+    [](){
+        cout<<"hello world"<<endl;
+    };
+}
+
+******calling lambda functions:**********
+int main()
+{
+    //create lambda function. You have not called it. So it wont print anything
+    [](){
+        cout<<"hello world"<<endl;   //op is hello world
+    }();
+}
+
+****lambda function can return a value .Syntax to specify the return type is as follow.********
+    int retvalue =  []()->int{
+        return 100;
+    }();
+    
+    cout<<retvalue<<endl;
+*******std::function*******************
+std::function Constructs a function object:
+
+std::function<int(int, int)> sumFunc;   // returns int and takes 2 int as input.
+example addition of 2 nums.
+
+#include<iostream>
+#include<vector>
+#include<functional>
+using namespace std;
+
+int main()
+{
+    std::function<int(int,int)> fp = [](int x,int y)->int{
+        return x+y;
+    };
+    
+    cout<<"sum is "<<fp(2,3)<<endl;
+}
+*****************
 1.print vector ele using lambda function.
 #include<iostream>
 #include<vector>
@@ -64,3 +108,17 @@ Case 2: Using [&]
 }
 
 3. Capturing Local Variables by value inside Lambda Function
+
+
+
+
+
+
+
+
+
+
+
+
+
+
