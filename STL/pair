@@ -1,0 +1,38 @@
+Pair is used to combine together two values that may be different in type. Pair provides a way to store two heterogeneous objects as a 
+single unit.
+The pair container is a simple container defined in <utility> header consisting of two data elements or objects
+The first element is referenced as ‘first’ and the second element as ‘second’ and the order is fixed (first, second).
+NOTE: If not initialized, the first value of the pair gets automatically initialized. 
+
+int main()
+{
+    pair<string,int> p1;
+    p1.first = "pavan";
+    p1.second = 24;
+    
+    pair<string,int> p2{"raj",24};
+    pair<string,int> p3 = {"rajth",27};
+    
+    pair<int,int> p4(3,4);
+    
+    //use below
+    pair<int,int> p = make_pair(3,56);
+    
+    cout<<p1.first<<" "<<p1.second<<endl;
+}
+
+/******** tie function********/
+int main()
+{
+    pair<int, int> pair1 = { 1, 2 };
+    int a, b;
+    //get the values in to var
+    tie(a, b) = pair1;
+    cout << a << " " << b << "\n";
+    
+    pair<int, int> pair2 = { 3, 4 };
+    tie(a, ignore) = pair2;  //ignore wont unpack the value of b
+}
+
+
+
