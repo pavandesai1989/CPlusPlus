@@ -1,0 +1,27 @@
+*********1. sort : Sorts the elements in the range [first, last) in non-descending order.Default sort is in increasing order.
+int main()
+{
+    vector<int> vec = {0,34,1,2,8,4,56,34};
+    sort(vec.begin(),vec.end());   //default comparator used is std::less<int>()
+    
+    for(auto ele:vec)
+        cout<<ele<<" ";
+    cout<<endl;
+}
+//output is 0 1 2 4 8 34 34 56 
+****** how to sort in the decreasing order********
+
+ sort(vec.begin(),vec.end(),std::greater<int>());
+ //ouput is 56 34 34 8 4 2 1 0 
+ 
+****** The time complexity of std::sort() is:*****
+1. Best Case – O(N log N)
+2. Average Case – O(N log N)
+3. Worst Case – O(N log N)
+
+****we can write our own comparator function to sort in particular order******
+
+**********2.std::reverse*****
+ std::reverse(vec.begin(),vec.end());//reverse the array
+ 
+ *********3.
