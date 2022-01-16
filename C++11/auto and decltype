@@ -1,0 +1,44 @@
+/*
+Use auto and decltype to declare a template function whose return type depends on the types of its template arguments.
+use auto and decltype to declare a template function that wraps a call to another function, and then returns the return type of the wrapped function.
+
+
+
+
+
+*/
+
+**********exmaple 
+template<typename T1,typename T2>
+auto addition(T1 a,T2 b)->decltype(a+b)
+{
+    return a + b;
+}
+
+int main()
+{
+    cout<<addition<int,int>(1,2)<<endl;
+    cout<<addition<double,int>(3.4,1)<<endl;
+}
+*****************
+template<typename T1,typename T2>
+auto addition(T1 a,T2 b)->decltype(a+b)
+{
+    return a + b;
+}
+
+int main()
+{
+    // Data type of x is same as return type of fun1()
+    // and type of y is same as return type of fun2()
+    
+    decltype(addition<int,int>(1,2)) x;
+    decltype(addition<double,int>(3.4,1)) y;
+    
+    cout << typeid(x).name() << endl;
+    cout << typeid(y).name() << endl;
+    
+}
+
+**************
+
