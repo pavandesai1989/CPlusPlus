@@ -85,6 +85,63 @@ std::unique_ptr<Task> taskPtr(new Task(23));
 We can not create a unique_ptr<> object through assignment, otherwise it will cause compile error
 // std::unique_ptr<Task> taskPtr2 = new Task(); // Compile Error
 
+******* move***
+We cannot copy a unique_ptr object, but we can move them. It means a unique_ptr object can transfer the owner ship of associated raw pointer to another 
+unique_ptr object.
+
+int main()
+{
+    std::unique_ptr<foo> sp1(new foo(10));
+    cout<<"sp1 address "<<sp1.get()<<endl;
+    cout<<"sp1 has "<<sp1->get()<<endl;
+    
+    // p1 = p2;  //cannot copy unique ptr
+    
+    //transfer owner from p1 to p3.now p3 will have what p1 had
+    std::unique_ptr<foo> sp2= std::move(sp1);
+    //sp1 will be NULL
+    cout<<"sp2 address "<<sp2.get()<<endl;
+    cout<<"Sp2 has "<<sp2->get()<<endl;
+    if(!sp1)
+        cout<<"sp1 empty"<<endl;
+    
+}
+******* get*******
+get will the managed object
+
+    std::unique_ptr<foo> sp1(new foo(10));
+    cout<<"sp1 is "<<sp1<<endl;
+    //get the managed object
+    foo* p1 = sp1.get();
+    cout<<"p1 is "<<p1<<endl;
+    
+/******* release********
+    std::unique_ptr<foo> sp1(new foo(10));
+    
+   /*Calling release() on unique_ptr object will release the ownership
+     of associated raw pointer from the object.
+      It returns the raw pointer*/
+    
+    foo* P = sp1.release();
+    
+    if(!sp1)
+        cout<<"NULL"<<endl;
+        
+  /******* reset***      
+  
+  Calling reset() function on a unique_ptr<> object will reset it i.e. it will delete the associated raw pointer 
+  and make unique_ptr<> object empty i.e.
+  
+      std::unique_ptr<foo> sp1(new foo(10));
+
+    sp1.reset();
+    
+    if(!sp1)  cout<<"NULL"<<endl;
+    
+    
+  
+  
+
 
  
   
