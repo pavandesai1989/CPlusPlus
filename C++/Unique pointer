@@ -1,0 +1,196 @@
+A Smart Pointer is a wrapper class over a pointer with an operator like * and -> overloaded. The objects of the smart pointer 
+class look like normal pointers. But, unlike Normal Pointers it can deallocate and free destroyed object memory.
+
+The idea is to take a class with a pointer, destructor and overloaded operators like * and ->. Since the destructor is automatically called when an 
+object goes out of scope, the dynamically allocated memory would automatically be deleted (or reference count can be decremented).
+
+
+
+#include <iostream>
+using namespace std;
+
+// A generic smart pointer class
+template <class T>
+class SmartPtr {
+	T* ptr; // Actual pointer
+public:
+	// Constructor
+	explicit SmartPtr(T* p = NULL) { ptr = p; }
+
+	// Destructor
+	~SmartPtr() { delete (ptr); }
+
+	// Overloading dereferencing operator
+	T& operator*() { return *ptr; }
+
+	// Overloading arrow operator so that
+	// members of T can be accessed
+	// like a pointer (useful if T represents
+	// a class or struct or union type)
+	T* operator->() { return ptr; }
+};
+
+int main()
+{
+	SmartPtr<int> ptr(new int());
+	*ptr = 20;
+	cout << *ptr;
+	return 0;
+}
+
+
+*********Unique Pointer*******
+VVVIMP When exception comes then also it will de-allocate the memory hence no memory leak.
+1 pointer and 1 ownership
+
+#include <iostream>
+#include<memory>
+using namespace std;
+
+int main()
+{
+    //Bad practice of creating unique ptr 
+    /*int* p1 = new int(12);
+    int* p2 = new int(34);
+
+    unique_ptr<int> sp1(p1);
+    unique_ptr<int> sp2(p1);*/
+
+    //prefer below 
+    unique_ptr<int> sp3(new int(34));  //its not exception safe 
+    unique_ptr<int> sp4 = make_unique<int> (12); //exception safe prefer this way 
+
+    //copy not allowed 
+   // sp3 = sp4 ; //fail 
+
+   //you can transfer the ownership 
+   unique_ptr<int> sp5 = std::move(sp3); // now sp5 will point to 34 and sp3 will be empty 
+   if(!sp3)
+      cout<<"sp3 is empty"<<endl;
+
+    //get will give you the managed object 
+    int* ptr = sp5.get(); 
+    cout<<*ptr<<endl;   //34
+
+    //release will release the ownership of obj and return underlying obj
+    int* p = sp5.release();
+    cout<<*p<<endl;
+
+    if(!sp5)
+       cout<<"sp5 is null"<<endl;
+
+    //Calling reset() function on a unique_ptr<> object will reset it i.e. it will delete the associated raw pointer and make unique_ptr<> object empty i.e.
+       
+
+
+    return 0;
+}
+
+
+
+
+
+Implement Unique Pointer
+
+
+    template<typename T>
+class uniqueptr
+{
+    private:
+    T* ptr;
+    
+    public:
+      explicit uniqueptr(T *p):ptr(p)
+      {
+           cout<<"Explicit constructor called "<<endl;
+      }
+      
+      uniqueptr(std::nullptr_t p):ptr(p)
+      {
+            cout<<"Nullptr constructor called "<<endl;
+      }
+      ~uniqueptr()
+      {
+        cout<<"uniqueptr destroyed "<<endl;
+        delete ptr;
+      }
+      void display()
+      {
+          cout<<"display function "<<*ptr<<endl;
+      }
+      
+      //operator overloading
+      T& operator*()const 
+      {
+        cout<<"overloaded * operator"<<endl;
+        return *ptr;
+      }
+      T* operator->()const
+      { 
+          return ptr;
+      }
+      operator bool() const
+      { 
+        cout<<"bool overloaded "<<endl;
+        return ptr;
+      }
+      T* release()
+      {
+        T* result = nullptr;
+        std::swap(result,ptr);
+        return result;
+      }
+      T* get()const 
+      {
+        return ptr;
+      }
+      void reset()
+      {
+      T* temp = release();
+      delete temp;
+      }
+};
+
+
+
+unique_ptr<Dog> spGunner=new Dog("Gunner");   ****NOT ALLOWED 
+Unique Ownership of unique pointer:
+A unique_ptr object is always the unique owner of associated raw pointer. We can not copy
+a unique_ptr object, its only movable.
+As each unique_ptr object is sole owner of a raw pointer, therefore in its destructor it directly
+deletes the associated pointer. There is no need of any reference counting, therefore its
+very light.
+
+unique_ptr object is not copyable
+As unique_ptr<> is not copyable, only movable. Hence we can not create copy of a
+unique_ptr object either through copy constructor or assignment operator.
+
+    //create empty unique pointer 
+    unique_ptr<foo>  sp;   //now it has an assciated raw pointer 
+
+    //create with value 
+    unique_ptr<foo> sp(new int(45));  ******NOT EXCEPTION SAFE 
+    unique_ptr<int> sp = make_unique<foo> (2);  *** EXCEPTION SAFE 
+    sp.reset();  //delete the raw pointer and unique ptr will be empty 
+    if(!sp)
+      cout<<"empty pointer"<<endl;
+      
+      Transfering the ownership of unique_ptr object:
+unique_ptr<int> ptr1(new int(25));
+unique_ptr<int> ptr2 = move(ptr1);
+ //now ptr1 is empty!!
+ 
+ 
+ Releasing the associated raw pointer:
+Calling release() on unique_ptr object will release the ownership of associated raw pointer
+from the object.
+It returns the raw pointer. 
+
+// Create a unique_ptr object through raw pointer
+std::unique_ptr<Task> taskPtr5(new Task(55));
+if(taskPtr5 != nullptr)
+    std::cout<<"taskPtr5 is not empty"<<std::endl;
+// Release the ownership of object from raw pointer
+Task * ptr = taskPtr5.release();
+if(taskPtr5 == nullptr)
+    std::cout<<"taskPtr5 is empty"<<std::endl;
