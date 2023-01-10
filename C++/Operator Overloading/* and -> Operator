@@ -1,0 +1,39 @@
+#include<iostream>
+
+using namespace std;
+
+class Num
+{
+private:
+	int m_x;
+
+public:
+	Num(int value=0):m_x(value){}
+	void display()
+	{
+		cout<<"number is "<<m_x<<endl;
+	}
+
+	Num* operator->()
+	{
+		cout<<"overloaded -> operator"<<endl;
+		return this;
+	}
+
+	Num& operator*()
+	{
+		cout<<"overloaded * operator"<<endl;
+		return *this;
+	}
+};
+
+int main()
+{
+	Num ob(10);
+
+	ob->display();
+	(*ob).display();
+
+
+	return 0;
+} 
