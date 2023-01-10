@@ -1,1 +1,46 @@
 Pointers in C are used to store the address of variables or a memory location.
+
+Opaque pointer: The following pointer is opaque. One can’t know the data contained in STest structure by looking at the definition.
+
+struct STest* pSTest;
+
+******Reference****
+      A reference variable is an alias, another name for an already present variable. As soon as a reference is initialized with a variable,
+      either the variable name or the reference name may consult the variable.
+
+
+      --------Applications------- 
+      1. Modify the passed parameters in a function:
+      2. Avoiding a copy of large structures:
+
+
+    -----Can References Refer to Invalid Location in C++?-------
+    In C++, Reference variables are safer than pointers because reference variables must be initialized and they cannot be changed to refer to
+    something else once they are initialized.
+
+    But there are exceptions where we can have invalid references.
+    1) Reference to Value at the Uninitialized Pointer
+
+          int *ptr;
+          int &ref = *ptr; // Reference to value at 
+                           // some random memory location
+
+     2) Reference to a Local Variable is Returned
+
+
+          int& fun()
+          {
+          int a = 10;
+          return a;
+          }
+    Once fun() returns, the space allocated to it on the stack frame will be taken back. So the reference to a local variable will not be valid.  
+
+
+    -------When do we pass arguments by reference or pointer?--------
+    1) To modify local variables of the caller function: 
+    2) For passing large sized arguments:
+    3) To avoid Object Slicing: If we pass an object of subclass to a function that expects an object of superclass then the passed object is sliced if it is pass by value.
+    4) To achieve Run Time Polymorphism in a function 
+
+
+
