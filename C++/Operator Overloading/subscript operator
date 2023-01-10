@@ -1,0 +1,51 @@
+class Point
+{
+        private:
+            int arr[2]; //0->x and 1-->y
+
+        public:
+        Point(int x=0,int y=0)
+        {
+            arr[0] = x;
+            arr[1] = y;
+        }
+
+        void Print()
+        {
+           cout<<"x is "<<arr[0]<<endl; cout<<"y is "<<arr[1]<<endl;
+        }
+
+        int& operator[](int pos)
+        {
+            if(pos == 0)
+                return arr[0]; 
+            else if(pos == 1)
+                return arr[1];
+            else
+            {
+                cout<<"out of bound"<<endl; 
+                exit(0);
+            }   
+        } 
+
+
+
+};
+ 
+
+
+cout<<"out of bound"<<endl; exit(0);
+ 
+
+
+int main()
+{
+Point b1(2,6);
+
+b1.Print();
+
+b1[0] = 8;
+b1.Print();
+
+return 0;
+}
