@@ -1,0 +1,33 @@
+class Marks
+{
+        private:
+        int mark;
+        
+        public:
+        Marks(int m):mark(m)
+        {
+        cout<<"constructor"<<endl;
+        }
+        void Print()
+        {
+        cout<<"mark is "<<mark<<endl;
+        }
+
+        Marks& operator()(int m)
+        {
+        cout<<"Opeartor () overloaded "<<endl; this->mark = m;
+        return *this;
+        }
+};
+
+
+int main()
+{
+Marks ob(25); ob.Print();
+
+ob(125);
+ob.Print();
+
+return 0;
+}
+
