@@ -1,0 +1,28 @@
+#include<iostream>
+using namespace std;
+class Num
+{
+private:
+int m_x;
+public:
+       Num(int value=0):m_x(value){}
+       friend istream& operator>>(istream &in,Num &ob);
+       friend ostream& operator<<(ostream &out,Num &ob);
+};
+istream& operator>>(istream &in,Num &ob)
+{
+       cout<<"cin overloaded"<<endl;
+       in>>ob.m_x;
+       return in;
+}
+ostream& operator<<(ostream &out,Num &ob)
+{
+       cout<<"cout overloaded "<<endl;
+       out<<ob.m_x;
+       return out;
+}
+int main() {
+Num ob;
+cin>>ob;
+cout<<ob;
+return 0; }
