@@ -1,0 +1,67 @@
+class Test
+{
+private:
+       int m_x;
+public:
+       Test(int value=0):m_x(value){}
+       void* operator new(size_t size)
+       {
+              cout<<"new operator overloaded "<<size<<endl;
+              void *p = malloc(size);
+              return p;
+}
+       void operator delete(void* p)
+       {
+              cout<<"delete operator overloaded "<<endl;
+free(p); }
+};
+
+
+int main() 
+{
+    Test *ptr = new Test;
+    delete ptr;
+    return 0; 
+}
+
+********Local nd global scope****
+
+class Test
+{
+    private:
+    int m_x;
+
+    public:
+    Test(int value=0):m_x(value){}
+
+    void* operator new(size_t size)
+    {
+    cout<<"LOCAL SCOPE new operator overloaded "<<size<<endl; void *p = malloc(size);
+    return p;
+    }
+
+    void operator delete(void* p)
+    {
+    cout<<"LOCAL SCOPE delete operator overloaded "<<endl; free(p);
+    }
+};
+
+void* operator new(size_t size)
+{
+cout<<"GLOBAL SCOPE new operator overloaded "<<size<<endl; void *p = malloc(size);
+return p;
+}
+ 
+void operator delete(void* p)
+{
+cout<<"GLOBAL SCOPE delete operator overloaded "<<endl; free(p);
+}
+
+
+
+int main()
+{
+Test *ptr = new Test;		//calls local scope delete ptr;	//calls local scope
+
+int *p = new int; //calls global scope delete p;	//calls global scope return 0;
+}
