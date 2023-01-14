@@ -1,0 +1,10 @@
+Initialize list and uniform initialization:
+
+Initilizer list:
+type variable = { data, elements };	//this is initialize list
+
+
+uniform initialization:
+syntax takes the following form:
+
+type variable { data, elements }; // note: no assignment operator
