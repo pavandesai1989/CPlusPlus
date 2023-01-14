@@ -1,0 +1,10 @@
+1.Deduces the type of a declared variable from its initialization expression.
+2.Auto keyword is used to explicitly define variables storage class.
+3.The auto keyword directs the compiler to use the initialization expression of a declared variable, or lambda expression parameter, 
+  to deduce its type.
+  
+  
+The auto keyword is a simple way to declare a variable that has a complicated type. For example, you can use auto to declare a variable where 
+the initialization expression involves templates, pointers to functions, or pointers to members.
+
+You can also use auto to declare and initialize a variable to a lambda expression
