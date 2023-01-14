@@ -8,3 +8,18 @@ The auto keyword is a simple way to declare a variable that has a complicated ty
 the initialization expression involves templates, pointers to functions, or pointers to members.
 
 You can also use auto to declare and initialize a variable to a lambda expression
+
+NOTE: auto keyword cannot be used as a function parameter. 
+
+int add (auto a,auto b)
+{
+int m = a+b;  //this is not allowed
+}
+
+---- Auto type deduction cannot deduce array types.
+int x[5];
+auto y[5] = x;   //error, x decays to a pointer,
+                 //which does not match the array type
+
+
+
