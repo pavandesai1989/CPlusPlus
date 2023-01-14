@@ -1,0 +1,130 @@
+Syntax:
+Auto Somevar[](int a,int b)->int{};
+
+//https://learn.microsoft.com/en-us/cpp/cpp/lambda-expressions-in-cpp?view=msvc-170 
+
+
+[=](int,int) mutable throw()->int
+{
+
+}
+capture clause (Also known as the lambda-introducer in the C++ specification.)
+
+parameter list Optional. (Also known as the lambda declarator)
+
+mutable specification Optional.
+
+exception-specification Optional.
+
+trailing-return-type Optional.
+
+lambda body.
+
+ And int are optionsl.AS compiler detects return type:
+
+SIMPLE LAMDA FUNCTION: without para auto HelloWorld = [](){cout<<"Hello wordl "<<endl;};
+
+HelloWorld();
+
+SIMPLE LAMDA WITH PARAMETER:
+auto HelloWorld = [](int a,int b){return a*b;}; cout<<HelloWorld(25,4)<<endl;
+ specifying return type
+auto HelloWorld = [](int a,int b)->int {return a*b;}; cout<<HelloWorld(5,6);
+
+#include<functional>	to use std::function vvvvvvvvvvvvimp
+
+std::function<int(int,int)> fp = [](const int&x,const int&y)->int{return x+y;}; cout<<fp(5,6);
+
+what is used in auto keyword??????? While using lambda:
+
+function<int(int)> fp = [](int x){return x+100;}; cout<<"value is "<<fp(150)<<endl;
+USING LAMDA INSIDE CLASS MEMBER FUNCTION:
+#include<iostream> #include<vector> #include<algorithm> #include<functional> using namespace std;
+
+//using lamda inside class function class A
+ 
+{
+int a; int b;
+
+ 
+public:
+A()
+{
+
+
+}
+ 
+
+
+
+a = 10;
+b = 20;
+ 
+
+int sum()
+{
+return [this]()
+{
+return this->a+this->b;
+}();
+}
+};
+
+int main()
+{
+A ob;
+
+cout<<ob.sum()<<endl; return 0;
+}
+
+
+
+
+CAPTURE LIST:
+BY default we cant use outside variables inside the body of lambda.
+For making use of the vars we can use capture list.
+
+int i = 10;
+
+auto HelloWorld = [](int a,int b)->int {return a*b + i;};
+//compiler error as we cant use i var of main inside lambda
+
+
+Just pass this I in the capture list as follow:
+This way of passing is pass by value and you cant change the value passed inside the lambda.
+
+int i = 10;
+auto HelloWorld = [i](int a,int b)->int {return a + b + i;};
+pass by ref to change value inside lamda as follow:
+int i = 10;
+
+auto HelloWorld = [&i](int a,int b)->int{ i = 25;return a+b;};
+
+
+cout<<HelloWorld(100,200)<<endl;
+cout<<"i after modi inside lambda"<<i<<endl; [=] :Pass all vars used in the capture list by value
+ 
+auto HelloWorld = [=](int a,int b)->int{ return a+b;};
+
+[&] : Pass all the vars used in the capture list by reference auto HelloWorld = [&](int a,int b)->int{ return a+b;};
+
+[&,i] ===== capture I by value and rest all vars by reference. [=,&i] ===== capture I by ref and rest all vars by value.
+PRCATICAL EXAMPLE OF LAMDA
+vector<int> vec; double total = 0;
+
+vec.push_back(1); vec.push_back(2); vec.push_back(3); vec.push_back(4);
+
+for_each(vec.begin(),vec.end(),[&](int x){total+=x;}); cout<<"sum is "<<total<<endl;
+lambdas
+
+lambda’s. ()	is const by-default, meaning it can’t modify the variables it
+captured by-value (which are analogous to class members). To change this default add mutable: A mutable lambda expression is allowed to change the variables that are captured by value
+
+
+int i=10;
+
+std::function<int(void)> fp = [i]()mutable{i+=5;return i;}; cout<<fp()<<endl;	//output 15
+int i=10;
+
+std::function<int(void)> fp = [i]()mutable{i+=5;return i;}; cout<<fp()<<endl;	//output 15
+
