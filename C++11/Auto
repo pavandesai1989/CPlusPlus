@@ -1,25 +1,29 @@
-1.Deduces the type of a declared variable from its initialization expression.
-2.Auto keyword is used to explicitly define variables storage class.
-3.The auto keyword directs the compiler to use the initialization expression of a declared variable, or lambda expression parameter, 
-  to deduce its type.
-  
-  
-The auto keyword is a simple way to declare a variable that has a complicated type. For example, you can use auto to declare a variable where 
-the initialization expression involves templates, pointers to functions, or pointers to members.
+auto-typed variables are deduced by the compiler according to the type of their initializer.
 
-You can also use auto to declare and initialize a variable to a lambda expression
+auto a = 3.14; // double
+auto b = 1; // int
+auto& c = b; // int&
+auto d = { 0 }; // std::initializer_list<int>
+auto&& e = 1; // int&&
+auto&& f = b; // int&
+auto g = new auto(123); // int*
+const auto h = 1; // const int
+auto i = 1, j = 2, k = 3; // int, int, int
+auto l = 1, m = true, n = 1.61; // error -- `l` deduced to be int, `m` is bool
+auto o; // error -- `o` requires initializer
+Extremely useful for readability, especially for complicated types:
 
-NOTE: auto keyword cannot be used as a function parameter. 
+std::vector<int> v = ...;
+std::vector<int>::const_iterator cit = v.cbegin();
+// vs.
+auto cit = v.cbegin();
+Functions can also deduce the return type using auto. In C++11, a return type must be specified either explicitly, or using decltype like so:
 
-int add (auto a,auto b)
-{
-int m = a+b;  //this is not allowed
+template <typename X, typename Y>
+auto add(X x, Y y) -> decltype(x + y) {
+  return x + y;
 }
-
----- Auto type deduction cannot deduce array types.
-int x[5];
-auto y[5] = x;   //error, x decays to a pointer,
-                 //which does not match the array type
-
-
-
+add(1, 2); // == 3
+add(1, 2.0); // == 3.0
+add(1.5, 1.5); // == 3.0
+The trailing return type in the above example is the declared type (see section on decltype) of the expression x + y. For example, if x is an integer and y is a double, decltype(x + y) is a double. Therefore, the above function will deduce the type depending on what type the expression x + y yields. Notice that the trailing return type has access to its parameters, and this when appropriate.
