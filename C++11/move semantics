@@ -1,0 +1,54 @@
+problems with the temporary objects 
+#include<iostream> 
+#include<vector>
+
+static int x;
+
+using namespace std; 
+class container
+{
+    private:
+        int* m_ptr;
+
+    public:
+       container()
+       {
+           x++;
+           m_ptr = new int[100];
+           cout<<"dafult con "<<x<<endl;
+       }
+       ~container()
+       {
+           if(m_ptr)
+           {
+               delete[]m_ptr;
+               m_ptr=nullptr;
+           }
+       }
+       container(const container &ob)
+       {
+           x++;
+           m_ptr = new int[100];
+
+           for(int i=0;i<100;i++)
+           {
+               m_ptr[i] = ob.m_ptr[i];
+           }
+           cout<<"copy con "<<x<<endl;
+       }
+};
+
+    container getcontainer()
+    {
+        container obj; 
+        return obj;
+    }
+ 
+int main()
+{
+    vector<container> vectorOfContainers; 
+    vectorOfContainers.push_back(getcontainer());
+    return 0;
+}
+
+*********Use of move semantics****
