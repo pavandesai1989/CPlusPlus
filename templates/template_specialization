@@ -1,0 +1,65 @@
+#include <iostream>
+using namespace std;
+
+template<typename T>
+void display(T a)
+{
+   cout<<"display template"<<" "<<a<<endl;
+}
+
+
+template<>
+void display(string str)
+{
+    cout<<"specialization"<<" "<<str<<endl;
+}
+
+
+int main()
+{
+    display<int>(3);
+
+    display<string>("rty");
+
+    return 0;
+}
+
+************ class specialization***
+#include <iostream>
+#include<string>
+using namespace std;
+
+template<typename T>
+class test1
+{
+    private:
+       T a;
+
+    public:
+       test1()
+       {
+           cout<<"Class T"<<endl;
+       }   
+};
+
+template<>
+class test1<int>
+{
+    public:
+       test1()
+       {
+           cout<<"spe class"<<endl;
+       }   
+};
+
+
+
+int main()
+{
+    test1<string> ob1;
+
+    test1<int> ob2;
+
+    return 0;
+}
+
