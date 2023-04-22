@@ -1,0 +1,89 @@
+#include <iostream>
+#include<string>
+using namespace std;
+
+class memblock
+{
+     private:
+         int m_size;
+         int* m_ptr;
+
+     public:
+        memblock(int len):m_size(len),m_ptr(new int[m_size])
+        {
+            cout<<"para con"<<endl;
+        }   
+        ~memblock()
+        {
+            cout<<"destroy"<<endl;
+            delete[]m_ptr;
+            m_ptr = nullptr;
+        }
+        memblock(const memblock& ob)
+                     :m_size(ob.m_size),m_ptr(new int[m_size])
+        {
+            cout<<"copy constructor"<<endl;
+            copy(ob.m_ptr,ob.m_ptr+m_size,m_ptr);
+        }
+        memblock& operator=(const memblock& ob)
+        {
+            cout<<"copy assignment"<<endl;
+            if(this == &ob)
+                return *this;
+
+            delete[]m_ptr;
+            m_ptr = nullptr;
+            m_size=ob.m_size;
+            m_ptr=new int[ob.m_size];
+            copy(ob.m_ptr,ob.m_ptr+m_size,m_ptr);
+
+            return *this;    
+        }
+
+        memblock(memblock&& ob)
+                :m_size(0),m_ptr(nullptr)
+        {
+            cout<<"move con"<<endl;
+              m_size=ob.m_size;
+              m_ptr=ob.m_ptr;
+
+              ob.m_size=0;
+              ob.m_ptr=nullptr;
+        }
+
+        memblock& operator=(memblock&& ob)
+        {
+            cout<<"move assig"<<endl;
+             if(&ob == this)
+                 return *this;
+
+              delete[]m_ptr;
+              m_ptr = nullptr;
+              m_size=0;
+
+              m_ptr = ob.m_ptr;
+              m_size = ob.m_size;
+
+              ob.m_ptr = nullptr;
+              ob.m_size = 0;
+
+              return *this;   
+        };
+        int getlength()const
+        {
+            return m_size;
+        }
+                   
+};
+
+
+
+int main()
+{
+    memblock ob1(2);
+
+    memblock ob2(2);
+    ob2 = move(ob1);
+
+    return 0;
+}
