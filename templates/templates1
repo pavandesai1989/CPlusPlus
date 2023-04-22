@@ -1,0 +1,24 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+template<typename T>
+void  add(T a)
+{
+    cout<<"template version"<<" "<<a<<endl;
+}
+
+template<>
+void  add(string str)
+{
+    cout<<"string version"<<" "<<str<<endl;
+}
+
+int main()
+{
+    add<int>(2);
+
+    add<string>("pavan");
+
+    return 0;
+}
