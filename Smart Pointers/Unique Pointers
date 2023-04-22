@@ -6,6 +6,73 @@
 4. When exception comes then also it will de-allocate the memory hence no memory leak.
 5. Not only object we can create array of objects of unique_ptr.
 
+***********IMPLEMENT OWN UNIQUE POINTER*******
+#include <iostream>
+using namespace std;
+
+template<typename T>
+class uniqueptr
+{
+   public:
+       T* m_ptr;
+
+   public:
+       uniqueptr(T* ptr=nullptr):m_ptr(ptr){
+
+       }  
+       ~uniqueptr()
+       {
+           delete m_ptr;
+           m_ptr=nullptr;
+       }
+
+       //delete copy
+       uniqueptr<T>(const uniqueptr<T>& ob) = delete;
+       uniqueptr<T>& operator=(const uniqueptr<T>& ob) = delete;
+
+       T& operator*()
+       {
+           return *m_ptr;
+       }
+
+       T* operator->()
+       {
+           return m_ptr;
+       }
+       friend ostream& operator<<(ostream& ob,const uniqueptr<T>& ob);
+
+};
+
+std::ostream& operator<< (std::ostream& stream, const Bar& bar)
+ostream& operator<<(ostream& ob,uniqueptr<T>& ob)
+{
+    cout<<"overloading the ostream"<<endl;
+    ob<<*m_ptr;
+    return ob;
+}
+
+class demo
+{
+    public:
+       void display()
+       {
+           cout<<" calling the display of demo class"<<endl;
+       }
+       
+
+};
+
+
+
+
+int main() 
+{
+    uniqueptr<demo> sp(new demo);
+
+    cout<<*sp<<endl;
+}
+
+
 *******msdn link for good points******
 https://docs.microsoft.com/en-us/cpp/cpp/how-to-create-and-use-unique-ptr-instances?view=msvc-170
 
