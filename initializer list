@@ -1,0 +1,49 @@
+#include <iostream>
+#include<string>
+using namespace std;
+
+class example
+{
+   public:
+      example()
+      {
+          cout<<"default "<<endl;
+      }
+      example(int a)
+      {
+          cout<<"para"<<endl;
+      }
+      ~example()
+      {
+          cout<<"destroy"<<endl;
+      }
+      example(const example& ob)
+      {
+          cout<<"copy"<<endl;
+      }
+      example& operator=(const example& ob)
+      {
+          cout<<"assign"<<endl;
+          return *this;
+      }
+};
+
+
+class entity
+{
+   private:
+      example m_ob;
+
+   public:
+       entity():m_ob(3)
+       {
+           //m_ob = example(3);
+       }   
+};
+
+int main()
+{
+    entity ob;
+
+    return 0;
+}
