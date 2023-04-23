@@ -1,0 +1,62 @@
+*******passing data to thread by ref*****
+#include<iostream>
+#include<string>
+#include<thread>
+
+using namespace std;
+
+void foo(string &str)
+{
+    str="pavan";
+}
+
+int main()
+{
+    string str("shrutu");
+	thread t(foo,ref(str));
+    t.join();
+
+    cout<<str<<endl;
+	return 0;	
+}
+
+
+***********ways to create thread****
+1. using function pointer 
+#include<iostream>
+#include<string>
+#include<thread>
+
+using namespace std;
+
+void foo(int x)
+{
+    cout<<"in foo"<<endl;
+}
+
+int main()
+{
+    int y = 10;
+	thread t(foo,y);
+    t.join();
+    return 0;	
+}
+
+2.Lamda Function
+#include<iostream>
+#include<string>
+#include<thread>
+
+using namespace std;
+
+
+
+int main()
+{
+    auto fptr = [](){cout<<"calling the Lambda function";};
+	thread t(fptr);
+    t.join();
+    return 0;	
+}
+
+3. using functor
