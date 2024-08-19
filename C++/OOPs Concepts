@@ -1,0 +1,18 @@
+Object-Oriented Programming (OOP) is a paradigm in programming that uses "objects" to design software. Here are some basic concepts that serve as the building blocks of OOP:
+
+Class: A class is a blueprint or template for creating objects. It defines a set of attributes (data) and methods (functions) that the objects created from the class can use.
+
+Object: An object is an instance of a class. It is a self-contained entity that consists of both data and methods. Objects are the actual entities that interact when the program runs.
+
+Encapsulation: Encapsulation is the concept of bundling the data (attributes) and the methods (functions) that operate on the data into a single unit, called a class. It also involves restricting direct access to some of the object's components, which is a way of hiding the internal representation of the object. This is often done through access modifiers like private, protected, and public.
+
+Inheritance: Inheritance allows a new class (child or subclass) to inherit the properties and behavior of an existing class (parent or superclass). This promotes code reusability and establishes a natural hierarchy between classes.
+
+Polymorphism: Polymorphism allows objects of different classes to be treated as objects of a common super class. It also allows the same method to behave differently based on the object that is invoking it. Polymorphism can be achieved through method overriding and method overloading.
+
+Abstraction: Abstraction is the concept of hiding the complex implementation details and showing only the essential features of the object. It helps in reducing the complexity of the code and increases readability and maintainability.
+
+Method Overloading: This is a feature that allows a class to have more than one method having the same name but different parameters (different type, number, or both). It is a form of compile-time polymorphism.
+
+Method Overriding: This occurs when a subclass provides a specific implementation of a method that is already defined in its superclass. The method in the subclass should have the same name, return type, and parameters as in the superclass. This is a form of runtime polymorphism.
+
