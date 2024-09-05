@@ -1,0 +1,244 @@
+#include <iostream>
+#include <stdexcept> // For throwing exceptions
+
+template <typename T>
+class Stack {
+private:
+    T* arr;          // Array to store stack elements
+    int capacity;    // Maximum capacity of the stack
+    int top;         // Index of the top element
+
+public:
+    // Constructor to initialize the stack with a given size
+    Stack(int size) {
+        arr = new T[size];
+        capacity = size;
+        top = -1;  // Top is initialized to -1, indicating an empty stack
+    }
+
+    // Destructor to free memory
+    ~Stack() {
+        delete[] arr;
+    }
+
+    // Push an element onto the stack
+    void push(const T& element) {
+        if (isFull()) {
+            throw std::overflow_error("Stack overflow: Cannot push onto a full stack");
+        }
+        arr[++top] = element;  // Increment top and store the element
+    }
+
+    // Pop an element off the stack
+    void pop() {
+        if (isEmpty()) {
+            throw std::underflow_error("Stack underflow: Cannot pop from an empty stack");
+        }
+        top--;  // Just decrement the top index
+    }
+
+    // Peek (get the top element without popping)
+    T peek() const {
+        if (isEmpty()) {
+            throw std::underflow_error("Stack is empty: Cannot peek");
+        }
+        return arr[top];  // Return the top element
+    }
+
+    // Check if the stack is empty
+    bool isEmpty() const {
+        return top == -1;
+    }
+
+    // Check if the stack is full
+    bool isFull() const {
+        return top == capacity - 1;
+    }
+
+    // Return the number of elements in the stack
+    int size() const {
+        return top + 1;
+    }
+
+    // Print the elements of the stack (for testing purposes)
+    void printStack() const {
+        if (isEmpty()) {
+            std::cout << "Stack is empty" << std::endl;
+        } else {
+            std::cout << "Stack elements: ";
+            for (int i = 0; i <= top; i++) {
+                std::cout << arr[i] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+// Example usage
+int main() {
+    Stack<int> stack(5);  // Create a stack with capacity of 5
+
+    // Push elements onto the stack
+    stack.push(10);
+    stack.push(20);
+    stack.push(30);
+
+    // Print stack
+    stack.printStack();  // Output: Stack elements: 10 20 30
+
+    // Peek the top element
+    std::cout << "Top element is: " << stack.peek() << std::endl;  // Output: 30
+
+    // Pop an element
+    stack.pop();
+    stack.printStack();  // Output: Stack elements: 10 20
+
+    // Check if the stack is empty or full
+    std::cout << "Is the stack empty? " << (stack.isEmpty() ? "Yes" : "No") << std::endl;  // Output: No
+    std::cout << "Is the stack full? " << (stack.isFull() ? "Yes" : "No") << std::endl;    // Output: No
+
+    // Push more elements
+    stack.push(40);
+    stack.push(50);
+    stack.push(60);  // Stack is now full
+    stack.printStack();  // Output: Stack elements: 10 20 40 50 60
+
+    return 0;
+}
+
+
+
+Stack elements: 10 20 30 
+Top element is: 30
+Stack elements: 10 20 
+Is the stack empty? No
+Is the stack full? No
+Stack elements: 10 20 40 50 60 
+
+
+**********VVVVVMIP*******
+modify above code to work for any container. example stack <vector<int>> 
+
+
+#include <iostream>
+#include <vector>  // For using vector as a default container
+#include <stdexcept> // For throwing exceptions
+
+// Stack class with any container
+template <typename T, typename Container = std::vector<T>>
+class Stack {
+private:
+    Container container;  // Container to hold stack elements
+
+public:
+    // Default constructor
+    Stack() = default;
+
+    // Push an element onto the stack
+    void push(const T& element) {
+        container.push_back(element);  // Uses push_back of the container
+    }
+
+    // Pop an element off the stack
+    void pop() {
+        if (isEmpty()) {
+            throw std::underflow_error("Stack underflow: Cannot pop from an empty stack");
+        }
+        container.pop_back();  // Uses pop_back of the container
+    }
+
+    // Peek (get the top element without popping)
+    T& top() {
+        if (isEmpty()) {
+            throw std::underflow_error("Stack is empty: Cannot peek");
+        }
+        return container.back();  // Uses back() of the container
+    }
+
+    // Peek (const version for read-only access)
+    const T& top() const {
+        if (isEmpty()) {
+            throw std::underflow_error("Stack is empty: Cannot peek");
+        }
+        return container.back();  // Uses back() of the container
+    }
+
+    // Check if the stack is empty
+    bool isEmpty() const {
+        return container.empty();  // Uses empty() of the container
+    }
+
+    // Return the number of elements in the stack
+    size_t size() const {
+        return container.size();  // Uses size() of the container
+    }
+
+    // Print the elements of the stack (for testing purposes)
+    void printStack() const {
+        if (isEmpty()) {
+            std::cout << "Stack is empty" << std::endl;
+        } else {
+            std::cout << "Stack elements (top to bottom): ";
+            for (auto it = container.rbegin(); it != container.rend(); ++it) {
+                std::cout << *it << " ";  // Print in reverse order (top to bottom)
+            }
+            std::cout << std::endl;
+        }
+    }
+};
+
+// Example usage
+int main() {
+    // Stack using vector<int> as the underlying container
+    Stack<int, std::vector<int>> stack1;
+    stack1.push(10);
+    stack1.push(20);
+    stack1.push(30);
+    stack1.printStack();  // Output: Stack elements (top to bottom): 30 20 10
+
+    // Peek the top element
+    std::cout << "Top element is: " << stack1.top() << std::endl;  // Output: 30
+
+    // Pop an element
+    stack1.pop();
+    stack1.printStack();  // Output: Stack elements (top to bottom): 20 10
+
+    // Stack using list<int> as the underlying container
+    Stack<int, std::list<int>> stack2;
+    stack2.push(100);
+    stack2.push(200);
+    stack2.push(300);
+    stack2.printStack();  // Output: Stack elements (top to bottom): 300 200 100
+
+    return 0;
+}
+
+
+Stack<int, std::vector<int>> stack1;
+stack1.push(10);
+stack1.push(20);
+stack1.push(30);
+stack1.printStack();  // Output: Stack elements (top to bottom): 30 20 10
+
+
+Stack<int, std::list<int>> stack2;
+stack2.push(100);
+stack2.push(200);
+stack2.push(300);
+stack2.printStack();  // Output: Stack elements (top to bottom): 300 200 100
+
+
+Key Modifications:
+Template Parameters:
+
+The class is now templated with two parameters:
+T: The type of the elements to be stored in the stack.
+Container: The type of the container used to store the stack elements (default is std::vector<T>).
+Container Operations:
+
+The class uses the container's push_back, pop_back, back, empty, and size methods.
+This ensures the class can work with any container that supports these operations, such as std::vector, std::deque, or std::list.
+Flexible Container Type:
+
+By passing the container type as a template argument, the stack can now use different underlying containers, allowing for flexibility.
+For example, you can use std::list for a doubly linked list or std::deque for efficient insertion and deletion from both ends.
