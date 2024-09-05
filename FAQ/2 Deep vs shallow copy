@@ -1,0 +1,104 @@
+#include <iostream>
+
+class Shallow {
+public:
+    int* data;
+
+    // Constructor
+    Shallow(int value) {
+        data = new int;  // Allocate memory
+        *data = value;   // Assign value
+    }
+
+    // Shallow Copy Constructor
+    Shallow(const Shallow& source) : data(source.data) {
+        std::cout << "Shallow copy constructor called\n";
+    }
+
+    // Destructor
+    ~Shallow() {
+        delete data;  // Deallocate memory
+        std::cout << "Destructor freeing data\n";
+    }
+};
+
+int main() {
+    Shallow obj1(10);       // Create first object
+    Shallow obj2 = obj1;    // Shallow copy (copies the pointer, not the actual data)
+
+    // Changing obj1's data affects obj2 because they share the same memory
+    *obj1.data = 20;
+    std::cout << "obj1's data: " << *obj1.data << std::endl;
+    std::cout << "obj2's data: " << *obj2.data << std::endl;
+
+    // Destructor will be called twice, potentially causing double deletion
+    return 0;
+}
+
+
+Shallow copy constructor called
+obj1's data: 20
+obj2's data: 20
+Destructor freeing data
+Destructor freeing data  // This leads to double deletion, undefined behavior!
+
+
+In the shallow copy example, obj1 and obj2 share the same pointer data. When obj1 changes its value, obj2 sees the same change. When both objects are destroyed, they both try to free the same memory, leading to a double deletion error, which can cause crashes or other undefined behavior.
+
+
+
+#include <iostream>
+
+class Deep {
+public:
+    int* data;
+
+    // Constructor
+    Deep(int value) {
+        data = new int;  // Allocate memory
+        *data = value;   // Assign value
+    }
+
+    // Deep Copy Constructor
+    Deep(const Deep& source) {
+        data = new int;               // Allocate new memory
+        *data = *(source.data);       // Copy the data, not the pointer
+        std::cout << "Deep copy constructor called\n";
+    }
+
+    // Destructor
+    ~Deep() {
+        delete data;  // Deallocate memory
+        std::cout << "Destructor freeing data\n";
+    }
+};
+
+int main() {
+    Deep obj1(10);       // Create first object
+    Deep obj2 = obj1;    // Deep copy (creates a new pointer and copies the data)
+
+    // Changing obj1's data does not affect obj2 because they have separate memory
+    *obj1.data = 20;
+    std::cout << "obj1's data: " << *obj1.data << std::endl;
+    std::cout << "obj2's data: " << *obj2.data << std::endl;
+
+    // Both objects will correctly delete their own memory
+    return 0;
+}
+
+
+Deep copy constructor called
+obj1's data: 20
+obj2's data: 10
+Destructor freeing data
+Destructor freeing data
+
+Key Differences:
+Shallow Copy:
+Copies only pointers, not the actual data.
+Both objects share the same data in memory.
+Can lead to issues like double deletion or unintended data changes.
+Deep Copy:
+Allocates new memory for the copied object.
+Each object has its own copy of the data.
+No risk of double deletion or unintended side effects.
