@@ -1,0 +1,184 @@
+A shared_ptr is a smart pointer in C++ that allows multiple owners of the same dynamically allocated object. The object is deleted when the last shared_ptr pointing to it goes out of scope, preventing memory leaks.
+To achieve this, the shared_ptr keeps a reference count that tracks how many pointers share ownership of the object.
+
+
+
+#include <iostream>
+#include <utility>  // For std::move
+
+template <typename T>
+class SharedPointer {
+private:
+    T* ptr;                 // Raw pointer to manage the resource
+    unsigned int* refCount; // Reference count to track ownership
+
+public:
+    // Constructor: Takes a raw pointer to manage
+    explicit SharedPointer(T* p = nullptr) : ptr(p) {
+        if (ptr) {
+            refCount = new unsigned int(1);  // Initialize reference count to 1
+        } else {
+            refCount = nullptr;
+        }
+    }
+
+    // Copy Constructor: Increases the reference count
+    SharedPointer(const SharedPointer& other) : ptr(other.ptr), refCount(other.refCount) {
+        if (refCount) {
+            ++(*refCount);  // Increase reference count
+        }
+    }
+
+    // Move Constructor: Transfers ownership and nullifies the source
+    SharedPointer(SharedPointer&& other) noexcept : ptr(other.ptr), refCount(other.refCount) {
+        other.ptr = nullptr;
+        other.refCount = nullptr;
+    }
+
+    // Copy Assignment Operator: Handle copy assignment
+    SharedPointer& operator=(const SharedPointer& other) {
+        if (this != &other) {
+            // First, decrease the reference count of the current object
+            release();
+
+            // Then, copy the new object's pointer and reference count
+            ptr = other.ptr;
+            refCount = other.refCount;
+            if (refCount) {
+                ++(*refCount);  // Increase reference count
+            }
+        }
+        return *this;
+    }
+
+    // Move Assignment Operator: Handle move assignment
+    SharedPointer& operator=(SharedPointer&& other) noexcept {
+        if (this != &other) {
+            // First, release the current object
+            release();
+
+            // Transfer ownership from the source
+            ptr = other.ptr;
+            refCount = other.refCount;
+
+            // Nullify the source
+            other.ptr = nullptr;
+            other.refCount = nullptr;
+        }
+        return *this;
+    }
+
+    // Destructor: Decrease reference count and delete if necessary
+    ~SharedPointer() {
+        release();
+    }
+
+    // Overload dereference operator (*)
+    T& operator*() const {
+        return *ptr;
+    }
+
+    // Overload arrow operator (->)
+    T* operator->() const {
+        return ptr;
+    }
+
+    // Get the current reference count
+    unsigned int use_count() const {
+        return refCount ? *refCount : 0;
+    }
+
+    // Check if the pointer is not null
+    bool isNull() const {
+        return ptr == nullptr;
+    }
+
+    // Release the current object (decrease refCount and delete if necessary)
+    void release() {
+        if (refCount) {
+            --(*refCount);  // Decrease reference count
+            if (*refCount == 0) {
+                delete ptr;         // Delete the managed object
+                delete refCount;    // Delete the reference count
+            }
+        }
+        ptr = nullptr;
+        refCount = nullptr;
+    }
+};
+
+int main() {
+    // Create a shared pointer managing a dynamically allocated integer
+    SharedPointer<int> sp1(new int(42));
+    std::cout << "sp1 use count: " << sp1.use_count() << std::endl;  // Output: 1
+
+    // Create another shared pointer by copying sp1
+    SharedPointer<int> sp2 = sp1;
+    std::cout << "sp1 use count after copy: " << sp1.use_count() << std::endl;  // Output: 2
+    std::cout << "sp2 use count: " << sp2.use_count() << std::endl;  // Output: 2
+
+    // Access the value using dereference and arrow operators
+    std::cout << "Value pointed by sp2: " << *sp2 << std::endl;  // Output: 42
+
+    // Move sp2 to sp3
+    SharedPointer<int> sp3 = std::move(sp2);
+    std::cout << "sp2 use count after move: " << sp2.use_count() << std::endl;  // Output: 0
+    std::cout << "sp3 use count: " << sp3.use_count() << std::endl;  // Output: 2
+
+    // sp1 goes out of scope here, and sp3 will clean up the resource
+    return 0;
+}
+
+
+sp1 use count: 1
+sp1 use count after copy: 2
+sp2 use count: 2
+Value pointed by sp2: 42
+sp2 use count after move: 0
+sp3 use count: 2
+
+
+Explanation of the SharedPointer Class
+Constructor:
+
+Takes a raw pointer (T* p) and initializes the reference count to 1 if the pointer is not null.
+If no pointer is provided, both ptr and refCount are set to nullptr.
+Copy Constructor:
+
+When a new SharedPointer is created from an existing one, the reference count is incremented to reflect the additional owner.
+Move Constructor:
+
+Transfers ownership from the source SharedPointer to the new one. The source is nullified to prevent double deletion.
+Copy Assignment Operator:
+
+Increases the reference count of the new pointer while decreasing the reference count of the current pointer (if it exists).
+If the reference count of the current pointer reaches zero, the resource is deleted.
+Move Assignment Operator:
+
+Releases the resource of the current object, then transfers ownership from the source, nullifying the source after the move.
+Destructor:
+
+Decreases the reference count when the SharedPointer goes out of scope. If the reference count reaches zero, it deletes the managed object and the reference count.
+Overloaded Operators:
+
+The dereference (*) and arrow (->) operators allow access to the managed object as if the SharedPointer were a raw pointer.
+use_count() Method:
+
+Returns the current reference count, indicating how many SharedPointers are managing the same object.
+isNull() Method:
+
+Checks if the SharedPointer is managing any object (i.e., whether the pointer is nullptr).
+release() Method:
+
+Decreases the reference count and deletes the managed object if the reference count drops to zero. It then nullifies the pointer and reference count.
+
+
+
+
+Key Points:
+Reference Counting: The class maintains a reference count to track how many SharedPointers are managing the same resource.
+Copy Semantics: When a SharedPointer is copied, the reference count is increased, and both SharedPointers manage the same object.
+Move Semantics: When a SharedPointer is moved, ownership is transferred, and the source pointer is nullified.
+Automatic Cleanup: The managed object is deleted when the last SharedPointer pointing to it is destroyed.
+Thread Safety: This implementation is not thread-safe. In a multi-threaded environment, you would need to use atomic operations to ensure safe manipulation of the reference count.
+This custom SharedPointer class demonstrates the core principles behind std::shared_ptr.
