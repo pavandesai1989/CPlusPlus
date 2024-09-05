@@ -1,0 +1,196 @@
+In C++, weak_ptr is used to prevent cyclic references (or reference cycles) in situations where shared_ptr objects refer to each other. weak_ptr is a non-owning smart pointer that provides a way to reference an object managed by shared_ptr without increasing the reference count.
+
+Problem: Cyclic References with shared_ptr
+If two or more objects hold shared_ptr references to each other, they will never be deallocated because their reference counts will never drop to zero. This leads to a memory leak.
+
+Example of Cyclic References (without weak_ptr)
+Let’s consider two classes, A and B, which reference each other through shared_ptr. This leads to a reference cycle and a memory leak.
+
+#include <iostream>
+#include <memory>
+
+class B;  // Forward declaration
+
+class A {
+public:
+    std::shared_ptr<B> ptrB;  // A holds a shared pointer to B
+    ~A() { std::cout << "A destroyed" << std::endl; }
+};
+
+class B {
+public:
+    std::shared_ptr<A> ptrA;  // B holds a shared pointer to A
+    ~B() { std::cout << "B destroyed" << std::endl; }
+};
+
+int main() {
+    std::shared_ptr<A> a(new A());
+    std::shared_ptr<B> b(new B());
+
+    // Creating a cyclic reference
+    a->ptrB = b;
+    b->ptrA = a;
+
+    // Both a and b will never be deallocated because their reference counts never drop to zero
+    return 0;
+}
+
+
+(no output)
+
+
+In this example:
+
+A holds a shared_ptr to B, and B holds a shared_ptr to A.
+This creates a cycle because each object has a reference to the other.
+The destructors for A and B are never called because the reference count of both a and b will never reach zero, resulting in a memory leak.
+
+
+Solution: Using weak_ptr
+To break the cyclic reference, one of the shared_ptrs must be replaced with a weak_ptr. weak_ptr is a non-owning pointer, meaning it doesn't contribute to the reference count. Thus, it allows the objects to be deallocated when no shared_ptr holds the object.
+
+Here’s how to modify the previous example to use weak_ptr:
+
+
+#include <iostream>
+#include <memory>
+
+class B;  // Forward declaration
+
+class A {
+public:
+    std::weak_ptr<B> ptrB;  // A holds a weak pointer to B to prevent cyclic reference
+    ~A() { std::cout << "A destroyed" << std::endl; }
+};
+
+class B {
+public:
+    std::shared_ptr<A> ptrA;  // B holds a shared pointer to A
+    ~B() { std::cout << "B destroyed" << std::endl; }
+};
+
+int main() {
+    std::shared_ptr<A> a(new A());
+    std::shared_ptr<B> b(new B());
+
+    // Preventing cyclic reference by using weak_ptr in class A
+    a->ptrB = b;
+    b->ptrA = a;
+
+    // Both objects will be properly deallocated
+    return 0;
+}
+
+
+B destroyed
+A destroyed
+
+
+
+Explanation of the Corrected Code:
+Weak Reference (weak_ptr):
+In class A, ptrB is now a std::weak_ptr<B> instead of a std::shared_ptr<B>. This prevents a cyclic reference because weak_ptr doesn’t increment the reference count.
+This allows the shared_ptr to be properly deallocated when there are no more owning shared_ptrs.
+Object Destruction:
+Since there’s no cyclic reference, the reference counts of a and b drop to zero when the program exits, allowing their destructors to be called and the memory to be freed.
+How weak_ptr Works:
+weak_ptr is used to observe an object managed by a shared_ptr without claiming ownership.
+It does not increase the reference count, so it can safely be used to break circular references.
+To access the object managed by a shared_ptr through a weak_ptr, you need to convert the weak_ptr to a shared_ptr using the lock() function.
+
+
+
+
+if (auto sptr = weak_ptr.lock()) {
+    // Successfully acquired a shared_ptr from weak_ptr
+    // sptr is a shared_ptr, and you can safely use it
+} else {
+    // The object no longer exists
+}
+
+
+
+When to Use weak_ptr:
+Breaking Cyclic References: As seen in the example, weak_ptr is essential when objects can reference each other, to prevent memory leaks due to cyclic dependencies.
+
+Non-Ownership Observers: Use weak_ptr when you want a reference to an object, but you don’t want to claim ownership or prevent the object from being destroyed.
+
+Cache-like Structures: weak_ptr can be used in cache systems where the lifetime of cached objects is managed by multiple entities. You can observe the objects without preventing their deallocation when no longer needed.
+
+
+
+
+#include <iostream>
+#include <memory>
+#include <vector>
+
+class Subject;
+
+class Observer {
+public:
+    virtual void update() = 0;
+    virtual ~Observer() { std::cout << "Observer destroyed" << std::endl; }
+};
+
+class ConcreteObserver : public Observer {
+public:
+    void update() override {
+        std::cout << "Observer updated" << std::endl;
+    }
+};
+
+class Subject {
+public:
+    void addObserver(std::shared_ptr<Observer> obs) {
+        observers.push_back(obs);
+    }
+
+    void notifyObservers() {
+        for (auto it = observers.begin(); it != observers.end();) {
+            if (auto obs = it->lock()) {  // Check if the observer is still valid
+                obs->update();
+                ++it;
+            } else {
+                // The observer was destroyed, remove it from the list
+                it = observers.erase(it);
+            }
+        }
+    }
+
+    ~Subject() { std::cout << "Subject destroyed" << std::endl; }
+
+private:
+    std::vector<std::weak_ptr<Observer>> observers;  // Use weak_ptr to prevent cyclic references
+};
+
+int main() {
+    std::shared_ptr<Subject> subject = std::make_shared<Subject>();
+    {
+        std::shared_ptr<Observer> observer1 = std::make_shared<ConcreteObserver>();
+        std::shared_ptr<Observer> observer2 = std::make_shared<ConcreteObserver>();
+
+        subject->addObserver(observer1);
+        subject->addObserver(observer2);
+
+        subject->notifyObservers();  // Both observers are notified
+
+        // Observer1 and Observer2 go out of scope and are destroyed
+    }
+
+    // At this point, the observers no longer exist, but no memory leaks
+    subject->notifyObservers();  // No observers are notified, but no crash occurs
+
+    return 0;
+}
+
+
+Observer updated
+Observer updated
+Observer destroyed
+Observer destroyed
+Subject destroyed
+
+
+Key Points:
+Use weak_ptr in the Subject class to observe Observer objects without preventing their destruction.
+When observers go out of scope, they are destroyed, and the Subject can safely remove them from its list without causing memory leaks or crashes.
