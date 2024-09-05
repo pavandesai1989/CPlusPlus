@@ -1,0 +1,132 @@
+In C++, a unique_ptr is a smart pointer introduced in C++11 that ensures a single owner for the dynamically allocated object. It automatically deallocates memory when the unique_ptr goes out of scope, preventing memory leaks. 
+It cannot be copied, but it can be moved, which makes it useful in scenarios where ownership must be transferred.
+
+
+#include <iostream>
+#include <utility>  // For std::move
+
+template <typename T>
+class UniquePointer {
+private:
+    T* ptr;  // Raw pointer to hold the resource
+
+public:
+    // Constructor: Takes a raw pointer to manage
+    explicit UniquePointer(T* p = nullptr) : ptr(p) {}
+
+    // Destructor: Deletes the managed object if it exists
+    ~UniquePointer() {
+        delete ptr;
+    }
+
+    // Delete copy constructor to prevent copying
+    UniquePointer(const UniquePointer&) = delete;
+
+    // Delete copy assignment operator to prevent copying
+    UniquePointer& operator=(const UniquePointer&) = delete;
+
+    // Move constructor: Transfers ownership from another UniquePointer
+    UniquePointer(UniquePointer&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;  // Set the other pointer to null to prevent double deletion
+    }
+
+    // Move assignment operator: Transfers ownership from another UniquePointer
+    UniquePointer& operator=(UniquePointer&& other) noexcept {
+        if (this != &other) {
+            // Release the current resource
+            delete ptr;
+
+            // Transfer ownership
+            ptr = other.ptr;
+            other.ptr = nullptr;
+        }
+        return *this;
+    }
+
+    // Overload dereference operator (*)
+    T& operator*() const {
+        return *ptr;
+    }
+
+    // Overload arrow operator (->)
+    T* operator->() const {
+        return ptr;
+    }
+
+    // Check if the pointer is not null
+    bool isNull() const {
+        return ptr == nullptr;
+    }
+
+    // Release ownership of the pointer and return it
+    T* release() {
+        T* temp = ptr;
+        ptr = nullptr;  // Release ownership
+        return temp;
+    }
+
+    // Reset the UniquePointer with a new raw pointer (deletes the old one)
+    void reset(T* p = nullptr) {
+        delete ptr;  // Delete the current resource
+        ptr = p;     // Take ownership of the new pointer
+    }
+};
+
+int main() {
+    // Create a unique pointer managing a dynamically allocated integer
+    UniquePointer<int> uptr(new int(42));
+    
+    // Use dereference and arrow operators
+    std::cout << "Value pointed by unique pointer: " << *uptr << std::endl;
+
+    // Move the unique pointer to another unique pointer
+    UniquePointer<int> uptr2 = std::move(uptr);
+
+    if (uptr.isNull()) {
+        std::cout << "uptr is now null after moving" << std::endl;
+    }
+
+    std::cout << "Value after move: " << *uptr2 << std::endl;
+
+    // Reset the unique pointer with a new value
+    uptr2.reset(new int(100));
+    std::cout << "Value after reset: " << *uptr2 << std::endl;
+
+    // Release the pointer from the unique pointer
+    int* rawPtr = uptr2.release();
+    std::cout << "Value after release: " << *rawPtr << std::endl;
+
+    // Manually delete rawPtr since ownership is now with the user
+    delete rawPtr;
+
+    return 0;
+}
+
+
+Creating a Unique Pointer:
+
+UniquePointer<int> uptr(new int(42));
+std::cout << *uptr << std::endl;  // Output: 42
+
+
+Moving a Unique Pointer:
+
+UniquePointer<int> uptr2 = std::move(uptr);
+After the move, uptr will be nullptr, and uptr2 will own the memory.
+
+Resetting a Unique Pointer:
+uptr2.reset(new int(100));
+This changes the managed object to a new value, and the old value is deleted.
+
+Releasing a Unique Pointer:
+int* rawPtr = uptr2.release();
+After calling release(), the UniquePointer no longer owns the pointer, and the user must manually manage it.
+
+Output:
+Value pointed by unique pointer: 42
+uptr is now null after moving
+Value after move: 42
+Value after reset: 100
+Value after release: 100
+
+
