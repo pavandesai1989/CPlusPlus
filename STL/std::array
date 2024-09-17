@@ -1,0 +1,152 @@
+std::array is a container that encapsulates fixed size arrays.
+array size is needed at compile time.
+
+syntax: std::array<T, N> myarray;
+std::array<int, 3> a1{{1, 2, 3}}; 
+
+
+Key Points:
+By Value: Copies the array, which could be inefficient for large arrays.
+By Reference: Allows modification of the original array.
+By Const Reference: Efficient, prevents modification.
+
+
+#include <iostream>
+#include <array>
+
+void printArray(std::array<int, 5> arr) {
+    for (const auto& elem : arr) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    std::array<int, 5> myArray = {1, 2, 3, 4, 5};
+    printArray(myArray);
+    return 0;
+}
+
+#include <iostream>
+#include <array>
+
+void modifyArray(std::array<int, 5>& arr) {
+    arr[0] = 100;
+}
+
+int main() {
+    std::array<int, 5> myArray = {1, 2, 3, 4, 5};
+    modifyArray(myArray);
+    for (const auto& elem : myArray) {
+        std::cout << elem << " ";
+    }
+    std::cout << std::endl;
+    return 0;
+}
+
+#include <iostream>
+#include <array>
+#include <algorithm> // for std::sort
+
+int main() {
+    // Creating an std::array of size 5
+    std::array<int, 5> arr = {5, 2, 9, 1, 3};
+
+    // 1. size() - Returns the number of elements in the array
+    std::cout << "Size of array: " << arr.size() << std::endl;
+
+    // 2. at(index) - Accesses element at given index with bounds checking
+    std::cout << "Element at index 2 (with bounds checking): " << arr.at(2) << std::endl;
+
+    // 3. operator[] - Accesses element at given index without bounds checking
+    std::cout << "Element at index 2 (without bounds checking): " << arr[2] << std::endl;
+
+    // 4. front() - Returns reference to the first element
+    std::cout << "First element: " << arr.front() << std::endl;
+
+    // 5. back() - Returns reference to the last element
+    std::cout << "Last element: " << arr.back() << std::endl;
+
+    // 6. data() - Returns a pointer to the first element of the array
+    int* ptr = arr.data();
+    std::cout << "First element via pointer: " << *ptr << std::endl;
+
+    // 7. fill(value) - Fills the entire array with the specified value
+    arr.fill(10);
+    std::cout << "Array after fill(10): ";
+    for (const auto& elem : arr) {
+        std::cout << elem << " "; // Output: 10 10 10 10 10
+    }
+    std::cout << std::endl;
+
+    // 8. swap(otherArray) - Swaps contents with another array of same type and size
+    std::array<int, 5> otherArr = {7, 8, 9, 10, 11};
+    arr.swap(otherArr);
+    std::cout << "Array after swap with otherArr: ";
+    for (const auto& elem : arr) {
+        std::cout << elem << " "; // Output: 7 8 9 10 11
+    }
+    std::cout << std::endl;
+
+    // 9. empty() - Checks if the array is empty (always false for std::array)
+    std::cout << std::boolalpha << "Is array empty? " << arr.empty() << std::endl;
+
+    // 10. begin() and end() - Iterators to the beginning and end of the array
+    // Can be used with algorithms like std::sort
+    std::sort(arr.begin(), arr.end());
+    std::cout << "Sorted array: ";
+    for (const auto& elem : arr) {
+        std::cout << elem << " "; // Output: 7 8 9 10 11
+    }
+    std::cout << std::endl;
+
+    return 0;
+}
+
+
+Explanation of the Code:
+size(): Prints the number of elements in the array.
+at(): Accesses an element at a given index with bounds checking.  **********
+operator[]: Accesses an element at a given index without bounds checking.
+front(): Prints the first element in the array.
+back(): Prints the last element in the array.
+data(): Gets a pointer to the underlying array and prints the first element via pointer dereference.
+fill(): Fills the array with the value 10 and prints it.
+swap(): Swaps the contents of arr with another array (otherArr).
+empty(): Checks if the array is empty (always false for fixed-size arrays).
+begin() and end(): Used to sort the array and iterate over it to print the sorted values.
+This covers all the common member functions of std::array in one C++ program!
+
+
+*******imp different ways to initialize the arrays 
+std::array<int, 5> arr = {1, 2, 3, 4, 5};  // Initializer list
+
+std::array<int, 5> arr{1, 2, 3, 4, 5};  // Uniform initialization (C++11)
+
+std::array<int, 5> arr;
+arr = {1, 2, 3, 4, 5};  // Initializer list    ********imp this is not allowed in c style arrays 
+    
+for(auto ele:arr)
+{
+  cout<<ele<<" ";
+}
+
+it’s recommended to use uniform initialization for better consistency and safety in modern C++. ***************
+
+
+why do we need std::array?
+
+C-style arrays decay into pointers, losing size information when passed to functions. With std::array, size information is preserved, making it more robust.
+Example: The size of the array is part of its type (e.g., std::array<int, 5>), making accidental size mismatches impossible.
+
+While C-style arrays allow direct access using the subscript operator ([]), there is no bounds checking. This can lead to undefined behavior if an out-of-bounds index is accessed.
+std::array provides the at() method, which performs bounds checking and throws an exception (std::out_of_range) if an invalid index is accessed.
+
+Standard Member Functions
+
+std::array supports range-based for loops, making code more readable and less error-prone compared to traditional loops with raw arrays.
+
+Safe Copying and Assignment
+C-style arrays cannot be directly copied or assigned, but std::array supports copy construction and assignment operators.
+
+
