@@ -1,3 +1,4 @@
+vector provides O(1) fast access and dynamic allocation of memory ******
 
 1. dynamic size :
     std::vector solves this: With std::vector, the size of the array can grow or shrink at runtime, allowing you to add or remove elements as needed. This dynamic resizing is essential for many algorithms and applications where data is collected or modified on the fly.
@@ -21,3 +22,81 @@ Standard algorithms: Integrates seamlessly with C++ STL algorithms.
 Versatile operations: Provides rich methods to add, remove, and modify elements.
 
     
+#include <iostream>
+#include <vector>
+#include <algorithm>  // For std::sort
+
+int main() {
+    // 1. Default constructor (Empty vector)
+    std::vector<int> vec;
+
+    // 2. push_back() - Add elements to the end of the vector
+    vec.push_back(10);
+    vec.push_back(20);
+    vec.push_back(30);
+    
+    std::cout << "After push_back: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 10 20 30
+    std::cout << std::endl;
+
+    // 3. size() - Returns the number of elements
+    std::cout << "Size of vector: " << vec.size() << std::endl;  // Output: 3
+
+    // 4. at() - Access elements with bounds checking
+    std::cout << "Element at index 1: " << vec.at(1) << std::endl;  // Output: 20
+
+    // 5. [] operator - Access elements without bounds checking
+    std::cout << "Element at index 0: " << vec[0] << std::endl;  // Output: 10
+
+    // 6. front() - Get the first element
+    std::cout << "First element: " << vec.front() << std::endl;  // Output: 10
+
+    // 7. back() - Get the last element
+    std::cout << "Last element: " << vec.back() << std::endl;  // Output: 30
+
+    // 8. insert() - Insert an element at a specific position
+    vec.insert(vec.begin() + 1, 15);  // Insert 15 at index 1
+    std::cout << "After insert: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 10 15 20 30
+    std::cout << std::endl;
+
+    // 9. erase() - Remove an element from a specific position
+    vec.erase(vec.begin() + 2);  // Erase element at index 2
+    std::cout << "After erase: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 10 15 30
+    std::cout << std::endl;
+
+    // 10. pop_back() - Remove the last element
+    vec.pop_back();  // Remove last element (30)
+    std::cout << "After pop_back: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 10 15
+    std::cout << std::endl;
+
+    // 11. clear() - Remove all elements
+    vec.clear();
+    std::cout << "After clear, size of vector: " << vec.size() << std::endl;  // Output: 0
+
+    // 12. empty() - Check if the vector is empty
+    if (vec.empty()) {
+        std::cout << "Vector is empty." << std::endl;  // This will be printed
+    }
+
+    // 13. resize() - Resize the vector (if growing, new elements are value-initialized)
+    vec.resize(5, 100);  // Resize vector to 5 elements, new elements initialized to 100
+    std::cout << "After resize: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 100 100 100 100 100
+    std::cout << std::endl;
+
+    // 14. reserve() - Pre-allocate memory without changing the size
+    vec.reserve(10);  // Pre-allocate memory for 10 elements
+    std::cout << "Capacity after reserve: " << vec.capacity() << std::endl;
+
+    // 15. sort() - Sorting the vector (using STL algorithm)
+    vec = {50, 30, 20, 10, 40};  // Reassign vector values
+    std::sort(vec.begin(), vec.end());  // Sort in ascending order
+    std::cout << "After sort: ";
+    for (int i : vec) std::cout << i << " ";  // Output: 10 20 30 40 50
+    std::cout << std::endl;
+
+    return 0;
+}
