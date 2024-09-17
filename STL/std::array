@@ -2,7 +2,7 @@ std::array is a container that encapsulates fixed size arrays.
 array size is needed at compile time.
 
 syntax: std::array<T, N> myarray;
-std::array<int, 3> a1{{1, 2, 3}}; 
+std::array<int, 3> a1{{1, 2, 3}};       
 
 
 Key Points:
