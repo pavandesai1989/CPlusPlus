@@ -122,3 +122,29 @@ Temporary objects, like return values, require deep copies, even though they are
 With Move Constructor:
 Move semantics allow for resources to be transferred rather than copied, making operations involving large resources or temporary objects more efficient.
 The move constructor optimizes cases where an object is being constructed from a temporary or rvalue object.
+
+
+***imp below code
+The reason the copy constructor is not being called in your code is due to Return Value Optimization (RVO) or Named Return Value Optimization (NRVO), which is a compiler optimization technique. In modern C++ compilers, RVO or NRVO allows the compiler to optimize away the need for copying an object when returning it from a function. This optimization directly constructs the object in the caller’s context, avoiding the creation of temporary objects and the associated overhead of calling the copy constructor.
+
+myclass get()
+{
+    myclass ob(10000);
+    return ob; //calls copy constructor
+}
+
+In your code, the following line:
+
+myclass ob = get();
+
+force cc call 
+int main()
+{
+    myclass ob1 = get();  // This still may not call the copy constructor due to RVO
+    
+    myclass ob2(ob1);  // Explicitly calling the copy constructor
+    
+    return 0;
+}
+
+
