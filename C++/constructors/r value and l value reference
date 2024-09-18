@@ -1,0 +1,81 @@
+******************what is std::move do?
+The std::move function in C++ is a standard library utility that casts an object to an rvalue reference. 
+It does not actually "move" anything by itself; 
+rather, it allows the compiler to treat an object as a temporary (rvalue) so that move semantics can be applied to it
+
+What Does std::move Do?
+Converts to rvalue reference: std::move casts an lvalue (an object with a name, like variables) to an rvalue reference (T&&). 
+This signals to the compiler that the object is no longer needed and its resources can be "moved" rather than copied.
+
+Move Semantics
+Move semantics allow the transfer of resources (like memory, file handles, etc.) from one object to another without performing a deep copy. 
+The goal is to avoid the overhead of copying large or resource-intensive objects by transferring ownership of resources instead.
+
+Without std::move:
+If you don’t use std::move, the compiler will treat your object as an lvalue, and the copy constructor or copy assignment operator 
+will be called instead of the move constructor or move assignment operator. This would result in a deep copy, which is less efficient.
+
+
+
+int main() {
+    MyClass obj1;
+    MyClass obj2 = std::move(obj1);  // Move Constructor is called
+
+    MyClass obj3;
+    obj3 = std::move(obj2);          // Move Assignment Operator is called
+
+    return 0;
+}
+
+Explanation:
+MyClass obj1;: The constructor is called, allocating resources.
+MyClass obj2 = std::move(obj1);: std::move(obj1) casts obj1 to an rvalue, allowing the move constructor to be invoked. Resources are transferred from obj1 to obj2.
+After the move, obj1.data is set to nullptr to prevent double deletion.
+obj3 = std::move(obj2);: std::move(obj2) casts obj2 to an rvalue, triggering the move assignment operator. Resources are transferred from obj2 to obj3, and obj2.data is set to nullptr.
+
+
+*********why fter the move, obj1.data is set to nullptr to prevent double deletion. ?**********v imp concept 
+Scenario of a Move
+When you perform a move operation (either via the move constructor or move assignment operator), the resources (like dynamically allocated memory, file handles, or other system resources) 
+are transferred from one object (the source) to another object (the target). 
+After this transfer, the source object (let’s call it obj1) is still alive, but it no longer "owns" the resources it originally managed. 
+Instead, the target object (let’s call it obj2) now owns those resources.
+
+If you don't reset obj1.data to nullptr after the move, both obj1 and obj2 will hold a pointer to the same dynamically allocated memory. 
+When both objects are destroyed (which calls their destructors), they will both try to free the same memory, resulting in double deletion.
+
+How Setting to nullptr Prevents Double Deletion
+By setting obj1.data to nullptr after the move, we ensure that obj1 no longer tries to delete memory that has been transferred to obj2. When obj1 is destroyed, its destructor checks if data is nullptr. If it is nullptr, the destructor knows that there's no memory to delete.
+
+
+
+*************which type of casting is used by move ?********
+The type of casting used inside std::move to cast objects to rvalue references is static_cast. Specifically, 
+std::move uses static_cast to convert an lvalue (an object that has a name and persists beyond a single expression) into an rvalue reference,
+which allows the object to be treated as a temporary (rvalue) and thus enables move semantics.
+
+
+The reason static_cast is used rather than other types of casts (like reinterpret_cast or dynamic_cast) is that it's both lightweight and the correct tool for type conversions between different value categories (lvalue, rvalue, etc.).
+
+
+*************L value and R value references*****
+Lvalue: An lvalue (locator value) refers to an object that occupies some identifiable location in memory (i.e., it has a name and persists beyond a single expression). 
+You can take the address of an lvalue using the address-of operator (&).
+
+int x = 10;  // 'x' is an lvalue
+
+Rvalue: An rvalue is a temporary object or expression that does not have a persistent memory location and cannot be assigned to directly.
+It typically represents the result of a computation or a literal.
+
+int y = x + 5;  // 'x + 5' is an rvalue
+
+
+Introduction of Rvalue References in C++
+Rvalue references were introduced in C++11 to enable move semantics and perfect forwarding.
+Move semantics allows the efficient transfer of resources from one object to another (e.g., moving large data instead of copying).
+Perfect forwarding ensures that function templates can forward arguments while preserving their value category (lvalue or rvalue).
+
+Key Use of Rvalue References:
+Move Constructor/Move Assignment: Efficiently "move" resources from temporary objects.
+Perfect Forwarding: Forward rvalue/lvalue arguments to other functions without unnecessary copies.
+
