@@ -1,0 +1,113 @@
+To write a proper copy constructor and copy assignment operator for a class in C++, we must follow the Rule of Three. 
+The Rule of Three states that if a class manages resources (like dynamically allocated memory), you should provide:
+
+Destructor: To clean up the allocated memory.
+Copy Constructor: To correctly copy resources when an object is copied.
+Copy Assignment Operator: To correctly assign one object to another, handling the cleanup of the previously held resources.
+
+
+
+#include <iostream>
+using namespace std;
+
+class MyClass {
+private:
+    int* data;  // Pointer to dynamically allocated memory
+
+public:
+    // Constructor
+    MyClass(int value) {
+        data = new int(value);  // Allocate memory and store the value
+        cout << "Constructor: Allocated memory for value " << value << endl;
+    }
+
+    // Destructor
+    ~MyClass() {
+        delete data;  // Free the memory
+        cout << "Destructor: Freed memory" << endl;
+    }
+
+    // Copy Constructor (Deep Copy)
+    MyClass(const MyClass& source) {
+        data = new int(*source.data);  // Allocate new memory and copy the value
+        cout << "Copy Constructor: Created a deep copy" << endl;
+    }
+
+    // Copy Assignment Operator (Deep Copy)
+    MyClass& operator=(const MyClass& source) {
+        if (this == &source) {  // Check for self-assignment
+            return *this;  // Return the current object if self-assigned
+        }
+
+        // Clean up the old data
+        delete data;  // Free the old memory
+
+        // Allocate new memory and copy the data
+        data = new int(*source.data);
+
+        cout << "Copy Assignment Operator: Assigned a deep copy" << endl;
+
+        return *this;  // Return the current object by reference
+    }
+
+    // Display the value
+    void display() const {
+        cout << "Value: " << *data << endl;
+    }
+};
+
+int main() {
+    MyClass obj1(10);     // Normal constructor
+    MyClass obj2 = obj1;  // Copy constructor
+    MyClass obj3(20);     // Normal constructor
+
+    obj3 = obj1;          // Copy assignment operator
+
+    obj1.display();
+    obj2.display();
+    obj3.display();
+
+    return 0;
+}
+
+
+
+
+*********why only in copy assignment operator we do delete data; not in copy constructor
+Why delete is not used in the Copy Constructor:
+When the copy constructor is called, it is invoked on a newly created object that doesn't have any pre-existing resources. There's no old data to delete because the object is being constructed for the first time, so you don't need to delete anything. Instead, you just allocate new memory and copy the values from the source object.
+
+Why delete is used in the Copy Assignment Operator:
+The copy assignment operator is used when an already-existing object is assigned new values. This object might already be holding some dynamically allocated memory from a previous operation. 
+If we don't delete the old data before assigning new data, we will have a memory leak because the old memory will no longer be accessible but still allocated.**************************************
+
+*******what are the scenarios in which copy constructor and copy assignment operator are called
+Copy Constructor:
+The copy constructor is called when a new object is being created from an existing object.
+This happens in cases like:
+Passing an object by value to a function.
+Returning an object by value from a function.
+Creating an object as a copy of another object (initialization). 
+
+int main() {
+    MyClass obj1(10);       // Constructor is called
+    MyClass obj2 = obj1;    // Copy Constructor is called (initialization)
+    passByValue(obj1);      // Copy Constructor is called (passing by value)
+}
+
+void passByValue(MyClass obj) {
+    // This will trigger the copy constructor
+    obj.display();
+}
+
+The copy assignment operator is called when an existing object is assigned to another existing object (after both have already been initialized).
+This happens when using the assignment operator (=) between two objects.
+
+obj2 = obj1;       // Copy Assignment Operator is called
+  
+
+
+
+
+
+  
