@@ -91,6 +91,22 @@ public:
         cout << "Move Constructor: Moved " << size << " elements." << endl;
     }
 
+    // Move Assignment Operator: Transfers ownership of resources
+    MyClass& operator=(MyClass&& other) noexcept {
+        if (this != &other) { // Self-assignment check
+            delete[] data; // Release any resources held by the current object
+
+            data = other.data; // Transfer ownership of resources
+            size = other.size;
+
+            other.data = nullptr; // Prevent double deletion
+            other.size = 0;      // Leave moved-from object in a valid state
+
+            cout << "Move Assignment Operator: Moved resources." << endl;
+        }
+        return *this;
+    }
+
     // Destructor
     ~MyClass() {
         delete[] data;
@@ -106,6 +122,20 @@ MyClass createLargeObject() {
 
 int main() {
     MyClass obj1 = createLargeObject();  // Move constructor will be invoked
+    return 0;
+}
+
+int main() {
+    MyClass obj1(10);           // Constructor: Allocates memory
+    MyClass obj2 = std::move(obj1);  // Move Constructor: Transfers ownership
+
+    MyClass obj3(5);            // Constructor: Allocates memory
+    obj3 = std::move(obj2);     // Move Assignment Operator: Transfers ownership
+
+    obj1.printSize();  // Size will be 0, as obj1 is moved from
+    obj2.printSize();  // Size will be 0, as obj2 is moved from
+    obj3.printSize();  // Size will be 10, as resources are moved to obj3
+
     return 0;
 }
 
