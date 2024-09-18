@@ -1,0 +1,92 @@
+1. shallow copy vs deep copy 
+
+*********shallow copy **********
+  
+#include <iostream>
+using namespace std;
+
+class Shallow {
+public:
+    int* data;
+
+    // Constructor
+    Shallow(int d) {
+        data = new int(d);  // Allocate memory dynamically
+    }
+
+    // Copy Constructor (Shallow Copy)
+    Shallow(const Shallow& source) : data(source.data) {
+        cout << "Shallow copy constructor - just copying pointer!" << endl;
+    }
+
+    // Destructor
+    ~Shallow() {
+        delete data;  // Delete the memory
+        cout << "Destructor freeing memory!" << endl;
+    }
+
+    void display() {
+        cout << "Value: " << *data << endl;
+    }
+};
+
+int main() {
+    Shallow obj1(10);
+    obj1.display();
+
+    Shallow obj2 = obj1;  // Shallow copy happens here
+    obj2.display();
+
+    ob1.setvalue(100);     ****** when we modify 1 object ob1, its modifying the ob2 object as well. because both are pointing to same memory
+    ob1.display();
+    ob2.display();
+
+    return 0;
+}
+
+Here, both obj1 and obj2 point to the same memory. When obj1 and obj2 are destructed, they both try to free the same memory, leading to a potential crash or undefined behavior.
+solution : 
+In this case, after the first object frees the memory and sets the pointer to nullptr, the second object does not attempt to free the memory again because the pointer is already nullptr.
+
+However, this approach is not ideal because both obj1 and obj2 still share the same pointer. Any changes made to the memory through one object will affect the other. This doesn't truly solve the ownership problem.
+
+  *******deep copy*****
+  #include <iostream>
+using namespace std;
+
+class Deep {
+public:
+    int* data;
+
+    // Constructor
+    Deep(int d) {
+        data = new int(d);  // Allocate memory dynamically
+    }
+
+    // Copy Constructor (Deep Copy)
+    Deep(const Deep& source) {
+        data = new int(*source.data);  // Allocate new memory and copy the data
+        cout << "Deep copy constructor - allocating separate memory!" << endl;
+    }
+
+    // Destructor
+    ~Deep() {
+        delete data;  // Delete the memory
+        cout << "Destructor freeing memory!" << endl;
+    }
+
+    void display() {
+        cout << "Value: " << *data << endl;
+    }
+};
+
+int main() {
+    Deep obj1(10);
+    obj1.display();
+
+    Deep obj2 = obj1;  // Deep copy happens here
+    obj2.display();
+
+    return 0;
+}
+
