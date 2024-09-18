@@ -1,0 +1,51 @@
+Perfect Forwarding in C++ refers to a technique used in function templates that allows you to forward arguments to another 
+function while preserving the value category (whether the argument is an lvalue or rvalue). 
+
+The key to perfect forwarding is the use of universal (forwarding) references (T&&) and the std::forward function, 
+which ensures that the correct value category (lvalue or rvalue) is preserved when forwarding arguments.
+
+
+
+#include <iostream>
+#include <utility>  // for std::forward
+
+// Function that takes lvalue references
+void process(int& x) {
+    std::cout << "Lvalue reference overload called, value: " << x << std::endl;
+}
+
+// Function that takes rvalue references
+void process(int&& x) {
+    std::cout << "Rvalue reference overload called, value: " << x << std::endl;
+}
+
+// A generic wrapper function template that forwards its argument
+template <typename T>
+void forwardToProcess(T&& arg) {
+    process(std::forward<T>(arg));  // Forward arg as either lvalue or rvalue
+}
+
+int main() {
+    int a = 10;
+
+    // Calls lvalue version of process
+    forwardToProcess(a);  // 'a' is an lvalue
+
+    // Calls rvalue version of process
+    forwardToProcess(20);  // '20' is an rvalue
+}
+
+Lvalue reference overload called, value: 10
+Rvalue reference overload called, value: 20
+
+
+What Happens Behind the Scenes:
+Lvalues are passed as lvalue references, and std::forward ensures they are forwarded as lvalues.
+Rvalues are passed as rvalue references, and std::forward ensures they are forwarded as rvalues.
+
+This avoids unnecessary copies and ensures the correct function overload is called based on the value category of the argument.
+
+Key Points of Perfect Forwarding:
+Universal References (T&&): Allow the function to accept both lvalues and rvalues.
+std::forward<T>(arg): Ensures that the original value category of the argument is preserved (i.e., whether it's an lvalue or rvalue).
+Use Case: Often used in generic programming to write wrappers or factory functions that can handle both lvalues and rvalues without performance degradation.
