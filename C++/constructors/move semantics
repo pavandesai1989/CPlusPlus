@@ -1,0 +1,124 @@
+what is the need of move constructor?
+Problem Without Move Constructor:
+In C++98, when an object is returned from a function or passed by value, the copy constructor is invoked, and the object's data must be copied. 
+This can be slow, especially when dealing with large resources like big arrays or containers.
+
+
+#include <iostream>
+using namespace std;
+
+class MyClass {
+public:
+    int* data;
+    size_t size;
+
+    // Constructor
+    MyClass(size_t sz) : size(sz) {
+        data = new int[size];
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = i;  // Initialize array with some values
+        }
+        cout << "Constructor: Allocated " << size << " elements." << endl;
+    }
+
+    // Copy Constructor (Deep Copy)
+    MyClass(const MyClass& source) : size(source.size) {
+        data = new int[size];  // Allocate new memory for the copy
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = source.data[i];  // Copy elements
+        }
+        cout << "Copy Constructor: Deep copy of " << size << " elements." << endl;
+    }
+
+    // Destructor
+    ~MyClass() {
+        delete[] data;
+        cout << "Destructor: Freed memory for " << size << " elements." << endl;
+    }
+};
+
+// Function that returns a temporary object
+MyClass createLargeObject() {
+    MyClass obj(1000000);  // Large array with 1,000,000 elements
+    return obj;  // Will trigger a copy constructor without move semantics
+}
+
+int main() {
+    MyClass obj1 = createLargeObject();  // Copy constructor will be invoked
+    return 0;
+}
+
+
+Problem:
+When createLargeObject() returns an object, it calls the copy constructor, which performs a deep copy of 1,000,000 elements, even though the temporary object will be discarded.
+This deep copy is unnecessary and incurs significant performance overhead.
+
+Solution: Using Move Constructor
+With the move constructor introduced in C++11, we can "move" the resources instead of copying them. This means that the resources (such as a large dynamic array) are transferred from one object to another, leaving the source object in a valid but empty state. This avoids the overhead of copying large resources.
+
+
+solution using move constructor 
+#include <iostream>
+using namespace std;
+
+class MyClass {
+public:
+    int* data;
+    size_t size;
+
+    // Constructor
+    MyClass(size_t sz) : size(sz) {
+        data = new int[size];
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = i;  // Initialize array with some values
+        }
+        cout << "Constructor: Allocated " << size << " elements." << endl;
+    }
+
+    // Copy Constructor (Deep Copy)
+    MyClass(const MyClass& source) : size(source.size) {
+        data = new int[size];  // Allocate new memory for the copy
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = source.data[i];  // Copy elements
+        }
+        cout << "Copy Constructor: Deep copy of " << size << " elements." << endl;
+    }
+
+    // Move Constructor (No Deep Copy, Just Transfer Ownership)
+    MyClass(MyClass&& source) noexcept : data(source.data), size(source.size) {
+        source.data = nullptr;  // Leave source in a valid but empty state
+        source.size = 0;
+        cout << "Move Constructor: Moved " << size << " elements." << endl;
+    }
+
+    // Destructor
+    ~MyClass() {
+        delete[] data;
+        cout << "Destructor: Freed memory for " << size << " elements." << endl;
+    }
+};
+
+// Function that returns a temporary object
+MyClass createLargeObject() {
+    MyClass obj(1000000);  // Large array with 1,000,000 elements
+    return obj;  // This will now trigger the move constructor, not the copy constructor
+}
+
+int main() {
+    MyClass obj1 = createLargeObject();  // Move constructor will be invoked
+    return 0;
+}
+
+
+*******
+How Move Constructor Solves the Issue:
+Instead of deep copying the large resource (1,000,000 elements), the move constructor transfers ownership of the resource from the temporary object to obj1.
+After the move, the temporary object is left in a valid but empty state, so no unnecessary deep copy happens.
+This significantly improves performance, especially when dealing with large objects or resources.
+
+Without Move Constructor:
+Copying objects involves a deep copy, which can be expensive in terms of both time and memory, especially for large objects or containers.
+Temporary objects, like return values, require deep copies, even though they are about to be discarded.
+With Move Constructor:
+Move semantics allow for resources to be transferred rather than copied, making operations involving large resources or temporary objects more efficient.
+The move constructor optimizes cases where an object is being constructed from a temporary or rvalue object.
