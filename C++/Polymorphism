@@ -1,0 +1,31 @@
+Polymorphism in C++ refers to the ability of a function, object, or operator to take on different forms.
+
+Types of Polymorphism
+Compile-time Polymorphism
+Runtime Polymorphism
+
+1. Compile-time (Static) Polymorphism:
+This is achieved through function overloading and operator overloading.
+
+Function Overloading: Multiple functions with the same name but different parameter types or counts.
+
+class Math {
+public:
+    int add(int a, int b) { return a + b; }
+    double add(double a, double b) { return a + b; }
+};
+
+Operator Overloading: The ability to redefine how operators work for user-defined types.
+class Complex {
+public:
+    int real, imag;
+    Complex operator + (const Complex &obj) {
+        Complex res;
+        res.real = real + obj.real;
+        res.imag = imag + obj.imag;
+        return res;
+    }
+};
+
+2. Run-time (Dynamic) Polymorphism:
+This is achieved through inheritance and virtual functions. It allows derived class objects to be treated as base class objects, but the appropriate overridden function in the derived class is called at runtime.
