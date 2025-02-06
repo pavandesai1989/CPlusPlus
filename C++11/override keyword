@@ -1,0 +1,53 @@
+When override is used, the compiler ensures that a function correctly overrides a base class function.
+
+#include <iostream>
+
+class Base {
+public:
+    virtual void show() {  
+        std::cout << "Base class show()\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    void show() override {  // Correct override
+        std::cout << "Derived class show()\n";
+    }
+};
+
+int main() {
+    Base* obj = new Derived();
+    obj->show();  // Calls Derived::show()
+    delete obj;
+}
+
+
+✅ Compiler checks for correctness.
+✅ If the function signature is incorrect, the compiler gives an error.
+
+ Preventing Errors with override
+Let's see an example where override catches an error.
+
+class Base {
+public:
+    virtual void display(int x) {  // Function takes an int
+        std::cout << "Base class display\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    void display(double x) override {  // ERROR: Signature does not match
+        std::cout << "Derived class display\n";
+    }
+};
+
+⛔ Compilation Error: Function signature must exactly match the base class function.
+✅ The compiler detects this mismatch before runtime, preventing unexpected behavior.
+
+5. Summary
+🔹 override ensures a function correctly overrides a virtual function.
+🔹 It helps catch typos and mismatched function signatures.
+🔹 Works well with final to prevent further overriding.
+🔹 Improves code readability and maintainability.
