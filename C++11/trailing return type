@@ -1,0 +1,60 @@
+In C++11, a trailing return type is a feature that allows specifying the return type of a function after the parameter list using the -> syntax.
+It is particularly useful when dealing with auto and complex return types.
+
+auto functionName(parameters) -> returnType;
+
+
+return type should be auto always*****
+
+Basic use:
+#include <iostream>
+
+auto add(int a, int b) -> int {
+    return a + b;
+}
+
+int main() {
+    std::cout << add(5, 3); // Output: 8
+    return 0;
+}
+
+
+Why Use a Trailing Return Type?
+
+1.For readability with long return types
+auto getPair() -> std::pair<int, double> {
+    return {42, 3.14};
+}
+
+2.When return type depends on template parameters
+template <typename T1, typename T2>
+auto multiply(T1 a, T2 b) -> decltype(a * b) {
+    return a * b;
+}
+Here, decltype(a * b) ensures the correct return type based on the input types.
+
+
+3.Necessary for auto return type in function pointers
+using FuncPtr = auto(*)(int, int) -> int;
+
+
+When to Use It?
+When the return type is dependent on template parameters.
+When using decltype for return type inference.
+When improving readability with complex return types.
+
+Alternative in C++14 and Later ***********IMP
+From C++14, auto can be used as a return type without a trailing return type:
+auto add(int a, int b) { return a + b; }
+
+
+Here, the compiler deduces the return type automatically.
+
+Conclusion
+Trailing return types in C++11 are useful for template metaprogramming and return type deduction when the return type depends on input parameters. 
+However, with C++14 and later, using auto directly is often more convenient.
+
+
+
+
+
