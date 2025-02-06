@@ -1,0 +1,80 @@
+final in C++11
+The final keyword was introduced in C++11 to prevent further derivation of a class or overriding of a virtual function. It is used as a safeguard to enforce design constraints.
+
+1. final with Classes (Prevents Inheritance)
+When a class is marked as final, it cannot be inherited by another class.
+
+class Base final {  // This class cannot be inherited
+public:
+    void show() { std::cout << "Base class\n"; }
+};
+
+// Compilation error: Cannot inherit from a final class
+class Derived : public Base { 
+};
+
+Explanation:
+The Base class is marked as final, so any attempt to derive from it will result in a compilation error.
+
+2. final with Virtual Functions (Prevents Overriding)
+When a virtual function is marked as final, it cannot be overridden in derived classes.
+
+class Base {
+public:
+    virtual void show() final {  // This function cannot be overridden
+        std::cout << "Base class show()\n";
+    }
+};
+
+class Derived : public Base {
+public:
+    // Compilation error: Cannot override final function
+    void show() override { 
+        std::cout << "Derived class show()\n";
+    }
+};
+
+Explanation:
+The show() function in the Base class is marked as final, so any attempt to override it in the Derived class will result in a compilation error.
+
+Key Points:
+final prevents class inheritance when used with a class.
+final prevents function overriding when used with a virtual function.
+It is useful for enforcing design constraints and avoiding unintended modifications.
+
+
+USE CASE ::::::::::::
+Let’s consider a logging system where we want to ensure:
+
+The Logger class cannot be inherited (to maintain its behavior).
+The logMessage function in BaseLogger cannot be overridden in derived classes (to enforce a strict logging format).
+
+#include <iostream>
+#include <string>
+
+// BaseLogger provides a default logging behavior
+class BaseLogger {
+public:
+    virtual void logMessage(const std::string& msg) final {  // Cannot be overridden
+        std::cout << "[LOG]: " << msg << std::endl;
+    }
+};
+
+// Logger is the final class; it cannot be extended further
+class Logger final : public BaseLogger {
+public:
+    void logWarning(const std::string& msg) {
+        std::cout << "[WARNING]: " << msg << std::endl;
+    }
+};
+
+// Compilation error: Cannot inherit from a final class
+// class AdvancedLogger : public Logger { };
+
+int main() {
+    Logger logger;
+    logger.logMessage("System started.");
+    logger.logWarning("Low disk space.");
+
+    return 0;
+}
