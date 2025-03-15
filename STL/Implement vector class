@@ -1,0 +1,107 @@
+#include <iostream>
+#include <stdexcept> // For exceptions
+
+using namespace std;
+
+template <typename T>
+class MyVector {
+private:
+    T* arr;        // Pointer to the dynamic array
+    size_t capacity; // Total allocated memory
+    size_t size;     // Number of elements
+
+    // Function to resize when needed
+    void resize() {
+        capacity *= 2; // Double the capacity
+        T* newArr = new T[capacity];
+
+        for (size_t i = 0; i < size; i++) {
+            newArr[i] = arr[i]; // Copy elements
+        }
+
+        delete[] arr;  // Free old memory
+        arr = newArr;  // Update pointer
+    }
+
+public:
+    // Constructor
+    MyVector(size_t initial_capacity = 2) {
+        size = 0;
+        capacity = initial_capacity;
+        arr = new T[capacity];
+    }
+
+    // Destructor
+    ~MyVector() {
+        delete[] arr;
+    }
+
+    // Insert an element at the end
+    void push_back(T value) {
+        if (size == capacity) {
+            resize();
+        }
+        arr[size++] = value;
+    }
+
+    // Remove the last element
+    void pop_back() {
+        if (size > 0) {
+            size--;
+        }
+    }
+
+    // Get the number of elements
+    size_t get_size() const {
+        return size;
+    }
+
+    // Get the current capacity
+    size_t get_capacity() const {
+        return capacity;
+    }
+
+    // Access element at index
+    T& operator[](size_t index) {
+        if (index >= size) {
+            throw out_of_range("Index out of bounds");
+        }
+        return arr[index];
+    }
+
+    // Clear the vector
+    void clear() {
+        size = 0;
+    }
+
+    // Check if vector is empty
+    bool empty() const {
+        return size == 0;
+    }
+};
+
+int main() {
+    // Create a vector of integers
+    MyVector<int> vec;
+
+    // Add elements
+    vec.push_back(10);
+    vec.push_back(20);
+    vec.push_back(30);
+
+    // Print elements
+    cout << "Vector elements: ";
+    for (size_t i = 0; i < vec.get_size(); i++) {
+        cout << vec[i] << " ";
+    }
+    cout << endl;
+
+    // Remove last element
+    vec.pop_back();
+    cout << "After pop_back, size: " << vec.get_size() << endl;
+
+    // Print capacity
+    cout << "Vector capacity: " << vec.get_capacity() << endl;
+
+    return 0;
+}
