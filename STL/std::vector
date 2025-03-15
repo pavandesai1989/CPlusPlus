@@ -21,6 +21,70 @@ Efficient resizing: Handles memory efficiently, with amortized constant-time ins
 Standard algorithms: Integrates seamlessly with C++ STL algorithms.
 Versatile operations: Provides rich methods to add, remove, and modify elements.
 
+***************ways to initialize vector*******
+// Online C++ compiler to run C++ program online
+#include <iostream>
+#include <vector>
+#include <array>
+
+using namespace std;
+
+int main() 
+{
+    //Under the hood, the std::vector constructor that takes an std::initializer_list<int> is invoked.
+    vector<int> vec= {1,2,3,4,5}; //initializer list 
+    
+    for(auto ele:vec)
+    {
+        cout<<ele<<" ";
+    }
+    cout<<endl;
+
+    //using push_back
+    vector<int> vec2;
+    vec2.push_back(2);
+    vec2.push_back(3);
+    vec2.push_back(4);
+
+    for(auto ele:vec2)
+    {
+        cout<<ele<<" ";
+    }
+    cout<<endl;
+
+
+    //with single value
+    vector<int> vec3(4,14); //creates 4 elements with all initialized to 14
+    for(auto ele:vec3)
+    {
+        cout<<ele<<" ";
+    }
+    cout<<endl;
+
+    //initialize using array 
+    array<int,4> arr = {7,8,4,6};    
+    vector<int> vec4 (arr.begin(),arr.end());
+
+    int arr1[] = {3,4,8,2,5,9,6};
+    int n = sizeof(arr1)/sizeof(arr1[0]);
+    vector<int> vec5(arr1,arr1+n);
+    for(auto ele:vec5)
+    {
+        cout<<ele<<" ";
+    }
+    cout<<endl;
+
+    //another vector 
+    vector<int> vec6(vec5.begin(),vec5.end());
+    for(auto ele:vec6)
+    {
+        cout<<ele<<" ";
+    }
+
+    return 0;
+}
+
+*********************************
     
 #include <iostream>
 #include <vector>
