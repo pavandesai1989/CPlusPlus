@@ -21,6 +21,22 @@ Efficient resizing: Handles memory efficiently, with amortized constant-time ins
 Standard algorithms: Integrates seamlessly with C++ STL algorithms.
 Versatile operations: Provides rich methods to add, remove, and modify elements.
 
+
+Key Features of std::vector
+✅ Dynamic Resizing – It grows automatically when needed.
+✅ Contiguous Memory Allocation – Just like arrays, elements are stored sequentially.
+✅ Fast Access (O(1)) – Accessing elements using [] is constant time.
+✅ Efficient Insertions/Deletions (at End) – push_back() and pop_back() are amortized O(1).
+✅ Support for Iterators – Works well with range-based loops, algorithms, and iterators.
+
+
+Function	Description
+size()	Returns the number of elements.
+capacity()	Returns allocated memory size (≥ size()).  **************
+resize(n)	Resizes the vector to n elements.
+empty()	Returns true if the vector is empty.
+shrink_to_fit()	Reduces capacity() to size().
+
 ***************ways to initialize vector*******
 // Online C++ compiler to run C++ program online
 #include <iostream>
