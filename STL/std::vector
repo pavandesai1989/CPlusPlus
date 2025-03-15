@@ -7,7 +7,7 @@ vector provides O(1) fast access and dynamic allocation of memory ******
 Manual memory management with arrays: In C-style arrays, if you want to dynamically allocate an array of unknown size, you need to manage memory manually using new and delete. This introduces the risk of memory leaks, dangling pointers, or errors in allocation and deallocation.
 std::vector handles memory automatically: It internally manages memory allocation and deallocation, ensuring that memory is allocated when the vector grows and properly freed when the vector goes out of scope or is no longer needed.
 
-3. Efficient Resizing and Reallocation
+3. Efficient Resizing and Reallocation   
 
 4. Random Access:
 Just like arrays, std::vector provides constant-time random access to its elements via the [] operator or the at() method. This allows efficient access to any element by its index.
