@@ -1,0 +1,66 @@
+std::initializer_list is a feature introduced in C++11 that allows the initialization of containers and user-defined classes using curly braces {}. 
+It provides a way to handle a sequence of values as an object.
+
+
+ Using std::initializer_list in a Class
+#include <iostream>
+#include <initializer_list>
+
+class MyClass {
+public:
+    MyClass(std::initializer_list<int> values) {
+        for (int value : values) {
+            std::cout << value << " ";
+        }
+        std::cout << std::endl;
+    }
+};
+
+int main() {
+    MyClass obj = {5, 10, 15, 20};  // Uses initializer_list constructor
+}
+
+Accessing Elements of std::initializer_list
+#include <iostream>
+#include <initializer_list>
+
+void display(std::initializer_list<int> lst) {
+    std::cout << "Size: " << lst.size() << "\nElements: ";
+    for (auto it = lst.begin(); it != lst.end(); ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+
+int main() {
+    display({2, 4, 6, 8, 10});
+}
+
+
+std::initializer_list is Immutable  *********imp
+void modifyList(std::initializer_list<int> lst) {
+    *lst.begin() = 100;  // ❌ Error: Elements are read-only
+}
+
+
+ When to Use std::initializer_list?
+✅ Use std::initializer_list when:
+
+You want to provide easy initialization of objects.
+You need constant, read-only values.
+You are writing a constructor that accepts multiple values.
+❌ Do not use std::initializer_list when:
+
+You need modification after initialization.
+You need dynamic resizing (use std::vector instead).
+
+
+
+Summary**********************
+std::initializer_list<T> allows passing multiple values using {}.
+It is immutable and provides .begin(), .end(), and .size().
+Used in constructors, functions, and container initialization.
+Cannot be modified after initialization.
+If modification is needed, prefer std::vector.
+
+
