@@ -25,41 +25,78 @@ int main()
 }
 
 ************ class specialization***
+Template specialization allows you to provide a custom implementation for a specific type or a set of types while still keeping the general template for other types. It gives you the ability to customize behavior for certain types, such as integers, floating-point numbers, or pointers, without affecting the generic template for other types.
+
+1. Full Specialization
+In full specialization, you define the entire template for a specific type. It overrides the general template for that type.
+
 #include <iostream>
-#include<string>
 using namespace std;
 
 template<typename T>
-class test1
+class add
+{
+  private:
+    T a,b;
+  
+  public:
+    add(T x,T y):a(x),b(y)
+    {
+        cout<<"a is "<<a<<" "<<"b is "<<b<<endl;
+        cout<<"T called "<<endl;
+    }
+};
+template<>
+class add<char>
 {
     private:
-       T a;
-
+      char a;
+    
     public:
-       test1()
-       {
-           cout<<"Class T"<<endl;
-       }   
+      add(char x):a(x)
+      {
+          cout<<"a is "<<a<<endl;
+          cout<<"char called"<<endl;
+      }
 };
-
-template<>
-class test1<int>
-{
-    public:
-       test1()
-       {
-           cout<<"spe class"<<endl;
-       }   
-};
-
-
-
 int main()
 {
-    test1<string> ob1;
-
-    test1<int> ob2;
-
-    return 0;
+    add<int> ob(2,3);
+    add<double> ob2(3.4,5.6);
+    
+    add<char> ob3('A');
 }
 
+
+a is 2 b is 3
+T called 
+a is 3.4 b is 5.6
+T called 
+a is A
+char called
+
+
+
+
+
+General Template:
+template <typename T>
+void print(T value) {
+    cout << "General value: " << value << endl;
+}
+This is a general template that works for any type T. It can handle any type passed to it, such as int, float, double, etc.
+
+Partial Specialization:
+
+template <typename T>
+void print(T* value) {
+    cout << "Pointer value: " << *value << endl;  // Dereferencing the pointer
+}
+This is a partial specialization of the general template. Specifically, it specializes the template for pointer types (i.e., T*). This means the print function with a T* type (i.e., a pointer) will be handled by this function.
+
+Why Is This Partial Specialization and Not Full?
+This is partial specialization because:
+
+You haven’t fully specialized the template for a particular type like int. Instead, you've specialized it for pointer types.
+
+The template still remains generic for all other types. For example, you can still use print with an int, float, char, etc., and it will use the general template, but only pointer types (like int*, float*, etc.) will use the partial specialization.
