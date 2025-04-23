@@ -1,0 +1,3 @@
+In C++, sets are associative container which stores unique elements in some sorted order.
+By default, it is sorted ascending order of the keys, but this can be changed as per requirement. 
+It provides fast insertion, deletion and search operations.
