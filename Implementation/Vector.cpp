@@ -1,134 +1,135 @@
-// Online C++ compiler to run C++ program online
 #include <iostream>
-using namespace std;
+#include <stdexcept>  // For std::out_of_range
 
 template<typename T>
-class myvector
-{
-   private:
-     T* _pdata;
-     int _size;
-     int _capacity;
+class MyVector {
+private:
+    T* data;             // Pointer to the dynamically allocated array
+    size_t capacity;     // Capacity of the vector (how much space it can hold)
+    size_t size;         // Current size (number of elements in the vector)
 
-    public:
-        myvector();
-        ~myvector();
+    // Function to resize the vector (doubling the capacity)
+    void resize() {
+        capacity *= 2;
+        T* new_data = new T[capacity];  // Create a new array with double capacity
 
-        void push_back(const T& data); 
-        void pop_back();
-        T& at(size_t idx);
-        T& operator[](size_t idx);
-        size_t size()const;
-        size_t capacity()const;
-        bool empty()const;
-        void print(); 
-        void clear();
+        // Copy elements from the old array to the new array
+        for (size_t i = 0; i < size; ++i) {
+            new_data[i] = data[i];
+        }
+
+        // Delete the old array
+        delete[] data;
+
+        // Point the data to the new array
+        data = new_data;
+    }
+
+public:
+    // Constructor
+    MyVector() : data(nullptr), capacity(0), size(0) {}
+
+    // Destructor to clean up allocated memory
+    ~MyVector() {
+        delete[] data;
+    }
+
+    // Function to add an element to the back of the vector
+    void push_back(const T& value) {
+        if (size == capacity) {
+            // Resize the array if there is no space left
+            if (capacity == 0) {
+                capacity = 1;  // Start with capacity 1 if the vector is empty
+            }
+            resize();
+        }
+
+        // Add the new element
+        data[size] = value;
+        ++size;
+    }
+
+    // Function to remove the last element
+    void pop_back() {
+        if (size > 0) {
+            --size;
+        } else {
+            throw std::out_of_range("pop_back called on an empty vector.");
+        }
+    }
+
+    // Function to access an element by index
+    T& operator[](size_t index) {
+        if (index >= size) {
+            throw std::out_of_range("Index out of range.");
+        }
+        return data[index];
+    }
+
+    // Const version of operator[] for read-only access
+    const T& operator[](size_t index) const {
+        if (index >= size) {
+            throw std::out_of_range("Index out of range.");
+        }
+        return data[index];
+    }
+
+    // Function to get the current size of the vector
+    size_t get_size() const {
+        return size;
+    }
+
+    // Function to check if the vector is empty
+    bool empty() const {
+        return size == 0;
+    }
+
+    // Function to get the capacity of the vector
+    size_t get_capacity() const {
+        return capacity;
+    }
+
+    // Function to clear the vector
+    void clear() {
+        size = 0;
+    }
+
+    // Function to print the vector elements (for debugging purposes)
+    void print() const {
+        for (size_t i = 0; i < size; ++i) {
+            std::cout << data[i] << " ";
+        }
+        std::cout << std::endl;
+    }
 };
 
-
-template<typename T>
-bool myvector<T>::empty()const
-{
-    return _size==0;
-}
-
-template<typename T>
-void myvector<T>::clear()
-{
-    _size = 0;
-}
-
-template<typename T>
-size_t myvector<T>::size()const
-{
-    return _size;
-}
-
-template<typename T>
-size_t myvector<T>::capacity()const
-{
-    return _capacity;
-}
-
-template<typename T>
-T& myvector<T>::at(size_t idx)
-{
-    if(idx>=_size)
-    {
-        throw std::out_of_range("Index out of range");
-    }
-    return _pdata[idx];
-}
-
-template<typename T>
-void myvector<T>:: pop_back()
-{
-  if(_size==0)
-  {
-    throw std::out_of_range("Vector is empty");
-  }
-  _size--;
-}
-
-template<typename T>
-T& myvector<T>::operator[](size_t idx)
-{
-    return _pdata[idx];
-}
-
-
-template<typename T>
-void myvector<T>::print()
-{
-  for(int i=0;i<_size;i++)
-  {
-    cout<<_pdata[i]<<endl;
-  }
-}
-
-template<typename T>
-myvector<T>::myvector():_pdata(new int),_capacity(1),_size(0)
-{
-}
-
-template<typename T>
-myvector<T>::~myvector()
-{
-    delete[]_pdata;
-}
-
-template<typename T>
-void myvector<T>::push_back(const T& data)
-{
-    if(_size == _capacity)
-    {
-        cout<<"doubling size"<<endl;
-        T* _temp = new T [2*_capacity];
-        for(int i=0;i<_size;i++)
-        {
-            _temp[i] = _pdata[i];
-        }
-        delete[]_pdata;
-        _capacity = 2*_capacity;
-        _pdata = _temp;
-    }
-    _pdata[_size++] = data;
-}
-
 int main() {
-    // Write C++ code here
-    myvector<int> ob;
-    ob.push_back(1);
-    ob.push_back(2);
-    ob.push_back(3);
-    ob.push_back(4);
-    ob.push_back(5);
+    MyVector<int> vec;
 
-    cout<<ob.at(0)<<endl;;
-    cout<<"size is "<<ob.size()<<endl;
-    cout<<"capacity is "<<ob.capacity()<<endl;
-    ob.pop_back();
-    ob.print();
+    // Add elements to the vector
+    vec.push_back(10);
+    vec.push_back(20);
+    vec.push_back(30);
+    vec.push_back(40);
+    
+    std::cout << "Vector contents: ";
+    vec.print();  // Output: 10 20 30 40
+
+    // Access elements by index
+    std::cout << "Element at index 2: " << vec[2] << std::endl;  // Output: 30
+
+    // Remove the last element
+    vec.pop_back();
+    std::cout << "After pop_back, vector contents: ";
+    vec.print();  // Output: 10 20 30
+
+    // Get size and capacity
+    std::cout << "Size: " << vec.get_size() << std::endl;  // Output: 3
+    std::cout << "Capacity: " << vec.get_capacity() << std::endl;  // Output: 4
+
+    // Clear the vector
+    vec.clear();
+    std::cout << "After clear, vector is empty: " << (vec.empty() ? "Yes" : "No") << std::endl;  // Output: Yes
 
     return 0;
 }
