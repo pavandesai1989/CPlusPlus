@@ -1,213 +1,207 @@
-0. unique_ptr is a class template.
-1. unique_ptr is one of the smart pointer provided by c++11 to prevent memory leaks.
-2. unique_ptr wraps a raw pointer in it, and de-allocates the raw pointer,
-   when unique_ptr object goes out of scope.
-3. similar to actual pointers we can use arrow and * on the object of unique_ptr,  because it is overloaded in unique_ptr class.
-4. When exception comes then also it will de-allocate the memory hence no memory leak.
-5. Not only object we can create array of objects of unique_ptr.
 
-***********IMPLEMENT OWN UNIQUE POINTER*******
+How unique_ptr solves the issue of auto_ptr in C++? *******+
+#include<memory> is the header
+Ownership Model
+•	Unique Ownership: A unique_ptr owns the resource it points to exclusively.
+   o	You cannot copy a unique_ptr. Copying it would lead to a compiler error.
+   o	Ownership can be transferred using std::move, but after the move, the original unique_ptr is null.
+
+Custom Deleters  *****
+When you define a std::unique_ptr<T, D>, you're telling it:
+
+T = the type of the object it manages (e.g. Resource)
+
+D = the type of the custom deleter (e.g. CustomDeleter class)
+
+•	You can specify a custom deleter if you need to perform some additional cleanup when the unique_ptr goes out of scope.
 #include <iostream>
-using namespace std;
+#include <memory>
 
-template<typename T>
-class uniqueptr
-{
-   public:
-       T* m_ptr;
-
-   public:
-       uniqueptr(T* ptr=nullptr):m_ptr(ptr){
-
-       }  
-       ~uniqueptr()
-       {
-           delete m_ptr;
-           m_ptr=nullptr;
-       }
-
-       //delete copy
-       uniqueptr<T>(const uniqueptr<T>& ob) = delete;
-       uniqueptr<T>& operator=(const uniqueptr<T>& ob) = delete;
-
-       T& operator*()
-       {
-           return *m_ptr;
-       }
-
-       T* operator->()
-       {
-           return m_ptr;
-       }
-       friend ostream& operator<<(ostream& ob,const uniqueptr<T>& ob);
-
-};
-
-std::ostream& operator<< (std::ostream& stream, const Bar& bar)
-ostream& operator<<(ostream& ob,uniqueptr<T>& ob)
-{
-    cout<<"overloading the ostream"<<endl;
-    ob<<*m_ptr;
-    return ob;
-}
-
-class demo
-{
-    public:
-       void display()
-       {
-           cout<<" calling the display of demo class"<<endl;
-       }
-       
-
-};
-
-
-
-
-int main() 
-{
-    uniqueptr<demo> sp(new demo);
-
-    cout<<*sp<<endl;
-}
-
-
-*******msdn link for good points******
-https://docs.microsoft.com/en-us/cpp/cpp/how-to-create-and-use-unique-ptr-instances?view=msvc-170
-
-A unique_ptr does not share its pointer. It cannot be copied to another unique_ptr, passed by value to a function, or used in any C++ Standard 
-Library algorithm that requires copies to be made.
-A unique_ptr can only be moved. This means that the ownership of the memory resource is transferred to another unique_ptr and the original 
-unique_ptr no longer owns it.
-unique_ptr is defined in the <memory> header in the C++ Standard Library. 
-*****The addition of unique_ptr instances to C++ Standard Library containers is efficient because the move constructor of the unique_ptr eliminates 
-the need for a copy operation.
-unique_ptr copy constructor is deleted
-
-As each unique_ptr object is sole owner of a raw pointer, therefore in its destructor it directly deletes the associated pointer.
-There is no need of any reference counting, therefore its very light
-
-
-***** example case issue*****
-
-int main()
-{
-   int* p = new int;
-   ..
-   ...
-   exception happens //fun return from here and deallocate local varibles.but heap memory not cleared. Wont delete p.//this is an issue
-   
-   delete p;
-   return 0;
-}
-
-********  use of the unique ptr****************
-#include<iostream>
-using namespace std;
-#include<memory>
-
-class foo
-{
-private:
-    int x;
-    
+class Resource {
 public:
-    foo(int a):x(a){
-        
+    Resource() {
+        std::cout << "Resource acquired\n";
     }
-    int getvalue(){return x;}
-    ~foo()
-    {
-        cout<<"destroyed"<<endl;
+
+    ~Resource() {
+        std::cout << "Resource destroyed\n";
+    }
+
+    void say_hello() const {
+        std::cout << "Hello from Resource\n";
     }
 };
 
-int main()
-{
-    foo *p = new foo(10);
-    cout<<p->getvalue()<<endl;  //destructor not called. we forgot delete p
-    
-    std::unique_ptr<foo> spfoo(new foo(10));   //its an object on stack and when it goes out of scope its destructor is called 
-    cout<<spfoo->getvalue()<<endl; //destructor called 
+// Custom deleter class
+class CustomDeleter {
+public:
+    void operator()(Resource* ptr) const {
+        std::cout << "CustomDeleter called\n";
+        delete ptr;
+    }
+};
+
+int main() {
+    // unique_ptr with a custom deleter class
+    std::unique_ptr<Resource, CustomDeleter> ptr(new Resource);
+
+    ptr->say_hello();
+
+    // CustomDeleter will be called when ptr goes out of scope
+    return 0;
 }
 
-its a single ownership object.
-
-/********* different ways to create the unique pointer*******
- std::unique_ptr<foo> spfoo(new foo(10));
- std::unique_ptr<foo> make_unique<foo>(10); ///best practice as its exception safe
- 
- 
- NOTE : 
- unique_ptr stores one pointer only. We can assign a different object by removing the current object from the pointer.
- 
- ***** Creating a empty unique_ptr object
- std::unique_ptr<int> ptr1;
- 
- // Create a unique_ptr object through raw pointer
-std::unique_ptr<Task> taskPtr(new Task(23));
-
-//NOTEEEEEEE
-We can not create a unique_ptr<> object through assignment, otherwise it will cause compile error
-// std::unique_ptr<Task> taskPtr2 = new Task(); // Compile Error
-
-******* move***
-We cannot copy a unique_ptr object, but we can move them. It means a unique_ptr object can transfer the owner ship of associated raw pointer to another 
-unique_ptr object.
-
-int main()
-{
-    std::unique_ptr<foo> sp1(new foo(10));
-    cout<<"sp1 address "<<sp1.get()<<endl;
-    cout<<"sp1 has "<<sp1->get()<<endl;
+call custom deletor explicitly 
+int main() {
+    std::unique_ptr<Resource, CustomDeleter> ptr(new Resource);
     
-    // p1 = p2;  //cannot copy unique ptr
-    
-    //transfer owner from p1 to p3.now p3 will have what p1 had
-    std::unique_ptr<foo> sp2= std::move(sp1);
-    //sp1 will be NULL
-    cout<<"sp2 address "<<sp2.get()<<endl;
-    cout<<"Sp2 has "<<sp2->get()<<endl;
-    if(!sp1)
-        cout<<"sp1 empty"<<endl;
-    
+    // Explicitly call the custom deleter
+    CustomDeleter deleter;
+    Resource* raw = ptr.release();  // release ownership without deleting
+    deleter(raw);  // manually delete  ******
+
+    // ptr now holds nullptr and will not try to delete anything
+    return 0;
 }
-******* get*******
-get will the managed object
 
-    std::unique_ptr<foo> sp1(new foo(10));
-    cout<<"sp1 is "<<sp1<<endl;
-    //get the managed object
-    foo* p1 = sp1.get();
-    cout<<"p1 is "<<p1<<endl;
-    
-/******* release********
-    std::unique_ptr<foo> sp1(new foo(10));
-    
-   /*Calling release() on unique_ptr object will release the ownership
-     of associated raw pointer from the object.
-      It returns the raw pointer*/
-    
-    foo* P = sp1.release();
-    
-    if(!sp1)
-        cout<<"NULL"<<endl;
-        
-  /******* reset***      
-  
-  Calling reset() function on a unique_ptr<> object will reset it i.e. it will delete the associated raw pointer 
-  and make unique_ptr<> object empty i.e.
-  
-      std::unique_ptr<foo> sp1(new foo(10));
 
-    sp1.reset();
-    
-    if(!sp1)  cout<<"NULL"<<endl;
-    
-    
-  
-  
+
+reset() and release()
+•	reset(): Releases ownership of the resource and optionally replaces it with a new resource.
+p.reset(new int(20));  // Releases old memory and points to new memory
+
+•	release(): Releases ownership without deleting the resource, returning the raw pointer.
+int* rawPtr = p.release();  // p no longer owns the resource
+
+What happens when you try to copy a unique_ptr?
+When you attempt to copy a unique_ptr, the compiler will produce a compile-time error. This is because std::unique_ptr is move-only, 
+meaning it cannot be copied to prevent accidental ownership transfer.
+
+std::unique_ptr<int> ptr = std::make_unique<int>(10);
+std::vector<std::unique_ptr<int>> vec;
+vec.push_back(std::move(ptr));  // Moves ownership into the vector
+// ptr is now null, and the vector holds the resource
+
+Create unique_ptr ******
+std::make_unique<T>()
+Why: This function ensures that memory is allocated safely, without the need to call new manually. 
+std::unique_ptr<int> ptr = std::make_unique<int>(10);  // Allocates an int with value 10
+
+reset()
+•	Purpose: Releases ownership of the current resource and optionally takes ownership of a new resource.
+std::unique_ptr<int> ptr = std::make_unique<int>(10);
+ptr.reset(new int(20));  // Releases old memory and assigns new memory
+release()
+•	Purpose: Releases ownership of the managed resource, returning the raw pointer. The unique_ptr no longer owns the resource, and it’s the programmer's responsibility to delete the resource if necessary.
+std::unique_ptr<int> ptr = std::make_unique<int>(10);
+int* rawPtr = ptr.release();  // ptr no longer owns the resource
+
+get()
+•	Purpose: Returns the raw pointer that unique_ptr is managing, without transferring ownership.
+
+
+*************************implement unique ptr class**********
+#include <iostream>
+#include <utility>  // For std::move
+
+template <typename T>
+class MyUniquePtr {
+private:
+    T* ptr;  // Raw pointer to the resource
+
+public:
+    // Constructor
+    explicit MyUniquePtr(T* p = nullptr) : ptr(p) {}
+
+    // Destructor
+    ~MyUniquePtr() {
+        delete ptr;  // Automatically deletes the resource when it goes out of scope
+    }
+
+    // Move Constructor (Transfers ownership)
+    MyUniquePtr(MyUniquePtr&& other) noexcept : ptr(other.ptr) {
+        other.ptr = nullptr;  // Set the other ptr to nullptr to avoid double deletion
+    }
+
+    // Move Assignment Operator (Transfers ownership)
+    MyUniquePtr& operator=(MyUniquePtr&& other) noexcept {
+        if (this != &other) {
+            delete ptr;  // Delete current resource
+            ptr = other.ptr;  // Take ownership of other's resource
+            other.ptr = nullptr;  // Set the other ptr to nullptr
+        }
+        return *this;
+    }
+
+    // Deleted Copy Constructor (Prevent copying)
+    MyUniquePtr(const MyUniquePtr&) = delete;
+
+    // Deleted Copy Assignment Operator (Prevent copying)
+    MyUniquePtr& operator=(const MyUniquePtr&) = delete;
+
+    // Reset the pointer (release current resource and optionally set a new one)
+    void reset(T* p = nullptr) {
+        delete ptr;  // Release current resource
+        ptr = p;  // Assign the new resource (or nullptr)
+    }
+
+    // Release the ownership of the resource (returns the raw pointer)
+    T* release() {
+        T* temp = ptr;
+        ptr = nullptr;
+        return temp;
+    }
+
+    // Access the raw pointer
+    T* get() const {
+        return ptr;
+    }
+
+    // Dereference the pointer
+    T& operator*() const {
+        return *ptr;
+    }
+
+    // Access the object via the arrow operator
+    T* operator->() const {
+        return ptr;
+    }
+
+    // Explicit conversion to bool (checks if the pointer is non-null)
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+};
+
+// Example usage of MyUniquePtr
+int main() {
+    MyUniquePtr<int> p1(new int(10));  // p1 owns the int resource
+
+    std::cout << "Value: " << *p1 << std::endl;  // Access the value
+
+    // Move ownership to p2
+    MyUniquePtr<int> p2 = std::move(p1);  // p1 is now empty, p2 owns the resource
+
+    if (!p1) {
+        std::cout << "p1 is now null." << std::endl;
+    }
+
+    std::cout << "Value in p2: " << *p2 << std::endl;
+
+    // Reset p2 to a new resource
+    p2.reset(new int(20));
+    std::cout << "New value in p2: " << *p2 << std::endl;
+
+    // Release ownership from p2
+    int* rawPtr = p2.release();
+    std::cout << "Raw pointer value: " << *rawPtr << std::endl;
+
+    delete rawPtr;  // Don't forget to delete manually when ownership is released!
+
+    return 0;
+}
+
+
 
 
  
