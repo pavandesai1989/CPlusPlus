@@ -1,0 +1,73 @@
+#include <iostream>
+#include <vector>
+#include <memory>  // Needed for shared_ptr and make_shared
+using namespace std;
+
+int main() {
+    // 🔹 Creating shared_ptr (NOT recommended way)
+    shared_ptr<int> sp1(new int);  // Allocates:
+                                   // 1. memory for int
+                                   // 2. control block for reference count
+
+    // 🔹 Recommended: use make_shared (fast + exception-safe)
+    shared_ptr<int> sp2 = make_shared<int>(25);
+
+    // 🔹 Get reference count
+    cout << "ref count is " << sp2.use_count() << endl;
+
+    // 🔹 Get the raw pointer
+    int* RawPtr = sp2.get();
+    cout << "value using the raw pointer: " << *RawPtr << endl;
+
+    // ❌ BAD PRACTICE: constructing two shared_ptr from same raw pointer
+    // This causes double delete and undefined behavior
+    /*
+    int* p = new int;
+    shared_ptr<int> sp3(p);
+    shared_ptr<int> sp4(p);  // ❌ Wrong: both will try to delete same pointer
+    */
+
+    // ❌ Invalid syntax: constructor is explicit
+    // shared_ptr<int> sp3 = new int;  // ❌ Build error
+
+    // 🔹 Shared_ptr with array: use custom deleter
+    {
+        shared_ptr<int> sp(new int[10], [](int* p) {
+            cout << "Custom deleter for array called!" << endl;
+            delete[] p;
+        });
+
+        // You can now use sp just like any shared_ptr
+    } // sp goes out of scope here, and custom deleter is called
+
+    return 0;
+}
+
+✅ 1. Custom Deletion Using a Function Pointer
+void deleter(int* x) {
+    std::cout << "DELETER FUNCTION CALLED\n";
+    delete[] x;
+}
+
+int main() {
+    shared_ptr<int> p(new int[5], deleter);
+    // custom deleter will be called when p goes out of scope
+}
+Notes:
+deleter must match the type: void (*)(int*).
+
+It will be called when the shared_ptr's reference count hits zero.
+
+Used when the deletion logic is shared or reusable.
+
+2. Custom Deletion Using a Lambda Function
+shared_ptr<int> p(new int[5], [](int* p) {
+    std::cout << "I am using custom deletor" << std::endl;
+    delete[] p;
+});
+Notes:
+Lambdas are more flexible and inline.
+
+Especially useful for one-off deletions.
+
+Cleaner when no named function is needed.
