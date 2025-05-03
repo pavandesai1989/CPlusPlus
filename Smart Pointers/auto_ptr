@@ -1,0 +1,62 @@
+Auto_ptr:
+•	•  auto_ptr was the first smart pointer in the standard library (introduced in C++98).
+•	•  It provided automatic memory management: the object is deleted when auto_ptr goes out of scope.
+Key Problems:
+1.	Ownership transfer on copy:
+o	Copying an auto_ptr moves the ownership.
+o	This leads to confusing behavior and bugs because copying doesn't mean sharing.
+2.	Breaks STL compatibility:
+o	STL containers (like vector, map) require elements to be copyable in a predictable way, which auto_ptr breaks.
+3.	No reference counting or shared ownership.
+
+#include <iostream>
+#include <memory>	
+int main() {
+8.	     std::auto_ptr<int> p1(new int(100));
+9.	    std::auto_ptr<int> p2 = p1;  // Ownership transferred to p2
+10.	
+11.	    if (p1.get() == nullptr)
+12.	        std::cout << "p1 is now null\n";
+13.	    else
+14.	        std::cout << "p1 still holds the pointer\n";
+15.	
+16.	    std::cout << "p2 holds: " << *p2 << "\n";
+17.	
+18.	    return 0;
+    }
+
+auto_ptr + STL Containers = Disaster **********
+The core issue is that STL containers copy elements, and auto_ptr transfers ownership on copy. This leads to some elements becoming null without you realizing it.  
+
+#include <iostream>
+#include <memory>
+#include <vector>
+
+int main() {
+    std::auto_ptr<int> a(new int(1));
+    std::auto_ptr<int> b(new int(2));
+
+    std::vector<std::auto_ptr<int>> vec;
+
+    vec.push_back(a);  // ownership of 'a' is moved into vector
+    vec.push_back(b);  // ownership of 'b' is moved into vector
+
+    // Now 'a' and 'b' are NULL! Using them will crash your program.
+    if (!a.get()) std::cout << "a is null\n";
+    if (!b.get()) std::cout << "b is null\n";
+
+    for (const auto& ptr : vec) {
+        std::cout << *ptr << "\n";  // OK, values are inside the vector
+    }
+
+    return 0;
+}
+
+Summary:
+  Why std::auto_ptr Was Deprecated (Short & Sweet):
+  1.	Confusing Copy Semantics
+    o	Copying an auto_ptr transfers ownership, instead of sharing or duplicating it.
+    o	This leads to unexpected null pointers after copy.
+  2.	Breaks STL Compatibility
+    o	STL containers like vector copy elements internally.
+    o	With auto_ptr, copying moves the pointer, which makes elements become null.
