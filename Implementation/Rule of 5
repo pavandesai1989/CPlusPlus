@@ -1,0 +1,101 @@
+#include <iostream>
+#include <cstring> // for std::memcpy
+void* memcpy(void* dest, const void* src, size_t count);
+Parameter	Description
+dest	Destination memory location
+src	Source memory location
+count	Number of bytes to copy
+
+ When to Use memcpy
+Copying plain-old-data (POD) types like int, float, arrays, or structs without complex constructors or virtual functions.
+
+High-performance block memory copying (e.g. for buffers, images).
+
+Don’t use memcpy on classes with custom copy/move constructors — it will skip them and lead to undefined behavior.
+                                       
+*********************************************
+
+class IntArray {
+private:
+    int* data;
+    size_t size;
+
+public:
+    // Constructor
+    IntArray(size_t s) : size(s), data(new int[s]) {
+        std::cout << "Constructor\n";
+        for (size_t i = 0; i < size; ++i)
+            data[i] = 0;
+    }
+
+    // Destructor
+    ~IntArray() {
+        std::cout << "Destructor\n";
+        delete[] data;
+    }
+
+    // Copy Constructor
+    IntArray(const IntArray& other) : size(other.size), data(new int[other.size]) {
+        std::cout << "Copy Constructor\n";
+        std::memcpy(data, other.data, size * sizeof(int));
+    }
+
+    // Copy Assignment
+    IntArray& operator=(const IntArray& other) {
+        std::cout << "Copy Assignment\n";
+        if (this != &other) {
+            delete[] data;
+            size = other.size;
+            data = new int[size];
+            std::memcpy(data, other.data, size * sizeof(int));
+        }
+        return *this;
+    }
+
+    // Move Constructor
+    IntArray(IntArray&& other) noexcept : data(other.data), size(other.size) {
+        std::cout << "Move Constructor\n";
+        other.data = nullptr;
+        other.size = 0;
+    }
+
+    // Move Assignment
+    IntArray& operator=(IntArray&& other) noexcept {
+        std::cout << "Move Assignment\n";
+        if (this != &other) {
+            delete[] data;
+            data = other.data;
+            size = other.size;
+            other.data = nullptr;
+            other.size = 0;
+        }
+        return *this;
+    }
+
+    // Index operator
+    int& operator[](size_t idx) {
+        return data[idx];
+    }
+
+    const int& operator[](size_t idx) const {
+        return data[idx];
+    }
+
+    // Size getter
+    size_t getSize() const {
+        return size;
+    }
+};
+int main() {
+    IntArray a(5);
+    a[0] = 42;
+
+    IntArray b = a;          // Copy constructor
+    IntArray c = std::move(a); // Move constructor
+
+    IntArray d(3);
+    d = b;                   // Copy assignment
+    d = std::move(c);        // Move assignment
+
+    std::cout << "d[0] = " << d[0] << std::endl;
+}
