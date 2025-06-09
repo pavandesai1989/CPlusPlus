@@ -1,135 +1,137 @@
 #include <iostream>
-#include <stdexcept>  // For std::out_of_range
+#include <stdexcept>
+#include <utility> // for std::move
 
 template<typename T>
-class MyVector {
+class Vector {
 private:
-    T* data;             // Pointer to the dynamically allocated array
-    size_t capacity;     // Capacity of the vector (how much space it can hold)
-    size_t size;         // Current size (number of elements in the vector)
+    T* data;
+    size_t _size;
+    size_t _capacity;
 
-    // Function to resize the vector (doubling the capacity)
     void resize() {
-        capacity *= 2;
-        T* new_data = new T[capacity];  // Create a new array with double capacity
+        _capacity = (_capacity == 0) ? 1 : _capacity * 2;
+        T* new_data = new T[_capacity];
 
-        // Copy elements from the old array to the new array
-        for (size_t i = 0; i < size; ++i) {
-            new_data[i] = data[i];
+        for (size_t i = 0; i < _size; ++i) {
+            new_data[i] = std::move(data[i]); // Move for performance
         }
 
-        // Delete the old array
         delete[] data;
-
-        // Point the data to the new array
         data = new_data;
     }
 
 public:
-    // Constructor
-    MyVector() : data(nullptr), capacity(0), size(0) {}
+    // Constructors
+    Vector() : data(nullptr), _size(0), _capacity(0) {}
 
-    // Destructor to clean up allocated memory
-    ~MyVector() {
+    // Destructor
+    ~Vector() {
         delete[] data;
     }
 
-    // Function to add an element to the back of the vector
-    void push_back(const T& value) {
-        if (size == capacity) {
-            // Resize the array if there is no space left
-            if (capacity == 0) {
-                capacity = 1;  // Start with capacity 1 if the vector is empty
-            }
+    // Copy constructor
+    Vector(const Vector& other) : _size(other._size), _capacity(other._capacity) {
+        data = new T[_capacity];
+        for (size_t i = 0; i < _size; ++i)
+            data[i] = other.data[i];
+    }
+
+    // Move constructor
+    Vector(Vector&& other) noexcept : data(other.data), _size(other._size), _capacity(other._capacity) {
+        other.data = nullptr;
+        other._size = 0;
+        other._capacity = 0;
+    }
+
+    // Copy assignment
+    Vector& operator=(const Vector& other) {
+        if (this != &other) {
+            delete[] data;
+            _size = other._size;
+            _capacity = other._capacity;
+            data = new T[_capacity];
+            for (size_t i = 0; i < _size; ++i)
+                data[i] = other.data[i];
+        }
+        return *this;
+    }
+
+    // Move assignment
+    Vector& operator=(Vector&& other) noexcept {
+        if (this != &other) {
+            delete[] data;
+            data = other.data;
+            _size = other._size;
+            _capacity = other._capacity;
+            other.data = nullptr;
+            other._size = 0;
+            other._capacity = 0;
+        }
+        return *this;
+    }
+
+    // Add element
+    void push_back(const T& val) {
+        if (_size == _capacity)
             resize();
-        }
-
-        // Add the new element
-        data[size] = value;
-        ++size;
+        data[_size++] = val;
     }
 
-    // Function to remove the last element
-    void pop_back() {
-        if (size > 0) {
-            --size;
-        } else {
-            throw std::out_of_range("pop_back called on an empty vector.");
-        }
+    void push_back(T&& val) {
+        if (_size == _capacity)
+            resize();
+        data[_size++] = std::move(val);
     }
 
-    // Function to access an element by index
+    // Element access
     T& operator[](size_t index) {
-        if (index >= size) {
-            throw std::out_of_range("Index out of range.");
-        }
         return data[index];
     }
 
-    // Const version of operator[] for read-only access
     const T& operator[](size_t index) const {
-        if (index >= size) {
-            throw std::out_of_range("Index out of range.");
-        }
         return data[index];
     }
 
-    // Function to get the current size of the vector
-    size_t get_size() const {
-        return size;
+    T& at(size_t index) {
+        if (index >= _size)
+            throw std::out_of_range("Index out of range in Vector::at()");
+        return data[index];
     }
 
-    // Function to check if the vector is empty
-    bool empty() const {
-        return size == 0;
+    const T& at(size_t index) const {
+        if (index >= _size)
+            throw std::out_of_range("Index out of range in Vector::at()");
+        return data[index];
     }
 
-    // Function to get the capacity of the vector
-    size_t get_capacity() const {
-        return capacity;
-    }
+    // Size and capacity
+    size_t size() const { return _size; }
+    size_t capacity() const { return _capacity; }
 
-    // Function to clear the vector
+    // Clear
     void clear() {
-        size = 0;
-    }
-
-    // Function to print the vector elements (for debugging purposes)
-    void print() const {
-        for (size_t i = 0; i < size; ++i) {
-            std::cout << data[i] << " ";
-        }
-        std::cout << std::endl;
+        delete[] data;
+        data = nullptr;
+        _size = 0;
+        _capacity = 0;
     }
 };
 
+
 int main() {
-    MyVector<int> vec;
+    Vector<int> v;
+    v.push_back(10);
+    v.push_back(20);
+    v.push_back(30);
 
-    // Add elements to the vector
-    vec.push_back(10);
-    vec.push_back(20);
-    vec.push_back(30);
-    vec.push_back(40);
-    
-    std::cout << "Vector contents: ";
-    vec.print();  // Output: 10 20 30 40
+    for (size_t i = 0; i < v.size(); ++i)
+        std::cout << v[i] << " ";  // Output: 10 20 30
 
-    // Access elements by index
-    std::cout << "Element at index 2: " << vec[2] << std::endl;  // Output: 30
+    std::cout << "\nElement at 1: " << v.at(1) << std::endl;
 
-    // Remove the last element
-    vec.pop_back();
-    std::cout << "After pop_back, vector contents: ";
-    vec.print();  // Output: 10 20 30
-
-    // Get size and capacity
-    std::cout << "Size: " << vec.get_size() << std::endl;  // Output: 3
-    std::cout << "Capacity: " << vec.get_capacity() << std::endl;  // Output: 4
-
-    // Clear the vector
-    vec.clear();
-    std::cout << "After clear, vector is empty: " << (vec.empty() ? "Yes" : "No") << std::endl;  // Output: Yes
-
-    return 0;
+    // Test move semantics
+    Vector<int> v2 = std::move(v);
+    std::cout << "v2[0]: " << v2[0] << std::endl;
 }
+
