@@ -1,100 +1,115 @@
+Summary:
+UniquePtr gives exclusive ownership.
+
+It can't be copied, only moved.
+
+You can release the pointer (manual control) or reset it.
+
+
 
 #include <iostream>
-#include <utility>  // For std::move
 
-template <typename T>
-class MyUniquePtr {
-private:
-    T* ptr;  // Raw pointer to the resource
-
+template<typename T>
+class UniquePtr {
 public:
     // Constructor
-    explicit MyUniquePtr(T* p = nullptr) : ptr(p) {}
+    explicit UniquePtr(T* ptr = nullptr) : m_ptr(ptr) {}
 
     // Destructor
-    ~MyUniquePtr() {
-        delete ptr;  // Automatically deletes the resource when it goes out of scope
+    ~UniquePtr() {
+        delete m_ptr;
     }
 
-    // Move Constructor (Transfers ownership)
-    MyUniquePtr(MyUniquePtr&& other) noexcept : ptr(other.ptr) {
-        other.ptr = nullptr;  // Set the other ptr to nullptr to avoid double deletion
+    // Delete copy constructor and copy assignment
+    UniquePtr(const UniquePtr&) = delete;
+    UniquePtr& operator=(const UniquePtr&) = delete;
+
+    // Move constructor
+    UniquePtr(UniquePtr&& other) noexcept : m_ptr(other.m_ptr) {
+        other.m_ptr = nullptr;
     }
 
-    // Move Assignment Operator (Transfers ownership)
-    MyUniquePtr& operator=(MyUniquePtr&& other) noexcept {
+    // Move assignment
+    UniquePtr& operator=(UniquePtr&& other) noexcept {
         if (this != &other) {
-            delete ptr;  // Delete current resource
-            ptr = other.ptr;  // Take ownership of other's resource
-            other.ptr = nullptr;  // Set the other ptr to nullptr
+            delete m_ptr;          // Clean up current resource
+            m_ptr = other.m_ptr;   // Transfer ownership
+            other.m_ptr = nullptr; // Release other's ownership
         }
         return *this;
     }
 
-    // Deleted Copy Constructor (Prevent copying)
-    MyUniquePtr(const MyUniquePtr&) = delete;
-
-    // Deleted Copy Assignment Operator (Prevent copying)
-    MyUniquePtr& operator=(const MyUniquePtr&) = delete;
-
-    // Reset the pointer (release current resource and optionally set a new one)
-    void reset(T* p = nullptr) {
-        delete ptr;  // Release current resource
-        ptr = p;  // Assign the new resource (or nullptr)
+    // Dereference operator
+    T& operator*() const {
+        return *m_ptr;
     }
 
-    // Release the ownership of the resource (returns the raw pointer)
+    // Arrow operator
+    T* operator->() const {
+        return m_ptr;
+    }
+
+    // Get the raw pointer
+    T* get() const {
+        return m_ptr;
+    }
+
+    // Release ownership and return the raw pointer
     T* release() {
-        T* temp = ptr;
-        ptr = nullptr;
+        T* temp = m_ptr;
+        m_ptr = nullptr;
         return temp;
     }
 
-    // Access the raw pointer
-    T* get() const {
-        return ptr;
+    // Reset with a new raw pointer
+    void reset(T* ptr = nullptr) {
+        delete m_ptr;
+        m_ptr = ptr;
     }
 
-    // Dereference the pointer
-    T& operator*() const {
-        return *ptr;
-    }
-
-    // Access the object via the arrow operator
-    T* operator->() const {
-        return ptr;
-    }
-
-    // Explicit conversion to bool (checks if the pointer is non-null)
+    // Bool conversion for if-checks
     explicit operator bool() const {
-        return ptr != nullptr;
+        return m_ptr != nullptr;
+    }
+
+private:
+    T* m_ptr;
+};
+
+struct MyClass {
+    void greet() {
+        std::cout << "Hello from MyClass!" << std::endl;
     }
 };
 
-// Example usage of MyUniquePtr
 int main() {
-    MyUniquePtr<int> p1(new int(10));  // p1 owns the int resource
+    UniquePtr<MyClass> uptr(new MyClass());
 
-    std::cout << "Value: " << *p1 << std::endl;  // Access the value
-
-    // Move ownership to p2
-    MyUniquePtr<int> p2 = std::move(p1);  // p1 is now empty, p2 owns the resource
-
-    if (!p1) {
-        std::cout << "p1 is now null." << std::endl;
+    if (uptr) {
+        uptr->greet();
     }
 
-    std::cout << "Value in p2: " << *p2 << std::endl;
+    // Transferring ownership
+    UniquePtr<MyClass> uptr2 = std::move(uptr);
+    if (!uptr) {
+        std::cout << "uptr is now empty." << std::endl;
+    }
 
-    // Reset p2 to a new resource
-    p2.reset(new int(20));
-    std::cout << "New value in p2: " << *p2 << std::endl;
+    if (uptr2) {
+        uptr2->greet();
+    }
 
-    // Release ownership from p2
-    int* rawPtr = p2.release();
-    std::cout << "Raw pointer value: " << *rawPtr << std::endl;
+    // Reset with a new object
+    uptr2.reset(new MyClass());
+    uptr2->greet();
 
-    delete rawPtr;  // Don't forget to delete manually when ownership is released!
+    // Release ownership manually
+    MyClass* raw = uptr2.release();
+    if (!uptr2) {
+        std::cout << "uptr2 is now empty after release." << std::endl;
+    }
 
+    delete raw; // clean up manually
     return 0;
 }
+
