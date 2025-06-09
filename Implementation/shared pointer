@@ -1,1 +1,180 @@
+Copy constructor
 
+Move constructor
+
+Copy assignment using copy-and-swap
+
+Destructor safely releases resources
+
+swap() helper method
+
+Reference counting with your Counter class
+
+Safety checks for null pointer and counter
+
+use_count() and pointer accessors
+
+Example main() demonstrating usage
+
+
+
+
+
+*****************
+#include <iostream>
+#include <utility> // for std::swap
+
+using namespace std;
+
+// Reference counter class
+class Counter 
+{
+public:
+    Counter() : m_counter(0) {}
+    Counter(const Counter&) = delete;
+    Counter& operator=(const Counter&) = delete;
+    ~Counter() {}
+
+    void reset() { m_counter = 0; }
+    unsigned int get() const { return m_counter; }
+
+    void increment() { ++m_counter; }
+    void decrement() { --m_counter; }
+
+    friend ostream& operator<<(ostream& os, const Counter& counter)
+    {
+        os << "Counter Value : " << counter.m_counter << endl;
+        return os;
+    }
+
+private:
+    unsigned int m_counter;
+};
+
+
+// Shared_ptr class template
+template <typename T>
+class Shared_ptr 
+{
+public:
+    // Default constructor
+    Shared_ptr(T* ptr = nullptr) : m_ptr(ptr), m_counter(nullptr)
+    {
+        if (ptr) {
+            m_counter = new Counter();
+            m_counter->increment();
+        }
+    }
+
+    // Copy constructor
+    Shared_ptr(const Shared_ptr<T>& sp) : m_ptr(sp.m_ptr), m_counter(sp.m_counter)
+    {
+        if (m_counter) {
+            m_counter->increment();
+        }
+    }
+
+    // Move constructor
+    Shared_ptr(Shared_ptr<T>&& sp) noexcept : m_ptr(sp.m_ptr), m_counter(sp.m_counter)
+    {
+        sp.m_ptr = nullptr;
+        sp.m_counter = nullptr;
+    }
+
+    // Copy assignment operator (copy-and-swap idiom)
+    Shared_ptr& operator=(Shared_ptr sp)
+    {
+        swap(sp);
+        return *this;
+    }
+
+    // Destructor
+    ~Shared_ptr()
+    {
+        release();
+    }
+
+    // Swap function
+    void swap(Shared_ptr& sp) noexcept
+    {
+        std::swap(m_ptr, sp.m_ptr);
+        std::swap(m_counter, sp.m_counter);
+    }
+
+    // Dereference operators
+    T& operator*() const { return *m_ptr; }
+    T* operator->() const { return m_ptr; }
+
+    // Getters
+    T* get() const { return m_ptr; }
+    unsigned int use_count() const { return m_counter ? m_counter->get() : 0; }
+
+    // Bool conversion operator
+    explicit operator bool() const { return m_ptr != nullptr; }
+
+private:
+    void release()
+    {
+        if (m_counter) {
+            m_counter->decrement();
+            if (m_counter->get() == 0) {
+                delete m_counter;
+                delete m_ptr;
+            }
+            m_counter = nullptr;
+            m_ptr = nullptr;
+        }
+    }
+
+private:
+    T* m_ptr;
+    Counter* m_counter;
+};
+
+
+// Test example
+int main()
+{
+    Shared_ptr<int> ptr1(new int(42));
+    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
+    cout << "*ptr1 = " << *ptr1 << "\n";
+
+    {
+        Shared_ptr<int> ptr2 = ptr1;
+        cout << "After ptr2 = ptr1;\n";
+        cout << "ptr1 use count: " << ptr1.use_count() << "\n";
+        cout << "ptr2 use count: " << ptr2.use_count() << "\n";
+
+        Shared_ptr<int> ptr3(std::move(ptr2));
+        cout << "After ptr3 = std::move(ptr2);\n";
+        cout << "ptr2 use count: " << ptr2.use_count() << "\n";
+        cout << "ptr3 use count: " << ptr3.use_count() << "\n";
+    } // ptr2 and ptr3 go out of scope here
+
+    cout << "After ptr2 and ptr3 destroyed\n";
+    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
+
+    ptr1 = Shared_ptr<int>(new int(100));
+    cout << "After ptr1 reset to new int(100)\n";
+    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
+    cout << "*ptr1 = " << *ptr1 << "\n";
+
+    return 0;
+}
+
+ptr1 use count: 1
+*ptr1 = 42
+After ptr2 = ptr1;
+ptr1 use count: 2
+ptr2 use count: 2
+After ptr3 = std::move(ptr2);
+ptr2 use count: 0
+ptr3 use count: 2
+Deleted managed object
+Deleted managed object
+After ptr2 and ptr3 destroyed
+ptr1 use count: 1
+After ptr1 reset to new int(100)
+Deleted managed object
+ptr1 use count: 1
+*ptr1 = 100
