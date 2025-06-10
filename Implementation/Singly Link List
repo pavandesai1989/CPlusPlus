@@ -1,0 +1,99 @@
+
+#include <iostream>
+
+template <typename T>
+class SinglyLinkedList {
+private:
+    struct Node {
+        T data;
+        Node* next;
+        Node(const T& val) : data(val), next(nullptr) {}
+    };
+
+    Node* head;
+
+public:
+    SinglyLinkedList() : head(nullptr) {}
+
+    ~SinglyLinkedList() {
+        clear();
+    }
+
+    // Insert at front
+    void push_front(const T& val) {
+        Node* newNode = new Node(val);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    // Insert at back
+    void push_back(const T& val) {
+        Node* newNode = new Node(val);
+        if (!head) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next)
+            temp = temp->next;
+        temp->next = newNode;
+    }
+
+    // Delete from front
+    void pop_front() {
+        if (!head) return;
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+
+    // Delete entire list
+    void clear() {
+        while (head)
+            pop_front();
+    }
+
+    // Print list
+    void print() const {
+        Node* temp = head;
+        while (temp) {
+            std::cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        std::cout << "null\n";
+    }
+
+    // Check if empty
+    bool empty() const {
+        return head == nullptr;
+    }
+
+    // Return first element
+    T& front() {
+        if (!head) throw std::out_of_range("List is empty");
+        return head->data;
+    }
+
+    const T& front() const {
+        if (!head) throw std::out_of_range("List is empty");
+        return head->data;
+    }
+};
+
+int main() {
+    SinglyLinkedList<int> list;
+
+    list.push_back(10);
+    list.push_back(20);
+    list.push_front(5);
+
+    list.print(); // Output: 5 -> 10 -> 20 -> null
+
+    list.pop_front();
+    list.print(); // Output: 10 -> 20 -> null
+
+    std::cout << "Front: " << list.front() << "\n";
+    std::cout << "Empty? " << std::boolalpha << list.empty() << "\n";
+
+    return 0;
+}
