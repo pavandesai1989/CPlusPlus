@@ -1,1 +1,157 @@
+STL queue uses deque internally and u can use list as well.
+
+***********generic container*****
+#include <iostream>
+#include <deque>
+#include <list>
+
+template<typename T, typename Container = std::deque<T>>
+class MyQueue {
+private:
+    Container c;
+
+public:
+    void push(const T& val) {
+        c.push_back(val);
+    }
+
+    void pop() {
+        if (!c.empty())
+            c.pop_front();
+    }
+
+    T& front() {
+        return c.front();
+    }
+
+    const T& front() const {
+        return c.front();
+    }
+
+    T& back() {
+        return c.back();
+    }
+
+    const T& back() const {
+        return c.back();
+    }
+
+    bool empty() const {
+        return c.empty();
+    }
+
+    size_t size() const {
+        return c.size();
+    }
+
+    void emplace(const T& val) {
+        c.emplace_back(val);
+    }
+
+    void swap(MyQueue& other) {
+        c.swap(other.c);
+    }
+};
+int main() {
+    // Using default (deque)
+    MyQueue<int> q1;
+    q1.push(10);
+    q1.push(20);
+    std::cout << "Deque Front: " << q1.front() << ", Back: " << q1.back() << '\n';
+
+    // Using list
+    MyQueue<int, std::list<int>> q2;
+    q2.push(100);
+    q2.push(200);
+    std::cout << "List Front: " << q2.front() << ", Back: " << q2.back() << '\n';
+
+    // Swap example
+    q1.swap(q1);
+}
+
+
+
+**********Link list***********
+
+#include <iostream>
+#include <stdexcept>
+
+template <typename T>
+class MyQueue {
+private:
+    struct Node {
+        T data;
+        Node* next;
+        Node(const T& val) : data(val), next(nullptr) {}
+    };
+
+    Node* frontNode;
+    Node* backNode;
+    size_t count;
+
+public:
+    MyQueue() : frontNode(nullptr), backNode(nullptr), count(0) {}
+
+    ~MyQueue() {
+        while (!empty()) {
+            pop();
+        }
+    }
+
+    void push(const T& val) {
+        Node* node = new Node(val);
+        if (backNode) {
+            backNode->next = node;
+        } else {
+            frontNode = node;
+        }
+        backNode = node;
+        ++count;
+    }
+
+    void pop() {
+        if (empty()) throw std::runtime_error("Queue is empty");
+        Node* temp = frontNode;
+        frontNode = frontNode->next;
+        if (!frontNode) backNode = nullptr;
+        delete temp;
+        --count;
+    }
+
+    T& front() {
+        if (empty()) throw std::runtime_error("Queue is empty");
+        return frontNode->data;
+    }
+
+    T& back() {
+        if (empty()) throw std::runtime_error("Queue is empty");
+        return backNode->data;
+    }
+
+    bool empty() const {
+        return count == 0;
+    }
+
+    size_t size() const {
+        return count;
+    }
+};
+
+int main() {
+    MyQueue<int> q;
+    q.push(10);
+    q.push(20);
+    q.push(30);
+
+    std::cout << "Front: " << q.front() << std::endl; // 10
+    std::cout << "Back: " << q.back() << std::endl;   // 30
+
+    q.pop();
+    std::cout << "After pop, Front: " << q.front() << std::endl; // 20
+
+    std::cout << "Size: " << q.size() << std::endl;  // 2
+    std::cout << "Empty? " << std::boolalpha << q.empty() << std::endl;
+
+    return 0;
+}
 
