@@ -1,0 +1,22 @@
+What is Function Overloading?
+Function overloading means defining multiple functions with the same name but with different parameters (type or number).
+
+Key Rules for Overloading:
+•	Same function name ✅
+•	Different parameter type, number, or order ✅
+•	Return type alone cannot be used to overload ❌
+
+Functions that cannot be overloaded in C++
+•	Function declarations that differ only in the return type.
+•	Member function declarations with the same name and the name parameter-type-list cannot be overloaded if any of them is a static member function declaration.
+•	Parameter declarations that differ only in a pointer * versus an array [] are equivalent
+•	Parameter declarations that differ only in the presence or absence of const and/or volatile are equivalent.
+
+
+int f ( int x) {
+    return x+10;
+}
+ 
+int f ( const int x) {
+    return x+10;
+}
