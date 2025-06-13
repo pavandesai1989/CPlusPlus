@@ -1,0 +1,102 @@
+The Diamond Problem occurs in the following inheritance structure:
+       A
+     /   \
+    B     C
+     \   /
+      D
+using namespace std;
+
+class A {
+public:
+    void show() {
+        cout << "A::show()" << endl;
+    }
+};
+
+class B : public A { };
+class C : public A { };
+class D : public B, public C { };
+
+int main() {
+    D obj;
+    obj.show();  // error 
+    return 0;
+}
+// ❌ error: request for member 'show' is ambiguous
+
+Class D inherits from both B and C.
+
+Both B and C inherit from A, so now D contains two copies of class A.
+
+Therefore, the call obj.show() is ambiguous:
+
+Compiler doesn't know whether to call B::A::show() or C::A::show().
+
+Memory Diagram (Conceptually)
+         A
+       /   \
+     B       C
+       \   /
+         D
+
+In reality, without virtual inheritance, D contains two separate A subobjects:
+
+One via B
+
+One via C
+
+Hence, calling show() is ambiguous.
+
+
+How to Fix: Use Virtual Inheritance
+Change both B and C to inherit A virtually:
+class A {
+public:
+    void show() {
+        cout << "A::show()" << endl;
+    }
+};
+
+class B : virtual public A { };
+class C : virtual public A { };
+class D : public B, public C { };
+
+int main() {
+    D obj;
+    obj.show();  // ✅ No ambiguity
+    return 0;
+}
+
+ Why This Works
+With virtual inheritance, only one shared copy of A exists in D.
+
+Now the compiler knows exactly which show() to call → no ambiguity.
+
+This is known as the diamond problem in C++ multiple inheritance.
+
+
+ Solution: Virtual Inheritance
+Now let's declare B and C like this:
+class A { };
+class B : virtual public A { };
+class C : virtual public A { };
+class D : public B, public C { };
+
+D obj;
+
+Now, both B and C point to the same A, and there's only one copy.
+
+obj (D)
+├── B
+├── C
+└── A  ← shared single copy
+
+so this works 
+obj.show();  // ✅ Calls A::show() — unambiguous
+
+How Virtual Inheritance Works Internally
+With virtual inheritance, B and C don’t embed their own copies of A.
+
+Instead, they store a pointer/reference to a single shared instance of A created by D.
+
+This eliminates the ambiguity and multiple copies.
