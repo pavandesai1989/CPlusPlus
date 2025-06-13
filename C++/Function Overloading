@@ -20,3 +20,4 @@ int f ( int x) {
 int f ( const int x) {
     return x+10;
 }
+C++ allows functions to be overloaded on the basis of the const-ness of parameters only if the const parameter is a reference or a pointer.
