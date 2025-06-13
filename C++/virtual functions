@@ -1,0 +1,106 @@
+Virtual functions
+virtual function is a member function in a base class that you expect to be overridden in derived classes. 
+It allows runtime polymorphism, which means the function call is resolved at runtime rather than compile time.
+
+  Issue without virtual keyword:
+// Online C++ compiler to run C++ program online
+#include <iostream>
+using namespace std;
+
+class base
+{
+   public:
+   void show()
+   {
+    cout<<"base class"<<endl;
+   }
+};
+
+class derived:public base
+{
+  public:
+    void show()
+    {
+        cout<<"derived class"<<endl;
+    }
+};
+
+int main() 
+{
+    base* ptr = new derived;
+    ptr->show();
+    return 0;
+}
+  
+But since show() is not virtual in the base class, the function call is resolved at compile time, based on the type of the pointer, not the object it points to.
+  
+Expected Output (if virtual used):
+If your intention was to call derived::show(), then you need to declare show() as virtual in the base class:
+
+Summary:
+Without virtual, C++ uses compile-time binding, and the base class version is called.
+With virtual, C++ uses runtime polymorphism, and the correct derived version is called based on the object type.
+
+  In C++, once a member function is declared as a virtual function in a base class, it becomes virtual in every class derived from that base class. In other words, it is not necessary to use the keyword virtual in the derived class while declaring redefined versions of the virtual base class function.
+    
+  ******working****
+How Does It Work Internally?
+1. VTable (Virtual Table)
+•	A vtable is a table of function pointers created by the compiler. A vtable is a lookup table created by the compiler that stores addresses of virtual functions for a class.
+•	Each class with virtual functions has its own vtable.
+•	Each entry in the table corresponds to a virtual function.
+  
+2. VPTR (Virtual Pointer)
+•	Each object of a class with virtual functions contains a hidden pointer (vptr) to the vtable of its class.
+•	When you call a virtual function using a pointer/reference, the call goes through the vptr → vtable → actual function.
+  
+Step 1: What is vptr?
+•	vptr is a hidden pointer inserted by the compiler inside every object of a class that has virtual functions.
+•	It is not visible in your code, but it exists in the object's memory layout.
+•	Its job: point to the correct vtable for the object’s actual type.
+
+  
+class Base {
+public:
+    virtual void f1() { cout << "Base::f1" << endl; }
+};
+
+class Derived : public Base {
+public:
+    void f1() override { cout << "Derived::f1" << endl; }
+};
+
+int main() {
+    Base* ptr = new Derived();
+    ptr->f1();  // Which function?
+}
+  
+Here’s What the Compiler Does:
+When new Derived() is called:
+1.	Memory is allocated for the Derived object.
+2.	Inside the Derived constructor, the compiler automatically inserts code like this (pseudocode): 
+this->vptr = &Derived_vtable;
+Now, when we later call ptr->f1(), the compiler generates code like:
+(*ptr->vptr[0])();  // Access first function pointer in Derived_vtable 
+Because vptr points to Derived_vtable, it ends up calling Derived::f1() — even though ptr is a Base*.
+Order of Virtual Functions in the Base Class
+The compiler creates the vtable for a class by adding the virtual functions in the order they appear in the class, regardless of whether they are overridden by a derived clas
+class Base {
+public:
+    virtual void f1() { cout << "Base::f1" << endl; }
+    virtual void f2() { cout << "Base::f2" << endl; }
+};
+For the Base class, the compiler generates a vtable in the following order:
+Base_vtable:
++-------------------+
+| &Base::f1         |  <- Index 0
+| &Base::f2         |  <- Index 1  
+Summary:
+•	The order of virtual functions in the class determines their vtable index.
+•	This index is fixed during compilation.
+•	At runtime, the vtable pointer (stored in each object of a polymorphic class) is used to fetch the correct function pointer from the right index.
+
+So, Base_vtable contains function pointers for f1 and f2 in the same order they were declared in the Base class
+
+
+  
