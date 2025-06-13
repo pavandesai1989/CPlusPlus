@@ -1,0 +1,179 @@
+Object slicing is a concept in C++ that occurs when an object of a derived class is assigned to an object of a base class. 
+The derived class object is "sliced off", meaning that only the base class part of the object is copied, and the derived class-specific members (variables and functions) are lost.
+
+When a derived class object is assigned to a base class object (either by value or through passing by value), the extra attributes and methods specific to the derived class are not included. This results in a loss of information.
+
+
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    int x = 10;
+    virtual void show() {
+        cout << "Base: x = " << x << endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    int y = 20;
+    void show() override {
+        cout << "Derived: x = " << x << ", y = " << y << endl;
+    }
+};
+
+int main() {
+    Derived d;
+    d.show();   // ✅ Expected to print both x and y
+
+    Base b = d; // ❌ Object slicing happens here
+    b.show();   // ❌ Calls Base::show(), y is lost
+
+    return 0;
+}
+
+
+Derived: x = 10, y = 20
+Base: x = 10
+
+What Happened in Base b = d;?
+d is a Derived object (has both x and y).
+
+b is a Base object, created by copying only the Base part from d.
+
+This "copy by value" slices off the derived part (the y and Derived::show()).
+
+So when you call b.show(), it does not call the overridden version in Derived — it calls Base::show().
+
+******Correct Way (Using Reference or Pointer)
+
+int main() {
+    Derived d;
+    Base& ref = d;  // ✅ No slicing
+    ref.show();     // ✅ Calls Derived::show()
+
+    Base* ptr = &d; // ✅ No slicing
+    ptr->show();    // ✅ Calls Derived::show()
+
+    return 0;
+}
+
+Derived: x = 10, y = 20
+Derived: x = 10, y = 20
+
+***interview
+You are given the following C++ classes:
+#include <iostream>
+using namespace std;
+
+class Animal {
+public:
+    virtual void speak() const {
+        cout << "Animal speaks" << endl;
+    }
+};
+
+class Dog : public Animal {
+public:
+    void speak() const override {
+        cout << "Dog barks" << endl;
+    }
+};
+
+void makeAnimalSpeak(Animal a) {
+    a.speak();
+}
+
+int main() {
+    Dog d;
+    makeAnimalSpeak(d); // What will this print?
+    return 0;
+}
+
+Animal speaks
+
+ Explanation:
+In makeAnimalSpeak(Animal a), the Dog d object is passed by value.
+
+This causes object slicing — only the Animal part of Dog is copied into parameter a.
+
+So a.speak() calls Animal::speak(), not the overridden version in Dog.
+
+Even though speak() is virtual, slicing already removed the Dog part before the virtual function mechanism can help.
+
+
+How to Fix It:
+Change the function to pass by reference:
+void makeAnimalSpeak(const Animal& a) {
+    a.speak(); // Will now call Dog::speak() if a Dog is passed
+}
+
+Dog barks
+
+Do This                                         	     Avoid This
+Pass polymorphic objects by reference or pointer	     Passing by value (causes slicing)
+Use virtual for dynamic dispatch	                     Assuming virtual always works (it doesn’t if slicing   occurs)
+
+****interview
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Shape {
+public:
+    virtual void draw() const {
+        cout << "Drawing Shape" << endl;
+    }
+};
+
+class Circle : public Shape {
+public:
+    void draw() const override {
+        cout << "Drawing Circle" << endl;
+    }
+};
+
+int main() {
+    vector<Shape> shapes;
+    Circle c;
+
+    shapes.push_back(c); // What happens here?
+    
+    for (const Shape& s : shapes) {
+        s.draw();
+    }
+
+    return 0;
+}
+
+Drawing Shape
+
+ Explanation:
+Circle is derived from Shape.
+
+When we do shapes.push_back(c);, the object is copied by value into the vector<Shape>.
+
+This causes object slicing — only the Shape part of Circle is stored.
+
+So when s.draw() is called in the loop, even though draw() is virtual, the sliced object no longer contains Circle's data or override.
+
+Therefore, Shape::draw() is called.
+
+
+How to Fix It: Use Pointers
+int main() {
+    vector<Shape*> shapes;
+    Circle c;
+
+    shapes.push_back(&c); // Now we're storing a pointer to Circle
+
+    for (const Shape* s : shapes) {
+        s->draw();        // Now dynamic dispatch works
+    }
+
+    return 0;
+}
+
+Drawing Circle
+
