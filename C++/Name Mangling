@@ -1,0 +1,59 @@
+Name mangling is the process by which the C++ compiler encodes additional information (like function arguments, namespaces, classes) 
+into the function name to support function overloading, namespaces, and templates.
+
+It's how C++ enables features like function overloading that aren't supported by C-style linking.
+
+Why Name Mangling Is Needed
+In C, functions are identified only by their name:
+void func();   // C treats just 'func' as the symbol
+
+
+But in C++, you can have:
+void func();           // func()
+void func(int);        // func(int)
+void func(double, int); // func(double, int)
+
+So the compiler "mangles" these into unique internal names, like:
+_Z4funcv             // for func()
+_Z4funci             // for func(int)
+_Z4funcdi            // for func(double, int)
+
+#include <iostream>
+using namespace std;
+
+void greet() {
+    cout << "Hello!" << endl;
+}
+
+void greet(string name) {
+    cout << "Hello, " << name << "!" << endl;
+}
+
+When compiled, the symbol names are mangled (you can see them with tools like nm or objdump on Linux).
+
+Why is name mangling necessary in C++ but not in C?
+C++ supports function overloading, namespaces, and templates. These features require multiple functions with the same name but 
+different parameters to coexist, so the compiler uses name mangling to create unique internal names. 
+C doesn’t support these features, so it doesn’t need mangling.
+
+
+Can name mangling cause problems? If yes, when?
+Yes, it can cause linking issues when:
+Mixing C and C++ code (C doesn't understand mangled names).
+Linking C++ code compiled with different compilers (e.g., GCC vs Clang), which may mangle names differently.
+
+
+How can you avoid name mangling in C++?
+Use extern "C" to tell the compiler to use C-style linking:
+extern "C" void myFunction();
+
+How can you view the mangled names of functions?
+Use tools like:
+nm <object_file> – lists symbols in object files
+objdump -t <object_file> – shows symbol tables
+c++filt – demangles C++ symbols to human-readable names
+
+Is name mangling part of the C++ standard?
+No, name mangling is implementation-specific. Each compiler (e.g., GCC, MSVC, Clang) may use a different name mangling scheme.
+
+
