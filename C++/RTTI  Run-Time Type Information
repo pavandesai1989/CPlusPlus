@@ -1,0 +1,46 @@
+What is RTTI in C++?
+RTTI (Run-Time Type Information) allows you to:
+•	Use typeid to get the actual type of an object at runtime. Works with references and pointers to polymorphic types 
+•	Use dynamic_cast for safe downcasting.
+
+For RTTI to work correctly with polymorphic types, the base class must have at least one virtual function.
+Case 1: No Virtual Function — Static Type is Used
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class Base { };
+class Derived : public Base { };
+
+int main() {
+    Base* ptr = new Derived;
+    cout << typeid(*ptr).name() << endl;  // Prints "Base"
+    return 0;
+}
+
+Explanation:
+•	Since Base has no virtual functions, there's no vtable and no RTTI tracking of the real object.
+•	typeid(*ptr) uses the static type of the pointer (Base*), so you get "Base" even though ptr points to a Derived.
+
+Case 2: Virtual Function Present — Dynamic Type is Used
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+class Base {
+public:
+    virtual void foo() {}  // Now it's polymorphic
+};
+
+class Derived : public Base { };
+
+int main() {
+    Base* ptr = new Derived;
+    cout << typeid(*ptr).name() << endl;  // Prints "Derived"
+    return 0;
+}
+
+Explanation:
+•	Now Base is a polymorphic class because it has a virtual function.
+•	typeid(*ptr) uses the dynamic type of the object that ptr is pointing to.
+•	So it prints "Derived".
