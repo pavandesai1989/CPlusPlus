@@ -1,0 +1,44 @@
+In C++, when you have overloaded methods in a base class, and a derived class defines a method with the same name, 
+the base class methods are hidden (or overshadowed) by the derived class method. This is called method hiding.
+
+
+#include <iostream>
+using namespace std;
+
+class Base {
+public:
+    void show() {
+        cout << "Base class - no parameters" << endl;
+    }
+
+    void show(int x) {
+        cout << "Base class - with integer: " << x << endl;
+    }
+
+    void show(double y) {
+        cout << "Base class - with double: " << y << endl;
+    }
+};
+
+class Derived : public Base {
+public:
+    void show() {  // Hides all show() functions in Base class
+        cout << "Derived class - no parameters" << endl;
+    }
+};
+
+int main() {
+    Base b;
+    b.show();     // Calls Base class show() with no parameters
+    b.show(10);   // Calls Base class show(int)
+    b.show(5.5);  // Calls Base class show(double)
+
+    Derived d;
+    d.show();     // Calls Derived class show() (hides Base class show())
+
+    // The following would be errors because the Base class methods are hidden:
+    // d.show(10);  // Error: No matching function in Derived
+    // d.show(5.5); // Error: No matching function in Derived
+
+    return 0;
+}
