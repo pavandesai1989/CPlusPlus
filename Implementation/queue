@@ -1,5 +1,115 @@
 STL queue uses deque internally and u can use list as well.
 
+
+**********ararys*****
+#include<iostream>
+using namespace std;
+
+
+class myqueue
+{
+private:
+int* arr;
+int front;
+int rear;
+int currsize;
+int maxsize;
+
+
+public:
+myqueue()
+{
+    maxsize = 100;
+    front = -1;
+    rear = -1;
+    currsize = 0;
+    arr = new int[maxsize];
+}
+
+void push(int val)
+{
+    //when we cant push 
+    if(currsize == maxsize)
+    {
+        cout<<"full "<<endl;
+        return;
+    }
+
+    if(front == -1 && rear == -1)
+    {
+        front = 0;
+        rear = 0;
+    }
+    else
+    {
+        rear = (rear+1)%maxsize;
+    }
+
+    arr[rear] = val;
+    currsize++;
+}
+
+int pop()
+{
+    //when cant pop. when empty
+    if(front == -1)
+    {
+        cout<<"empty"<<endl;
+        return -1;
+    }
+
+    int ele = arr[front];
+    if(currsize == 1)
+    {
+        front = -1;
+        rear = -1;
+    }
+    else
+    {
+        //move start
+        front = (front+1)%maxsize;
+    }
+    currsize--;
+    return ele;
+}
+
+int top()
+{
+    if(front == -1)
+    {
+        cout<<"empty"<<endl;
+        return -1;
+    }
+    return arr[front];
+}
+
+int size()
+{
+    return currsize;
+}
+
+
+
+};
+
+
+
+int main() {
+  myqueue q;
+  q.push(4);
+  q.push(14);
+  q.push(24);
+  q.push(34);
+  cout << "The peek of the queue before deleting any element " << q.top() << endl;
+  cout << "The size of the queue before deletion " << q.size() << endl;
+  cout << "The first element to be deleted " << q.pop() << endl;
+  cout << "The peek of the queue after deleting an element " << q.top() << endl;
+  cout << "The size of the queue after deleting an element " << q.size() << endl;
+
+  return 0;
+}
+
+
 ***********generic container*****
 #include <iostream>
 #include <deque>
