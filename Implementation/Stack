@@ -67,6 +67,91 @@ int main() {
 }
 
 
+***********************link list*******
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+
+    Node(int val) {
+        data = val;
+        next = nullptr;
+    }
+};
+
+class Stack {
+private:
+    Node* topNode;
+    int currSize;
+
+public:
+    Stack() {
+        topNode = nullptr;
+        currSize = 0;
+    }
+
+    void push(int val) {
+        Node* newNode = new Node(val);
+        newNode->next = topNode;
+        topNode = newNode;
+        currSize++;
+    }
+
+    void pop() {
+        if (isEmpty()) {
+            cout << "Stack Underflow!" << endl;
+            return;
+        }
+        Node* temp = topNode;
+        topNode = topNode->next;
+        delete temp;
+        currSize--;
+    }
+
+    int top() {
+        if (isEmpty()) {
+            cout << "Stack is empty!" << endl;
+            return -1;
+        }
+        return topNode->data;
+    }
+
+    int size() {
+        return currSize;
+    }
+
+    bool isEmpty() {
+        return topNode == nullptr;
+    }
+
+    ~Stack() {
+        while (!isEmpty()) {
+            pop(); // Clean up memory
+        }
+    }
+};
+
+int main() {
+    Stack s;
+    s.push(10);
+    s.push(20);
+    s.push(30);
+
+    cout << "Top element: " << s.top() << endl;
+    cout << "Size of stack: " << s.size() << endl;
+
+    s.pop();
+
+    cout << "Top after pop: " << s.top() << endl;
+    cout << "Size after pop: " << s.size() << endl;
+
+    return 0;
+}
+
+
 ********Custom Stack Class Using vector**********
 #include <iostream>
 #include <vector>
