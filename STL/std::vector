@@ -30,12 +30,34 @@ Key Features of std::vector
 ✅ Support for Iterators – Works well with range-based loops, algorithms, and iterators.
 
 
-Function	Description
-size()	Returns the number of elements.
-capacity()	Returns allocated memory size (≥ size()).  **************
-resize(n)	Resizes the vector to n elements.
-empty()	Returns true if the vector is empty.
-shrink_to_fit()	Reduces capacity() to size().
+| Method                  | Return Type              | Purpose / Description                                           | Example Usage                      |
+| ----------------------- | ------------------------ | --------------------------------------------------------------- | ---------------------------------- |
+| `size()`                | `size_t`                 | Returns number of elements in the vector                        | `v.size()`                         |
+| `capacity()`            | `size_t`                 | Returns current allocated storage capacity                      | `v.capacity()`                     |
+| `empty()`               | `bool`                   | Checks if vector is empty                                       | `v.empty()`                        |
+| `resize(n)`             | `void`                   | Resizes vector to `n` elements (default-initialized if growing) | `v.resize(10)`                     |
+| `reserve(n)`            | `void`                   | Increases capacity to at least `n` elements                     | `v.reserve(100)`                   |
+| `shrink_to_fit()`       | `void`                   | Requests to reduce capacity to fit size                         | `v.shrink_to_fit()`                |
+| `clear()`               | `void`                   | Removes all elements                                            | `v.clear()`                        |
+| `push_back(val)`        | `void`                   | Appends `val` to the end                                        | `v.push_back(5)`                   |
+| `pop_back()`            | `void`                   | Removes last element                                            | `v.pop_back()`                     |
+| `insert(pos, val)`      | `iterator`               | Inserts `val` before `pos`                                      | `v.insert(v.begin()+1, 42)`        |
+| `erase(pos)`            | `iterator`               | Removes element at `pos`                                        | `v.erase(v.begin()+2)`             |
+| `erase(start, end)`     | `iterator`               | Removes a range of elements                                     | `v.erase(v.begin(), v.begin()+3)`  |
+| `assign(n, val)`        | `void`                   | Assigns `n` copies of `val`                                     | `v.assign(5, 100)`                 |
+| `swap(other)`           | `void`                   | Swaps contents with another vector                              | `v1.swap(v2)`                      |
+| `front()`               | `T&` / `const T&`        | Access first element                                            | `v.front()`                        |
+| `back()`                | `T&` / `const T&`        | Access last element                                             | `v.back()`                         |
+| `operator[]`            | `T&` / `const T&`        | Direct access without bounds check                              | `v[2]`                             |
+| `at(index)`             | `T&` / `const T&`        | Bounds-checked access, throws on error                          | `v.at(2)`                          |
+| `data()`                | `T*`                     | Pointer to underlying array                                     | `int* p = v.data()`                |
+| `begin()` / `end()`     | `iterator`               | Iterators to first and one-past-last element                    | `for (auto it = v.begin(); ...)`   |
+| `cbegin()` / `cend()`   | `const_iterator`         | Const iterators                                                 | `for (auto it = v.cbegin(); ...)`  |
+| `rbegin()` / `rend()`   | `reverse_iterator`       | Reverse iterators                                               | `for (auto it = v.rbegin(); ...)`  |
+| `crbegin()` / `crend()` | `const_reverse_iterator` | Const reverse iterators                                         | `for (auto it = v.crbegin(); ...)` |
+| `emplace(pos, args...)` | `iterator`               | Constructs element in-place at `pos`                            | `v.emplace(v.begin()+1, 50)`       |
+| `emplace_back(args...)` | `void`                   | Constructs element in-place at the end                          | `v.emplace_back(42)`               |
+
 
 ***************ways to initialize vector*******
 // Online C++ compiler to run C++ program online
