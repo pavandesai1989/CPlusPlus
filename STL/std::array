@@ -21,6 +21,15 @@ Safer and more expressive than C-style arrays.
 | `swap(other)`           | `void`                   | Swaps contents with another `std::array`                    | `arr.swap(other)`                    |
 
 
+Can You Delete an Element from std::array?
+👉 No, you cannot truly delete an element from a std::array.
+
+ Why?
+std::array<T, N> is a fixed-size container — it's essentially a wrapper around a C-style array.
+
+The size N is known and constant at compile time.
+
+You cannot resize it (no push_back, no erase, no resize, etc.).
 
 
 #include <iostream>
