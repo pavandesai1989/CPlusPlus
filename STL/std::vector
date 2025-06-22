@@ -59,6 +59,23 @@ Key Features of std::vector
 | `emplace_back(args...)` | `void`                   | Constructs element in-place at the end                          | `v.emplace_back(42)`               |
 
 
+shrink_to_fit() in C++
+The shrink_to_fit() function is used to reduce the capacity of a dynamic container (like std::vector, std::deque, or std::string) to match its size, potentially releasing unused memory.
+
+When to Use shrink_to_fit
+You should use shrink_to_fit() when:
+| Scenario                                                                | Why `shrink_to_fit()` Helps                    |
+| ----------------------------------------------------------------------- | ---------------------------------------------- |
+| ✅ You've removed many elements (via `erase`, `pop_back`, `resize`)      | To **release excess memory**                   |
+| ✅ You've cleared the container (`vec.clear()`)                          | To **free capacity** not returned by `clear()` |
+| ✅ You've reserved extra capacity with `reserve()` but no longer need it | To **give memory back to the system**          |
+| ✅ After swapping/shuffling elements                                     | To **reclaim unused heap memory**              |
+
+clear() in C++ STL containers (like vector, string, deque) removes all elements, but it does not free the memory (capacity remains unchanged).
+
+Should You Use shrink_to_fit() After clear()?
+Yes — if your goal is to release unused memory back to the system, then calling shrink_to_fit() after clear() is appropriate.
+
 ***************ways to initialize vector*******
 // Online C++ compiler to run C++ program online
 #include <iostream>
