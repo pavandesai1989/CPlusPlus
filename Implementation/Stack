@@ -5,6 +5,25 @@ so only containers that support these methods (like vector, deque, list) can be 
 deque is used by default. next u can use vector and last is list ********
 If you try forward_list or array, it won't work — they don’t support push_back()/back().
 
+| Operation       | `std::vector` Stack | Linked List Stack           |
+| --------------- | ------------------- | --------------------------- |
+| `push()`        | `O(1)` (amortized)  | `O(1)`                      |
+| `pop()`         | `O(1)`              | `O(1)`                      |
+| `top()`         | `O(1)`              | `O(1)`                      |
+| **Cache usage** | ✅ Excellent         | ❌ Poor                      |
+| **Memory use**  | ✅ Compact           | ❌ Higher (pointer overhead) |
+
+Use std::vector unless you're forced not to — it's preferred in practice and STL itself implements std::stack using deque or vector.
+"I’d prefer std::vector for stack implementation because it gives O(1) push/pop at the end, 
+excellent cache performance, and lower memory overhead. A linked list may be more appropriate
+if you require constant-time insertions/removals at both ends or cannot predict stack size, 
+but in practice, vector is almost always faster and simpler."
+
+Bonus: STL's std::stack
+Internally uses a container adapter (std::deque by default).
+
+
+
 **********for interview perfect*****
 #include <iostream>
 #include <vector>
