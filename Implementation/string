@@ -20,21 +20,34 @@ public:
     }
 
     // Copy constructor
-    MyString(const MyString& other) {
-        len = other.len;
-        data = new char[len + 1];
-        std::strcpy(data, other.data);
+    mystring(const mystring& ob)
+    {
+        cout << "copy called " << endl;
+        if (ob.m_ptr) {    ********************
+            len = strlen(ob.m_ptr);
+            m_ptr = new char[len + 1];
+            strcpy(m_ptr, ob.m_ptr);
+        } else {
+            len = 0;
+            m_ptr = nullptr;
+        }
     }
 
     // Copy assignment
-    MyString& operator=(const MyString& other) {
-        if (this == &other)
-            return *this;
-
-        delete[] data;
-        len = other.len;
-        data = new char[len + 1];
-        std::strcpy(data, other.data);
+    mystring& operator=(const mystring& ob)
+    {
+        cout << "copy assign called " << endl;
+        if (this != &ob) {
+            delete[] m_ptr;
+            if (ob.m_ptr) {   *******************
+                len = strlen(ob.m_ptr);
+                m_ptr = new char[len + 1];
+                strcpy(m_ptr, ob.m_ptr);
+            } else {
+                len = 0;
+                m_ptr = nullptr;
+            }
+        }
         return *this;
     }
 
