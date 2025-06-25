@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdexcept>
-#include <memory>     // for std::uninitialized_copy, std::allocator
-#include <utility>    // for std::move, std::swap
+#include <utility>  // for std::move
 
 template<typename T>
 class MyVector {
@@ -11,19 +10,12 @@ private:
     size_t m_capacity = 0;
 
     void reallocate(size_t new_capacity) {
-        T* new_data = static_cast<T*>(operator new(sizeof(T) * new_capacity));
+        T* new_data = new T[new_capacity];  // uses constructor
 
-        // Move old elements to new buffer
         for (size_t i = 0; i < m_size; ++i)
-            new (new_data + i) T(std::move(m_data[i]));
+            new_data[i] = std::move(m_data[i]);  // move elements
 
-        // Destroy old elements
-        for (size_t i = 0; i < m_size; ++i)
-            m_data[i].~T();
-
-        // Release old buffer
-        operator delete(m_data);
-
+        delete[] m_data;
         m_data = new_data;
         m_capacity = new_capacity;
     }
@@ -32,53 +24,45 @@ public:
     MyVector() = default;
 
     explicit MyVector(size_t count, const T& value = T()) {
-        m_data = static_cast<T*>(operator new(sizeof(T) * count));
+        m_data = new T[count];
         for (size_t i = 0; i < count; ++i)
-            new (m_data + i) T(value);
+            m_data[i] = value;
         m_size = m_capacity = count;
     }
 
-    // Destructor
     ~MyVector() {
-        clear();
-        operator delete(m_data);
+        delete[] m_data;
     }
 
-    // Copy constructor
     MyVector(const MyVector& other) {
-        m_data = static_cast<T*>(operator new(sizeof(T) * other.m_capacity));
+        m_data = new T[other.m_capacity];
         for (size_t i = 0; i < other.m_size; ++i)
-            new (m_data + i) T(other.m_data[i]);
+            m_data[i] = other.m_data[i];
         m_size = other.m_size;
         m_capacity = other.m_capacity;
     }
 
-    // Move constructor
-    MyVector(MyVector&& other) noexcept
-        : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
-        other.m_data = nullptr;
-        other.m_size = other.m_capacity = 0;
-    }
-
-    // Copy assignment
     MyVector& operator=(const MyVector& other) {
         if (this != &other) {
-            clear();
-            operator delete(m_data);
-            m_data = static_cast<T*>(operator new(sizeof(T) * other.m_capacity));
+            delete[] m_data;
+            m_data = new T[other.m_capacity];
             for (size_t i = 0; i < other.m_size; ++i)
-                new (m_data + i) T(other.m_data[i]);
+                m_data[i] = other.m_data[i];
             m_size = other.m_size;
             m_capacity = other.m_capacity;
         }
         return *this;
     }
 
-    // Move assignment
+    MyVector(MyVector&& other) noexcept
+        : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
+        other.m_data = nullptr;
+        other.m_size = other.m_capacity = 0;
+    }
+
     MyVector& operator=(MyVector&& other) noexcept {
         if (this != &other) {
-            clear();
-            operator delete(m_data);
+            delete[] m_data;
             m_data = other.m_data;
             m_size = other.m_size;
             m_capacity = other.m_capacity;
@@ -91,25 +75,22 @@ public:
     void push_back(const T& value) {
         if (m_size == m_capacity)
             reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        new (m_data + m_size) T(value);
-        ++m_size;
+        m_data[m_size++] = value;
     }
 
     void push_back(T&& value) {
         if (m_size == m_capacity)
             reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
-        new (m_data + m_size) T(std::move(value));
-        ++m_size;
+        m_data[m_size++] = std::move(value);
     }
 
     void pop_back() {
-        if (m_size == 0) throw std::out_of_range("Vector is empty");
-        m_data[--m_size].~T();
+        if (m_size == 0)
+            throw std::out_of_range("Vector is empty");
+        --m_size;
     }
 
     void clear() {
-        for (size_t i = 0; i < m_size; ++i)
-            m_data[i].~T();
         m_size = 0;
     }
 
@@ -136,30 +117,23 @@ public:
 
 int main() {
     MyVector<int> v;
-    v.push_back(10);
-    v.push_back(20);
-    v.push_back(30);
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
 
     std::cout << "Size: " << v.size() << ", Capacity: " << v.capacity() << "\n";
 
-    for (size_t i = 0; i < v.size(); ++i)
-        std::cout << v[i] << " ";
+    for (auto val : v)
+        std::cout << val << " ";
     std::cout << "\n";
 
     v.pop_back();
-    std::cout << "After pop, size: " << v.size() << "\n";
-
-    MyVector<int> v2 = v; // copy
-    MyVector<int> v3 = std::move(v); // move
-
-    std::cout << "v2[0]: " << v2[0] << "\n";
+    std::cout << "After pop, size = " << v.size() << "\n";
 }
 
-| Topic               | Key Point                                                          |
-| ------------------- | ------------------------------------------------------------------ |
-| Rule of 5           | Implements copy/move ctor and assignment                           |
-| Memory management   | Manual allocation/deallocation (`operator new`, `operator delete`) |
-| Placement new       | Used to construct objects in raw memory                            |
-| Capacity management | Doubles on growth (`O(1)` amortized `push_back`)                   |
-| Exception safety    | Ensures proper cleanup during reallocation                         |
-| Element destruction | Uses `~T()` to manually destroy objects                            |
+| Feature                         | `new[]`         | `operator new` + placement |
+| ------------------------------- | --------------- | -------------------------- |
+| Simpler syntax                  | ✅ Yes           | ❌ No (more verbose)        |
+| Calls constructor               | ✅ Yes           | ❌ You call it manually     |
+| Destructor automatically called | ✅ on `delete[]` | ❌ You must do it manually  |
+| Control over allocation         | ❌ Less flexible | ✅ More control             |
