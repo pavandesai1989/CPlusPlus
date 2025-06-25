@@ -1,1 +1,88 @@
+** inter ready***
+
+#include <iostream>
+
+class MyInt {
+private:
+    int* m_ptr;
+
+public:
+    // Default constructor
+    MyInt() : m_ptr(nullptr) {
+        std::cout << "Default constructor\n";
+    }
+
+    // Parameterized constructor
+    explicit MyInt(int value) {
+        std::cout << "Constructor\n";
+        m_ptr = new int(value);
+    }
+
+    // Copy constructor
+    MyInt(const MyInt& other) {
+        std::cout << "Copy constructor\n";
+        if (other.m_ptr) {
+            m_ptr = new int(*other.m_ptr);
+        } else {
+            m_ptr = nullptr;
+        }
+    }
+
+    // Copy assignment
+    MyInt& operator=(const MyInt& other) {
+        std::cout << "Copy assignment\n";
+        if (this != &other) {
+            delete m_ptr;
+            m_ptr = (other.m_ptr ? new int(*other.m_ptr) : nullptr);
+        }
+        return *this;
+    }
+
+    // Move constructor
+    MyInt(MyInt&& other) noexcept : m_ptr(other.m_ptr) {
+        std::cout << "Move constructor\n";
+        other.m_ptr = nullptr;
+    }
+
+    // Move assignment
+    MyInt& operator=(MyInt&& other) noexcept {
+        std::cout << "Move assignment\n";
+        if (this != &other) {
+            delete m_ptr;
+            m_ptr = other.m_ptr;
+            other.m_ptr = nullptr;
+        }
+        return *this;
+    }
+
+    // Destructor
+    ~MyInt() {
+        std::cout << "Destructor\n";
+        delete m_ptr;
+    }
+
+    // Utility function
+    void print() const {
+        if (m_ptr)
+            std::cout << "Value: " << *m_ptr << "\n";
+        else
+            std::cout << "null\n";
+    }
+};
+
+
+int main() {
+    MyInt a(10);          // Constructor
+    MyInt b = std::move(a); // Move constructor
+
+    MyInt c(20);
+    c = std::move(b);     // Move assignment
+
+    a.print();            // null
+    b.print();            // null
+    c.print();            // Value: 10
+
+    return 0;
+}
+
 
