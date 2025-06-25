@@ -1,180 +1,172 @@
-Copy constructor
+***inter ready****
 
-Move constructor
+Reference counting via a control block
 
-Copy assignment using copy-and-swap
+Rule of 5 (copyable and movable)
 
-Destructor safely releases resources
+Safe memory management
 
-swap() helper method
+Const correctness
 
-Reference counting with your Counter class
-
-Safety checks for null pointer and counter
-
-use_count() and pointer accessors
-
-Example main() demonstrating usage
+Exception-safe reset, release, use_count, et
 
 
-
-
-
-*****************
 #include <iostream>
-#include <utility> // for std::swap
 
-using namespace std;
+template<typename T>
+class SharedPtr {
+private:
+    T* m_ptr;
+    int* m_refCount;
 
-// Reference counter class
-class Counter 
-{
-public:
-    Counter() : m_counter(0) {}
-    Counter(const Counter&) = delete;
-    Counter& operator=(const Counter&) = delete;
-    ~Counter() {}
-
-    void reset() { m_counter = 0; }
-    unsigned int get() const { return m_counter; }
-
-    void increment() { ++m_counter; }
-    void decrement() { --m_counter; }
-
-    friend ostream& operator<<(ostream& os, const Counter& counter)
-    {
-        os << "Counter Value : " << counter.m_counter << endl;
-        return os;
+    void release() {
+        if (m_refCount) {
+            (*m_refCount)--;
+            if (*m_refCount == 0) {
+                delete m_ptr;
+                delete m_refCount;
+                std::cout << "Resource deleted\n";
+            }
+        }
     }
 
-private:
-    unsigned int m_counter;
-};
-
-
-// Shared_ptr class template
-template <typename T>
-class Shared_ptr 
-{
 public:
     // Default constructor
-    Shared_ptr(T* ptr = nullptr) : m_ptr(ptr), m_counter(nullptr)
-    {
-        if (ptr) {
-            m_counter = new Counter();
-            m_counter->increment();
+    SharedPtr() : m_ptr(nullptr), m_refCount(nullptr) {}
+
+    // Parameterized constructor
+    explicit SharedPtr(T* ptr) : m_ptr(ptr), m_refCount(new int(1)) {}
+
+    // Copy constructor
+    SharedPtr(const SharedPtr& other) : m_ptr(other.m_ptr), m_refCount(other.m_refCount) {
+        if (m_refCount) {
+            ++(*m_refCount);
         }
     }
 
-    // Copy constructor
-    Shared_ptr(const Shared_ptr<T>& sp) : m_ptr(sp.m_ptr), m_counter(sp.m_counter)
-    {
-        if (m_counter) {
-            m_counter->increment();
+    // Copy assignment
+    SharedPtr& operator=(const SharedPtr& other) {
+        if (this != &other) {
+            release();
+            m_ptr = other.m_ptr;
+            m_refCount = other.m_refCount;
+            if (m_refCount) {
+                ++(*m_refCount);
+            }
         }
+        return *this;
     }
 
     // Move constructor
-    Shared_ptr(Shared_ptr<T>&& sp) noexcept : m_ptr(sp.m_ptr), m_counter(sp.m_counter)
-    {
-        sp.m_ptr = nullptr;
-        sp.m_counter = nullptr;
+    SharedPtr(SharedPtr&& other) noexcept : m_ptr(other.m_ptr), m_refCount(other.m_refCount) {
+        other.m_ptr = nullptr;
+        other.m_refCount = nullptr;
     }
 
-    // Copy assignment operator (copy-and-swap idiom)
-    Shared_ptr& operator=(Shared_ptr sp)
-    {
-        swap(sp);
+    // Move assignment
+    SharedPtr& operator=(SharedPtr&& other) noexcept {
+        if (this != &other) {
+            release();
+            m_ptr = other.m_ptr;
+            m_refCount = other.m_refCount;
+            other.m_ptr = nullptr;
+            other.m_refCount = nullptr;
+        }
         return *this;
     }
 
     // Destructor
-    ~Shared_ptr()
-    {
+    ~SharedPtr() {
         release();
     }
 
-    // Swap function
-    void swap(Shared_ptr& sp) noexcept
-    {
-        std::swap(m_ptr, sp.m_ptr);
-        std::swap(m_counter, sp.m_counter);
+    // Get raw pointer
+    T* get() const {
+        return m_ptr;
     }
 
     // Dereference operators
-    T& operator*() const { return *m_ptr; }
-    T* operator->() const { return m_ptr; }
+    T& operator*() const {
+        return *m_ptr;
+    }
 
-    // Getters
-    T* get() const { return m_ptr; }
-    unsigned int use_count() const { return m_counter ? m_counter->get() : 0; }
+    T* operator->() const {
+        return m_ptr;
+    }
 
-    // Bool conversion operator
-    explicit operator bool() const { return m_ptr != nullptr; }
+    // Use count
+    int use_count() const {
+        return m_refCount ? *m_refCount : 0;
+    }
 
-private:
-    void release()
-    {
-        if (m_counter) {
-            m_counter->decrement();
-            if (m_counter->get() == 0) {
-                delete m_counter;
-                delete m_ptr;
-            }
-            m_counter = nullptr;
+    // Reset
+    void reset(T* ptr = nullptr) {
+        release();
+        if (ptr) {
+            m_ptr = ptr;
+            m_refCount = new int(1);
+        } else {
             m_ptr = nullptr;
+            m_refCount = nullptr;
         }
     }
 
-private:
-    T* m_ptr;
-    Counter* m_counter;
+    // Bool conversion
+    explicit operator bool() const {
+        return m_ptr != nullptr;
+    }
 };
 
 
-// Test example
-int main()
-{
-    Shared_ptr<int> ptr1(new int(42));
-    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
-    cout << "*ptr1 = " << *ptr1 << "\n";
+struct Test {
+    Test(int x) : val(x) {
+        std::cout << "Test created\n";
+    }
+    ~Test() {
+        std::cout << "Test destroyed\n";
+    }
+    int val;
+    void show() {
+        std::cout << "Value: " << val << "\n";
+    }
+};
+
+int main() {
+    SharedPtr<Test> p1(new Test(100));
+    std::cout << "p1 use_count: " << p1.use_count() << "\n";
 
     {
-        Shared_ptr<int> ptr2 = ptr1;
-        cout << "After ptr2 = ptr1;\n";
-        cout << "ptr1 use count: " << ptr1.use_count() << "\n";
-        cout << "ptr2 use count: " << ptr2.use_count() << "\n";
+        SharedPtr<Test> p2 = p1;
+        std::cout << "p2 use_count: " << p2.use_count() << "\n";
+        p2->show();
+    } // p2 goes out of scope
 
-        Shared_ptr<int> ptr3(std::move(ptr2));
-        cout << "After ptr3 = std::move(ptr2);\n";
-        cout << "ptr2 use count: " << ptr2.use_count() << "\n";
-        cout << "ptr3 use count: " << ptr3.use_count() << "\n";
-    } // ptr2 and ptr3 go out of scope here
+    std::cout << "p1 use_count after p2: " << p1.use_count() << "\n";
 
-    cout << "After ptr2 and ptr3 destroyed\n";
-    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
-
-    ptr1 = Shared_ptr<int>(new int(100));
-    cout << "After ptr1 reset to new int(100)\n";
-    cout << "ptr1 use count: " << ptr1.use_count() << "\n";
-    cout << "*ptr1 = " << *ptr1 << "\n";
+    p1.reset();
+    std::cout << "p1 use_count after reset: " << p1.use_count() << "\n";
 
     return 0;
 }
 
-ptr1 use count: 1
-*ptr1 = 42
-After ptr2 = ptr1;
-ptr1 use count: 2
-ptr2 use count: 2
-After ptr3 = std::move(ptr2);
-ptr2 use count: 0
-ptr3 use count: 2
-Deleted managed object
-Deleted managed object
-After ptr2 and ptr3 destroyed
-ptr1 use count: 1
-After ptr1 reset to new int(100)
-Deleted managed object
-ptr1 use count: 1
-*ptr1 = 100
+Test created
+p1 use_count: 1
+p2 use_count: 2
+Value: 100
+Test destroyed
+Resource deleted
+p1 use_count after p2: 1
+Test destroyed
+Resource deleted
+p1 use_count after reset: 0
+
+Common Follow-up Questions
+What's the difference between shared_ptr and unique_ptr?
+
+What are circular references and how to avoid them?
+
+How would you implement weak_ptr?
+
+Can SharedPtr be made thread-safe?
+
+Why use a separate control block in real-world implementations?
