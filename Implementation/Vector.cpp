@@ -1,137 +1,165 @@
 #include <iostream>
 #include <stdexcept>
-#include <utility> // for std::move
+#include <memory>     // for std::uninitialized_copy, std::allocator
+#include <utility>    // for std::move, std::swap
 
 template<typename T>
-class Vector {
+class MyVector {
 private:
-    T* data;
-    size_t _size;
-    size_t _capacity;
+    T* m_data = nullptr;
+    size_t m_size = 0;
+    size_t m_capacity = 0;
 
-    void resize() {
-        _capacity = (_capacity == 0) ? 1 : _capacity * 2;
-        T* new_data = new T[_capacity];
+    void reallocate(size_t new_capacity) {
+        T* new_data = static_cast<T*>(operator new(sizeof(T) * new_capacity));
 
-        for (size_t i = 0; i < _size; ++i) {
-            new_data[i] = std::move(data[i]); // Move for performance
-        }
+        // Move old elements to new buffer
+        for (size_t i = 0; i < m_size; ++i)
+            new (new_data + i) T(std::move(m_data[i]));
 
-        delete[] data;
-        data = new_data;
+        // Destroy old elements
+        for (size_t i = 0; i < m_size; ++i)
+            m_data[i].~T();
+
+        // Release old buffer
+        operator delete(m_data);
+
+        m_data = new_data;
+        m_capacity = new_capacity;
     }
 
 public:
-    // Constructors
-    Vector() : data(nullptr), _size(0), _capacity(0) {}
+    MyVector() = default;
+
+    explicit MyVector(size_t count, const T& value = T()) {
+        m_data = static_cast<T*>(operator new(sizeof(T) * count));
+        for (size_t i = 0; i < count; ++i)
+            new (m_data + i) T(value);
+        m_size = m_capacity = count;
+    }
 
     // Destructor
-    ~Vector() {
-        delete[] data;
+    ~MyVector() {
+        clear();
+        operator delete(m_data);
     }
 
     // Copy constructor
-    Vector(const Vector& other) : _size(other._size), _capacity(other._capacity) {
-        data = new T[_capacity];
-        for (size_t i = 0; i < _size; ++i)
-            data[i] = other.data[i];
+    MyVector(const MyVector& other) {
+        m_data = static_cast<T*>(operator new(sizeof(T) * other.m_capacity));
+        for (size_t i = 0; i < other.m_size; ++i)
+            new (m_data + i) T(other.m_data[i]);
+        m_size = other.m_size;
+        m_capacity = other.m_capacity;
     }
 
     // Move constructor
-    Vector(Vector&& other) noexcept : data(other.data), _size(other._size), _capacity(other._capacity) {
-        other.data = nullptr;
-        other._size = 0;
-        other._capacity = 0;
+    MyVector(MyVector&& other) noexcept
+        : m_data(other.m_data), m_size(other.m_size), m_capacity(other.m_capacity) {
+        other.m_data = nullptr;
+        other.m_size = other.m_capacity = 0;
     }
 
     // Copy assignment
-    Vector& operator=(const Vector& other) {
+    MyVector& operator=(const MyVector& other) {
         if (this != &other) {
-            delete[] data;
-            _size = other._size;
-            _capacity = other._capacity;
-            data = new T[_capacity];
-            for (size_t i = 0; i < _size; ++i)
-                data[i] = other.data[i];
+            clear();
+            operator delete(m_data);
+            m_data = static_cast<T*>(operator new(sizeof(T) * other.m_capacity));
+            for (size_t i = 0; i < other.m_size; ++i)
+                new (m_data + i) T(other.m_data[i]);
+            m_size = other.m_size;
+            m_capacity = other.m_capacity;
         }
         return *this;
     }
 
     // Move assignment
-    Vector& operator=(Vector&& other) noexcept {
+    MyVector& operator=(MyVector&& other) noexcept {
         if (this != &other) {
-            delete[] data;
-            data = other.data;
-            _size = other._size;
-            _capacity = other._capacity;
-            other.data = nullptr;
-            other._size = 0;
-            other._capacity = 0;
+            clear();
+            operator delete(m_data);
+            m_data = other.m_data;
+            m_size = other.m_size;
+            m_capacity = other.m_capacity;
+            other.m_data = nullptr;
+            other.m_size = other.m_capacity = 0;
         }
         return *this;
     }
 
-    // Add element
-    void push_back(const T& val) {
-        if (_size == _capacity)
-            resize();
-        data[_size++] = val;
+    void push_back(const T& value) {
+        if (m_size == m_capacity)
+            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+        new (m_data + m_size) T(value);
+        ++m_size;
     }
 
-    void push_back(T&& val) {
-        if (_size == _capacity)
-            resize();
-        data[_size++] = std::move(val);
+    void push_back(T&& value) {
+        if (m_size == m_capacity)
+            reallocate(m_capacity == 0 ? 1 : m_capacity * 2);
+        new (m_data + m_size) T(std::move(value));
+        ++m_size;
     }
 
-    // Element access
+    void pop_back() {
+        if (m_size == 0) throw std::out_of_range("Vector is empty");
+        m_data[--m_size].~T();
+    }
+
+    void clear() {
+        for (size_t i = 0; i < m_size; ++i)
+            m_data[i].~T();
+        m_size = 0;
+    }
+
+    size_t size() const { return m_size; }
+    size_t capacity() const { return m_capacity; }
+    bool empty() const { return m_size == 0; }
+
     T& operator[](size_t index) {
-        return data[index];
+        if (index >= m_size) throw std::out_of_range("Index out of range");
+        return m_data[index];
     }
 
     const T& operator[](size_t index) const {
-        return data[index];
+        if (index >= m_size) throw std::out_of_range("Index out of range");
+        return m_data[index];
     }
 
-    T& at(size_t index) {
-        if (index >= _size)
-            throw std::out_of_range("Index out of range in Vector::at()");
-        return data[index];
-    }
-
-    const T& at(size_t index) const {
-        if (index >= _size)
-            throw std::out_of_range("Index out of range in Vector::at()");
-        return data[index];
-    }
-
-    // Size and capacity
-    size_t size() const { return _size; }
-    size_t capacity() const { return _capacity; }
-
-    // Clear
-    void clear() {
-        delete[] data;
-        data = nullptr;
-        _size = 0;
-        _capacity = 0;
-    }
+    T* begin() { return m_data; }
+    T* end() { return m_data + m_size; }
+    const T* begin() const { return m_data; }
+    const T* end() const { return m_data + m_size; }
 };
 
 
 int main() {
-    Vector<int> v;
+    MyVector<int> v;
     v.push_back(10);
     v.push_back(20);
     v.push_back(30);
 
+    std::cout << "Size: " << v.size() << ", Capacity: " << v.capacity() << "\n";
+
     for (size_t i = 0; i < v.size(); ++i)
-        std::cout << v[i] << " ";  // Output: 10 20 30
+        std::cout << v[i] << " ";
+    std::cout << "\n";
 
-    std::cout << "\nElement at 1: " << v.at(1) << std::endl;
+    v.pop_back();
+    std::cout << "After pop, size: " << v.size() << "\n";
 
-    // Test move semantics
-    Vector<int> v2 = std::move(v);
-    std::cout << "v2[0]: " << v2[0] << std::endl;
+    MyVector<int> v2 = v; // copy
+    MyVector<int> v3 = std::move(v); // move
+
+    std::cout << "v2[0]: " << v2[0] << "\n";
 }
 
+| Topic               | Key Point                                                          |
+| ------------------- | ------------------------------------------------------------------ |
+| Rule of 5           | Implements copy/move ctor and assignment                           |
+| Memory management   | Manual allocation/deallocation (`operator new`, `operator delete`) |
+| Placement new       | Used to construct objects in raw memory                            |
+| Capacity management | Doubles on growth (`O(1)` amortized `push_back`)                   |
+| Exception safety    | Ensures proper cleanup during reallocation                         |
+| Element destruction | Uses `~T()` to manually destroy objects                            |
