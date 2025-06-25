@@ -1,3 +1,4 @@
+*** interview ready***
 #include <iostream>
 #include <stdexcept>
 #include <utility>  // for std::move
