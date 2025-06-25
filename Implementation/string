@@ -1,134 +1,144 @@
-
 #include <iostream>
 #include <cstring>
+#include <utility>
 #include <stdexcept>
 
 class MyString {
 private:
-    char* data;
-    size_t len;
+    char* m_data;
+    size_t m_length;
 
 public:
     // Default constructor
-    MyString() : data(nullptr), len(0) {}
+    MyString() : m_data(nullptr), m_length(0) {}
 
-    // Constructor from C-string
+    // Constructor from C-style string
     MyString(const char* str) {
-        len = std::strlen(str);
-        data = new char[len + 1];
-        std::strcpy(data, str);
-    }
-
-    // Copy constructor
-    mystring(const mystring& ob)
-    {
-        cout << "copy called " << endl;
-        if (ob.m_ptr) {    ********************
-            len = strlen(ob.m_ptr);
-            m_ptr = new char[len + 1];
-            strcpy(m_ptr, ob.m_ptr);
+        if (str) {
+            m_length = std::strlen(str);
+            m_data = new char[m_length + 1];
+            std::strcpy(m_data, str);
         } else {
-            len = 0;
-            m_ptr = nullptr;
+            m_data = nullptr;
+            m_length = 0;
         }
     }
 
-    // Copy assignment
-    mystring& operator=(const mystring& ob)
-    {
-        cout << "copy assign called " << endl;
-        if (this != &ob) {
-            delete[] m_ptr;
-            if (ob.m_ptr) {   *******************
-                len = strlen(ob.m_ptr);
-                m_ptr = new char[len + 1];
-                strcpy(m_ptr, ob.m_ptr);
+    // Copy constructor (deep copy)
+    MyString(const MyString& other) {
+        std::cout << "Copy constructor\n";
+        if (other.m_data) {
+            m_length = other.m_length;
+            m_data = new char[m_length + 1];
+            std::strcpy(m_data, other.m_data);
+        } else {
+            m_data = nullptr;
+            m_length = 0;
+        }
+    }
+
+    // Move constructor
+    MyString(MyString&& other) noexcept
+        : m_data(other.m_data), m_length(other.m_length) {
+        std::cout << "Move constructor\n";
+        other.m_data = nullptr;
+        other.m_length = 0;
+    }
+
+    // Copy assignment operator
+    MyString& operator=(const MyString& other) {
+        std::cout << "Copy assignment\n";
+        if (this != &other) {
+            delete[] m_data;
+            if (other.m_data) {
+                m_length = other.m_length;
+                m_data = new char[m_length + 1];
+                std::strcpy(m_data, other.m_data);
             } else {
-                len = 0;
-                m_ptr = nullptr;
+                m_data = nullptr;
+                m_length = 0;
             }
         }
         return *this;
     }
 
-    // Move constructor
-    MyString(MyString&& other) noexcept {
-        data = other.data;
-        len = other.len;
-        other.data = nullptr;
-        other.len = 0;
-    }
-
-    // Move assignment
+    // Move assignment operator
     MyString& operator=(MyString&& other) noexcept {
-        if (this == &other)
-            return *this;
-
-        delete[] data;
-        data = other.data;
-        len = other.len;
-        other.data = nullptr;
-        other.len = 0;
+        std::cout << "Move assignment\n";
+        if (this != &other) {
+            delete[] m_data;
+            m_data = other.m_data;
+            m_length = other.m_length;
+            other.m_data = nullptr;
+            other.m_length = 0;
+        }
         return *this;
     }
 
     // Destructor
     ~MyString() {
-        delete[] data;
+        delete[] m_data;
     }
 
-    // Access operator
-    char& operator[](size_t index) {
-        if (index >= len) throw std::out_of_range("Index out of range");
-        return data[index];
+    // Accessors
+    const char* c_str() const {
+        return m_data ? m_data : "";
     }
 
-    const char& operator[](size_t index) const {
-        if (index >= len) throw std::out_of_range("Index out of range");
-        return data[index];
-    }
-
-    // String length
-    size_t length() const {
-        return len;
+    size_t size() const {
+        return m_length;
     }
 
     bool empty() const {
-        return len == 0;
+        return m_length == 0;
     }
 
-    void print() const {
-        std::cout << (data ? data : "") << std::endl;
+    // Operator[]
+    char& operator[](size_t index) {
+        if (index >= m_length) throw std::out_of_range("Index out of range");
+        return m_data[index];
     }
 
-    // Concatenation
-    MyString operator+(const MyString& rhs) const {
-        MyString result;
-        result.len = len + rhs.len;
-        result.data = new char[result.len + 1];
-        std::strcpy(result.data, data);
-        std::strcat(result.data, rhs.data);
-        return result;
+    const char& operator[](size_t index) const {
+        if (index >= m_length) throw std::out_of_range("Index out of range");
+        return m_data[index];
     }
 
-    // C-style string getter
-    const char* c_str() const {
-        return data;
+    // Stream insertion
+    friend std::ostream& operator<<(std::ostream& os, const MyString& str) {
+        os << str.c_str();
+        return os;
     }
 };
 
 
 int main() {
     MyString s1("Hello");
-    MyString s2("World");
+    MyString s2 = s1;         // Copy constructor
+    MyString s3 = std::move(s1); // Move constructor
 
-    MyString s3 = s1 + MyString(" ") + s2;
-    s3.print();  // Hello World
+    std::cout << "s2: " << s2 << "\n";
+    std::cout << "s3: " << s3 << "\n";
 
-    s3[0] = 'h';
-    s3.print();  // hello World
+    MyString s4;
+    s4 = s2;                  // Copy assignment
+    s4 = MyString("World");   // Move assignment
 
-    std::cout << "Length: " << s3.length() << std::endl;
+    std::cout << "s4: " << s4 << "\n";
 
-    return 0;
+    std::cout << "s4[0]: " << s4[0] << "\n";
+    std::cout << "Length: " << s4.size() << "\n";
 }
+
+
+When presenting this code, be ready to explain:
+
+Why deep copy is needed (because of dynamic allocation).
+
+Why const char* is used as input (for interop with C-style strings).
+
+The Rule of Five and why move constructors improve performance.
+
+Exception safety: no resource leaks, operator[] bounds check.
+
+That this is a minimal example — more features (e.g. +=, comparisons) can be added if needed.
