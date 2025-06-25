@@ -1,26 +1,21 @@
-Summary:
-UniquePtr gives exclusive ownership.
-
-It can't be copied, only moved.
-
-You can release the pointer (manual control) or reset it.
-
-
+******interview ready***
 
 #include <iostream>
+#include <utility>   // for std::move
 
+// UniquePtr class template
 template<typename T>
 class UniquePtr {
 public:
     // Constructor
-    explicit UniquePtr(T* ptr = nullptr) : m_ptr(ptr) {}
+    explicit UniquePtr(T* ptr = nullptr) noexcept : m_ptr(ptr) {}
 
     // Destructor
     ~UniquePtr() {
         delete m_ptr;
     }
 
-    // Delete copy constructor and copy assignment
+    // Delete copy operations (non-copyable)
     UniquePtr(const UniquePtr&) = delete;
     UniquePtr& operator=(const UniquePtr&) = delete;
 
@@ -32,9 +27,9 @@ public:
     // Move assignment
     UniquePtr& operator=(UniquePtr&& other) noexcept {
         if (this != &other) {
-            delete m_ptr;          // Clean up current resource
-            m_ptr = other.m_ptr;   // Transfer ownership
-            other.m_ptr = nullptr; // Release other's ownership
+            reset(); // delete current
+            m_ptr = other.m_ptr;
+            other.m_ptr = nullptr;
         }
         return *this;
     }
@@ -49,67 +44,64 @@ public:
         return m_ptr;
     }
 
-    // Get the raw pointer
-    T* get() const {
+    // Access raw pointer
+    T* get() const noexcept {
         return m_ptr;
     }
 
-    // Release ownership and return the raw pointer
-    T* release() {
+    // Release ownership
+    T* release() noexcept {
         T* temp = m_ptr;
         m_ptr = nullptr;
         return temp;
     }
 
-    // Reset with a new raw pointer
-    void reset(T* ptr = nullptr) {
-        delete m_ptr;
-        m_ptr = ptr;
+    // Reset with new pointer
+    void reset(T* ptr = nullptr) noexcept {
+        if (m_ptr != ptr) {
+            delete m_ptr;
+            m_ptr = ptr;
+        }
     }
 
-    // Bool conversion for if-checks
-    explicit operator bool() const {
+    // Check if not null
+    explicit operator bool() const noexcept {
         return m_ptr != nullptr;
     }
 
 private:
-    T* m_ptr;
+    T* m_ptr = nullptr;
 };
 
 struct MyClass {
     void greet() {
-        std::cout << "Hello from MyClass!" << std::endl;
+        std::cout << "Hello from MyClass!\n";
     }
 };
 
 int main() {
-    UniquePtr<MyClass> uptr(new MyClass());
+    UniquePtr<MyClass> up1(new MyClass());
 
-    if (uptr) {
-        uptr->greet();
+    if (up1) {
+        up1->greet();
     }
 
-    // Transferring ownership
-    UniquePtr<MyClass> uptr2 = std::move(uptr);
-    if (!uptr) {
-        std::cout << "uptr is now empty." << std::endl;
+    UniquePtr<MyClass> up2 = std::move(up1);
+    if (!up1) {
+        std::cout << "up1 is now empty.\n";
     }
 
-    if (uptr2) {
-        uptr2->greet();
+    up2->greet();
+
+    up2.reset(new MyClass());
+    up2->greet();
+
+    MyClass* rawPtr = up2.release();
+    if (!up2) {
+        std::cout << "up2 is now empty after release.\n";
     }
 
-    // Reset with a new object
-    uptr2.reset(new MyClass());
-    uptr2->greet();
-
-    // Release ownership manually
-    MyClass* raw = uptr2.release();
-    if (!uptr2) {
-        std::cout << "uptr2 is now empty after release." << std::endl;
-    }
-
-    delete raw; // clean up manually
+    delete rawPtr; // manual cleanup
     return 0;
 }
 
