@@ -21,7 +21,110 @@ but in practice, vector is almost always faster and simpler."
 
 Bonus: STL's std::stack
 Internally uses a container adapter (std::deque by default).
+******interview ready custom container****************************
 
+#include <iostream>
+#include <deque>
+#include <vector>
+#include <list>
+#include <stdexcept>
+#include <utility>
+
+template<typename T, typename Container = std::deque<T>>
+class MyStack {
+private:
+    Container data;
+
+public:
+    // Constructors & assignment
+    MyStack() = default;
+    MyStack(const MyStack&) = default;
+    MyStack(MyStack&&) noexcept = default;
+    MyStack& operator=(const MyStack&) = default;
+    MyStack& operator=(MyStack&&) noexcept = default;
+    ~MyStack() = default;
+
+    // Push methods
+    void push(const T& val) {
+        data.push_back(val);
+    }
+
+    void push(T&& val) {
+        data.push_back(std::move(val));
+    }
+
+    template<typename... Args>
+    void emplace(Args&&... args) {
+        data.emplace_back(std::forward<Args>(args)...);
+    }
+
+    // Pop method
+    void pop() {
+        if (data.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        data.pop_back();
+    }
+
+    // Top methods
+    T& top() {
+        if (data.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        return data.back();
+    }
+
+    const T& top() const {
+        if (data.empty()) {
+            throw std::out_of_range("Stack is empty");
+        }
+        return data.back();
+    }
+
+    // Size, empty, and clear
+    std::size_t size() const noexcept {
+        return data.size();
+    }
+
+    bool empty() const noexcept {
+        return data.empty();
+    }
+
+    void clear() noexcept {
+        data.clear();
+    }
+};
+
+// ------------------------
+// Usage Examples
+// ------------------------
+int main() {
+    MyStack<int> s1;  // Uses default deque
+    s1.push(10);
+    s1.push(20);
+    s1.emplace(30);
+
+    std::cout << "Top: " << s1.top() << "\n";  // 30
+    s1.pop();
+    std::cout << "Top after pop: " << s1.top() << "\n";  // 20
+    std::cout << "Size: " << s1.size() << "\n";
+    std::cout << "Is empty: " << std::boolalpha << s1.empty() << "\n";
+
+    s1.clear();
+    std::cout << "Size after clear: " << s1.size() << "\n";
+
+    // Using std::vector as container
+    MyStack<int, std::vector<int>> s2;
+    s2.push(100);
+    std::cout << "Top of vector-based stack: " << s2.top() << "\n";
+
+    // Using std::list as container
+    MyStack<std::string, std::list<std::string>> s3;
+    s3.emplace("OpenText");
+    std::cout << "Top of list-based stack: " << s3.top() << "\n";
+
+    return 0;
+}
 
 
 **********for interview perfect*****
