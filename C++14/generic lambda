@@ -1,0 +1,36 @@
+Generic Lambdas
+In C++11, lambdas were type-specific: you had to declare the parameter types explicitly.
+
+❌ C++11 Limitation:
+auto add = [](int a, int b) { return a + b; }; // only works for int
+add(1, 2);           // OK
+add(1.2, 3.4);       // ❌ Error
+
+
+✅ C++14: Generic Lambda with auto Parameters
+C++14 introduced the ability to use auto in the lambda parameter list:
+
+auto add = [](auto a, auto b) {
+    return a + b;
+};
+
+add(1, 2);         // int + int
+add(1.2, 3.4);     // double + double
+add("Hi"s, "!"s);  // string + string (C++14 + std::string literals)
+
+
+🔧 How Does It Work?
+When you write [](auto x) { ... }, the compiler:
+
+Treats this lambda as a templated call operator.
+
+Generates a different version of the lambda each time it's called with new types.
+struct {
+    template<typename T>
+    void operator()(T x) const {
+        // ...
+    }
+} lambda;
+
+
+⚠️ Limitations
