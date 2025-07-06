@@ -47,7 +47,47 @@ This allows manual control over the lifetime of the pointer.
 7.Null safety for ref_count
 Why? Avoids dereferencing a null pointer when copying or deleting a null-initialized SharedPtr.
 
+| Member       | Type   | Purpose                                                                            |
+| ------------ | ------ | ---------------------------------------------------------------------------------- |
+| `m_ptr`      | `T*`   | Pointer to the actual object (of type `T`) that you're managing                    |
+| `m_refCount` | `int*` | Pointer to a heap-allocated counter tracking how many `SharedPtr`s share ownership |
 
+Why do we increment *m_refCount?
+Because:
+
+We are creating a new copy of the SharedPtr (say p2) from an existing one (say p1)
+
+Both p1 and p2 now point to the same object
+
+So we need to increase the reference count to say:
+
+"Now there are 2 owners of this object"
+
+Otherwise, when one goes out of scope, it will delete the object even though the other still owns it — ❌ wrong behavior.
+
+**** why release in copy assign***
+SharedPtr<int> p1(new int(10));  // owns object A
+SharedPtr<int> p2(new int(20));  // owns object B
+
+p1 = p2;  // Copy assignment
+
+Without release():
+p1 already owns object A
+
+You overwrite m_ptr with p2's object B
+
+But object A is now lost — nothing is managing it
+
+✅ Memory leak — object A was never deleted!
+
+With release():
+p1 first decrements the reference count for object A
+
+If that was the last owner → object A is deleted
+
+Now, p1 takes ownership of p2's object B
+
+The reference count of object B is incremented
 
 
 
