@@ -1,88 +1,114 @@
-** inter ready***
-
 #include <iostream>
 
-class MyInt {
-private:
-    int* m_ptr;
+class MyIntArray {
+    int*   m_data = nullptr;
+    size_t m_size = 0;
 
 public:
     // Default constructor
-    MyInt() : m_ptr(nullptr) {
-        std::cout << "Default constructor\n";
-    }
+    MyIntArray() = default;
 
     // Parameterized constructor
-    explicit MyInt(int value) {
-        std::cout << "Constructor\n";
-        m_ptr = new int(value);
+    explicit MyIntArray(size_t size)
+      : m_data(new int[size]{}), m_size(size) {
+        std::cout << "Constructor (size=" << m_size << ")\n";
     }
 
-    // Copy constructor
-    MyInt(const MyInt& other) {
+    // Copy constructor (deep copy using loop)
+    MyIntArray(const MyIntArray& other)
+      : m_data(other.m_size ? new int[other.m_size] : nullptr),
+        m_size(other.m_size) {
+        for (size_t i = 0; i < m_size; ++i)
+            m_data[i] = other.m_data[i];
         std::cout << "Copy constructor\n";
-        if (other.m_ptr) {
-            m_ptr = new int(*other.m_ptr);
-        } else {
-            m_ptr = nullptr;
-        }
     }
 
-    // Copy assignment
-    MyInt& operator=(const MyInt& other) {
+    // Copy assignment (manual copy + swap)
+    MyIntArray& operator=(const MyIntArray& other) {
         std::cout << "Copy assignment\n";
         if (this != &other) {
-            delete m_ptr;
-            m_ptr = (other.m_ptr ? new int(*other.m_ptr) : nullptr);
+            // Allocate new memory
+            int* new_data = other.m_size ? new int[other.m_size] : nullptr;
+
+            // Copy manually
+            for (size_t i = 0; i < other.m_size; ++i)
+                new_data[i] = other.m_data[i];
+
+            // Release old and assign new
+            delete[] m_data;
+            m_data = new_data;
+            m_size = other.m_size;
         }
         return *this;
     }
 
     // Move constructor
-    MyInt(MyInt&& other) noexcept : m_ptr(other.m_ptr) {
+    MyIntArray(MyIntArray&& other) noexcept
+      : m_data(other.m_data), m_size(other.m_size) {
+        other.m_data = nullptr;
+        other.m_size = 0;
         std::cout << "Move constructor\n";
-        other.m_ptr = nullptr;
     }
 
     // Move assignment
-    MyInt& operator=(MyInt&& other) noexcept {
+    MyIntArray& operator=(MyIntArray&& other) noexcept {
         std::cout << "Move assignment\n";
         if (this != &other) {
-            delete m_ptr;
-            m_ptr = other.m_ptr;
-            other.m_ptr = nullptr;
+            delete[] m_data;
+            m_data = other.m_data;
+            m_size = other.m_size;
+            other.m_data = nullptr;
+            other.m_size = 0;
         }
         return *this;
     }
 
     // Destructor
-    ~MyInt() {
-        std::cout << "Destructor\n";
-        delete m_ptr;
+    ~MyIntArray() {
+        delete[] m_data;
+        std::cout << "Destructor (size=" << m_size << ")\n";
     }
 
-    // Utility function
+    // Utility: print array
     void print() const {
-        if (m_ptr)
-            std::cout << "Value: " << *m_ptr << "\n";
-        else
+        if (m_data) {
+            std::cout << "Values: ";
+            for (size_t i = 0; i < m_size; ++i)
+                std::cout << m_data[i] << " ";
+            std::cout << "\n";
+        } else {
             std::cout << "null\n";
+        }
     }
 };
 
 
 int main() {
-    MyInt a(10);          // Constructor
-    MyInt b = std::move(a); // Move constructor
+    MyIntArray a(5);             // Construct
+    MyIntArray b = a;            // Copy construct
+    MyIntArray c = std::move(a); // Move construct
 
-    MyInt c(20);
-    c = std::move(b);     // Move assignment
+    b = c;                       // Copy assign
+    c = MyIntArray(3);           // Move assign
 
-    a.print();            // null
-    b.print();            // null
-    c.print();            // Value: 10
+    a.print();  // null
+    b.print();  // copied values
+    c.print();  // 0 0 0
 
     return 0;
 }
 
 
+Constructor (size=5)
+Copy constructor
+Move constructor
+Copy assignment
+Constructor (size=3)
+Move assignment
+Destructor (size=0)
+Values: null
+Values: 0 0 0 0 0 
+Values: 0 0 0 
+Destructor (size=3)
+Destructor (size=5)
+Destructor (size=0)
