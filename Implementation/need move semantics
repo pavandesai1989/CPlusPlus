@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+struct Buffer {
+    int* data;
+
+    // default ctor
+    Buffer() 
+      : data(new int(0)) { 
+        cout << "ctor "; 
+    }
+
+    // copy ctor
+    Buffer(const Buffer&) 
+      : data(new int(0)) { 
+        cout << "copy-ctor "; 
+    }
+
+    // copy assignment
+    Buffer& operator=(const Buffer&) {
+        cout << "copy-assign ";
+        // (in real code you’d deep‑copy data here)
+        return *this;
+    }
+
+    // move ctor
+    Buffer(Buffer&&) noexcept 
+      : data(nullptr) { 
+        cout << "move-ctor "; 
+    }
+
+    // move assignment
+    Buffer& operator=(Buffer&&) noexcept {
+        cout << "move-assign ";
+        // (in real code you’d swap/release old data, steal rhs.data)
+        return *this;
+    }
+
+    ~Buffer() {
+        delete data;
+    }
+};
+
+int main() {
+    // 1) Demonstrate move assignment:
+    Buffer a;             // ctor
+    Buffer b;             // ctor
+    b = std::move(a);     // move-assign
+    cout << "\n";
+
+    // 2) Demonstrate move constructor during vector growth:
+    vector<Buffer> v;
+    v.reserve(1);
+
+    v.push_back(Buffer());   // ctor   move-ctor
+    v.push_back(Buffer());   // ctor   move-ctor move-ctor
+    cout << "\n";
+
+    return 0;
+}
+
+
+b = std::move(a);
+
+move-assign
+
+First push_back into a capacity‑1 vector:
+
+ctor (temporary)
+
+move-ctor (into v[0])
+
+Second push_back forces reallocation:
+
+ctor (new temporary)
+
+first move-ctor (relocate old v[0])
+
+second move-ctor (move new temporary into v[1])
