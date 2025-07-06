@@ -10,6 +10,49 @@ Const correctness
 
 Exception-safe reset, release, use_count, et
 
+*********notes on impl***
+1. ref_count is a pointer (int*)
+Why? So that all copies of SharedPtr share and update the same counter.
+If ref_count was just int, each copy would have its own counter → leads to double delete or memory leaks.
+
+ 2. release() is called in copy/move assignment and destructor
+Why? To decrement the reference count and delete the resource when no more owners exist.
+
+Prevents memory leaks and ensures safe cleanup.
+
+3. No new allocation in copy constructor
+SharedPtr(const SharedPtr& other)
+
+Why? Because SharedPtr is meant to share ownership, not clone the object.
+
+Creating a new object would break sharing semantics and lead to inconsistencies.
+
+4. No increment in move constructor or move assignment
+SharedPtr(SharedPtr&& other)
+
+Why? Because ownership is transferred, not shared.
+
+The original other is nullified, so the reference count remains unchanged.
+
+5. release() is called before move assignment takes ownership
+Why? If the current object already holds a resource, it needs to clean up before taking ownership of a new one.
+
+Avoids memory leaks or orphaned pointers
+
+ 6. reset() safely replaces the owned resource
+Why? reset() first releases the existing object (if any), then sets a new one with ref count 1.
+
+This allows manual control over the lifetime of the pointer.
+
+7.Null safety for ref_count
+Why? Avoids dereferencing a null pointer when copying or deleting a null-initialized SharedPtr.
+
+
+
+
+
+*************************
+
 
 #include <iostream>
 
