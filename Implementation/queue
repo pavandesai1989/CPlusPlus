@@ -3,100 +3,91 @@ STL queue uses deque internally and u can use list as well.
 
 **********ararys*****
 #include <iostream>
+#include <stdexcept>
 using namespace std;
 
-class myqueue {
-private:
-    int* arr;
-    int front;
-    int rear;
-    int currsize;
-    int maxsize;
+class ArrayQueue {
+    int* arr;            // Array to store queue elements
+    int start, end;      // Indices for front and rear
+    int currSize;        // Current number of elements
+    int maxSize;         // Maximum capacity
 
 public:
-    myqueue(int size = 100) {
-        maxsize = size;
-        front = -1;
-        rear = -1;
-        currsize = 0;
-        arr = new int[maxsize];
+    // Constructor
+    ArrayQueue(int capacity = 10) {
+        arr = new int[capacity];
+        start = -1;
+        end = -1;
+        currSize = 0;
+        maxSize = capacity;
     }
 
-    ~myqueue() {
+    // Destructor
+    ~ArrayQueue() {
         delete[] arr;
     }
 
-    myqueue(const myqueue&) = delete;
-    myqueue& operator=(const myqueue&) = delete;
+    // Disable copy constructor and assignment
+    ArrayQueue(const ArrayQueue&) = delete;
+    ArrayQueue& operator=(const ArrayQueue&) = delete;
 
-    void push(int val) {
-        if (currsize == maxsize) {
-            cerr << "Queue is full" << endl;
-            return;
+    // Enqueue
+    void push(int x) {
+        if (currSize == maxSize) {
+            throw overflow_error("Queue is full");
         }
 
-        if (front == -1 && rear == -1) {
-            front = rear = 0;
+        if (end == -1) {
+            start = end = 0;
         } else {
-            rear = (rear + 1) % maxsize;
+            end = (end + 1) % maxSize;
         }
 
-        arr[rear] = val;
-        currsize++;
+        arr[end] = x;
+        currSize++;
     }
 
+    // Dequeue
     int pop() {
-        if (front == -1) {
-            cerr << "Queue is empty" << endl;
-            return -1;
+        if (start == -1) {
+            throw underflow_error("Queue is empty");
         }
 
-        int ele = arr[front];
-        if (currsize == 1) {
-            front = rear = -1;
+        int popped = arr[start];
+
+        if (currSize == 1) {
+            start = end = -1;
         } else {
-            front = (front + 1) % maxsize;
+            start = (start + 1) % maxSize;
         }
 
-        currsize--;
-        return ele;
+        currSize--;
+        return popped;
     }
 
-    int top() const {
-        if (front == -1) {
-            cerr << "Queue is empty" << endl;
-            return -1;
+    // Return front element
+    int peek() const {
+        if (start == -1) {
+            throw underflow_error("Queue is empty");
         }
-        return arr[front];
+        return arr[start];
     }
 
-    int getSize() const {
-        return currsize;
-    }
-
+    // Check if queue is empty
     bool isEmpty() const {
-        return currsize == 0;
+        return currSize == 0;
     }
 
-    bool isFull() const {
-        return currsize == maxsize;
+    // Optional: return current size
+    int size() const {
+        return currSize;
+    }
+
+    // Optional: return max capacity
+    int capacity() const {
+        return maxSize;
     }
 };
-
-int main() {
-    myqueue q;
-    q.push(4);
-    q.push(14);
-    q.push(24);
-    q.push(34);
-    cout << "The peek of the queue before deleting any element: " << q.top() << endl;
-    cout << "The size of the queue before deletion: " << q.getSize() << endl;
-    cout << "The first element to be deleted: " << q.pop() << endl;
-    cout << "The peek of the queue after deleting an element: " << q.top() << endl;
-    cout << "The size of the queue after deleting an element: " << q.getSize() << endl;
-
-    return 0;
-}
 
 
 
