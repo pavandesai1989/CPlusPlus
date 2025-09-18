@@ -12,6 +12,30 @@ int main() {
     // 🔹 Recommended: use make_shared (fast + exception-safe)
     shared_ptr<int> sp2 = make_shared<int>(25);
 
+Case 1 — shared_ptr<int> sp1(new int);
+
+Two separate allocations happen:
+
+new int → allocates memory for the int.
+
+shared_ptr must also allocate a control block (reference count, deleter info, etc).
+
+So there are two allocations on the heap.
+
+Case 2 — make_shared<int>(25);
+
+Does only one allocation:
+
+Allocates memory for both the int value and the control block together in one chunk.
+
+So it’s faster and more memory-efficient.
+
+When NOT to use make_shared
+
+If you need a custom deleter, because make_shared doesn’t let you specify one.
+
+If you want separate lifetimes for the control block and the object (rare, advanced use cases).
+
     // 🔹 Get reference count
     cout << "ref count is " << sp2.use_count() << endl;
 
