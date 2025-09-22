@@ -1,0 +1,139 @@
+ 
+
+| **Category**       | **Function**              | **Description / Usage**                     | **Time Complexity** |
+| ------------------ | ------------------------- | ------------------------------------------- | ------------------- |
+| **Constructors**   | `deque<T> d;`             | Default empty deque                         | O(1)                |
+|                    | `deque<T> d(n, val);`     | n elements initialized to val               | O(n)                |
+|                    | `deque<T> d(other);`      | Copy constructor                            | O(n)                |
+|                    | `deque<T> d(begin, end);` | Construct from range                        | O(n)                |
+| **Capacity**       | `size()`                  | Returns number of elements                  | O(1)                |
+|                    | `empty()`                 | Check if deque is empty                     | O(1)                |
+|                    | `max_size()`              | Maximum possible elements                   | O(1)                |
+| **Element Access** | `front()`                 | Access first element                        | O(1)                |
+|                    | `back()`                  | Access last element                         | O(1)                |
+|                    | `operator[](i)`           | Access element at index i (no bounds check) | O(1)                |
+|                    | `at(i)`                   | Access element at index i (bounds-checked)  | O(1)                |
+| **Modifiers**      | `push_back(val)`          | Insert element at end                       | Amortized O(1)      |
+|                    | `push_front(val)`         | Insert element at front                     | Amortized O(1)      |
+|                    | `pop_back()`              | Remove element from end                     | O(1)                |
+|                    | `pop_front()`             | Remove element from front                   | O(1)                |
+|                    | `insert(pos, val)`        | Insert element at position                  | O(n)                |
+|                    | `erase(pos)`              | Remove element at position                  | O(n)                |
+|                    | `clear()`                 | Remove all elements                         | O(n)                |
+|                    | `resize(n)`               | Resize deque to n elements                  | O(n)                |
+|                    | `swap(other)`             | Swap contents with another deque            | O(1)                |
+| **Emplacement**    | `emplace_back(args...)`   | Construct element at end                    | Amortized O(1)      |
+|                    | `emplace_front(args...)`  | Construct element at front                  | Amortized O(1)      |
+|                    | `emplace(pos, args...)`   | Construct element at position               | O(n)                |
+| **Iterators**      | `begin(), end()`          | Forward iterators                           | O(1)                |
+|                    | `rbegin(), rend()`        | Reverse iterators                           | O(1)                |
+| **Others**         | `shrink_to_fit()`         | Reduce memory usage (optional, non-binding) | O(n)                |
+
+
+✅ Key Notes for Interviews:
+
+deque = double-ended queue → fast insertion/removal at both ends.
+
+Not contiguous in memory → vector is faster for random access.
+
+Iterators remain valid for front/back insertions, may invalidate for middle insert/erase.
+
+Use emplace_* for in-place construction to avoid extra copies.
+
+  working ******
+1. Memory Layout
+
+Unlike a vector, a deque does NOT use a single contiguous memory block. Instead:
+
+A deque maintains a map (array of pointers).
+
+Each pointer in the map points to a fixed-size memory block (buffer).
+
+Each buffer stores multiple elements contiguously.
+
+The buffers themselves may not be contiguous in memory.
+
+Map (array of pointers)
++-----+-----+-----+-----+
+| B1  | B2  | B3  | B4  |
++-----+-----+-----+-----+
+
+
+B1, B2, … are memory blocks, each holding several elements.
+
+The map allows quick access to any block.
+
+
+  2. Element Access
+
+To access an element at index i:
+
+Calculate which block contains it:
+
+block_index = i / block_size
+
+
+Calculate the element’s position within the block:
+
+element_index = i % block_size
+
+
+Access via:
+
+map[block_index][element_index]
+
+
+✅ This allows O(1) random access, though slightly slower than vector due to extra indirection.
+
+. Diagram
+Deque: [10, 20, 30, 40, 50, 60, 70, 80]
+
+Map -> Blocks (each block size = 3)
+map[0] -> [10, 20, 30]
+map[1] -> [40, 50, 60]
+map[2] -> [70, 80]
+
+
+d[4] → Block = 1, Index = 1 → value = 50
+
+  ************
+  
+#include <iostream>
+#include <deque>
+
+int main() {
+    std::deque<int> dq;
+
+    // Add elements
+    dq.push_back(10);        // deque: 10
+    dq.push_front(5);        // deque: 5, 10
+    dq.push_back(20);        // deque: 5, 10, 20
+
+    // Access elements
+    std::cout << "Front: " << dq.front() << "\n";     // 5
+    std::cout << "Back: " << dq.back() << "\n";       // 20
+    std::cout << "Element at index 1: " << dq[1] << "\n";  // 10
+    std::cout << "Element at index 2 (with at): " << dq.at(2) << "\n"; // 20
+
+    // Size and empty check
+    std::cout << "Size: " << dq.size() << "\n";       // 3
+    std::cout << "Is empty? " << (dq.empty() ? "Yes" : "No") << "\n"; // No
+
+    // Insert at position (before element at index 1)
+    auto it = dq.begin() + 1;
+    dq.insert(it, 7);        // deque: 5, 7, 10, 20
+
+    // Erase element at index 2
+    dq.erase(dq.begin() + 2); // deque: 5, 7, 20
+
+    // Pop front and back
+    dq.pop_front();          // deque: 7, 20
+    dq.pop_back();           // deque: 7
+
+    // Clear all elements
+    dq.clear();
+
+    std::cout << "Size after clear: " << dq.size() << "\n"; // 0
+
+    return 0;
+}
