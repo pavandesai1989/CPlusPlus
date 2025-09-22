@@ -1,0 +1,62 @@
+#include <iostream>
+using namespace std;
+
+class Point {
+private:
+    int x, y;
+public:
+    Point(int a = 0, int b = 0) : x(a), y(b) {}
+
+    // Overload + as a member function
+    Point operator+(const Point& rhs) const {
+        return Point(x + rhs.x, y + rhs.y);
+    }
+
+    void print() const {
+        cout << "(" << x << ", " << y << ")" << endl;
+    }
+};
+
+int main() {
+    Point p1(2, 3), p2(4, 5);
+    Point p3 = p1 + p2;  // calls p1.operator+(p2)
+    p3.print();           // Output: (6, 8)
+    return 0;
+}
+
+
+Why return by value
+The purpose of operator+
+
+operator+ creates a new object representing the sum of two objects.
+
+It should not modify the operands (i.e., *this or the other object).
+
+
+What does the const at the end mean?
+operator+ should not modify the original objects; it returns a new object.
+
+point p3 = p1 + p2;
+
+
+p1 and p2 must remain unchanged after the operation.
+
+Writing const ensures that even accidentally, you cannot modify x or y inside operator+.
+
+
+✅ Summary
+
+const after the function → guarantees object is not modified.
+
+Makes your class safe, efficient, and usable with const objects.
+
+Essential for good C++ style and interview correctness.
+
+
+Enables const objects: you can do:
+
+const point p1(2,3), p2(4,5);
+point p3 = p1 + p2;  // works only if operator+ is const
+
+
+If operator+ were not const, the compiler would not allow calling it on a const object.
