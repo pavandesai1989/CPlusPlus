@@ -1,0 +1,95 @@
+key Concepts
+
+Prefix increment (++obj)
+
+Operator signature:
+
+Type& operator++(); // no dummy parameter
+
+
+Increments the object and returns a reference to the updated object.
+
+Postfix increment (obj++)
+
+Operator signature:
+
+Type operator++(int); // int is dummy to distinguish postfix
+
+
+Returns the original value (before increment). Usually returns by value.
+
+Key difference:
+
+Operator	Return value	Example effect
+Prefix	Reference to incremented object	++obj increments first
+Postfix	Copy of original object	obj++ increments after returning old value
+
+#include <iostream>
+using namespace std;
+
+class Counter {
+private:
+    int value;
+public:
+    Counter(int v = 0) : value(v) {}
+
+    // Prefix ++
+    Counter& operator++() {
+        ++value;
+        return *this;
+    }
+
+    // Postfix ++
+    Counter operator++(int) {
+        Counter temp = *this;  // copy current state
+        ++value;               // increment
+        return temp;           // return old value
+    }
+
+    void display() const {
+        cout << "Value: " << value << endl;
+    }
+};
+
+int main() {
+    Counter c(5);
+
+    ++c;  // prefix
+    c.display(); // 6
+
+    c++;  // postfix
+    c.display(); // 7
+
+    Counter c2 = c++;  // postfix returns old value
+    c2.display();      // 7 (old value)
+    c.display();       // 8 (after increment)
+
+    return 0;
+}
+
+Interview Tips
+
+Distinguish prefix vs postfix clearly
+
+Prefix: modifies first, returns reference
+
+Postfix: returns copy of old value
+
+Return type matters
+
+Prefix: Type& → avoids extra copy
+
+Postfix: Type → returns a temporary copy
+
+Explain use cases
+
+Used in custom iterators, numeric classes, or counters
+
+STL iterators overload prefix and postfix increment
+
+Optional advanced tip
+
+For heavy objects, implement postfix efficiently using std::move to avoid unnecessary copyin
+
+We can overload both prefix (++obj) and postfix (obj++) operators. Prefix increments the object and returns a reference, while postfix returns the old value,
+so the compiler can distinguish postfix by a dummy int parameter. This is often used in iterators and numeric classes."
