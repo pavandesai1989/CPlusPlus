@@ -1,0 +1,62 @@
+What is Dynamic Memory?
+
+Dynamic memory is memory allocated at runtime from the heap (or free store).
+
+In C++, this is done using the new and delete operators.
+
+Useful when size is unknown at compile time or you need objects to outlive their scope.
+
+  🔹 Syntax
+1. Single Variable
+int* p = new int;        // allocate an int
+*p = 10;                 // assign value
+
+delete p;                // deallocate memory
+p = nullptr;             // avoid dangling pointer
+
+2. Array
+int* arr = new int[5];   // allocate array of 5 ints
+
+for(int i=0; i<5; i++)
+    arr[i] = i*10;
+
+delete[] arr;            // deallocate array
+arr = nullptr;
+
+Key Points******************
+
+Heap vs Stack
+  | Stack                       | Heap                       |
+| --------------------------- | -------------------------- |
+| Size fixed at compile time  | Size determined at runtime |
+| Automatic memory management | Must manually `delete`     |
+| Faster                      | Slower                     |
+
+
+Always pair new with delete and new[] with delete[].
+
+Avoid memory leaks:
+
+int* p = new int(10);
+// ... forget delete
+// memory leak!
+
+
+Dangling pointer: after delete p;, pointer still points to memory. Set it to nullptr.
+
+Smart pointers (C++11+) are safer:
+
+unique_ptr, shared_ptr, weak_ptr manage memory automatically.
+
+  | Feature                | `new`                                                      | `malloc`                                                 |
+| ---------------------- | ---------------------------------------------------------- | -------------------------------------------------------- |
+| **Language**           | C++                                                        | C                                                        |
+| **Memory allocation**  | Allocates memory **and calls the constructor** for objects | Allocates raw memory **only**, no constructor called     |
+| **Syntax**             | `Type* obj = new Type(args);`                              | `Type* obj = (Type*)malloc(sizeof(Type));`               |
+| **Return type**        | Returns pointer of the correct type (`Type*`)              | Returns `void*`, needs explicit cast to the desired type |
+| **Failure handling**   | Throws `std::bad_alloc` on failure                         | Returns `NULL` on failure                                |
+| **Deallocation**       | `delete obj;` calls **destructor** and frees memory        | `free(obj);` only frees memory, destructor not called    |
+| **Array allocation**   | `Type* arr = new Type[n];`                                 | `Type* arr = (Type*)malloc(sizeof(Type) * n);`           |
+| **Array deallocation** | `delete[] arr;` calls **destructors for all elements**     | `free(arr);` does not call any destructor                |
+
+  
