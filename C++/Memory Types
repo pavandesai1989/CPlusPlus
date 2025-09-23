@@ -138,16 +138,53 @@ Usually read-only.
 This layout helps in understanding memory allocation, lifetime, and scope of variables in C++.”
 
 🔹 When Can They Meet?
+High memory addresses
++------------------------+
+|        Code            |
++------------------------+
+|   Static / Global      |
++------------------------+
+|        Heap ↑           |
+|                        |
+|                        |
+|------------------------|
+|        Stack ↓          |
+|                        |
+Low memory addresses
+The heap grows upward: each new new or malloc pushes the top of the heap to higher addresses.
 
-If the stack grows too large (deep recursion, large local arrays).
+The stack grows downward: each function call or local variable allocation pushes the stack pointer to lower addresses.
 
-If the heap grows too large (many dynamic allocations).
+There is a gap between the current top of the heap and the bottom of the stack.
 
-Scenario:
+Even though they grow in opposite directions, they share the same virtual address space.
 
-Stack pushes down, heap pushes up.
 
-If the stack pointer goes below the heap pointer, memory regions overlap.
+When do they “meet”?
 
-This is called stack-heap collision, which can lead to stack overflow, heap corruption, or program crash.
+Normally: heap top < stack bottom → everything is fine.
+
+If heap grows too much (many large new allocations) and stack grows too much (deep recursion, large local arrays), the top of the heap moves up, and stack pointer moves down.
+High addresses
++------------------------+
+| Code/Global             |
++------------------------+
+| Heap top ↑  █████████   |
+| Stack bottom ↓ ████████ |
++------------------------+
+Low addresses
+
+The “gap” between heap and stack disappears.
+
+Now, the heap memory can collide with the stack memory, because both occupy the same address space.
+
+Any access beyond this point → segmentation fault or corruption.
+
+Key Takeaways
+
+Stack and heap grow in opposite directions but share the same memory corridor.
+
+They “meet” when the gap between them disappears due to excessive allocation.
+
+This is why stack overflow + heavy heap usage can crash your program.
 
