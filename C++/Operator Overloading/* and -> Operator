@@ -1,39 +1,35 @@
-#include<iostream>
+"Yes, the * and -> operators can be overloaded. They are most commonly used when implementing smart pointers, so that the smart pointer behaves like a raw pointer."
 
-using namespace std;
-
-class Num
-{
-private:
-	int m_x;
-
+template <typename T>
+class SmartPtr {
+    T* ptr;
 public:
-	Num(int value=0):m_x(value){}
-	void display()
-	{
-		cout<<"number is "<<m_x<<endl;
-	}
+    explicit SmartPtr(T* p = nullptr) : ptr(p) {}
+    ~SmartPtr() { delete ptr; }
 
-	Num* operator->()
-	{
-		cout<<"overloaded -> operator"<<endl;
-		return this;
-	}
-
-	Num& operator*()
-	{
-		cout<<"overloaded * operator"<<endl;
-		return *this;
-	}
+    T& operator*() { return *ptr; }   // dereference operator
+    T* operator->() { return ptr; }   // arrow operator
 };
 
-int main()
-{
-	Num ob(10);
 
-	ob->display();
-	(*ob).display();
+struct Test {
+    void show() { cout << "Hello from Test!" << endl; }
+};
 
+int main() {
+    SmartPtr<int> p1(new int(42));
+    cout << *p1 << endl;   // calls operator* → prints 42
 
-	return 0;
-} 
+    SmartPtr<Test> p2(new Test());
+    p2->show();            // calls operator-> → prints message
+}
+
+How to explain in the interview
+
+operator* returns a reference to the managed object, just like dereferencing a raw pointer.
+
+operator-> returns the raw pointer, which lets us call member functions directly.
+
+This is exactly how std::unique_ptr and std::shared_ptr are implemented in the STL.
+
+"So in short, overloading * and -> allows us to give pointer-like semantics to our class, which is the core idea behind smart pointers in modern C++."
