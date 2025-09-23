@@ -1,33 +1,45 @@
-class Marks
+Overloading the function call operator () in C++ is a common interview topic. It lets your objects behave like functions, which is especially useful for functors (function objects) in the STL.
+
+🔹 Key Points
+
+operator() allows you to call an object like a function.
+
+You can overload it with any number of arguments and return types.
+
+Common use cases:
+
+Functors for std::sort, std::for_each
+
+Callbacks
+
+Wrapping complex calculations inside objects
+
+“Overloading () lets an object behave like a function. This is widely used in STL algorithms as functors.”
+
+✅ Interview-ready summary:
+
+"By overloading operator(), we can make objects callable like functions. This is commonly used to create functors in the STL, which can store state and be passed to algorithms like std::sort, std::for_each, or std::count_if."
+
+#include <iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+class isEven
 {
-        private:
-        int mark;
-        
-        public:
-        Marks(int m):mark(m)
-        {
-        cout<<"constructor"<<endl;
-        }
-        void Print()
-        {
-        cout<<"mark is "<<mark<<endl;
-        }
-
-        Marks& operator()(int m)
-        {
-        cout<<"Opeartor () overloaded "<<endl; this->mark = m;
-        return *this;
-        }
+public:
+bool operator()(int val)
+{
+    return val%2 == 0;
+}
 };
-
 
 int main()
 {
-Marks ob(25); ob.Print();
-
-ob(125);
-ob.Print();
-
-return 0;
+   vector<int> vec = {1,2,3,4,5,6,7,8};
+   auto count = count_if(vec.begin(),vec.end(),isEven());
+   cout<<"number of even values "<<count<<endl;
+   return 0;
 }
+ 
 
