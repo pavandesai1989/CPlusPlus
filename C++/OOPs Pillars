@@ -85,6 +85,13 @@ int main() {
 }
 
 4. Polymorphism
+Type	Meaning
+Compile-time polymorphism	Function overloading, operator overloading
+Run-time polymorphism	Virtual functions (via inheritance)
+
+Compile-Time Polymorphism: Function call is bound to its definition during compilation.
+Runtime Polymorphism: Function call is bound to its definition during runtime.
+
 
 Definition:
 
