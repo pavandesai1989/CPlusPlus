@@ -1,4 +1,8 @@
 What is the this Pointer in C++?
+“this is the pointer to the current object. It allows member functions to know which object invoked them, helps in method chaining, 
+and resolves naming conflicts between members and parameters.”
+
+
 •	In C++, this is a special pointer available in non-static member functions.
 •	It points to the calling object — i.e., the object on which the member function is invoked.
 class MyClass {
