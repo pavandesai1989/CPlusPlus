@@ -1,28 +1,63 @@
-#include<iostream>
+Key Points (what interviewers look for)
+
+operator<< is usually implemented as a non-member friend function (so it can access private data).
+
+Same for operator>>.
+
+They should return the stream (ostream& or istream&) to allow chaining like cin >> obj1 >> obj2; or cout << obj1 << obj2;.
+
+#include <iostream>
+#include <string>
 using namespace std;
-class Num
-{
+
+class Person {
 private:
-int m_x;
+    string name;
+    int age;
+
 public:
-       Num(int value=0):m_x(value){}
-       friend istream& operator>>(istream &in,Num &ob);
-       friend ostream& operator<<(ostream &out,Num &ob);
+    Person(string n = "", int a = 0) : name(n), age(a) {}
+
+    // Friend functions for stream operators
+    friend ostream& operator<<(ostream& os, const Person& p);
+    friend istream& operator>>(istream& is, Person& p);
 };
-istream& operator>>(istream &in,Num &ob)
-{
-       cout<<"cin overloaded"<<endl;
-       in>>ob.m_x;
-       return in;
+
+// Stream insertion (output)
+ostream& operator<<(ostream& os, const Person& p) {
+    os << "Name: " << p.name << ", Age: " << p.age;
+    return os;
 }
-ostream& operator<<(ostream &out,Num &ob)
-{
-       cout<<"cout overloaded "<<endl;
-       out<<ob.m_x;
-       return out;
+
+// Stream extraction (input)
+istream& operator>>(istream& is, Person& p) {
+    cout << "Enter name: ";
+    is >> p.name;
+    cout << "Enter age: ";
+    is >> p.age;
+    return is;
 }
+
 int main() {
-Num ob;
-cin>>ob;
-cout<<ob;
-return 0; }
+    Person p1;
+
+    // Using overloaded >>
+    cin >> p1;
+
+    // Using overloaded <<
+    cout << p1 << endl;
+
+    return 0;
+}
+
+
+
+Interview Notes
+
+Why friend? → Because otherwise, private members (name, age) can’t be accessed directly.
+
+Return type? → Return ostream& / istream& to enable chaining.
+
+Const correctness? → The object in operator<< should be const because printing doesn’t modify it.
+
+"We overload << and >> as non-member friend functions, returning ostream& and istream& so that I/O chaining works. This is how classes integrate naturally with C++ streams."
