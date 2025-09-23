@@ -5,6 +5,7 @@ Definition:
 Encapsulation is the wrapping of data (variables) and methods (functions) into a single unit (class).
 
 It hides implementation details from the user.
+The goal is to protect the internal state of an object and only allow modification through well-defined interfaces (methods).
 
 Key points:
 
@@ -32,6 +33,9 @@ Here, balance cannot be accessed directly; only via member functions.
 Definition:
 
 Abstraction exposes only necessary details and hides complex implementation.
+Abstraction = Only expose what’s necessary, hide how it’s done.
+Abstraction means hiding complex details and showing only essential features to the user. In C++, we do this using classes, abstract classes, and interfaces (pure virtual functions).
+
 
 Focuses on what an object does, not how it does it.
 class Shape {
@@ -44,6 +48,13 @@ public:
     void draw() override { cout << "Drawing Circle\n"; }
 };
 Users only know draw() exists. Implementation is hidden in derived classes.
+
+Feature	Abstraction	Encapsulation
+Focus	Hiding implementation logic	Hiding data
+Purpose	To show only relevant details to user	To protect the object’s data
+Achieved By	Abstract classes, interfaces (pure virtual functions)	Access specifiers (private, public, etc.)
+User Perspective	"What an object does"	"How an object is protected"
+Example	Driving a car without knowing engine internals	Locking car doors to protect it
 
 
 3. Inheritance
