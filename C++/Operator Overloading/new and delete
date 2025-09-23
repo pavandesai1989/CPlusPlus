@@ -38,78 +38,137 @@ Global new/delete are used for other types like int, double, etc.
 "In production, we usually call ::operator new(size) and ::operator delete(ptr) instead of malloc/free to ensure exception safety and proper alignment."
 
 
-
-
-
 #include <iostream>
 using namespace std;
 
-class Test {
+class test
+{
 private:
-    int m_x;
+int m_x;
+
 public:
-    Test(int value=0): m_x(value) {}
+test(int a=0):m_x(a)
+{
 
-    // Class-level new
-    void* operator new(size_t size) {
-        cout << "LOCAL SCOPE new operator overloaded " << size << endl;
-        void* p = malloc(size);  // or ::operator new(size) in production
-        return p;
-    }
-
-    // Class-level delete
-    void operator delete(void* p) {
-        cout << "LOCAL SCOPE delete operator overloaded" << endl;
-        free(p);  // or ::operator delete(p)
-    }
-};
-
-int main() {
-    Test* ptr = new Test;  // calls local class-level new
-    delete ptr;            // calls local class-level delete
 }
 
-
-“Class-level new/delete override global new/delete for this class only. When we call new Test, it calls operator new first, then constructor, and when we delete ptr, it calls destructor, then operator delete.”
-
-********Local nd global scope****
-
-class Test
+void* operator new(size_t sz)
 {
-    private:
-    int m_x;
-
-    public:
-    Test(int value=0):m_x(value){}
-
-    void* operator new(size_t size)
-    {
-    cout<<"LOCAL SCOPE new operator overloaded "<<size<<endl; void *p = malloc(size);
-    return p;
-    }
-
-    void operator delete(void* p)
-    {
-    cout<<"LOCAL SCOPE delete operator overloaded "<<endl; free(p);
-    }
-};
-
-void* operator new(size_t size)
-{
-cout<<"GLOBAL SCOPE new operator overloaded "<<size<<endl; void *p = malloc(size);
-return p;
+    cout<<"calling class new "<<endl;
+    return malloc(sz);
 }
- 
+
 void operator delete(void* p)
 {
-cout<<"GLOBAL SCOPE delete operator overloaded "<<endl; free(p);
+    cout<<"calling class delete "<<endl;
+    free(p);
+}
+};
+
+void* operator new(size_t sz)
+{
+    cout<<"calling global new "<<endl;
+    return malloc(sz);
 }
 
-
+void operator delete(void* p)
+{
+    cout<<"calling global delete "<<endl;
+    free(p);
+}
 
 int main()
 {
-Test *ptr = new Test;		//calls local scope delete ptr;	//calls local scope
+   test* p = new test;
+   delete p;
 
-int *p = new int; //calls global scope delete p;	//calls global scope return 0;
+   int* p1 = new int;
+   delete p1;
+
+
+    return 0;
 }
+
+******IMP*****
+::operator new in C++
+
+:: refers to the global namespace.
+
+operator new is the global memory allocation function in C++.
+
+So ::operator new(size) means: “call the default, global new operator provided by C++, not any class-level overload.”
+
+use this instead of malloc *********interview 
+Without ::operator new, you might use malloc (like in your demo), but:
+
+malloc doesn’t call constructors
+
+malloc doesn’t guarantee proper C++ alignment
+
+Using ::operator new is safer and standard.
+
+*****BELOW CODE FOR INTERVIEW****
+#include <iostream>
+using namespace std;
+
+class test
+{
+private:
+    int m_x;
+
+public:
+    test(int a = 0) : m_x(a) {}
+
+    // Class-level new
+    void* operator new(size_t sz)
+    {
+        cout << "calling class new " << endl;
+        return ::operator new(sz); // use global operator new
+    }
+
+    // Class-level delete
+    void operator delete(void* p)
+    {
+        cout << "calling class delete " << endl;
+        ::operator delete(p);      // use global operator delete
+    }
+};
+
+// Global new
+void* operator new(size_t sz)
+{
+    cout << "calling global new " << endl;
+    return ::operator new(sz);      // use global operator new
+}
+
+// Global delete
+void operator delete(void* p)
+{
+    cout << "calling global delete " << endl;
+    ::operator delete(p);           // use global operator delete
+}
+
+int main()
+{
+    test* p = new test;   // calls class-level new
+    delete p;             // calls class-level delete
+
+    int* p1 = new int;    // calls global new
+    delete p1;            // calls global delete
+
+    return 0;
+}
+::operator new(sz) allocates memory just like new would normally do.
+
+::operator delete(p) deallocates memory safely.
+
+This version avoids malloc/free, which is safer in C++ because:
+
+Proper alignment is guaranteed
+
+Exceptions are thrown on allocation failure (bad_alloc)
+
+
+
+
+
