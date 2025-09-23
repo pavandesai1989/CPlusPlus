@@ -1,28 +1,76 @@
-class Test
-{
+Why overload new and delete?
+
+By default, new allocates memory from the heap and calls the constructor, while delete calls the destructor and frees memory.
+
+Sometimes you want custom behavior:
+
+Logging allocations/deallocations
+
+Pool allocation
+
+Debugging memory leaks
+
+"In C++, we can overload new and delete operators to customize memory allocation and deallocation. This is often done at the class level for things like logging, memory pooling, or debugging memory usage."
+
+How to Explain
+
+Allocation:
+
+operator new allocates raw memory before the constructor is called.
+
+Construction:
+
+After memory allocation, the constructor initializes the object.
+
+Deletion:
+
+When delete is called, the destructor runs first, then operator delete frees the memory.
+
+Scope:
+
+Class-level new/delete overrides the global versions only for that class.
+
+Global new/delete are used for other types like int, double, etc.
+
+*****
+🔹 Optional Follow-up Mention
+
+"In production, we usually call ::operator new(size) and ::operator delete(ptr) instead of malloc/free to ensure exception safety and proper alignment."
+
+
+
+
+
+#include <iostream>
+using namespace std;
+
+class Test {
 private:
-       int m_x;
+    int m_x;
 public:
-       Test(int value=0):m_x(value){}
-       void* operator new(size_t size)
-       {
-              cout<<"new operator overloaded "<<size<<endl;
-              void *p = malloc(size);
-              return p;
-}
-       void operator delete(void* p)
-       {
-              cout<<"delete operator overloaded "<<endl;
-free(p); }
+    Test(int value=0): m_x(value) {}
+
+    // Class-level new
+    void* operator new(size_t size) {
+        cout << "LOCAL SCOPE new operator overloaded " << size << endl;
+        void* p = malloc(size);  // or ::operator new(size) in production
+        return p;
+    }
+
+    // Class-level delete
+    void operator delete(void* p) {
+        cout << "LOCAL SCOPE delete operator overloaded" << endl;
+        free(p);  // or ::operator delete(p)
+    }
 };
 
-
-int main() 
-{
-    Test *ptr = new Test;
-    delete ptr;
-    return 0; 
+int main() {
+    Test* ptr = new Test;  // calls local class-level new
+    delete ptr;            // calls local class-level delete
 }
+
+
+“Class-level new/delete override global new/delete for this class only. When we call new Test, it calls operator new first, then constructor, and when we delete ptr, it calls destructor, then operator delete.”
 
 ********Local nd global scope****
 
