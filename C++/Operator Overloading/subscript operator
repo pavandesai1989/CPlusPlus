@@ -1,51 +1,63 @@
-class Point
-{
-        private:
-            int arr[2]; //0->x and 1-->y
+"Overloading the subscript operator [] allows objects to behave like arrays. 
+We return a reference for non-const objects 
+so that elements can be modified, and a const reference for const objects to allow read-only access.
+This is how classes like std::vector implement array-like access."
 
-        public:
-        Point(int x=0,int y=0)
-        {
-            arr[0] = x;
-            arr[1] = y;
+
+
+
+#include <iostream>
+using namespace std;
+
+class MyArray {
+private:
+    int* data;
+    size_t size;
+
+public:
+    MyArray(size_t s) : size(s) {
+        data = new int[size];
+        for (size_t i = 0; i < size; ++i)
+            data[i] = 0;
+    }
+
+    ~MyArray() { delete[] data; }
+
+    // Overload [] for non-const objects
+    int& operator[](size_t index) {
+        if (index >= size) {
+            throw out_of_range("Index out of bounds");
         }
+        return data[index];
+    }
 
-        void Print()
-        {
-           cout<<"x is "<<arr[0]<<endl; cout<<"y is "<<arr[1]<<endl;
+    // Overload [] for const objects
+    const int& operator[](size_t index) const {
+        if (index >= size) {
+            throw out_of_range("Index out of bounds");
         }
+        return data[index];
+    }
 
-        int& operator[](int pos)
-        {
-            if(pos == 0)
-                return arr[0]; 
-            else if(pos == 1)
-                return arr[1];
-            else
-            {
-                cout<<"out of bound"<<endl; 
-                exit(0);
-            }   
-        } 
-
-
-
+    size_t getSize() const { return size; }
 };
- 
 
+int main() {
+    MyArray arr(5);
 
-cout<<"out of bound"<<endl; exit(0);
- 
+    // Using [] to assign values
+    for (size_t i = 0; i < arr.getSize(); ++i)
+        arr[i] = i * 10;
 
+    // Using [] to read values
+    for (size_t i = 0; i < arr.getSize(); ++i)
+        cout << arr[i] << " ";  // 0 10 20 30 40
 
-int main()
-{
-Point b1(2,6);
+    cout << endl;
 
-b1.Print();
+    // Const object usage
+    const MyArray& constArr = arr;
+    cout << "First element of const array: " << constArr[0] << endl;
 
-b1[0] = 8;
-b1.Print();
-
-return 0;
+    return 0;
 }
