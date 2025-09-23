@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+class Shallow {
+    int *data;
+public:
+    Shallow(int val) {
+        data = new int(val);
+        cout << "Constructor called" << endl;
+    }
+
+    // Default copy constructor (shallow copy)
+    Shallow(const Shallow &s) = default;
+
+    void setData(int val) { *data = val; }
+    void showData() { cout << "Data: " << *data << endl; }
+
+    ~Shallow() {
+        delete data;
+        cout << "Destructor called" << endl;
+    }
+};
+
+int main() {
+    Shallow obj1(10);
+    Shallow obj2 = obj1;  // Shallow copy
+
+    obj2.setData(20);
+
+    obj1.showData();  // Oops! Data changed in obj1 too
+    obj2.showData();
+
+    return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+class Deep {
+    int *data;
+public:
+    Deep(int val) {
+        data = new int(val);
+        cout << "Constructor called" << endl;
+    }
+
+    // Deep copy constructor
+    Deep(const Deep &d) {
+        data = new int(*d.data);  // allocate new memory
+        cout << "Copy constructor (deep) called" << endl;
+    }
+
+    // Copy assignment operator
+    Deep& operator=(const Deep &d) {
+        if(this != &d) { // self-assignment check
+            delete data;            // free old memory
+            data = new int(*d.data);
+        }
+        cout << "Copy assignment (deep) called" << endl;
+        return *this;
+    }
+
+    void setData(int val) { *data = val; }
+    void showData() { cout << "Data: " << *data << endl; }
+
+    ~Deep() {
+        delete data;
+        cout << "Destructor called" << endl;
+    }
+};
+
+int main() {
+    Deep obj1(10);
+    Deep obj2 = obj1;  // Deep copy
+
+    obj2.setData(20);
+
+    obj1.showData();  // 10
+    obj2.showData();  // 20
+
+    Deep obj3(30);
+    obj3 = obj1;      // Deep copy assignment
+
+    obj3.showData();  // 10
+
+    return 0;
+}
