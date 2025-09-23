@@ -1,0 +1,153 @@
+1. Stack Memory
+
+Definition: Memory allocated automatically for local variables and function calls.
+
+Lifetime: Exists only during the scope of the function/block.
+
+Size: Limited, usually smaller than heap.
+
+Allocation/Deallocation: Automatic (done by compiler).
+
+Example:
+
+void func() {
+    int x = 10;  // stored on stack
+} // x destroyed automatically
+
+
+Key Points:
+
+Fast access.
+
+Size must be known at compile time.
+
+Local variables and function parameters live here.
+
+2. Heap Memory (Dynamic Memory)
+
+Definition: Memory allocated at runtime using new/delete in C++ (or malloc/free in C).
+
+Lifetime: Exists until manually freed.
+
+Size: Larger, limited by system memory.
+
+Allocation/Deallocation: Manual.
+
+Example:
+
+int* p = new int(42);  // allocate on heap
+delete p;              // free memory
+
+
+Key Points:
+
+Use when size is unknown at compile time.
+
+Must manage memory to avoid leaks.
+
+Objects survive beyond function scope.
+
+🔹 3. Static/Global Memory
+
+Definition: Memory for global variables, static variables, and constants.
+
+Lifetime: Exists throughout the program execution.
+
+Allocation/Deallocation: Done at program load/unload automatically.
+
+Example:
+
+int globalVar = 100;  // global, stored in static memory
+
+void func() {
+    static int counter = 0; // static variable
+    counter++;
+    cout << counter << endl;
+}
+
+
+Key Points:
+
+Shared across all functions.
+
+Useful for counters or configuration values.
+
+4. Code/Text Segment
+
+Definition: Memory where the executable code of the program is stored.
+
+Characteristics:
+
+Read-only (prevents accidental modification).
+
+Shared among multiple instances of the program.
+
+| Memory Type   | Allocation      | Lifetime       | Example              | Managed by |
+| ------------- | --------------- | -------------- | -------------------- | ---------- |
+| Stack         | Automatic       | Function scope | `int x;`             | Compiler   |
+| Heap          | Dynamic (`new`) | Until `delete` | `int* p = new int;`  | Programmer |
+| Static/Global | Static          | Entire program | `static int x;`      | Compiler   |
+| Code/Text     | Static          | Entire program | Program instructions | OS         |
+
++------------------------+  <- High memory addresses
+|      Code Segment      |  (Executable instructions)
++------------------------+
+|    Static/Global Data  |  (Global variables, static variables)
++------------------------+
+|                        |
+|        Heap ↑           |  (Dynamic memory allocated via new/malloc)
+|                        |
+|                        |
+|------------------------|
+|                        |
+|        Stack ↓          |  (Local variables, function calls)
+|                        |
++------------------------+  <- Low memory addresses
+
+Key Points to Explain in Interview
+
+Stack
+
+Stores local variables and function call info (return addresses).
+
+Grows downwards (towards lower memory addresses).
+
+Automatic allocation and deallocation.
+
+Heap
+
+Stores dynamic memory (objects created via new or malloc).
+
+Grows upwards (towards higher memory addresses).
+
+Programmer must manually free memory.
+
+Static/Global Data
+
+Stores global variables and static variables.
+
+Lifetime: entire program execution.
+
+Code Segment
+
+Stores executable instructions.
+
+Usually read-only.
+
+“As you can see, stack grows downward and heap grows upward. If they meet, stack overflow or heap corruption can occur. 
+This layout helps in understanding memory allocation, lifetime, and scope of variables in C++.”
+
+🔹 When Can They Meet?
+
+If the stack grows too large (deep recursion, large local arrays).
+
+If the heap grows too large (many dynamic allocations).
+
+Scenario:
+
+Stack pushes down, heap pushes up.
+
+If the stack pointer goes below the heap pointer, memory regions overlap.
+
+This is called stack-heap collision, which can lead to stack overflow, heap corruption, or program crash.
+
