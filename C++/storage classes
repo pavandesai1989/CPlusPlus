@@ -1,0 +1,81 @@
+1. auto (default for local variables)
+
+Scope: Local to the block in which it is defined.
+
+Lifetime: Exists until the block ends.
+
+Storage: Stack.
+
+Usage: Rarely specified explicitly, because all local variables are auto by default.
+
+void func() {
+    auto int x = 10;  // same as int x = 10;
+}
+
+2. register
+
+Scope: Local to the block.
+
+Lifetime: Exists until block ends.
+
+Storage: CPU registers (if possible) for fast access.
+
+Restriction: Cannot take address using &.
+
+void func() {
+    register int count = 0;
+}
+
+3. static
+
+Scope:
+
+Local static: Visible only inside the block.
+
+Class static: Belongs to class, not object.
+
+Lifetime: Entire program duration (retains value between calls).
+
+Storage: Data segment.
+
+void func() {
+    static int counter = 0;
+    counter++;
+    cout << counter << endl;
+}
+
+
+Output will increment each time func() is called.
+
+4. extern
+
+Scope: Global; used to declare a variable defined elsewhere.
+
+Lifetime: Entire program duration.
+
+Usage: For accessing global variables across files.
+
+extern int x;  // declared in another file
+
+5. mutable
+
+Scope: Class member only.
+
+Usage: Allows modification of a member even if the object is const.
+
+class Test {
+    mutable int counter;
+public:
+    void increment() const { counter++; } // allowed because counter is mutable
+};
+
+
+
+| Storage Class | Scope        | Lifetime | Default Storage | Key Feature                         |
+| ------------- | ------------ | -------- | --------------- | ----------------------------------- |
+| auto          | Block        | Block    | Stack           | Default for local vars              |
+| register      | Block        | Block    | CPU register    | Fast access, cannot take address    |
+| static        | Block/Class  | Program  | Data segment    | Retains value, class-level variable |
+| extern        | Global       | Program  | Data segment    | Access variable across files        |
+| mutable       | Class member | Object   | Data segment    | Can modify in const objects         |
+
