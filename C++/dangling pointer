@@ -1,0 +1,23 @@
+“A dangling pointer occurs when a pointer points to memory that has been deallocated or gone out of scope. Dereferencing it is undefined behavior. 
+To avoid it, either use dynamic memory with proper delete, set pointers to nullptr after delete, or use smart pointers in modern C++.”
+
+
+
+int* ptr = nullptr;  // Pointer initialized
+{
+    int x = 42;      // Local variable on stack
+    ptr = &x;        // ptr points to x
+} // x goes out of scope here
+
+x is a local (stack) variable inside the block.
+
+When the block ends, x ceases to exist.
+
+ptr now points to memory that is no longer valid → this is called a dangling pointer.
+
+  cout << *ptr << endl;  // Undefined behavior!
+
+Dereferencing a dangling pointer is undefined behavior.
+
+The program might print garbage, crash, or appear to work “sometimes” — this is unpredictable.
+  
