@@ -1,0 +1,191 @@
+=========================================
+DSA MUST-DO (MINIMUM SET)
+=========================================
+
+1. ARRAYS & HASHING ⭐⭐⭐⭐⭐
+-----------------------------------------
+Two Sum
+Contains Duplicate
+Valid Anagram
+Group Anagrams
+Top K Frequent Elements
+
+=========================================
+
+2. TWO POINTERS ⭐⭐⭐⭐⭐
+-----------------------------------------
+Valid Palindrome
+Two Sum II
+Container With Most Water
+3Sum
+
+=========================================
+
+3. SLIDING WINDOW ⭐⭐⭐⭐⭐
+-----------------------------------------
+Best Time To Buy And Sell Stock
+Longest Substring Without Repeating Characters
+Longest Repeating Character Replacement
+Permutation In String
+Minimum Window Substring
+Sliding Window Maximum
+
+=========================================
+
+4. BINARY SEARCH ⭐⭐⭐⭐⭐
+-----------------------------------------
+Binary Search
+Search In Rotated Sorted Array
+Find Minimum In Rotated Sorted Array
+Search 2D Matrix
+
+=========================================
+
+5. LINKED LIST ⭐⭐⭐⭐
+-----------------------------------------
+Reverse Linked List
+Middle Of Linked List
+Linked List Cycle
+Merge Two Sorted Lists
+Remove Nth Node From End
+LRU Cache (Important)
+
+=========================================
+
+6. STACK ⭐⭐⭐⭐
+-----------------------------------------
+Valid Parentheses
+Min Stack
+Evaluate Reverse Polish Notation
+Daily Temperatures
+
+=========================================
+
+7. TREES ⭐⭐⭐⭐⭐
+-----------------------------------------
+Maximum Depth Of Binary Tree
+Invert Binary Tree
+Same Tree
+Subtree Of Another Tree
+Lowest Common Ancestor BST
+Binary Tree Level Order Traversal
+Validate BST
+Kth Smallest In BST
+
+=========================================
+
+8. HEAP ⭐⭐⭐⭐
+-----------------------------------------
+Kth Largest Element
+Top K Frequent Elements
+Find Median From Data Stream
+
+=========================================
+
+9. INTERVALS ⭐⭐⭐⭐
+-----------------------------------------
+Merge Intervals
+Insert Interval
+Meeting Rooms
+Meeting Rooms II
+
+=========================================
+
+10. GRAPHS ⭐⭐⭐⭐
+-----------------------------------------
+Number Of Islands
+Clone Graph
+Course Schedule
+Graph BFS
+Graph DFS
+
+=========================================
+
+11. BACKTRACKING ⭐⭐⭐⭐
+-----------------------------------------
+Subsets
+Combination Sum
+Permutations
+
+=========================================
+
+12. DYNAMIC PROGRAMMING ⭐⭐⭐
+-----------------------------------------
+Climbing Stairs
+House Robber
+Coin Change
+Longest Increasing Subsequence
+
+=========================================
+TOP 25 ABSOLUTE MUST-DO
+=========================================
+
+1. Two Sum
+2. Valid Anagram
+3. Group Anagrams
+4. Container With Most Water
+5. Best Time To Buy And Sell Stock
+6. Longest Substring Without Repeating Characters
+7. Longest Repeating Character Replacement
+8. Minimum Window Substring
+9. Sliding Window Maximum
+10. Binary Search
+11. Search Rotated Sorted Array
+12. Reverse Linked List
+13. Linked List Cycle
+14. Merge Two Sorted Lists
+15. LRU Cache
+16. Valid Parentheses
+17. Daily Temperatures
+18. Maximum Depth Binary Tree
+19. Level Order Traversal
+20. Validate BST
+21. Number Of Islands
+22. Course Schedule
+23. Subsets
+24. Combination Sum
+25. House Robber
+
+=========================================
+TOPICS TO FOCUS MOST
+=========================================
+
+1. Sliding Window
+2. Binary Search
+3. Trees (DFS/BFS)
+4. Linked List
+5. Graph BFS/DFS
+6. Heap
+7. Intervals
+8. HashMap / HashSet
+
+=========================================
+CAN SKIP FOR NOW
+=========================================
+
+- Hard DP
+- Segment Tree
+- Fenwick Tree
+- Trie (unless company specifically asks)
+- Advanced Graph Algorithms
+- Heavy Math Problems
+- Hard Backtracking
+- Hard Greedy
+
+=========================================
+MY RECOMMENDED STOPPING POINT
+=========================================
+
+NeetCode 150 +
+Above 25 problems +
+1-2 LRU Cache implementations
+
+After that:
+Move your effort to
+- LLD
+- C++
+- Multithreading
+- OOP/SOLID
+- Design Patterns
+
+For a 10+ year C++ developer interview, these areas often matter more than solving additional hard LeetCode problems.
