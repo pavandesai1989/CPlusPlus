@@ -1,0 +1,179 @@
+=============================
+C++11 MUST-DO INTERVIEW TOPICS
+(10+ Years Experience)
+=============================
+
+TIER 1 - MUST KNOW (Most Frequently Asked)
+------------------------------------------
+
+1. auto
+   - Type deduction
+   - auto vs auto&
+   - auto vs const auto&
+   - auto with STL iterators
+
+2. nullptr
+   - Why nullptr was introduced
+   - NULL vs nullptr
+   - Function overloading issues with NULL
+
+3. Range-Based For Loop
+   - for(auto x : v)
+   - for(auto& x : v)
+   - for(const auto& x : v)
+   - Copy vs reference behavior
+
+4. Lambda Expressions ⭐⭐⭐⭐⭐
+   - Basic lambda syntax
+   - Capture by value [=]
+   - Capture by reference [&]
+   - Mixed capture [&, x]
+   - Mutable lambda
+   - Lambdas with STL algorithms
+   - Internal implementation of lambdas
+
+5. Smart Pointers ⭐⭐⭐⭐⭐
+   - unique_ptr
+   - shared_ptr
+   - weak_ptr
+   - Ownership semantics
+   - Reference counting
+   - Circular dependency problem
+   - make_unique
+   - make_shared
+
+6. Move Semantics ⭐⭐⭐⭐⭐
+   - Why move semantics were introduced
+   - Performance benefits
+   - std::move
+   - Resource transfer
+
+7. Rvalue References ⭐⭐⭐⭐⭐
+   - Lvalue
+   - Rvalue
+   - int&&
+   - Temporary objects
+
+8. Move Constructor
+   - Copy constructor vs Move constructor
+   - When move constructor is called
+   - Resource ownership transfer
+
+9. Move Assignment Operator
+   - Copy assignment vs Move assignment
+   - Self-assignment handling
+
+10. Rule of Five ⭐⭐⭐⭐⭐
+    - Destructor
+    - Copy Constructor
+    - Copy Assignment Operator
+    - Move Constructor
+    - Move Assignment Operator
+
+------------------------------------------
+
+TIER 2 - FREQUENTLY ASKED
+-------------------------
+
+11. Uniform Initialization
+    - {}
+    - Difference between {} and ()
+    - Narrowing conversions
+
+12. Initializer List
+    - std::initializer_list
+    - Container initialization
+    - Custom constructors
+
+13. enum class
+    - Scoped enums
+    - Type safety
+    - Benefits over traditional enum
+
+14. override
+    - Compile-time checking
+    - Avoiding accidental overriding mistakes
+
+15. final
+    - Prevent inheritance
+    - Prevent overriding
+
+16. Delegating Constructors
+    - One constructor calling another
+
+17. Constructor Inheritance
+    - using Base::Base
+
+------------------------------------------
+
+TIER 3 - MULTITHREADING BASICS
+------------------------------
+
+18. std::thread ⭐⭐⭐⭐
+    - Creating threads
+    - join()
+    - detach()
+
+19. std::mutex ⭐⭐⭐⭐
+    - Mutual exclusion
+    - Race conditions
+
+20. std::lock_guard ⭐⭐⭐⭐
+    - RAII locking
+    - Automatic unlock
+
+21. std::unique_lock
+    - Flexible locking
+    - Deferred locking
+
+22. std::condition_variable
+    - Producer Consumer
+    - wait()
+    - notify_one()
+    - notify_all()
+
+23. std::future
+    - Getting asynchronous results
+
+24. std::async
+    - Launching async tasks
+
+------------------------------------------
+
+TIER 4 - GOOD TO KNOW
+---------------------
+
+25. constexpr
+    - Compile-time evaluation
+
+26. static_assert
+    - Compile-time checks
+
+27. = delete
+    - Disable functions
+    - Disable copying
+
+28. = default
+    - Request compiler-generated implementation
+
+29. Variadic Templates
+    - template<typename... Args>
+    - Parameter packs
+
+------------------------------------------
+
+TOP 10 FOR QUICK REVISION
+-------------------------
+
+1. Smart Pointers
+2. Move Semantics
+3. Rvalue References
+4. Rule of Five
+5. Lambda Expressions
+6. auto
+7. nullptr
+8. override
+9. Uniform Initialization
+10. thread / mutex / lock_guard
+
+Master these thoroughly and you'll cover most C++11 interview questions.
