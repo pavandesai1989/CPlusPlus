@@ -1,0 +1,157 @@
+=========================================
+OOPS - MUST DO INTERVIEW QUESTIONS
+=========================================
+
+1. What are the 4 pillars of OOP?
+2. What is Encapsulation?
+3. What is Abstraction?
+4. Difference between Abstraction and Encapsulation?
+5. What is Inheritance?
+6. Types of Inheritance?
+7. What is Polymorphism?
+8. Compile-time vs Runtime Polymorphism?
+9. Function Overloading vs Function Overriding?
+10. What is a Virtual Function?
+11. Why do we need Virtual Functions?
+12. What is a Pure Virtual Function?
+13. What is an Abstract Class?
+14. Can we instantiate an Abstract Class?
+15. What is Object Slicing?
+16. Why should a Base Class Destructor be Virtual?
+17. Can Constructors be Virtual?
+18. Can Static Functions be Virtual?
+19. What is a VTable?
+20. What is VPTR?
+21. How does Runtime Polymorphism work internally?
+22. What is Early Binding vs Late Binding?
+23. What is Multiple Inheritance?
+24. What is Diamond Problem?
+25. How does Virtual Inheritance solve Diamond Problem?
+26. What is Association?
+27. What is Aggregation?
+28. What is Composition?
+29. Aggregation vs Composition?
+30. What is Dependency?
+
+=========================================
+SOLID PRINCIPLES - MUST DO QUESTIONS
+=========================================
+
+1. What is SOLID?
+2. Why are SOLID principles important?
+
+SRP (Single Responsibility Principle)
+-----------------------------------------
+3. What is SRP?
+4. Give a real-world example of SRP violation.
+5. How would you fix an SRP violation?
+
+OCP (Open Closed Principle)
+-----------------------------------------
+6. What is OCP?
+7. Explain OCP with Shape example.
+8. Why are if-else chains often OCP violations?
+
+LSP (Liskov Substitution Principle)
+-----------------------------------------
+9. What is LSP?
+10. Give a Rectangle-Square violation example.
+11. Give a Bird-Penguin violation example.
+12. How do you identify an LSP violation?
+
+ISP (Interface Segregation Principle)
+-----------------------------------------
+13. What is ISP?
+14. Why are fat interfaces bad?
+15. Give a Printer/Scanner example.
+
+DIP (Dependency Inversion Principle)
+-----------------------------------------
+16. What is DIP?
+17. High-level vs Low-level modules?
+18. Explain dependency injection.
+19. Give a Keyboard/Computer example.
+20. How does DIP improve testability?
+
+=========================================
+DESIGN PRINCIPLES (VERY COMMON)
+=========================================
+
+1. Favor Composition Over Inheritance
+-----------------------------------------
+Questions:
+- Composition vs Inheritance?
+- When should you use composition?
+- Why is composition preferred?
+
+2. Program to Interface, Not Implementation
+-----------------------------------------
+Questions:
+- What does this principle mean?
+- Benefits?
+- Real-world examples?
+
+3. Loose Coupling
+-----------------------------------------
+Questions:
+- What is coupling?
+- Tight vs Loose Coupling?
+- How do you achieve loose coupling?
+
+4. High Cohesion
+-----------------------------------------
+Questions:
+- What is cohesion?
+- High Cohesion vs Low Cohesion?
+
+5. Dependency Injection
+-----------------------------------------
+Questions:
+- What is Dependency Injection?
+- Constructor Injection?
+- Benefits?
+
+6. DRY Principle
+-----------------------------------------
+Questions:
+- What is DRY?
+- Why avoid code duplication?
+
+7. KISS Principle
+-----------------------------------------
+Questions:
+- What is KISS?
+- Why keep designs simple?
+
+8. YAGNI Principle
+-----------------------------------------
+Questions:
+- What is YAGNI?
+- Why avoid overengineering?
+
+=========================================
+TOP 20 MUST-DO QUESTIONS
+=========================================
+
+1. Difference between Abstraction and Encapsulation?
+2. Function Overloading vs Overriding?
+3. What is Runtime Polymorphism?
+4. Why Virtual Destructor?
+5. What is Object Slicing?
+6. What is VTable and VPTR?
+7. Diamond Problem?
+8. Aggregation vs Composition?
+9. What is Dependency?
+10. Explain SRP with example.
+11. Explain OCP with example.
+12. Explain LSP with example.
+13. Explain ISP with example.
+14. Explain DIP with example.
+15. Composition vs Inheritance?
+16. Program to Interface, Not Implementation?
+17. Tight Coupling vs Loose Coupling?
+18. What is Dependency Injection?
+19. High Cohesion vs Low Cohesion?
+20. Which SOLID principles have you used in projects?
+
+If you can answer these 20 questions confidently with examples and code snippets, you'll cover most OOP, SOLID, and design-principle discussions in senior C++ interviews.
