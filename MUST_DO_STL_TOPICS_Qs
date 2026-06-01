@@ -248,20 +248,25 @@ TOP 15 STL QUESTIONS (MOST ASKED)
 -----------------------------------------
 
 1. How does vector grow internally?
-2. size() vs capacity()?
-3. reserve() vs resize()?
-4. push_back() vs emplace_back()?
-5. Iterator invalidation in vector?
-6. Why vector preferred over list?
+2. reserve() vs resize()?
+3. push_back() vs emplace_back()?
+4. size() vs capacity()?
+5. Why vector preferred over list?
+6. Iterator invalidation rules?
 7. map vs unordered_map?
 8. How unordered_map works internally?
 9. What is rehashing?
 10. set vs unordered_set?
-11. lower_bound() vs upper_bound()?
-12. remove() vs erase()?
-13. sort() vs stable_sort()?
-14. Types of iterators?
-15. How to implement min heap using priority_queue?
+11. lower_bound vs upper_bound?
+12. remove vs erase?
+13. sort vs stable_sort?
+14. How to create min heap?
+15. Iterator categories?
+16. Complexity of all STL containers?
+17. When would you choose list over vector?
+18. What data structure is used internally by map?
+19. What data structure is used internally by unordered_map?
+20. How do custom comparators work?
 
 =========================================
 
