@@ -1,0 +1,368 @@
+=========================================
+C++ INTERVIEW ROADMAP (10+ YEARS EXP)
+Most Important → Least Important
+(C++11 Topics Removed)
+=========================================
+
+1. OOPS ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Class vs Object
+- Encapsulation
+- Abstraction
+- Inheritance
+- Polymorphism
+- Virtual Functions
+- Pure Virtual Functions
+- Abstract Classes
+- Runtime Polymorphism
+- Compile-Time Polymorphism
+- Function Overloading
+- Operator Overloading
+- Virtual Destructor
+- Object Slicing
+- VTable / VPTR
+
+Must Know Questions:
+- Why destructor should be virtual?
+- What is object slicing?
+- How does virtual function work internally?
+- Difference between overloading and overriding?
+- Can constructor be virtual?
+
+=========================================
+
+2. Memory Management ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Stack vs Heap
+- new/delete
+- new[]/delete[]
+- Memory Leaks
+- Dangling Pointer
+- Wild Pointer
+- Double Delete
+- RAII
+- Placement New
+
+Must Know Questions:
+- Difference between stack and heap?
+- What causes memory leak?
+- What is RAII?
+- What is placement new?
+
+=========================================
+
+3. Smart Pointers ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- unique_ptr
+- shared_ptr
+- weak_ptr
+- Ownership
+- Reference Counting
+- Circular Dependency
+
+Must Know Questions:
+- Difference between unique_ptr and shared_ptr?
+- Why weak_ptr?
+- How shared_ptr works internally?
+- What is reference count?
+
+=========================================
+
+4. Copy Control ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Copy Constructor
+- Copy Assignment Operator
+- Shallow Copy
+- Deep Copy
+- Rule of 3
+- Rule of 5
+- Rule of 0
+
+Must Know Questions:
+- Difference between copy constructor and assignment operator?
+- What is deep copy?
+- What is Rule of Five?
+
+=========================================
+
+5. Move Semantics & Rvalue References ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Lvalue
+- Rvalue
+- Rvalue References
+- Move Constructor
+- Move Assignment
+- std::move
+- Perfect Forwarding
+
+Must Know Questions:
+- What is std::move?
+- Why move semantics?
+- Difference between copy and move?
+
+=========================================
+
+6. STL Containers ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- vector
+- deque
+- list
+- forward_list
+- array
+- set
+- multiset
+- unordered_set
+- map
+- multimap
+- unordered_map
+- priority_queue
+
+Must Know Questions:
+- Which container to choose and why?
+- Complexity of each container?
+- Vector vs List?
+- Map vs Unordered Map?
+
+=========================================
+
+7. STL Algorithms ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- sort
+- stable_sort
+- binary_search
+- lower_bound
+- upper_bound
+- find
+- count
+- remove
+- unique
+- transform
+- for_each
+
+Must Know Questions:
+- lower_bound vs upper_bound?
+- remove vs erase?
+- sort complexity?
+
+=========================================
+
+8. Multithreading ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Thread
+- Mutex
+- Lock Guard
+- Unique Lock
+- Deadlock
+- Race Condition
+- Condition Variable
+- Future
+- Promise
+- Async
+- Atomic
+
+Must Know Questions:
+- What is race condition?
+- Deadlock?
+- Mutex vs Semaphore?
+- Lock_guard vs Unique_lock?
+
+=========================================
+
+9. Templates ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Function Templates
+- Class Templates
+- Template Specialization
+- Variadic Templates
+- SFINAE (Basic)
+
+Must Know Questions:
+- Why templates?
+- Template specialization?
+- Variadic templates?
+
+=========================================
+
+10. Exception Handling ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- try
+- catch
+- throw
+- Stack Unwinding
+- Exception Safety
+- noexcept
+
+Must Know Questions:
+- What is stack unwinding?
+- Why noexcept?
+
+=========================================
+
+11. References & Const Correctness ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Reference
+- Const Reference
+- Const Member Function
+- Mutable
+- Volatile (basic)
+
+Must Know Questions:
+- Pointer vs Reference?
+- const int* vs int* const?
+
+=========================================
+
+12. Operator Overloading ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- +
+- <<
+- >>
+- ==
+- []
+- ()
+
+Must Know Questions:
+- Which operators cannot be overloaded?
+- Friend function vs member function?
+
+=========================================
+
+13. Design Patterns ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Singleton
+- Factory
+- Abstract Factory
+- Observer
+- Strategy
+- Adapter
+- Decorator
+
+Must Know Questions:
+- Thread-safe Singleton?
+- Factory vs Abstract Factory?
+
+=========================================
+
+14. SOLID Principles ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- SRP
+- OCP
+- LSP
+- ISP
+- DIP
+
+Must Know Questions:
+- Explain each principle with example.
+- LSP violation example.
+- Dependency Inversion example.
+
+=========================================
+
+15. Object Relationships ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Association
+- Aggregation
+- Composition
+- Dependency
+
+Must Know Questions:
+- Aggregation vs Composition?
+- Real-world examples?
+
+=========================================
+
+16. Type Casting ⭐⭐⭐
+-----------------------------------------
+Topics:
+- static_cast
+- dynamic_cast
+- const_cast
+- reinterpret_cast
+- C-style cast
+
+Must Know Questions:
+- When to use dynamic_cast?
+- static_cast vs dynamic_cast?
+
+=========================================
+
+17. Preprocessor & Compilation ⭐⭐⭐
+-----------------------------------------
+Topics:
+- #define
+- Macros
+- Header Guards
+- pragma once
+- Compilation Stages
+
+Must Know Questions:
+- Compilation phases?
+- Header guards vs pragma once?
+
+=========================================
+
+18. C++17 / C++20 ⭐⭐⭐
+-----------------------------------------
+Topics:
+- Structured Bindings
+- if constexpr
+- std::optional
+- std::variant
+- std::any
+- string_view
+- Fold Expressions
+- Concepts (basic)
+
+Must Know Questions:
+- optional vs pointer?
+- string_view benefits?
+
+=========================================
+
+19. Low-Level Internals ⭐⭐⭐
+-----------------------------------------
+Topics:
+- Memory Layout of Object
+- VTable
+- VPTR
+- Alignment
+- Padding
+- sizeof()
+- Empty Class Size
+
+Must Know Questions:
+- Why empty class size is 1?
+- How virtual functions work internally?
+- What is padding?
+
+=========================================
+
+TOP 10 HIGHEST ROI TOPICS
+-----------------------------------------
+1. OOPS
+2. Memory Management
+3. Smart Pointers
+4. Copy Control (Rule of 3/5/0)
+5. Move Semantics
+6. STL Containers
+7. STL Algorithms
+8. Multithreading
+9. Templates
+10. SOLID Principles
+
+If you finish these 10 thoroughly, you'll be prepared for the majority of senior C++ interviews.
