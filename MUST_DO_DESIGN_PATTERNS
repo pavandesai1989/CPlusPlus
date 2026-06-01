@@ -1,0 +1,214 @@
+=========================================
+DESIGN PATTERNS FOR C++ INTERVIEWS
+Most Asked → Least Asked
+=========================================
+
+TIER 1 (MUST DO) ⭐⭐⭐⭐⭐
+-----------------------------------------
+
+1. Singleton Pattern
+-----------------------------------------
+Why:
+- Most frequently asked pattern
+- Follow-up questions on thread safety
+
+Must Know:
+- Lazy Initialization
+- Eager Initialization
+- Thread-Safe Singleton (Meyers Singleton)
+- Deleted Copy Constructor
+- Deleted Assignment Operator
+
+Interview Questions:
+- Implement Singleton
+- Make Singleton thread-safe
+- Problems with Singleton
+
+-----------------------------------------
+
+2. Factory Pattern
+-----------------------------------------
+Why:
+- Very common in LLD interviews
+
+Must Know:
+- Object creation abstraction
+- Runtime object creation
+
+Interview Questions:
+- What problem does Factory solve?
+- Factory vs Simple Object Creation?
+- Real-world examples?
+
+-----------------------------------------
+
+3. Strategy Pattern
+-----------------------------------------
+Why:
+- Frequently asked with SOLID (OCP)
+
+Must Know:
+- Runtime behavior change
+- Composition over inheritance
+
+Interview Questions:
+- Explain with payment example
+- Benefits over if-else chains
+
+-----------------------------------------
+
+4. Observer Pattern
+-----------------------------------------
+Why:
+- Common LLD question
+
+Examples:
+- YouTube subscribers
+- Stock price updates
+- Notification systems
+
+Interview Questions:
+- Publisher vs Subscriber
+- How notification mechanism works
+
+-----------------------------------------
+
+5. Adapter Pattern
+-----------------------------------------
+Why:
+- Very common practical example
+
+Examples:
+- Legacy code integration
+- Different API interfaces
+
+Interview Questions:
+- Adapter vs Wrapper?
+- Real-world use cases?
+
+=========================================
+
+TIER 2 (FREQUENTLY ASKED) ⭐⭐⭐⭐
+-----------------------------------------
+
+6. Decorator Pattern
+-----------------------------------------
+Examples:
+- Coffee customization
+- Logging
+- Feature additions
+
+Interview Questions:
+- Decorator vs Inheritance?
+
+-----------------------------------------
+
+7. Abstract Factory
+-----------------------------------------
+Examples:
+- Cross-platform UI
+- Windows/Linux/Mac widgets
+
+Interview Questions:
+- Factory vs Abstract Factory?
+
+-----------------------------------------
+
+8. Builder Pattern
+-----------------------------------------
+Examples:
+- Complex object creation
+- SQL Query Builder
+
+Interview Questions:
+- Builder vs Factory?
+
+-----------------------------------------
+
+9. Command Pattern
+-----------------------------------------
+Examples:
+- Undo/Redo
+- Remote Control
+
+Interview Questions:
+- How undo operation works?
+
+=========================================
+
+TIER 3 (GOOD TO KNOW) ⭐⭐⭐
+-----------------------------------------
+
+10. Template Method
+
+11. State Pattern
+
+12. Chain of Responsibility
+
+13. Facade Pattern
+
+14. Proxy Pattern
+
+15. Flyweight Pattern
+
+=========================================
+TOP 5 MUST-DO PATTERNS
+=========================================
+
+1. Singleton
+2. Factory
+3. Strategy
+4. Observer
+5. Adapter
+
+These alone cover a large percentage of design pattern questions.
+
+=========================================
+TOP 10 FOR SENIOR C++ INTERVIEWS
+=========================================
+
+1. Singleton
+2. Factory
+3. Strategy
+4. Observer
+5. Adapter
+6. Decorator
+7. Abstract Factory
+8. Builder
+9. Command
+10. State
+
+=========================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================
+
+1. Implement Singleton in C++
+2. How to make Singleton thread-safe?
+3. Factory vs Abstract Factory?
+4. Strategy vs State Pattern?
+5. Why prefer Strategy over if-else?
+6. Observer Pattern real-world example?
+7. Decorator vs Inheritance?
+8. Builder vs Factory?
+9. Adapter Pattern example?
+10. Which design patterns have you used in projects?
+
+=========================================
+IF SHORT ON TIME
+=========================================
+
+Prepare thoroughly:
+
+1. Singleton
+2. Factory
+3. Strategy
+4. Observer
+5. Adapter
+
+Then move to:
+
+6. Decorator
+7. Abstract Factory
+8. Builder
+
+For most 10+ year C++ interviews, these 8 patterns are sufficient.
