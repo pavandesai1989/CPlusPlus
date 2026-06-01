@@ -1,0 +1,281 @@
+=========================================
+C++ STL INTERVIEW TOPICS
+Most Asked → Least Asked
+=========================================
+
+1. vector ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Internal implementation
+- Dynamic resizing
+- Capacity vs Size
+- reserve()
+- resize()
+- emplace_back() vs push_back()
+- Iterator invalidation
+- Memory allocation strategy
+
+Must Know Questions:
+- How does vector grow internally?
+- Difference between size() and capacity()?
+- reserve() vs resize()?
+- push_back() vs emplace_back()?
+- When are iterators invalidated?
+- Why is vector preferred over list?
+
+=========================================
+
+2. unordered_map ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Hash Table
+- Buckets
+- Hash Function
+- Collision Handling
+- Load Factor
+- Rehashing
+
+Must Know Questions:
+- How unordered_map works internally?
+- Average and worst-case complexity?
+- What is collision?
+- What is rehashing?
+- map vs unordered_map?
+
+=========================================
+
+3. map ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Red-Black Tree
+- Ordered Storage
+- Iterator traversal
+- lower_bound()
+- upper_bound()
+
+Must Know Questions:
+- How map is implemented internally?
+- Why O(log n)?
+- map vs unordered_map?
+- lower_bound vs upper_bound?
+
+=========================================
+
+4. set / unordered_set ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Unique elements
+- Ordered vs unordered storage
+- Tree vs Hash Table
+
+Must Know Questions:
+- set vs unordered_set?
+- Complexity of operations?
+- Internal implementation?
+
+=========================================
+
+5. Iterators ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- begin/end
+- const_iterator
+- reverse_iterator
+- Iterator Categories
+
+Must Know Questions:
+- Types of iterators?
+- Random access iterator?
+- Why list doesn't support sorting with std::sort?
+- Difference between iterator and pointer?
+
+Iterator Categories:
+- Input Iterator
+- Output Iterator
+- Forward Iterator
+- Bidirectional Iterator
+- Random Access Iterator
+
+=========================================
+
+6. STL Algorithms ⭐⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- sort
+- stable_sort
+- find
+- count
+- binary_search
+- lower_bound
+- upper_bound
+- remove
+- unique
+- reverse
+
+Must Know Questions:
+- sort complexity?
+- stable_sort vs sort?
+- lower_bound vs upper_bound?
+- remove() vs erase()?
+- unique() behavior?
+
+=========================================
+
+7. pair ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- pair
+- make_pair
+- Nested pairs
+
+Must Know Questions:
+- Why use pair?
+- pair vs struct?
+
+=========================================
+
+8. priority_queue ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Max Heap
+- Min Heap
+- Custom Comparator
+
+Must Know Questions:
+- How to create min heap?
+- Complexity of push/pop?
+- Internal implementation?
+
+=========================================
+
+9. deque ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Double-ended insertion
+- Internal segmented memory
+
+Must Know Questions:
+- deque vs vector?
+- When to use deque?
+
+=========================================
+
+10. list ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- Doubly Linked List
+- splice()
+- merge()
+
+Must Know Questions:
+- list vs vector?
+- Why random access is not supported?
+- Why sort() member function exists?
+
+=========================================
+
+11. Custom Comparator ⭐⭐⭐⭐
+-----------------------------------------
+Topics:
+- sort comparator
+- set comparator
+- map comparator
+- priority_queue comparator
+
+Must Know Questions:
+- How custom sorting works?
+- Comparator rules?
+
+=========================================
+
+12. Functors ⭐⭐⭐
+-----------------------------------------
+Topics:
+- operator()
+- Stateful functors
+
+Must Know Questions:
+- Functor vs function?
+- Functor vs lambda?
+
+=========================================
+
+13. multiset / multimap ⭐⭐⭐
+-----------------------------------------
+Topics:
+- Duplicate keys
+- Ordered storage
+
+Must Know Questions:
+- Difference from set/map?
+
+=========================================
+
+14. array ⭐⭐⭐
+-----------------------------------------
+Topics:
+- Fixed-size container
+- Stack allocation
+
+Must Know Questions:
+- array vs vector?
+
+=========================================
+
+15. forward_list ⭐⭐
+-----------------------------------------
+Topics:
+- Singly Linked List
+
+Must Know Questions:
+- forward_list vs list?
+
+=========================================
+
+16. Allocators ⭐⭐
+-----------------------------------------
+Topics:
+- STL Allocator Model
+- Custom Allocators
+
+Must Know Questions:
+- What is allocator?
+- Why allocator exists?
+
+=========================================
+
+TOP 15 STL QUESTIONS (MOST ASKED)
+-----------------------------------------
+
+1. How does vector grow internally?
+2. size() vs capacity()?
+3. reserve() vs resize()?
+4. push_back() vs emplace_back()?
+5. Iterator invalidation in vector?
+6. Why vector preferred over list?
+7. map vs unordered_map?
+8. How unordered_map works internally?
+9. What is rehashing?
+10. set vs unordered_set?
+11. lower_bound() vs upper_bound()?
+12. remove() vs erase()?
+13. sort() vs stable_sort()?
+14. Types of iterators?
+15. How to implement min heap using priority_queue?
+
+=========================================
+
+MINIMUM MUST-DO STL
+-----------------------------------------
+1. vector
+2. map
+3. unordered_map
+4. set
+5. unordered_set
+6. Iterators
+7. STL Algorithms
+8. priority_queue
+9. deque
+10. Custom Comparators
+
+These 10 cover roughly 90% of STL interview questions.
