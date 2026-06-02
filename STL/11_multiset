@@ -1,0 +1,517 @@
+=========================================
+C++ MULTISET (Associative Container)
+INTERVIEW PREPARATION NOTES
+=========================================
+
+1. What is multiset?
+--------------------
+
+std::multiset is an STL associative container that stores elements in sorted order and allows duplicate values.
+
+Characteristics:
+✓ Sorted order
+✓ Duplicates allowed
+✓ Implemented using Red-Black Tree
+✓ Automatically ordered
+
+Example:
+
+multiset<int> ms;
+
+ms.insert(30);
+ms.insert(10);
+ms.insert(20);
+ms.insert(10);
+
+Output:
+
+10 10 20 30
+
+-----------------------------------------
+
+2. Difference Between set and multiset?
+---------------------------------------
+
+set
+---
+✓ Unique elements only
+✓ Duplicate insertion ignored
+
+Example:
+
+10 10 20
+
+Stored:
+
+10 20
+
+multiset
+--------
+✓ Duplicates allowed
+
+Example:
+
+10 10 20
+
+Stored:
+
+10 10 20
+
+Interview Answer:
+set stores unique elements, while multiset allows multiple occurrences of the same value.
+
+-----------------------------------------
+
+3. Internal Implementation
+--------------------------
+
+Implemented using:
+
+Red-Black Tree
+(Self-Balancing BST)
+
+Example:
+
+Insert:
+
+30 10 20 10
+
+Tree remains balanced automatically.
+
+Interview Answer:
+multiset is implemented using a self-balancing Red-Black Tree.
+
+-----------------------------------------
+
+4. Why is multiset Sorted?
+--------------------------
+
+Elements are stored according to tree ordering.
+
+Example:
+
+Insert:
+
+50
+10
+30
+20
+
+Output:
+
+10 20 30 50
+
+Insertion order does not matter.
+
+-----------------------------------------
+
+5. Why Are Duplicates Allowed?
+------------------------------
+
+Unlike set, multiset permits multiple identical keys.
+
+Example:
+
+ms.insert(10);
+ms.insert(10);
+ms.insert(10);
+
+Output:
+
+10 10 10
+
+Useful for frequency-based problems.
+
+-----------------------------------------
+
+6. Complexity
+-------------
+
+insert()          O(log n)
+erase()           O(log n)
+find()            O(log n)
+count()           O(log n + k)
+
+lower_bound()     O(log n)
+upper_bound()     O(log n)
+
+size()            O(1)
+empty()           O(1)
+
+-----------------------------------------
+
+7. Why is insert() O(log n)?
+----------------------------
+
+Insertion occurs in a balanced Red-Black Tree.
+
+Maximum height:
+
+log n
+
+Complexity:
+
+O(log n)
+
+-----------------------------------------
+
+8. Why is find() O(log n)?
+--------------------------
+
+Search follows BST path.
+
+Example:
+
+       40
+      /  \
+    20    60
+   / \
+ 10  30
+
+Searching takes at most tree height.
+
+Complexity:
+
+O(log n)
+
+-----------------------------------------
+
+9. Why No Random Access?
+------------------------
+
+Not supported:
+
+ms[0];
+
+Error.
+
+Reason:
+
+Elements are stored in tree nodes, not contiguous memory.
+
+-----------------------------------------
+
+10. count()
+-----------
+
+Returns number of occurrences.
+
+Example:
+
+multiset<int> ms;
+
+ms.insert(10);
+ms.insert(10);
+ms.insert(10);
+
+cout << ms.count(10);
+
+Output:
+
+3
+
+Interview Question:
+Difference between count() in set and multiset?
+
+Answer:
+
+set       -> 0 or 1
+multiset  -> 0 to n
+
+-----------------------------------------
+
+11. find()
+----------
+
+Returns iterator to first matching element.
+
+Example:
+
+auto it = ms.find(10);
+
+if(it != ms.end())
+{
+    cout << "Found";
+}
+
+Complexity:
+
+O(log n)
+
+-----------------------------------------
+
+12. erase()
+-----------
+
+Case 1:
+
+ms.erase(10);
+
+Removes ALL occurrences of 10.
+
+Example:
+
+10 10 10 20
+
+After:
+
+20
+
+-----------------------------------------
+
+Case 2:
+
+Erase only one occurrence.
+
+auto it = ms.find(10);
+
+ms.erase(it);
+
+Result:
+
+10 10 20
+
+Interview Question:
+How do you erase only one occurrence from a multiset?
+
+Answer:
+Use find() and erase(iterator).
+
+-----------------------------------------
+
+13. lower_bound()
+-----------------
+
+Returns first element >= key.
+
+Example:
+
+10 10 20 30
+
+lower_bound(15)
+
+Returns:
+
+20
+
+-----------------------------------------
+
+14. upper_bound()
+-----------------
+
+Returns first element > key.
+
+Example:
+
+10 10 20 30
+
+upper_bound(10)
+
+Returns iterator to 20.
+
+-----------------------------------------
+
+15. equal_range()
+-----------------
+
+Returns:
+
+(lower_bound, upper_bound)
+
+Useful for duplicates.
+
+Example:
+
+auto p = ms.equal_range(10);
+
+Range contains all 10s.
+
+-----------------------------------------
+
+16. Iterator Stability
+----------------------
+
+Insertion:
+----------
+Existing iterators remain valid.
+
+Erase:
+------
+Only erased iterator becomes invalid.
+
+-----------------------------------------
+
+17. multiset vs set
+-------------------
+
+set
+---
+Unique values
+
+10 10 20
+
+Stored:
+
+10 20
+
+multiset
+--------
+Duplicates allowed
+
+10 10 20
+
+Stored:
+
+10 10 20
+
+-----------------------------------------
+
+18. multiset vs unordered_multiset
+----------------------------------
+
+multiset
+--------
+Red-Black Tree
+Sorted
+O(log n)
+
+unordered_multiset
+------------------
+Hash Table
+Not Sorted
+Average O(1)
+
+Interview Answer:
+Use multiset when sorted order is required.
+
+-----------------------------------------
+
+19. When to Use multiset?
+-------------------------
+
+Use multiset when:
+
+✓ Duplicates are needed
+✓ Sorted order required
+✓ Frequency tracking required
+
+Examples:
+
+- Frequency problems
+- Sliding Window Median
+- Order statistics
+- Event processing
+- Competitive programming
+
+=========================================
+MOST COMMONLY USED FUNCTIONS
+=========================================
+
+insert(x)          -> Insert element
+
+erase(x)           -> Remove all occurrences
+
+erase(it)          -> Remove one occurrence
+
+find(x)            -> Search element
+
+count(x)           -> Number of occurrences
+
+lower_bound(x)     -> First element >= x
+
+upper_bound(x)     -> First element > x
+
+equal_range(x)     -> Range of duplicates
+
+size()             -> Number of elements
+
+empty()            -> Check empty
+
+clear()            -> Remove all elements
+
+=========================================
+COMMON PROGRAM
+=========================================
+
+#include <iostream>
+#include <set>
+
+using namespace std;
+
+int main()
+{
+    multiset<int> ms;
+
+    ms.insert(30);
+    ms.insert(10);
+    ms.insert(20);
+    ms.insert(10);
+
+    cout << "Elements: ";
+
+    for(auto x : ms)
+        cout << x << " ";
+
+    cout << endl;
+
+    cout << "Count of 10: "
+         << ms.count(10) << endl;
+
+    auto it = ms.find(10);
+
+    ms.erase(it);   // erase one 10
+
+    cout << "After erase one 10: ";
+
+    for(auto x : ms)
+        cout << x << " ";
+
+    return 0;
+}
+
+Output:
+10 10 20 30
+Count of 10: 2
+10 20 30
+
+=========================================
+TOP MULTISET INTERVIEW QUESTIONS
+=========================================
+
+1. What is multiset?
+2. Difference between set and multiset?
+3. How is multiset implemented internally?
+4. Why are duplicates allowed?
+5. Complexity of insert(), find(), erase()?
+6. Difference between count() in set and multiset?
+7. How do you remove only one occurrence?
+8. What is equal_range()?
+9. What is lower_bound()?
+10. What is upper_bound()?
+11. Why no random access?
+12. Difference between multiset and unordered_multiset?
+13. Iterator invalidation rules?
+14. When would you use multiset?
+15. Why is find() O(log n)?
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. multiset = Sorted + Duplicates Allowed
+2. Implemented using Red-Black Tree
+3. insert() = O(log n)
+4. find() = O(log n)
+5. erase() = O(log n)
+6. count() can return > 1
+7. lower_bound() => >= key
+8. upper_bound() => > key
+9. equal_range() => all duplicates
+10. No random access
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::multiset is an associative container implemented using a Red-Black Tree that stores elements in sorted order, allows duplicates, and provides 
+O(log n) insertion, deletion, and search operations.
