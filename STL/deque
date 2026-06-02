@@ -471,7 +471,8 @@ DEQUE INTERVIEW QUESTIONS & ANSWERS
 1. What is deque?
 -----------------
 
-deque (Double Ended Queue) is an STL sequence container that allows efficient insertion and deletion of elements at both the front and the back while still providing O(1) random access.
+deque (Double Ended Queue) is an STL sequence container that allows efficient insertion and deletion 
+of elements at both the front and the back while still providing O(1) random access.
 
 -----------------------------------------
 
