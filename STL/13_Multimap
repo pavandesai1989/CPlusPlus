@@ -1,0 +1,453 @@
+=========================================
+C++ MULTIMAP (Associative Container)
+INTERVIEW PREPARATION NOTES
+=========================================
+
+1. What is multimap?
+--------------------
+
+std::multimap is an associative container that stores:
+
+key -> value
+
+Unlike map:
+
+✓ Duplicate keys allowed
+✓ Keys automatically sorted
+
+Example:
+
+multimap<int,string> mm;
+
+mm.insert({1,"John"});
+mm.insert({1,"David"});
+
+Output:
+
+1 -> John
+1 -> David
+
+-----------------------------------------
+
+2. Internal Implementation
+--------------------------
+
+Implemented using:
+
+Red-Black Tree
+(Self-Balancing BST)
+
+Properties:
+
+✓ Sorted keys
+✓ Duplicate keys allowed
+✓ Search O(log n)
+✓ Insert O(log n)
+✓ Delete O(log n)
+
+Interview Q:
+How is multimap implemented internally?
+
+Answer:
+std::multimap is typically implemented using a Red-Black Tree that allows multiple elements with the same key.
+
+-----------------------------------------
+
+3. Key Characteristics
+----------------------
+
+✓ Key-Value storage
+✓ Duplicate keys allowed
+✓ Sorted by key
+✓ O(log n) operations
+
+Example:
+
+multimap<int,string> mm;
+
+mm.insert({10,"A"});
+mm.insert({10,"B"});
+mm.insert({20,"C"});
+
+Output:
+
+10 A
+10 B
+20 C
+
+-----------------------------------------
+
+4. Difference Between map and multimap
+--------------------------------------
+
+map
+---
+Duplicate Keys:
+✗ Not Allowed
+
+multimap
+--------
+Duplicate Keys:
+✓ Allowed
+
+Example:
+
+map<int,string>
+
+1 -> A
+1 -> B
+
+Result:
+
+1 -> B
+
+Old value overwritten.
+
+-----------------------------------------
+
+multimap<int,string>
+
+1 -> A
+1 -> B
+
+Result:
+
+1 -> A
+1 -> B
+
+Both stored.
+
+Interview Q:
+Difference between map and multimap?
+
+Answer:
+map stores unique keys, whereas multimap allows multiple elements with the same key.
+
+-----------------------------------------
+
+5. Complexity
+-------------
+
+insert()            O(log n)
+
+find()              O(log n)
+
+erase()             O(log n)
+
+count()             O(log n + k)
+
+equal_range()       O(log n)
+
+lower_bound()       O(log n)
+
+upper_bound()       O(log n)
+
+-----------------------------------------
+
+6. Why No operator[]?
+---------------------
+
+Not supported.
+
+Reason:
+
+Multiple values may exist for the same key.
+
+Therefore:
+
+mm[10];   // ERROR
+
+Interview Q:
+Why doesn't multimap support operator[]?
+
+Answer:
+Because duplicate keys are allowed, there is no unique value associated with a key.
+
+-----------------------------------------
+
+7. insert()
+-----------
+
+mm.insert({1,"John"});
+
+mm.insert({1,"David"});
+
+Complexity:
+
+O(log n)
+
+-----------------------------------------
+
+8. find()
+---------
+
+auto it = mm.find(10);
+
+Returns iterator to first matching key.
+
+Example:
+
+if(it != mm.end())
+{
+    cout << it->second;
+}
+
+Complexity:
+
+O(log n)
+
+-----------------------------------------
+
+9. count()
+----------
+
+mm.count(10);
+
+Returns:
+
+Number of elements having key 10.
+
+Example:
+
+10 -> A
+10 -> B
+10 -> C
+
+count(10) = 3
+
+Interview Q:
+Difference between map::count() and multimap::count()?
+
+Answer:
+map returns either 0 or 1, while multimap may return any number because duplicate keys are allowed.
+
+-----------------------------------------
+
+10. equal_range()
+-----------------
+
+Most Important Function.
+
+Returns:
+
+All elements having a key.
+
+Example:
+
+auto range = mm.equal_range(10);
+
+for(auto it = range.first;
+    it != range.second;
+    ++it)
+{
+    cout << it->second << endl;
+}
+
+Interview Q:
+How do you retrieve all values for a duplicate key?
+
+Answer:
+Use equal_range().
+
+-----------------------------------------
+
+11. lower_bound()
+-----------------
+
+Returns first element:
+
+key >= given key
+
+Example:
+
+mm.lower_bound(10);
+
+-----------------------------------------
+
+12. upper_bound()
+-----------------
+
+Returns first element:
+
+key > given key
+
+Example:
+
+mm.upper_bound(10);
+
+-----------------------------------------
+
+13. erase()
+-----------
+
+Erase all entries with key:
+
+mm.erase(10);
+
+Complexity:
+
+O(log n + count)
+
+-----------------------------------------
+
+14. Iterating Multimap
+----------------------
+
+for(auto &p : mm)
+{
+    cout << p.first
+         << " "
+         << p.second
+         << endl;
+}
+
+Output remains sorted by key.
+
+-----------------------------------------
+
+15. multimap vs map
+-------------------
+
+map
+---
+Unique keys
+
+multimap
+--------
+Duplicate keys allowed
+
+-----------------------------------------
+
+16. multimap vs unordered_multimap
+----------------------------------
+
+multimap
+--------
+Red-Black Tree
+Sorted
+O(log n)
+
+unordered_multimap
+------------------
+Hash Table
+Not Sorted
+Average O(1)
+
+Interview Q:
+Difference between multimap and unordered_multimap?
+
+Answer:
+multimap maintains sorted order using a Red-Black Tree, whereas unordered_multimap uses hashing and does not maintain order.
+
+-----------------------------------------
+
+17. Real World Use Cases
+------------------------
+
+✓ Student -> Multiple Subjects
+✓ Department -> Employees
+✓ Word -> Multiple Meanings
+✓ Category -> Products
+✓ Date -> Multiple Events
+
+Example:
+
+HR -> John
+HR -> David
+HR -> Mike
+
+Same key with multiple values.
+
+=========================================
+COMMONLY USED MULTIMAP FUNCTIONS PROGRAM
+=========================================
+
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int main()
+{
+    multimap<int,string> mm;
+
+    mm.insert({1,"John"});
+    mm.insert({1,"David"});
+    mm.insert({2,"Mike"});
+
+    cout << "Count of key 1 = "
+         << mm.count(1)
+         << endl;
+
+    auto range = mm.equal_range(1);
+
+    cout << "Values for key 1:" << endl;
+
+    for(auto it = range.first;
+        it != range.second;
+        ++it)
+    {
+        cout << it->second << endl;
+    }
+
+    mm.erase(2);
+
+    cout << "\nAll Elements:\n";
+
+    for(auto &p : mm)
+    {
+        cout << p.first
+             << " "
+             << p.second
+             << endl;
+    }
+
+    return 0;
+}
+
+=========================================
+TOP MULTIMAP INTERVIEW QUESTIONS
+=========================================
+
+1. What is multimap?
+2. How is multimap implemented internally?
+3. Difference between map and multimap?
+4. Are duplicate keys allowed?
+5. Why doesn't multimap support operator[]?
+6. Complexity of insert(), find(), erase()?
+7. What does count() return?
+8. What is equal_range()?
+9. How do you get all values for a key?
+10. Difference between multimap and unordered_multimap?
+11. Does multimap maintain sorted order?
+12. What tree is used internally?
+13. What does lower_bound() do?
+14. What does upper_bound() do?
+15. Real-world use cases?
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. multimap = Key-Value container
+2. Duplicate keys allowed
+3. Automatically sorted by key
+4. Red-Black Tree internally
+5. Search O(log n)
+6. Insert O(log n)
+7. Delete O(log n)
+8. No operator[]
+9. count() returns duplicate count
+10. equal_range() gets all duplicates
+11. lower_bound() => first key >= value
+12. upper_bound() => first key > value
+13. multimap = ordered
+14. unordered_multimap = hash table
+15. Best when one key maps to multiple values
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::multimap is an ordered associative container implemented using a Red-Black Tree that stores key-value pairs with duplicate keys allowed and provides O(log n) search, 
+insertion, and deletion operations.
