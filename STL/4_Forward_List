@@ -1,0 +1,331 @@
+=========================================
+FORWARD_LIST INTERVIEW QUESTIONS & ANSWERS
+=========================================
+
+1. What is forward_list?
+------------------------
+
+forward_list is an STL container implemented as a singly linked list.
+
+Each node contains:
+
+[data][next]
+
+It supports efficient insertion and deletion operations and uses less memory than std::list because it stores only one pointer per node.
+
+-----------------------------------------
+
+2. How is forward_list implemented internally?
+----------------------------------------------
+
+forward_list is implemented as a singly linked list.
+
+Node Structure:
+
+[data][next]
+
+Example:
+
+10 -> 20 -> 30 -> NULL
+
+Each node stores:
+1. Data
+2. Pointer to next node
+
+Unlike list, it does not store a previous pointer.
+
+-----------------------------------------
+
+3. Difference between list and forward_list?
+--------------------------------------------
+
+list
+----
+- Doubly linked list
+- Stores prev and next pointers
+- Forward and backward traversal
+- Supports push_front() and push_back()
+- More memory usage
+
+forward_list
+------------
+- Singly linked list
+- Stores only next pointer
+- Forward traversal only
+- Supports push_front()
+- Less memory usage
+
+-----------------------------------------
+
+4. Why does forward_list not support push_back()?
+-------------------------------------------------
+
+forward_list maintains only forward links.
+
+Example:
+
+10 -> 20 -> 30 -> NULL
+
+To insert at the end, it must traverse all nodes to find the last node.
+
+Cost:
+
+O(n)
+
+Therefore STL forward_list does not provide push_back().
+
+-----------------------------------------
+
+5. Why is insert_after() used instead of insert()?
+--------------------------------------------------
+
+In a singly linked list, a node only knows its next node.
+
+Example:
+
+10 -> 20 -> 30
+
+If we have iterator at 10:
+
+insert_after(it, 15)
+
+Result:
+
+10 -> 15 -> 20 -> 30
+
+Insertion after a node is easy because the next pointer is available.
+
+-----------------------------------------
+
+6. Does forward_list support random access?
+-------------------------------------------
+
+No.
+
+Example:
+
+fl[5];   // Error
+
+Reason:
+
+Nodes are linked together and not stored contiguously in memory.
+
+To reach an element, traversal is required.
+
+Complexity:
+
+O(n)
+
+-----------------------------------------
+
+7. Complexity of insert_after()?
+--------------------------------
+
+O(1)
+
+Reason:
+
+Only pointer manipulation is required.
+
+Example:
+
+10 -> 20 -> 30
+
+Insert 15 after 10:
+
+10 -> 15 -> 20 -> 30
+
+No shifting of elements.
+
+-----------------------------------------
+
+8. Complexity of erase_after()?
+-------------------------------
+
+O(1)
+
+Reason:
+
+Only pointer updates are needed.
+
+Example:
+
+10 -> 20 -> 30
+
+erase_after(10)
+
+Result:
+
+10 -> 30
+
+-----------------------------------------
+
+9. Why does forward_list use less memory than list?
+---------------------------------------------------
+
+list node:
+
+[data][prev][next]
+
+forward_list node:
+
+[data][next]
+
+Since forward_list stores only one pointer instead of two, each node requires less memory.
+
+-----------------------------------------
+
+10. When would you use forward_list?
+------------------------------------
+
+Use forward_list when:
+
+✓ Memory usage is important
+✓ Frequent insertions/deletions required
+✓ Only forward traversal is needed
+
+Avoid forward_list when:
+
+✗ Random access required
+✗ Backward traversal required
+✗ Frequent access to last element needed
+
+=========================================
+COMMONLY USED FORWARD_LIST FUNCTIONS
+=========================================
+
+#include <iostream>
+#include <forward_list>
+
+using namespace std;
+
+int main()
+{
+    forward_list<int> fl;
+
+    // push_front()
+    fl.push_front(30);
+    fl.push_front(20);
+    fl.push_front(10);
+
+    // 10 -> 20 -> 30
+
+    cout << "Elements: ";
+    for(auto x : fl)
+        cout << x << " ";
+    cout << endl;
+
+    // front()
+    cout << "Front: " << fl.front() << endl;
+
+    // insert_after()
+    auto it = fl.begin();
+    fl.insert_after(it, 15);
+
+    // 10 -> 15 -> 20 -> 30
+
+    cout << "After insert_after: ";
+    for(auto x : fl)
+        cout << x << " ";
+    cout << endl;
+
+    // erase_after()
+    fl.erase_after(it);
+
+    // 10 -> 20 -> 30
+
+    cout << "After erase_after: ";
+    for(auto x : fl)
+        cout << x << " ";
+    cout << endl;
+
+    // pop_front()
+    fl.pop_front();
+
+    // 20 -> 30
+
+    cout << "After pop_front: ";
+    for(auto x : fl)
+        cout << x << " ";
+    cout << endl;
+
+    // empty()
+    cout << "Empty? "
+         << (fl.empty() ? "Yes" : "No")
+         << endl;
+
+    // remove()
+    fl.remove(20);
+
+    // 30
+
+    cout << "After remove(20): ";
+    for(auto x : fl)
+        cout << x << " ";
+    cout << endl;
+
+    // clear()
+    fl.clear();
+
+    cout << "Empty after clear? "
+         << (fl.empty() ? "Yes" : "No")
+         << endl;
+
+    return 0;
+}
+
+=========================================
+MOST FREQUENTLY USED FUNCTIONS
+=========================================
+
+push_front()      -> Insert at front
+pop_front()       -> Remove front element
+front()           -> Access first element
+
+insert_after()    -> Insert after iterator
+erase_after()     -> Remove after iterator
+
+begin()           -> Iterator to first element
+end()             -> Iterator to end
+
+empty()           -> Check if empty
+clear()           -> Remove all elements
+
+remove()          -> Remove matching values
+reverse()         -> Reverse list
+sort()            -> Sort elements
+unique()          -> Remove consecutive duplicates
+
+=========================================
+INTERVIEW QUESTION
+=========================================
+
+Q: Why does forward_list use insert_after() and erase_after()
+instead of insert() and erase()?
+
+A:
+Because forward_list is a singly linked list.
+A node only knows its next node, not its previous node.
+Therefore operations are performed after a known iterator position.
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. forward_list = Singly Linked List
+2. Node = [data][next]
+3. No random access
+4. No push_back()
+5. push_front() O(1)
+6. insert_after() O(1)
+7. erase_after() O(1)
+8. Stable iterators
+9. Less memory than list
+10. Forward traversal only
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::forward_list is a singly linked list container that provides O(1) insertion and deletion after a known position with low memory overhead, 
+but supports only forward traversal and does not provide random access.
