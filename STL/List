@@ -1,0 +1,496 @@
+=========================================
+C++ LIST (Doubly Linked List)
+INTERVIEW PREPARATION NOTES
+=========================================
+
+1. What is list?
+----------------
+
+std::list is a doubly linked list provided by STL.
+
+Each node contains:
+
+[data][prev][next]
+
+Example:
+
+list<int> l;
+
+l.push_back(10);
+l.push_back(20);
+l.push_back(30);
+
+Result:
+
+10 <-> 20 <-> 30
+
+-----------------------------------------
+
+2. Internal Implementation
+--------------------------
+
+Implemented as a Doubly Linked List.
+
+Node Structure:
+
++------+-------+------+
+| prev | data  | next |
++------+-------+------+
+
+Example:
+
+NULL <- 10 <-> 20 <-> 30 -> NULL
+
+Each node stores:
+
+1. Data
+2. Pointer to previous node
+3. Pointer to next node
+
+Interview Q:
+How is list implemented internally?
+
+Answer:
+std::list is implemented as a doubly linked list where each node stores data along with pointers to the previous and next nodes.
+
+-----------------------------------------
+
+3. Why Use list?
+----------------
+
+Vector Problem:
+
+Insert in middle:
+
+[10][20][30][40]
+
+Insert 25:
+
+[10][20][25][30][40]
+
+Elements must shift.
+
+Cost = O(n)
+
+List:
+
+10 <-> 20 <-> 30 <-> 40
+
+Insert 25:
+
+10 <-> 20 <-> 25 <-> 30 <-> 40
+
+Only pointers change.
+
+Cost = O(1) after reaching position.
+
+-----------------------------------------
+
+4. Complexity
+-------------
+
+Access by index        O(n)
+
+push_front()          O(1)
+push_back()           O(1)
+
+pop_front()           O(1)
+pop_back()            O(1)
+
+insert(iterator)      O(1)
+erase(iterator)       O(1)
+
+find()                O(n)
+
+size()                O(1)
+
+-----------------------------------------
+
+5. Random Access?
+-----------------
+
+list does NOT support:
+
+l[5]
+
+Not allowed.
+
+Reason:
+
+Nodes are not contiguous.
+
+Need traversal.
+
+Complexity:
+
+O(n)
+
+Interview Q:
+Why does list not support random access?
+
+Answer:
+Because elements are stored as linked nodes rather than contiguous memory, so the container must traverse nodes sequentially.
+
+-----------------------------------------
+
+6. Contiguous Memory?
+---------------------
+
+vector:
+✓ Contiguous
+
+deque:
+✗ Non-contiguous blocks
+
+list:
+✗ Completely non-contiguous
+
+Example:
+
+Node1 -> Address 1000
+Node2 -> Address 9000
+Node3 -> Address 4000
+
+Interview Q:
+Does list store elements contiguously?
+
+Answer:
+No.
+
+-----------------------------------------
+
+7. Iterator Stability
+---------------------
+
+Major Advantage.
+
+Insert:
+
+l.insert(it, 100);
+
+Existing iterators remain valid.
+
+Erase:
+
+Only iterator pointing to erased node becomes invalid.
+
+Interview Q:
+Why are list iterators more stable than vector iterators?
+
+Answer:
+Because nodes are linked together and insertion/removal only changes pointers without moving existing elements.
+
+-----------------------------------------
+
+8. Why Insert/Delete O(1)?
+--------------------------
+
+Given iterator:
+
+it --> 20
+
+Insert 15:
+
+10 <-> 15 <-> 20 <-> 30
+
+Only pointer updates.
+
+No shifting.
+
+Complexity:
+
+O(1)
+
+Important:
+
+Finding position first may take O(n).
+
+Interview Answer:
+
+Insertion/deletion is O(1) only when the iterator to the position is already available.
+
+-----------------------------------------
+
+9. list vs vector
+-----------------
+
+vector
+------
+Contiguous memory
+Random access O(1)
+Insert middle O(n)
+Better cache locality
+
+list
+----
+Doubly linked list
+No random access
+Insert middle O(1)
+Poor cache locality
+
+Interview Q:
+Why is vector usually preferred over list?
+
+Answer:
+Modern CPUs benefit from cache locality. Although list provides O(1) insertion/deletion, vector is often faster in practice because its elements are stored contiguously.
+
+-----------------------------------------
+
+10. Common Functions
+--------------------
+
+push_back()
+push_front()
+
+pop_back()
+pop_front()
+
+insert()
+erase()
+
+front()
+back()
+
+begin()
+end()
+
+size()
+empty()
+
+remove()
+
+sort()
+
+reverse()
+
+unique()
+
+-----------------------------------------
+
+11. Special Functions
+---------------------
+
+remove(value)
+-------------
+
+l.remove(10);
+
+Removes all occurrences.
+
+-----------------------------------------
+
+sort()
+------
+
+l.sort();
+
+List has its own member sort.
+
+Reason:
+std::sort requires random access iterators.
+
+-----------------------------------------
+
+reverse()
+---------
+
+l.reverse();
+
+-----------------------------------------
+
+unique()
+--------
+
+l.unique();
+
+Removes consecutive duplicates.
+
+Example:
+
+1 1 2 2 3
+
+Result:
+
+1 2 3
+
+-----------------------------------------
+
+12. Memory Overhead
+-------------------
+
+Vector:
+
+Stores only data.
+
+List:
+
+Stores:
+
+data
+prev pointer
+next pointer
+
+More memory per element.
+
+Interview Q:
+Why does list consume more memory than vector?
+
+Answer:
+Because every node stores two extra pointers in addition to the data.
+
+-----------------------------------------
+
+13. When to Use list?
+---------------------
+
+Use list when:
+
+✓ Frequent insertions/deletions in middle
+✓ Iterator stability is important
+
+Avoid list when:
+
+✗ Random access required
+✗ Cache efficiency important
+✗ Mostly sequential storage
+
+=========================================
+TOP LIST INTERVIEW QUESTIONS
+=========================================
+
+1. What is std::list?
+2. How is list implemented internally?
+3. Why doesn't list support random access?
+4. Difference between vector and list?
+5. Complexity of insert() in list?
+6. Complexity of erase() in list?
+7. Why is insertion O(1)?
+8. Why is vector often faster than list?
+9. What is iterator stability?
+10. Why does list use more memory?
+11. Why can't std::sort be used with list?
+12. Difference between list and forward_list?
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. list = Doubly Linked List
+2. Not contiguous memory
+3. No random access
+4. push_front() O(1)
+5. push_back() O(1)
+6. insert(iterator) O(1)
+7. erase(iterator) O(1)
+8. Better iterator stability than vector
+9. More memory overhead
+10. vector usually preferred due to cache locality
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::list is a doubly linked list container that provides O(1) insertion and deletion at known positions with stable iterators, but it does not support random access and has higher 
+memory overhead than vector.
+
+14. Iterator Invalidation
+-------------------------
+
+Insert:
+-------
+l.insert(it, 100);
+
+All existing iterators remain valid.
+
+Erase:
+------
+Only iterator pointing to the erased node becomes invalid.
+
+Example:
+
+auto it = l.begin();
+
+l.erase(it);
+
+it becomes invalid.
+
+Other iterators remain valid.
+
+Interview Q:
+Which iterators become invalid after erase()?
+
+Answer:
+Only iterators/references to the erased element become invalid.
+
+15. splice()
+------------
+
+One of the most powerful list functions.
+
+Moves elements from one list to another
+without copying or moving elements.
+
+Example:
+
+list<int> l1 = {1,2,3};
+list<int> l2 = {4,5,6};
+
+l1.splice(l1.end(), l2);
+
+Result:
+
+l1 = {1,2,3,4,5,6}
+l2 = {}
+
+Complexity:
+
+O(1)
+
+Interview Q:
+Why is splice() efficient?
+
+Answer:
+Because it only relinks pointers and does not copy elements.
+
+16. list vs forward_list
+------------------------
+
+list
+----
+Doubly linked list
+
+[data][prev][next]
+
+Can traverse:
+Forward and Backward
+
+Supports:
+push_back()
+push_front()
+
+More memory usage
+
+forward_list
+------------
+Singly linked list
+
+[data][next]
+
+Can traverse:
+Forward only
+
+Supports:
+push_front()
+
+Less memory usage
+
+Interview Q:
+Difference between list and forward_list?
+
+Answer:
+list is a doubly linked list with bidirectional traversal, while forward_list is a singly linked list with lower memory overhead.
+
+Why is vector usually preferred over list even though list has O(1) insertion/deletion?
+Although list provides O(1) insertion and deletion, it suffers from poor cache locality because nodes are scattered in memory. 
+Vector stores elements contiguously, making traversal 
+much faster due to better CPU cache utilization. Therefore vector is usually faster in real-world applications.
