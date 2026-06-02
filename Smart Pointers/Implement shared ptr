@@ -1,0 +1,33 @@
+
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class MySharedPtr {
+private:
+    T* ptr;          // raw pointer to object
+    int* refCount;   // pointer to shared reference count
+
+public:
+    // Constructor
+    explicit MySharedPtr(T* p = nullptr) {
+        ptr = p;
+        if (p) {
+            refCount = new int(1);  // first owner
+        } else {
+            refCount = nullptr;
+        }
+    }
+
+    // Copy constructor (IMPORTANT: increases ref count)
+    MySharedPtr(const MySharedPtr& other) {
+        ptr = other.ptr;
+        refCount = other.refCount;
+
+        if (refCount) {
+            (*refCount)++;   // increase shared ownership
+        }
+    }
+
+    // Copy assignment operator
+    MySharedPtr& operator=(const
