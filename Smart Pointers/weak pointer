@@ -1,3 +1,167 @@
+=========================================
+CIRCULAR DEPENDENCY (shared_ptr PROBLEM)
+=========================================
+
+1. Problem Statement
+--------------------
+When two objects hold shared_ptr to each other,
+a circular reference is created.
+
+👉 Result: memory leak
+👉 Objects are NEVER deleted
+
+-----------------------------------------
+
+2. Example of Problem
+---------------------
+
+class parent {
+public:
+    shared_ptr<child> spchild;
+};
+
+class child {
+public:
+    shared_ptr<parent> spparent;
+};
+
+int main() {
+    shared_ptr<parent> sp1 = make_shared<parent>();
+    shared_ptr<child> sp2  = make_shared<child>();
+
+    sp1->spchild = sp2;
+    sp2->spparent = sp1;
+
+    return 0;
+}
+
+-----------------------------------------
+
+3. What Happens Internally?
+---------------------------
+- sp1 owns parent → ref count = 1
+- sp2 owns child  → ref count = 1
+
+After linking:
+- parent owns child → child ref count = 2
+- child owns parent → parent ref count = 2
+
+-----------------------------------------
+
+4. Problem During Destruction
+-----------------------------
+When main() ends:
+
+sp1 destroyed → parent ref count: 2 → 1
+sp2 destroyed → child ref count: 2 → 1
+
+👉 BOTH objects still have reference count = 1
+👉 So destructor is NEVER called
+
+❌ RESULT: MEMORY LEAK (cycle)
+
+=========================================
+SOLUTION: USE weak_ptr
+=========================================
+
+5. What is weak_ptr?
+--------------------
+- weak_ptr is a non-owning smart pointer
+- It does NOT increase reference count
+- Used to break circular dependency
+
+-----------------------------------------
+
+6. Correct Solution
+-------------------
+
+class parent {
+public:
+    shared_ptr<child> spchild;
+};
+
+class child {
+public:
+    weak_ptr<parent> spparent;  // BREAKS CYCLE
+};
+
+int main() {
+    shared_ptr<parent> sp1 = make_shared<parent>();
+    shared_ptr<child> sp2  = make_shared<child>();
+
+    sp1->spchild = sp2;
+    sp2->spparent = sp1;
+
+    return 0;
+}
+
+-----------------------------------------
+
+7. Why weak_ptr fixes the problem?
+-----------------------------------
+- weak_ptr does NOT increase reference count
+- So no circular ownership exists
+
+-----------------------------------------
+
+8. Final Lifecycle (Correct Flow)
+----------------------------------
+
+Step 1:
+sp1 → parent ref count = 1
+sp2 → child ref count = 1
+
+Step 2:
+sp1->spchild = sp2
+→ child ref count = 2
+
+Step 3:
+sp2->spparent = sp1 (weak_ptr)
+→ parent ref count remains 1
+
+Step 4: main ends
+sp1 destroyed → parent ref count = 0 → parent destroyed
+→ destructor runs
+
+During parent destruction:
+spchild (shared_ptr) is destroyed
+→ child ref count = 2 → 1
+
+Step 5:
+sp2 destroyed → child ref count = 1 → 0 → child destroyed
+
+=========================================
+FINAL OUTPUT
+=========================================
+destroy parent
+destroy child
+
+=========================================
+9. KEY INTERVIEW POINTS
+=========================================
+
+✔ Circular dependency happens only with shared_ptr
+✔ It causes memory leak due to reference cycle
+✔ weak_ptr breaks the cycle safely
+✔ weak_ptr does NOT affect reference count
+✔ Always use weak_ptr for back-references
+
+=========================================
+10. ONE-LINE INTERVIEW ANSWER
+-----------------------------------------
+Circular dependency occurs when two shared_ptr objects reference each other, preventing reference count from reaching zero, and is resolved using weak_ptr which breaks ownership without increasing reference count.
+=========================================
+
+
+
+
+
+
+
+
+
+
+***EXTRA****
 #include <iostream>
 #include<memory>
 using namespace std;
