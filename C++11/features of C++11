@@ -1,0 +1,124 @@
+=========================================
+C++11 TRAILING RETURN TYPE (INTERVIEW NOTES)
+=========================================
+
+What is trailing return type?
+-----------------------------
+A trailing return type allows specifying the return type
+AFTER the function parameters using -> syntax.
+
+Syntax:
+-------
+auto functionName(parameters) -> return_type;
+
+-----------------------------------------
+Basic Example:
+-----------------------------------------
+
+#include <iostream>
+
+auto add(int a, int b) -> int {
+    return a + b;
+}
+
+int main() {
+    std::cout << add(5, 3);
+}
+
+Output: 8
+
+=========================================
+WHY USE TRAILING RETURN TYPE?
+=========================================
+
+1. Readability for complex return types
+----------------------------------------
+
+auto getPair() -> std::pair<int, double> {
+    return {42, 3.14};
+}
+
+Useful when return type is long or complex.
+
+-----------------------------------------
+2. Return type depends on parameters (IMPORTANT)
+-----------------------------------------------
+
+template <typename T1, typename T2>
+auto multiply(T1 a, T2 b) -> decltype(a * b) {
+    return a * b;
+}
+
+✔ decltype ensures correct return type
+✔ based on expression (a * b)
+
+-----------------------------------------
+3. Needed when return type uses parameters
+------------------------------------------
+Before C++14, parameters are not visible before return type,
+so trailing return type is required.
+
+=========================================
+WHY IT WORKS (IMPORTANT CONCEPT)
+=========================================
+
+Function parameters are NOT available before return type.
+So this fails in C++11:
+
+❌ auto add(T a, T b); // return type not known early
+
+Trailing return fixes this:
+✔ auto add(T a, T b) -> decltype(a + b);
+
+=========================================
+FUNCTION POINTER CASE
+=========================================
+
+using FuncPtr = auto(*)(int, int) -> int;
+
+Used in advanced generic programming.
+
+=========================================
+C++14 IMPROVEMENT
+=========================================
+
+From C++14 onwards:
+
+auto add(int a, int b) {
+    return a + b;
+}
+
+✔ Compiler automatically deduces return type
+✔ No need for trailing return type in simple cases
+
+=========================================
+WHEN TO USE TRAILING RETURN TYPE?
+=========================================
+
+Use when:
+✔ Return type depends on template parameters
+✔ Using decltype expressions
+✔ Complex/long return types
+✔ Pre-C++14 codebases
+
+Avoid when:
+✘ Simple functions (use auto in C++14+)
+
+=========================================
+INTERVIEW ONE-LINER
+=========================================
+
+Trailing return type in C++11 allows specifying the return type
+after the parameter list using ->, useful when return type depends
+on template parameters or decltype expressions.
+
+=========================================
+QUICK REVISION
+=========================================
+
+- Syntax: auto f() -> return_type
+- Used in C++11 templates
+- Helps with decltype return types
+- Required before C++14 for dependent return types
+- Replaced by simple auto return in C++14+
+=========================================
