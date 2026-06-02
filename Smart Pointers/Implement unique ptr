@@ -1,1 +1,73 @@
 
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class MyUniquePtr {
+private:
+    T* ptr;
+
+public:
+    // Constructor
+    explicit MyUniquePtr(T* p = nullptr) : ptr(p) {}
+
+    // Destructor
+    ~MyUniquePtr() {
+        delete ptr;
+    }
+
+    // Delete copy constructor (NO copying allowed)
+    MyUniquePtr(const MyUniquePtr&) = delete;
+
+    // Delete copy assignment
+    MyUniquePtr& operator=(const MyUniquePtr&) = delete;
+
+    // Move constructor
+    MyUniquePtr(MyUniquePtr&& other) noexcept {
+        ptr = other.ptr;
+        other.ptr = nullptr;
+    }
+
+    // Move assignment
+    MyUniquePtr& operator=(MyUniquePtr&& other) noexcept {
+        if (this != &other) {
+            delete ptr;          // free existing resource
+            ptr = other.ptr;     // take ownership
+            other.ptr = nullptr; // release ownership
+        }
+        return *this;
+    }
+
+    // Dereference operator
+    T& operator*() const {
+        return *ptr;
+    }
+
+    // Arrow operator
+    T* operator->() const {
+        return ptr;
+    }
+
+    // Get raw pointer
+    T* get() const {
+        return ptr;
+    }
+
+    // Release ownership (returns raw pointer, does NOT delete)
+    T* release() {
+        T* temp = ptr;
+        ptr = nullptr;
+        return temp;
+    }
+
+    // Reset pointer
+    void reset(T* p = nullptr) {
+        delete ptr;
+        ptr = p;
+    }
+
+    // Check if not null
+    explicit operator bool() const {
+        return ptr != nullptr;
+    }
+};
