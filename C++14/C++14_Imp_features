@@ -1,0 +1,106 @@
+=========================================
+C++14 MOST IMPORTANT TOPICS (INTERVIEW FOCUS)
+=========================================
+
+1. Generic Lambdas (VERY IMPORTANT)
+------------------------------------
+Q: What is a generic lambda in C++14?
+
+A:
+A lambda that uses auto in parameters.
+
+Example:
+auto add = [](auto a, auto b) {
+    return a + b;
+};
+
+Why important:
+- Removes need for templates
+- Works with multiple types
+
+Common question:
+Q: How is it different from C++11 lambda?
+A: C++11 requires explicit types, C++14 supports auto parameters.
+
+-----------------------------------------
+
+2. Lambda Capture Initializer (Init Capture)
+--------------------------------------------
+Q: What is init capture?
+
+A:
+Allows creating new variables inside lambda capture.
+
+Example:
+int x = 10;
+auto f = [y = x + 5]() {
+    return y;
+};
+
+Why important:
+- Used for move-only objects (like unique_ptr)
+
+-----------------------------------------
+
+3. Return Type Deduction (auto return)
+--------------------------------------
+Q: What changed in function return types in C++14?
+
+A:
+Return type can be deduced automatically.
+
+Example:
+auto add(int a, int b) {
+    return a + b;
+}
+
+No need for trailing return type.
+
+-----------------------------------------
+
+4. std::make_unique (VERY COMMON INTERVIEW TOPIC)
+--------------------------------------------------
+Q: What is make_unique?
+
+A:
+Helper function to create unique_ptr safely.
+
+Example:
+auto p = std::make_unique<int>(10);
+
+Why important:
+- Exception safe
+- No raw new usage
+- Similar to make_shared
+
+-----------------------------------------
+
+5. Binary Literals + Digit Separators
+--------------------------------------
+Q: What are binary literals?
+
+A:
+You can write numbers in binary form.
+
+Example:
+int x = 0b1010;   // 10 in decimal
+
+Digit separator:
+int y = 1'000'000;
+
+Why important:
+- Improves readability
+
+-----------------------------------------
+
+=========================================
+ONE-LINE REVISION
+=========================================
+
+C++14 mainly improves:
+✔ Lambdas (generic + capture init)
+✔ Auto return type deduction
+✔ Smart pointer helper (make_unique)
+✔ Better readability features (binary literals, digit separator)
+
+=========================================
