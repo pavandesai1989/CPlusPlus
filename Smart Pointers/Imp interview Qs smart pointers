@@ -1,0 +1,227 @@
+
+=========================================
+SMART POINTER INTERVIEW QUESTIONS (C++)
+=========================================
+
+1. What are smart pointers in C++?
+-----------------------------------
+Smart pointers are wrapper classes over raw pointers that automatically manage memory and prevent memory leaks using RAII.
+
+They are defined in <memory>.
+
+Types:
+- unique_ptr
+- shared_ptr
+- weak_ptr
+
+-----------------------------------------
+
+2. Why do we need smart pointers?
+----------------------------------
+To solve problems of raw pointers:
+- Memory leaks
+- Dangling pointers
+- Double deletion
+- Manual delete management
+
+-----------------------------------------
+
+3. What is RAII?
+----------------
+Resource Acquisition Is Initialization.
+
+- Resource is acquired in constructor
+- Released in destructor automatically
+
+-----------------------------------------
+
+4. What is unique_ptr?
+----------------------
+- Exclusive ownership smart pointer
+- Only one pointer owns the resource
+- Cannot be copied, only moved
+- Lightweight and fast
+
+-----------------------------------------
+
+5. What is shared_ptr?
+----------------------
+- Shared ownership pointer
+- Multiple pointers can share same object
+- Uses reference counting
+- Object deleted when count becomes 0
+
+-----------------------------------------
+
+6. What is weak_ptr?
+--------------------
+- Non-owning smart pointer
+- Does NOT increase reference count
+- Used to break circular dependency in shared_ptr
+
+-----------------------------------------
+
+7. Difference between unique_ptr and shared_ptr?
+-------------------------------------------------
+unique_ptr:
+- Single owner
+- No reference count
+- Fast
+- Move-only
+
+shared_ptr:
+- Multiple owners
+- Reference counting
+- Slower due to overhead
+
+-----------------------------------------
+
+8. Difference between shared_ptr and weak_ptr?
+----------------------------------------------
+shared_ptr:
+- Owns object
+- Increases reference count
+
+weak_ptr:
+- Does NOT own object
+- Observes object
+- Prevents circular dependency
+
+-----------------------------------------
+
+9. What is circular dependency problem?
+---------------------------------------
+When two shared_ptr objects reference each other:
+
+A → B (shared_ptr)
+B → A (shared_ptr)
+
+👉 Reference count never becomes 0
+👉 Memory leak occurs
+
+Solution: use weak_ptr
+
+-----------------------------------------
+
+10. What is make_shared?
+-------------------------
+- Efficient way to create shared_ptr
+- Single memory allocation for object + control block
+- Faster and memory efficient
+
+-----------------------------------------
+
+11. Why is make_shared better than new?
+---------------------------------------
+new shared_ptr:
+- 2 allocations (object + control block)
+
+make_shared:
+- 1 allocation (both together)
+
+-----------------------------------------
+
+12. Can shared_ptr be converted to unique_ptr?
+-----------------------------------------------
+No (directly not allowed)
+
+Reason:
+- shared ownership cannot become exclusive safely
+
+-----------------------------------------
+
+13. Can unique_ptr be copied?
+-----------------------------
+No
+- Copy constructor is deleted
+- Only move is allowed
+
+-----------------------------------------
+
+14. What happens when shared_ptr is copied?
+-------------------------------------------
+- Reference count increases
+- Both pointers share ownership
+
+Example:
+p2 = p1 → count = 2
+
+-----------------------------------------
+
+15. What happens when shared_ptr is reset?
+------------------------------------------
+- Decreases reference count
+- If count becomes 0 → object deleted
+
+-----------------------------------------
+
+16. Can weak_ptr access object directly?
+----------------------------------------
+No
+
+Must use:
+- lock()
+
+Example:
+if(auto sp = wp.lock()) {
+    // safe access
+}
+
+-----------------------------------------
+
+17. What is use_count()?
+------------------------
+Returns number of shared_ptr owning the object.
+
+-----------------------------------------
+
+18. What is the danger of shared_ptr?
+-------------------------------------
+- Circular dependency
+- Memory overhead
+- Slight performance cost
+
+-----------------------------------------
+
+19. When should we use unique_ptr?
+-----------------------------------
+- Single ownership
+- Factory patterns
+- Performance-critical code
+
+-----------------------------------------
+
+20. When should we use shared_ptr?
+----------------------------------
+- Shared ownership required
+- Multiple modules sharing same resource
+
+-----------------------------------------
+
+21. When should we use weak_ptr?
+--------------------------------
+- To break cycles
+- Caching systems
+- Observer patterns
+
+-----------------------------------------
+
+22. What is the main advantage of smart pointers?
+-------------------------------------------------
+Automatic memory management + no manual delete required + exception safety
+
+-----------------------------------------
+
+23. What is the biggest interview trap?
+---------------------------------------
+Circular dependency with shared_ptr leading to memory leak.
+
+=========================================
+ONE-LINE REVISION
+=========================================
+
+unique_ptr  → single ownership
+shared_ptr  → shared ownership
+weak_ptr    → break cycles (non-owning)
+
+=========================================
