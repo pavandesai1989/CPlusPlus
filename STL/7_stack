@@ -1,3 +1,47 @@
+Q: Why is stack called a Container Adaptor?
+
+A:
+Because stack does not store data itself.
+It wraps another STL container (deque by default)
+and provides a restricted interface that enforces
+LIFO behavior.
+
+Q: Why is deque the default container for stack?
+
+A:
+Because deque provides efficient O(1)
+push_back(), pop_back(), and back() operations
+without the reallocation issues of vector.
+
+
+QUICK REVISION 
+Stack:
+- LIFO
+- Container Adaptor
+- Default Container = deque
+
+Operations:
+push()  O(1)
+pop()   O(1)
+top()   O(1)
+
+No:
+- Iterators
+- Random Access
+
+Underlying Containers:
+- deque (default)
+- vector
+- list
+
+Uses:
+- Recursion
+- DFS
+- Undo/Redo
+- Browser Back
+- Expression Evaluation
+- Parentheses Matching
+
 =========================================
 C++ STACK STL - COMPLETE INTERVIEW NOTES
 =========================================
