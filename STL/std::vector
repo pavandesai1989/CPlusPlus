@@ -388,7 +388,344 @@ TOP 10 MUST-KNOW VECTOR QUESTIONS
 10. Copy vs Move semantics in vector?
 
 
+====================================================
+C++ VECTOR - MOST FREQUENTLY USED FUNCTIONS
+(Most Asked in Interviews)
+====================================================
 
+1. push_back()
+--------------
+Adds element at the end.
+
+vector<int> v;
+v.push_back(10);
+
+Complexity:
+Amortized O(1)
+
+Interview Q:
+Why is push_back() amortized O(1)?
+
+----------------------------------------------------
+
+2. emplace_back()
+-----------------
+Constructs element directly at the end.
+
+vector<string> v;
+v.emplace_back("Hello");
+
+Complexity:
+Amortized O(1)
+
+Interview Q:
+push_back() vs emplace_back()?
+
+----------------------------------------------------
+
+3. pop_back()
+-------------
+Removes last element.
+
+v.pop_back();
+
+Complexity:
+O(1)
+
+Interview Q:
+What happens if vector is empty and pop_back() is called?
+
+----------------------------------------------------
+
+4. size()
+---------
+Returns number of elements.
+
+v.size();
+
+Complexity:
+O(1)
+
+Interview Q:
+Difference between size() and capacity()?
+
+----------------------------------------------------
+
+5. capacity()
+-------------
+Returns allocated storage capacity.
+
+v.capacity();
+
+Complexity:
+O(1)
+
+Interview Q:
+Difference between size() and capacity()?
+
+----------------------------------------------------
+
+6. reserve()
+------------
+Pre-allocates memory.
+
+v.reserve(100);
+
+Complexity:
+O(n) if reallocation occurs
+
+Interview Q:
+reserve() vs resize()?
+
+----------------------------------------------------
+
+7. resize()
+-----------
+Changes number of elements.
+
+v.resize(100);
+
+Complexity:
+O(n)
+
+Interview Q:
+reserve() vs resize()?
+
+----------------------------------------------------
+
+8. shrink_to_fit()
+------------------
+Requests removal of unused capacity.
+
+v.shrink_to_fit();
+
+Interview Q:
+How do you release unused vector memory?
+
+----------------------------------------------------
+
+9. empty()
+----------
+Checks whether vector is empty.
+
+if(v.empty())
+
+Complexity:
+O(1)
+
+Interview Q:
+empty() vs size()==0 ?
+
+----------------------------------------------------
+
+10. clear()
+-----------
+Removes all elements.
+
+v.clear();
+
+Result:
+size = 0
+capacity unchanged
+
+Interview Q:
+Does clear() free memory?
+
+Answer:
+No.
+
+----------------------------------------------------
+
+11. front()
+-----------
+Returns first element.
+
+v.front();
+
+Complexity:
+O(1)
+
+----------------------------------------------------
+
+12. back()
+----------
+Returns last element.
+
+v.back();
+
+Complexity:
+O(1)
+
+----------------------------------------------------
+
+13. at()
+--------
+Access with bounds checking.
+
+v.at(2);
+
+Throws:
+std::out_of_range
+
+Interview Q:
+at() vs operator[] ?
+
+----------------------------------------------------
+
+14. operator[]
+--------------
+Access element without bounds checking.
+
+v[2];
+
+Complexity:
+O(1)
+
+Interview Q:
+at() vs [] ?
+
+----------------------------------------------------
+
+15. insert()
+------------
+Insert element at any position.
+
+v.insert(v.begin()+2, 100);
+
+Complexity:
+O(n)
+
+Interview Q:
+Why is insert() O(n)?
+
+----------------------------------------------------
+
+16. erase()
+-----------
+Removes element(s).
+
+v.erase(v.begin()+2);
+
+Complexity:
+O(n)
+
+Interview Q:
+Why is erase() O(n)?
+
+----------------------------------------------------
+
+17. begin()
+-----------
+Returns iterator to first element.
+
+auto it = v.begin();
+
+----------------------------------------------------
+
+18. end()
+---------
+Returns iterator past last element.
+
+auto it = v.end();
+
+----------------------------------------------------
+
+19. rbegin()
+------------
+Reverse iterator begin.
+
+auto it = v.rbegin();
+
+----------------------------------------------------
+
+20. rend()
+----------
+Reverse iterator end.
+
+auto it = v.rend();
+
+----------------------------------------------------
+
+21. data()
+----------
+Returns pointer to underlying array.
+
+int* ptr = v.data();
+
+Interview Q:
+Why does vector support data()?
+
+Answer:
+Because elements are stored contiguously.
+
+----------------------------------------------------
+
+22. swap()
+----------
+Swaps contents of two vectors.
+
+v1.swap(v2);
+
+Complexity:
+O(1)
+
+Interview Q:
+Why is vector swap() O(1)?
+
+----------------------------------------------------
+
+====================================================
+TOP VECTOR INTERVIEW QUESTIONS
+====================================================
+
+1. How is vector implemented internally?
+2. Why is vector called a dynamic array?
+3. Difference between size() and capacity()?
+4. reserve() vs resize()?
+5. What happens during vector reallocation?
+6. Why is push_back() amortized O(1)?
+7. push_back() vs emplace_back()?
+8. at() vs operator[]?
+9. Why is vector preferred over list?
+10. When do vector iterators become invalid?
+11. Does clear() free memory?
+12. How do you release unused memory?
+13. Why are vector elements contiguous?
+14. Why is insert() O(n)?
+15. Why is erase() O(n)?
+16. Why is swap() O(1)?
+17. Copy vs Move vector?
+18. What happens to objects during reallocation?
+19. What is iterator invalidation?
+20. Why is random access O(1) in vector?
+
+====================================================
+MUST-KNOW FUNCTIONS FOR INTERVIEWS
+====================================================
+
+push_back()
+emplace_back()
+pop_back()
+size()
+capacity()
+reserve()
+resize()
+clear()
+empty()
+front()
+back()
+at()
+operator[]
+insert()
+erase()
+begin()
+end()
+data()
+swap()
+shrink_to_fit()
+
+If you master these functions and the Top 20 questions above,
+you can confidently answer ~90% of vector interview questions.
 
 
 
