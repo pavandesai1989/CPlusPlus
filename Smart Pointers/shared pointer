@@ -1,3 +1,197 @@
+=========================================
+std::shared_ptr (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is std::shared_ptr?
+---------------------------
+- A smart pointer introduced in C++11.
+- Provides SHARED ownership of a dynamically allocated object.
+- Multiple shared_ptr objects can own the same resource.
+- Uses reference counting to manage lifetime.
+- Object is deleted when reference count becomes 0.
+
+Header:
+#include <memory>
+
+-----------------------------------------
+
+2. How shared_ptr Works Internally
+----------------------------------
+Each shared_ptr maintains:
+1. Pointer to object
+2. Pointer to control block
+
+Control block contains:
+- Reference count
+- Weak count
+- Deleter info
+
+-----------------------------------------
+
+3. Creation of shared_ptr
+-------------------------
+
+❌ Not recommended:
+shared_ptr<int> sp1(new int(25));
+
+👉 Two allocations:
+1. Object allocation (new int)
+2. Control block allocation
+
+-----------------------------------------
+
+✔ Recommended: make_shared (BEST PRACTICE)
+
+auto sp2 = make_shared<int>(25);
+
+👉 One allocation only:
+- Object + control block together
+- Faster + memory efficient + exception safe
+
+-----------------------------------------
+
+4. Reference Count
+------------------
+- Tracks how many shared_ptr own the object.
+
+Example:
+shared_ptr<int> p1 = make_shared<int>(10);
+shared_ptr<int> p2 = p1;
+
+p1.use_count() → 2
+p2.use_count() → 2
+
+When count becomes 0 → object is deleted.
+
+-----------------------------------------
+
+5. Basic Operations
+-------------------
+
+use_count() → returns reference count
+get()       → returns raw pointer (does NOT release ownership)
+reset()     → releases ownership
+swap()      → swaps two shared_ptrs
+
+-----------------------------------------
+
+6. Example Code
+---------------
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+int main() {
+
+    shared_ptr<int> sp2 = make_shared<int>(25);
+
+    cout << "ref count: " << sp2.use_count() << endl;
+
+    int* raw = sp2.get();
+    cout << "value: " << *raw << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+7. Critical Mistake (VERY IMPORTANT)
+-------------------------------------
+
+❌ NEVER do this:
+
+int* p = new int;
+shared_ptr<int> sp1(p);
+shared_ptr<int> sp2(p);  // ❌ WRONG
+
+👉 Problem:
+- Both shared_ptr think they own same memory
+- Leads to DOUBLE DELETE
+- Undefined behavior
+
+-----------------------------------------
+
+8. Custom Deleter in shared_ptr
+------------------------------
+
+✔ Using function pointer:
+
+void deleter(int* p) {
+    cout << "Deleting memory\n";
+    delete[] p;
+}
+
+shared_ptr<int> sp(new int[5], deleter);
+
+-----------------------------------------
+
+✔ Using lambda (MOST COMMON):
+
+shared_ptr<int> sp(new int[5], [](int* p) {
+    cout << "Lambda deleter called\n";
+    delete[] p;
+});
+
+-----------------------------------------
+
+9. Why Custom Deleter is Needed?
+--------------------------------
+- To handle arrays (delete[])
+- To manage file handles, sockets, etc.
+- To define custom cleanup logic
+
+-----------------------------------------
+
+10. When NOT to use make_shared
+-------------------------------
+- When using custom deleter (rare cases)
+- When object and control block must have separate lifetime (advanced use)
+
+-----------------------------------------
+
+11. Advantages of shared_ptr
+----------------------------
+✔ Automatic memory management
+✔ Safe shared ownership
+✔ Prevents memory leaks
+✔ Reference counted lifecycle
+
+-----------------------------------------
+
+12. Disadvantages
+-----------------
+✘ Slight overhead due to reference counting
+✘ Not suitable for high-performance tight loops
+✘ Possible circular dependency issue
+
+-----------------------------------------
+
+13. Circular Dependency Problem (IMPORTANT INTERVIEW POINT)
+----------------------------------------------------------
+shared_ptr A → shared_ptr B
+shared_ptr B → shared_ptr A
+
+👉 Reference count never becomes 0
+👉 Memory leak occurs
+
+Solution:
+✔ Use weak_ptr to break cycle
+
+-----------------------------------------
+
+14. ONE-LINE INTERVIEW ANSWER
+-----------------------------
+std::shared_ptr is a smart pointer that implements shared ownership using reference counting and automatically deletes the object when the last reference goes out of scope, but it has overhead and can cause circular dependency issues.
+
+=========================================
+
+
+
+
+
+
+*********EXTRA******
 #include <iostream>
 #include <vector>
 #include <memory>  // Needed for shared_ptr and make_shared
