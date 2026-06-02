@@ -1,3 +1,250 @@
+=========================================
+std::unique_ptr (C++11) - INTERVIEW NOTES
+=========================================
+
+=========================================
+1. WHAT IS unique_ptr?
+=========================================
+
+std::unique_ptr is a smart pointer introduced in C++11.
+
+Key properties:
+- Exclusive ownership (only ONE owner)
+- Cannot be copied
+- Can only be moved
+- Automatically deletes memory (RAII)
+
+When unique_ptr goes out of scope → memory is freed automatically.
+
+-----------------------------------------
+One-line definition:
+-----------------------------------------
+unique_ptr is a smart pointer that provides exclusive ownership of a resource and automatically deletes it when it goes out of scope.
+
+=========================================
+2. DECLARATION
+=========================================
+
+#include <memory>
+
+std::unique_ptr<int> p1;                 // empty
+std::unique_ptr<int> p2(new int(10));    // owns int
+
+Array version:
+std::unique_ptr<int[]> arr(new int[5]);
+
+-----------------------------------------
+IMPORTANT:
+-----------------------------------------
+- unique_ptr<T>     → single object
+- unique_ptr<T[]>    → array (uses delete[] internally)
+
+=========================================
+3. KEY PROPERTIES
+=========================================
+
+✔ Exclusive ownership
+✔ No copy allowed
+✔ Move allowed
+✔ Auto memory management (RAII)
+✔ Lightweight (no reference counting)
+
+-----------------------------------------
+NOT allowed:
+-----------------------------------------
+std::unique_ptr<int> p2 = p1;   // ERROR (copy not allowed)
+
+=========================================
+4. MOVE SEMANTICS
+=========================================
+
+std::unique_ptr<int> p1(new int(10));
+std::unique_ptr<int> p2 = std::move(p1);
+
+After move:
+- p1 becomes nullptr
+- p2 owns the memory
+
+=========================================
+5. IMPORTANT MEMBER FUNCTIONS
+=========================================
+
+get()
+-----
+Returns raw pointer (does NOT release ownership)
+
+release()
+---------
+Releases ownership and returns raw pointer
+(manual delete required)
+
+reset()
+------
+Deletes current object and optionally assigns new one
+
+swap()
+-----
+Swaps two unique_ptr objects
+
+operator* / operator->
+----------------------
+Dereference like raw pointer
+
+operator bool
+-------------
+Checks if pointer is valid (not null)
+
+=========================================
+6. FUNCTION EXPLANATION
+=========================================
+
+get():
+-----
+int* raw = p.get();
+
+✔ Safe access
+❌ Does NOT transfer ownership
+
+-----------------------------------------
+
+release():
+----------
+int* raw = p.release();
+
+✔ Ownership removed
+✔ unique_ptr becomes empty
+❌ You must manually delete memory
+
+-----------------------------------------
+
+reset():
+--------
+p.reset(new int(20));
+
+✔ Deletes old object
+✔ Takes new ownership
+
+p.reset();  // deletes memory, sets nullptr
+
+-----------------------------------------
+
+swap():
+------
+p1.swap(p2);
+
+✔ Exchanges ownership
+
+=========================================
+7. WHY unique_ptr IS IMPORTANT?
+=========================================
+
+✔ Prevents memory leaks
+✔ Implements RAII
+✔ No manual delete needed
+✔ Exception safe
+✔ Faster than shared_ptr
+
+=========================================
+8. UNIQUE_PTR VS SHARED_PTR
+=========================================
+
+unique_ptr:
+-----------
+- Single owner
+- No reference counting
+- Faster
+- Lightweight
+
+shared_ptr:
+-----------
+- Multiple owners
+- Reference counting
+- Slower than unique_ptr
+- Use when shared ownership needed
+
+=========================================
+9. ARRAY SUPPORT
+=========================================
+
+std::unique_ptr<int[]> arr(new int[3]);
+
+arr[0] = 10;
+arr[1] = 20;
+arr[2] = 30;
+
+✔ Supports operator[]
+
+=========================================
+10. C++14 IMPROVEMENT (IMPORTANT)
+=========================================
+
+std::make_unique<T>()
+
+Example:
+auto p = std::make_unique<int>(10);
+
+Benefits:
+✔ Safer (exception safe)
+✔ No raw new usage
+✔ Preferred in modern C++
+
+NOTE:
+make_unique NOT available in C++11
+
+=========================================
+11. CUSTOM DELETER
+=========================================
+
+auto deleter = [](int* p) {
+    delete p;
+};
+
+std::unique_ptr<int, decltype(deleter)> p(new int(10), deleter);
+
+✔ Used for custom cleanup logic
+
+=========================================
+12. COMMON MISTAKE (IMPORTANT)
+=========================================
+
+int* raw = p.release();
+delete raw;   // MUST DO manually
+
+If not:
+→ memory leak
+
+=========================================
+13. WHEN TO USE unique_ptr?
+=========================================
+
+✔ Default choice for dynamic memory
+✔ When single ownership required
+✔ Factory functions
+✔ Resource management (files, sockets, etc.)
+
+=========================================
+14. INTERVIEW ONE-LINER
+=========================================
+
+std::unique_ptr is a smart pointer that provides exclusive ownership of a dynamically allocated object and automatically deletes it when it goes out of scope.
+
+=========================================
+QUICK REVISION
+=========================================
+
+- unique_ptr = single ownership
+- no copy, only move
+- RAII based memory management
+- get() → raw pointer
+- release() → manual ownership transfer
+- reset() → delete + replace
+- swap() → exchange ownership
+- preferred over raw pointers
+=========================================
+
+
+
+*****EXTRA***********
 1. Overview of std::unique_ptr
 
 std::unique_ptr is a smart pointer introduced in C++11.
