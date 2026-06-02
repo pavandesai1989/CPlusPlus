@@ -1,3 +1,187 @@
+=========================================
+C++ LAMBDA FUNCTIONS (C++11)
+INTERVIEW NOTES
+=========================================
+
+1. What is a Lambda Function?
+-----------------------------
+A lambda function is an anonymous (unnamed) function in C++.
+
+It is mainly used for:
+- short inline logic
+- callbacks
+- STL algorithms (for_each, sort, find_if)
+
+Key points:
+✔ No name
+✔ Can take parameters
+✔ Can return values
+✔ Defined inline
+
+-----------------------------------------
+
+2. Basic Syntax
+---------------
+
+[capture](parameters) -> return_type {
+    // body
+};
+
+Example:
+auto f = []() {
+    cout << "Hello World";
+};
+
+f();
+
+-----------------------------------------
+
+3. Lambda Execution
+-------------------
+
+Define + call immediately:
+
+[]() {
+    cout << "Hello World";
+}();
+
+-----------------------------------------
+
+4. Lambda with Return Value
+---------------------------
+
+auto result = []() -> int {
+    return 100;
+}();
+
+cout << result;
+
+-----------------------------------------
+
+5. Using std::function
+----------------------
+
+Used when we want to store lambda in a variable with explicit type.
+
+#include <functional>
+
+std::function<int(int,int)> add =
+[](int a, int b) {
+    return a + b;
+};
+
+cout << add(2, 3);
+
+-----------------------------------------
+
+6. Using Lambda with STL (IMPORTANT)
+------------------------------------
+
+#include <vector>
+#include <algorithm>
+
+vector<int> v = {1,2,3,4,5};
+
+for_each(v.begin(), v.end(),
+[](int x) {
+    cout << x << " ";
+});
+
+-----------------------------------------
+
+7. Capture Clause (MOST IMPORTANT)
+----------------------------------
+
+Used to access outer variables inside lambda.
+
+-----------------------------------------
+
+✔ [=] → Capture all by VALUE
+✔ [&] → Capture all by REFERENCE
+
+Example:
+
+int var = 10;
+
+auto f = [=]() {
+    // var is copied (cannot modify original)
+};
+
+auto g = [&]() {
+    // var is reference (can modify original)
+};
+
+-----------------------------------------
+
+8. Selective Capture
+--------------------
+
+int var = 10;
+int var2 = 20;
+
+auto f = [var, &var2]() {
+    // var  → value (read-only copy)
+    // var2 → reference (can modify)
+};
+
+-----------------------------------------
+
+9. Example (Modify Outer Variable)
+----------------------------------
+
+vector<int> v = {1,2,3,4};
+
+int sum = 0;
+
+for_each(v.begin(), v.end(),
+[&](int x) {
+    sum += x;
+});
+
+cout << sum;
+
+-----------------------------------------
+
+10. Why use Lambda?
+-------------------
+
+✔ Reduces boilerplate code
+✔ Useful for STL algorithms
+✔ No need to define separate function
+✔ Improves readability for small logic
+
+-----------------------------------------
+
+11. Interview One-liner
+-----------------------
+
+A lambda is an anonymous inline function introduced in C++11
+used for short operations and STL algorithms, with support for
+capture of external variables by value or reference.
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. Lambda = anonymous function
+2. Syntax: [](){}
+3. Used in STL algorithms
+4. [=] capture by value
+5. [&] capture by reference
+6. std::function used for storing lambdas
+7. Immediate execution possible with ()()
+8. Best for short inline logic
+=========================================
+
+
+
+
+
+
+
+
+
+***********EXTRA*******
 /*
 What is a Lambda Function?
 
