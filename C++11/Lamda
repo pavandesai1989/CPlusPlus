@@ -1,3 +1,152 @@
+=========================================
+C++ LAMBDA EXPRESSIONS (C++11)
+INTERVIEW NOTES
+=========================================
+
+1. What is a lambda?
+---------------------
+A lambda is an anonymous function (no name function)
+used for short inline operations.
+
+It is mostly used with STL algorithms.
+
+-----------------------------------------
+
+2. Basic Syntax
+---------------
+
+auto f = [capture](parameters) -> return_type {
+    // body
+};
+
+Example:
+auto add = [](int a, int b) -> int {
+    return a + b;
+};
+
+cout << add(2, 3);
+
+-----------------------------------------
+
+3. Lambda Parts
+---------------
+
+[capture]     -> captures external variables
+(parameters)   -> input arguments
+-> return type -> optional
+{ body }       -> function logic
+
+-----------------------------------------
+
+4. Capture Types (IMPORTANT)
+----------------------------
+
+[]      -> captures nothing
+[=]     -> captures all variables by VALUE
+[&]     -> captures all variables by REFERENCE
+
+[x]     -> captures x by value
+[&x]    -> captures x by reference
+
+[=, &x] -> default value capture, x by reference
+[&, x]  -> default reference capture, x by value
+
+-----------------------------------------
+
+5. Mutable Lambda
+------------------
+
+By default, captured-by-value variables are const.
+
+mutable allows modification:
+
+int x = 10;
+
+auto f = [x]() mutable {
+    x += 5;
+    return x;
+};
+
+-----------------------------------------
+
+6. Lambda with std::function
+-----------------------------
+
+#include <functional>
+
+std::function<int(int,int)> f =
+[](int a, int b) {
+    return a + b;
+};
+
+-----------------------------------------
+
+7. Common Use Cases
+-------------------
+
+- STL algorithms (for_each, sort, find_if)
+- Short callbacks
+- Custom comparators
+- Event handling logic
+
+Example:
+for_each(v.begin(), v.end(),
+[](int x){ cout << x << " "; });
+
+-----------------------------------------
+
+8. Example (Practical)
+----------------------
+
+vector<int> v = {1,2,3,4};
+
+int sum = 0;
+
+for_each(v.begin(), v.end(),
+[&](int x) { sum += x; });
+
+cout << sum;
+
+-----------------------------------------
+
+9. Why use lambda?
+------------------
+
+✔ Cleaner code
+✔ No need to define separate function
+✔ Best for STL algorithms
+✔ Improves readability for small logic
+
+-----------------------------------------
+
+10. Interview One-liner
+-----------------------
+
+A lambda is an anonymous function introduced in C++11
+that allows inline function definition with capture support
+and is widely used with STL algorithms.
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. Lambda = anonymous function
+2. Syntax: []() {}
+3. [=] capture by value
+4. [&] capture by reference
+5. Used in STL algorithms
+6. Can use std::function if needed
+7. mutable allows modifying captured values
+8. Best for small inline logic
+=========================================
+
+
+
+
+
+
+
+***********
 Syntax:
 Auto Somevar[](int a,int b)->int{};
 
