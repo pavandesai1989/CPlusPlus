@@ -1,29 +1,100 @@
-auto-typed variables are deduced by the compiler according to the type of their initializer.
+=========================================
+AUTO KEYWORD (C++11) - INTERVIEW NOTES
+=========================================
 
-auto a = 3.14; // double
-auto b = 1; // int
-auto& c = b; // int&
-auto d = { 0 }; // std::initializer_list<int>
-auto&& e = 1; // int&&
-auto&& f = b; // int&
-auto g = new auto(123); // int*
-const auto h = 1; // const int
-auto i = 1, j = 2, k = 3; // int, int, int
-auto l = 1, m = true, n = 1.61; // error -- `l` deduced to be int, `m` is bool
-auto o; // error -- `o` requires initializer
-Extremely useful for readability, especially for complicated types:
+1. What is auto?
+-----------------
+auto lets the compiler automatically deduce the type of a variable from its initializer.
 
-std::vector<int> v = ...;
-std::vector<int>::const_iterator cit = v.cbegin();
-// vs.
-auto cit = v.cbegin();
-Functions can also deduce the return type using auto. In C++11, a return type must be specified either explicitly, or using decltype like so:
+Example:
+auto x = 10;      // int
+auto y = 3.14;    // double
 
-template <typename X, typename Y>
-auto add(X x, Y y) -> decltype(x + y) {
-  return x + y;
+-----------------------------------------
+
+2. Why use auto?
+-----------------
+✓ Reduces code verbosity
+✓ Improves readability
+✓ Useful for complex STL types
+
+Example:
+auto it = v.begin();   // instead of long iterator type
+
+-----------------------------------------
+
+3. Important Rules
+------------------
+
+✓ Must be initialized
+
+auto x;   // ERROR
+
+✓ Type is fixed after deduction
+
+auto x = 10;
+x = 3.5;  // still int (error/converted)
+
+-----------------------------------------
+
+4. auto with references
+------------------------
+
+auto a = x;     // copy
+auto& b = x;    // reference
+
+-----------------------------------------
+
+5. auto with const
+-------------------
+
+const auto x = 10;  // const int
+
+-----------------------------------------
+
+6. auto in STL (very important)
+-------------------------------
+
+vector<int> v;
+
+auto it = v.begin();   // iterator type automatically deduced
+
+-----------------------------------------
+
+7. auto with functions (C++11 style)
+-------------------------------------
+
+Used with trailing return type:
+
+template <class T1, class T2>
+auto add(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
 }
-add(1, 2); // == 3
-add(1, 2.0); // == 3.0
-add(1.5, 1.5); // == 3.0
-The trailing return type in the above example is the declared type (see section on decltype) of the expression x + y. For example, if x is an integer and y is a double, decltype(x + y) is a double. Therefore, the above function will deduce the type depending on what type the expression x + y yields. Notice that the trailing return type has access to its parameters, and this when appropriate.
+
+-----------------------------------------
+
+8. Important Interview Points
+-----------------------------
+✓ Introduced in C++11
+✓ Type deduced at compile time
+✓ Must be initialized
+✓ Commonly used with STL iterators
+✓ Improves readability
+
+-----------------------------------------
+
+9. Common Interview Questions
+-----------------------------
+1. What is auto keyword?
+2. Why is auto used?
+3. Can auto be uninitialized?
+4. Difference between auto and decltype?
+5. Where is auto used in STL?
+
+-----------------------------------------
+
+ONE-LINE ANSWER
+----------------
+auto is a C++11 keyword that allows the compiler to deduce the type of a variable from its initializer, improving readability and reducing code complexity.
+=========================================
