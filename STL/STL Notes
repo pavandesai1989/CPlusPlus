@@ -1,3 +1,713 @@
+=========================================
+STL PREPARATION ORDER
+(Most Important → Least Important)
+=========================================
+
+1. vector ⭐⭐⭐⭐⭐
+---------------
+Must Know:
+- Internal implementation
+- Size vs Capacity
+- reserve vs resize
+- Reallocation
+- push_back vs emplace_back
+- Iterator invalidation
+- Copy vs Move
+
+Interview Frequency: Very High
+
+-----------------------------------------
+
+2. unordered_map ⭐⭐⭐⭐⭐
+-----------------------
+Must Know:
+- Hash table implementation
+- Average O(1)
+- Worst O(n)
+- Hash collisions
+- Rehashing
+- load_factor()
+
+Interview Frequency: Very High
+
+-----------------------------------------
+
+3. map ⭐⭐⭐⭐⭐
+------------
+Must Know:
+- Red-Black Tree
+- O(log n)
+- Sorted keys
+- operator[]
+- find()
+- lower_bound()
+
+Interview Frequency: Very High
+
+-----------------------------------------
+
+4. set / unordered_set ⭐⭐⭐⭐⭐
+-----------------------------
+Must Know:
+- Unique elements
+- Tree vs Hash Table
+- Complexity differences
+
+Interview Frequency: High
+
+-----------------------------------------
+
+5. Iterators ⭐⭐⭐⭐⭐
+------------------
+Must Know:
+- Input Iterator
+- Output Iterator
+- Forward Iterator
+- Bidirectional Iterator
+- Random Access Iterator
+
+Interview Frequency: Very High
+
+-----------------------------------------
+
+6. STL Algorithms ⭐⭐⭐⭐⭐
+------------------------
+Must Know:
+
+sort()
+stable_sort()
+find()
+binary_search()
+lower_bound()
+upper_bound()
+min_element()
+max_element()
+accumulate()
+count()
+
+Interview Frequency: Very High
+
+-----------------------------------------
+
+7. priority_queue ⭐⭐⭐⭐
+-----------------------
+Must Know:
+- Heap implementation
+- Max heap
+- Min heap
+
+Interview Frequency: High
+
+-----------------------------------------
+
+8. deque ⭐⭐⭐⭐
+-------------
+Must Know:
+- Double-ended insertion
+- Random access support
+- vector vs deque
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+9. pair ⭐⭐⭐⭐
+------------
+Must Know:
+- pair
+- make_pair
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+10. Lambda Expressions ⭐⭐⭐⭐
+----------------------------
+Must Know:
+- Capture by value
+- Capture by reference
+- Mutable lambda
+
+Interview Frequency: High
+
+-----------------------------------------
+
+11. Functors ⭐⭐⭐
+---------------
+Must Know:
+- operator()
+- Custom comparator
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+12. list ⭐⭐⭐
+------------
+Must Know:
+- Doubly linked list
+- O(1) insertion/deletion
+- Why vector is preferred
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+13. multiset / multimap ⭐⭐⭐
+----------------------------
+Must Know:
+- Duplicate keys allowed
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+14. array ⭐⭐⭐
+-------------
+Must Know:
+- Fixed size container
+- array vs vector
+
+Interview Frequency: Medium
+
+-----------------------------------------
+
+15. forward_list ⭐⭐
+--------------------
+Must Know:
+- Singly linked list
+
+Interview Frequency: Low
+
+=========================================
+TOPICS YOU MUST MASTER
+=========================================
+
+1. vector
+2. unordered_map
+3. map
+4. set
+5. Iterators
+6. Algorithms
+7. priority_queue
+8. deque
+9. Lambdas
+
+These 9 topics cover roughly 90–95% of STL questions asked in senior C++ interviews.
+
+=========================================
+30-MINUTE REVISION CHECKLIST
+=========================================
+
+✓ vector
+✓ map
+✓ unordered_map
+✓ set
+✓ unordered_set
+✓ Iterators
+✓ sort/lower_bound/upper_bound
+✓ priority_queue
+✓ Lambda
+✓ Functor
+✓ deque
+
+STL (Standard Template Library) is a collection of pre-built classes and functions in C++ used for efficient data handling 
+and programming. It provides ready-to-use data structures and algorithms that simplify development
+
+=========================================
+COMPONENTS OF STL (Standard Template Library)
+=========================================
+
+STL consists of four main components:
+
+1. Containers
+2. Algorithms
+3. Iterators
+4. Function Objects (Functors)
+
+-----------------------------------------
+1. Containers
+-----------------------------------------
+
+Containers store data.
+
+Sequence Containers:
+- vector
+- deque
+- list
+- forward_list
+- array
+
+Associative Containers:
+- set
+- multiset
+- map
+- multimap
+
+Unordered Containers:
+- unordered_set
+- unordered_multiset
+- unordered_map
+- unordered_multimap
+
+Container Adaptors:
+- stack
+- queue
+- priority_queue
+
+Example:
+
+vector<int> v;
+map<int, string> m;
+
+-----------------------------------------
+2. Algorithms
+-----------------------------------------
+
+Algorithms perform operations on containers.
+
+Examples:
+
+sort()
+find()
+count()
+binary_search()
+lower_bound()
+upper_bound()
+min_element()
+max_element()
+accumulate()
+reverse()
+
+Example:
+
+sort(v.begin(), v.end());
+
+-----------------------------------------
+3. Iterators
+-----------------------------------------
+
+Iterators are used to traverse containers.
+
+Similar to pointers.
+
+Example:
+
+vector<int>::iterator it;
+
+for(it = v.begin(); it != v.end(); ++it)
+{
+    cout << *it;
+}
+
+Types:
+- Input Iterator
+- Output Iterator
+- Forward Iterator
+- Bidirectional Iterator
+- Random Access Iterator
+
+-----------------------------------------
+4. Function Objects (Functors)
+-----------------------------------------
+
+Objects that behave like functions.
+
+Implemented using operator().
+
+Example:
+
+class Compare
+{
+public:
+    bool operator()(int a, int b)
+    {
+        return a > b;
+    }
+};
+
+sort(v.begin(), v.end(), Compare());
+
+Used for:
+- Custom sorting
+- Custom comparison
+
+-----------------------------------------
+Relationship Between Components
+-----------------------------------------
+
+Container  --> Stores data
+
+Iterator   --> Traverses data
+
+Algorithm  --> Operates on data
+
+Functor    --> Customizes algorithm behavior
+
+Example:
+
+vector<int> v = {4,1,3,2};
+
+sort(v.begin(), v.end());
+
+Container : vector
+Iterator  : begin(), end()
+Algorithm : sort()
+Functor   : optional custom comparator
+
+=========================================
+INTERVIEW ANSWER
+=========================================
+
+The STL consists of four major components:
+
+1. Containers – Store data (vector, map, set, etc.)
+2. Algorithms – Perform operations on data (sort, find, count, etc.)
+3. Iterators – Traverse containers and connect containers with algorithms.
+4. Function Objects (Functors) – Custom callable objects used to customize algorithm behavior.
+
+=========================================
+TYPES OF STL CONTAINERS
+=========================================
+
+STL containers are divided into 4 categories:
+
+1. Sequence Containers
+2. Associative Containers
+3. Unordered Associative Containers
+4. Container Adaptors
+
+=========================================
+1. SEQUENCE CONTAINERS
+=========================================
+
+Store elements in the order they are inserted.
+
+Containers:
+------------
+vector
+deque
+list
+forward_list
+array
+
+Examples:
+
+vector<int> v;
+deque<int> d;
+list<int> l;
+
+Characteristics:
+----------------
+- Maintain insertion order.
+- Access elements by position/index.
+- Best when order matters.
+
+Example:
+
+vector<int> v = {10,20,30};
+
+Output:
+10 20 30
+
+-----------------------------------------
+
+vector
+------
+- Dynamic array
+- Contiguous memory
+- O(1) random access
+
+Most used STL container.
+
+-----------------------------------------
+
+deque
+-----
+- Double-ended queue
+- Fast insertion/removal at both ends
+- Random access supported
+
+-----------------------------------------
+
+list
+----
+- Doubly linked list
+- O(1) insertion/deletion using iterator
+- No random access
+
+-----------------------------------------
+
+forward_list
+------------
+- Singly linked list
+- Less memory than list
+
+-----------------------------------------
+
+array
+-----
+- Fixed-size array
+- Stack allocated
+
+=========================================
+2. ASSOCIATIVE CONTAINERS
+=========================================
+
+Store data in sorted order.
+
+Implemented using:
+- Red-Black Tree (self-balancing BST)
+
+Containers:
+------------
+set
+multiset
+map
+multimap
+
+Characteristics:
+----------------
+- Automatically sorted.
+- Search/Insert/Delete O(log n)
+
+-----------------------------------------
+
+set
+----
+- Unique elements
+- Sorted
+
+Example:
+
+set<int> s = {5,2,8};
+
+Output:
+2 5 8
+
+-----------------------------------------
+
+multiset
+---------
+- Duplicate values allowed
+- Sorted
+
+Example:
+
+2 2 5 8
+
+-----------------------------------------
+
+map
+---
+- Key-Value pairs
+- Unique keys
+- Sorted by key
+
+Example:
+
+map<int,string> m;
+
+-----------------------------------------
+
+multimap
+--------
+- Duplicate keys allowed
+
+=========================================
+3. UNORDERED ASSOCIATIVE CONTAINERS
+=========================================
+
+Store data using hash tables.
+
+Containers:
+------------
+unordered_set
+unordered_multiset
+unordered_map
+unordered_multimap
+
+Characteristics:
+----------------
+- No sorting
+- Average O(1) search
+- Faster than map/set in most cases
+
+-----------------------------------------
+
+unordered_set
+-------------
+- Unique values
+- Hash table
+
+-----------------------------------------
+
+unordered_map
+-------------
+- Key-Value pairs
+- Unique keys
+- Hash table
+
+Most used after vector.
+
+Example:
+
+unordered_map<int,string> m;
+
+=========================================
+4. CONTAINER ADAPTORS
+=========================================
+
+Built on top of existing containers.
+
+Containers:
+------------
+stack
+queue
+priority_queue
+
+Characteristics:
+----------------
+Restrict access to provide specific behavior.
+
+-----------------------------------------
+
+stack
+-----
+LIFO (Last In First Out)
+
+Operations:
+
+push()
+pop()
+top()
+
+Example:
+
+1
+2
+3
+
+Pop order:
+
+3
+2
+1
+
+-----------------------------------------
+
+queue
+-----
+FIFO (First In First Out)
+
+Operations:
+
+push()
+pop()
+front()
+
+Example:
+
+1
+2
+3
+
+Pop order:
+
+1
+2
+3
+
+-----------------------------------------
+
+priority_queue
+--------------
+Heap-based container.
+
+Default:
+Max Heap
+
+Example:
+
+10
+30
+20
+
+Pop order:
+
+30
+20
+10
+
+=========================================
+INTERVIEW SUMMARY
+=========================================
+
+Sequence Containers
+-------------------
+vector
+deque
+list
+forward_list
+array
+
+Store elements in insertion order.
+
+-----------------------------------------
+
+Associative Containers
+----------------------
+set
+multiset
+map
+multimap
+
+Store elements in sorted order.
+Implemented using Red-Black Tree.
+
+-----------------------------------------
+
+Unordered Associative Containers
+--------------------------------
+unordered_set
+unordered_multiset
+unordered_map
+unordered_multimap
+
+Store elements using Hash Table.
+No sorting.
+Average O(1) lookup.
+
+-----------------------------------------
+
+Container Adaptors
+------------------
+stack
+queue
+priority_queue
+
+Provide restricted interfaces built on top
+of other containers.
+
+=========================================
+MOST IMPORTANT FOR INTERVIEWS
+=========================================
+
+1. vector
+2. unordered_map
+3. map
+4. set
+5. priority_queue
+6. deque
+7. list
+
+These account for the vast majority of STL
+container questions in C++ interviews.
+
+
+
+
+
 STL IN C++
 https://www.techiedelight.com/data-structures-and-algorithms-interview-questions-stl/
 problem solving using STL
