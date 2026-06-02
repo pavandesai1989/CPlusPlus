@@ -1,3 +1,152 @@
+=========================================
+AUTO + DECLTYPE (C++11)
+INTERVIEW NOTES
+=========================================
+
+1. Problem in Templates (Before C++11)
+--------------------------------------
+Earlier, return types of template functions were hard to define
+when they depend on input parameter types.
+
+Example:
+T1 + T2 → result type is unknown
+
+-----------------------------------------
+
+2. Solution: auto + decltype
+-----------------------------
+
+C++11 allows:
+✔ auto return type
+✔ decltype to deduce expression type
+
+-----------------------------------------
+
+3. Syntax (IMPORTANT)
+---------------------
+
+template <typename T1, typename T2>
+auto function(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
+}
+
+✔ auto → tells compiler return type is deduced
+✔ decltype → gives type of expression (a + b)
+
+-----------------------------------------
+
+4. Example: Generic Addition
+----------------------------
+
+template<typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
+}
+
+int main()
+{
+    cout << add(1, 2) << endl;        // int
+    cout << add(3.5, 2) << endl;      // double
+}
+-----------------------------------------
+
+5. Why decltype is used?
+------------------------
+
+decltype(expression) gives exact type of expression:
+
+Example:
+int a = 5;
+double b = 2.5;
+
+decltype(a + b) → double
+
+-----------------------------------------
+
+6. Using decltype for Variable Declaration
+------------------------------------------
+
+We can also use decltype to declare variables
+based on function return type.
+
+Example:
+
+decltype(add(1,2)) x;
+decltype(add(3.4,1)) y;
+
+-----------------------------------------
+
+7. Example with type checking
+-----------------------------
+
+#include <iostream>
+#include <typeinfo>
+using namespace std;
+
+template<typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
+}
+
+int main()
+{
+    decltype(add(1,2)) x;
+    decltype(add(3.4,1)) y;
+
+    cout << typeid(x).name() << endl;
+    cout << typeid(y).name() << endl;
+}
+
+-----------------------------------------
+
+8. Modern C++ (C++14 improvement)
+----------------------------------
+
+C++14 simplifies this:
+
+template<typename T1, typename T2>
+auto add(T1 a, T2 b)
+{
+    return a + b;
+}
+
+✔ No trailing return type needed
+
+-----------------------------------------
+
+9. Interview One-liner
+-----------------------
+
+auto + decltype allows writing generic functions where
+return type is automatically deduced from expression type,
+making templates more flexible and type-safe.
+
+=========================================
+QUICK REVISION
+=========================================
+
+1. auto → return type deduction
+2. decltype → type of expression
+3. Used in templates for dependent return types
+4. Syntax: auto f() -> decltype(expr)
+5. C++14 removes need for decltype in simple cases
+=========================================
+
+
+
+
+
+
+
+
+
+
+
+*********EXTRA***
+
 /*
 Use auto and decltype to declare a template function whose return type depends on the types of its template arguments.
 use auto and decltype to declare a template function that wraps a call to another function, and then returns the return type of the wrapped function.
