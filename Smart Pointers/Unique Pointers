@@ -2,6 +2,32 @@
 std::unique_ptr (C++11) - INTERVIEW NOTES
 =========================================
 
+Q: What is unique_ptr?
+A: unique_ptr is a smart pointer that provides exclusive ownership of a dynamically allocated object 
+and automatically deletes it when it goes out of scope.
+
+Q: Why is copy not allowed?
+A: Copying is not allowed because unique_ptr enforces exclusive ownership, and multiple owners 
+could cause double deletion.
+
+Q: Why is move allowed?
+A: Move semantics transfer ownership from one unique_ptr to another while maintaining a single owner.
+
+Q: get() vs release()?
+A: get() returns the raw pointer without releasing ownership, whereas release() returns the raw pointer 
+and relinquishes ownership.
+
+Q: What does reset() do?
+A: reset() deletes the currently managed object and optionally takes ownership of a new object.
+
+Q: What is make_unique()?
+A: make_unique() is the preferred, exception-safe way to create a unique_ptr without explicitly using new.
+
+Q: unique_ptr vs shared_ptr?
+A: unique_ptr has a single owner and no reference counting, while shared_ptr allows multiple owners using reference counting.
+
+Q: What is RAII?
+A: RAII is a C++ technique that ties resource lifetime to object lifetime, ensuring automatic cleanup through destructors.
 =========================================
 1. WHAT IS unique_ptr?
 =========================================
@@ -19,7 +45,8 @@ When unique_ptr goes out of scope → memory is freed automatically.
 -----------------------------------------
 One-line definition:
 -----------------------------------------
-unique_ptr is a smart pointer that provides exclusive ownership of a resource and automatically deletes it when it goes out of scope.
+unique_ptr is a smart pointer that provides exclusive ownership of a resource 
+and automatically deletes it when it goes out of scope.
 
 =========================================
 2. DECLARATION
@@ -94,6 +121,65 @@ operator bool
 -------------
 Checks if pointer is valid (not null)
 
+#include <iostream>
+#include <memory>
+
+using namespace std;
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor\n";
+    }
+
+    ~Test()
+    {
+        cout << "Destructor\n";
+    }
+
+    void display()
+    {
+        cout << "display()\n";
+    }
+};
+
+int main()
+{
+    // 1. make_unique
+    unique_ptr<Test> p1 = make_unique<Test>();
+
+    // 2. operator->
+    p1->display();
+
+    // 3. get()
+    cout << "Raw pointer: " << p1.get() << endl;
+
+    // 4. move()
+    unique_ptr<Test> p2 = move(p1);
+
+    if (p1 == nullptr)
+        cout << "p1 is null after move\n";
+
+    // 5. reset()
+    p2.reset(new Test());
+
+    // 6. release()
+    Test* rawPtr = p2.release();
+
+    if (p2 == nullptr)
+        cout << "p2 is null after release\n";
+
+    delete rawPtr;  // Must delete manually
+
+    // 7. bool check
+    if (!p2)
+        cout << "p2 is empty\n";
+
+    return 0;
+}
+
 =========================================
 6. FUNCTION EXPLANATION
 =========================================
@@ -113,7 +199,7 @@ int* raw = p.release();
 
 ✔ Ownership removed
 ✔ unique_ptr becomes empty
-❌ You must manually delete memory
+❌ You must manually delete memory *****************VVVVVIMP
 
 -----------------------------------------
 
