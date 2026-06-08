@@ -1,0 +1,537 @@
+=========================================================
+RULE OF FIVE - COMPLETE INTERVIEW EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Test
+{
+private:
+    int* ptr;
+
+public:
+
+    // 1. Constructor
+    Test(int val = 0)
+    {
+        ptr = new int(val);
+        cout << "Constructor\n";
+    }
+
+    // 2. Destructor
+    ~Test()
+    {
+        delete ptr;
+        cout << "Destructor\n";
+    }
+
+    // 3. Copy Constructor
+    Test(const Test& other)
+    {
+        cout << "Copy Constructor\n";
+        ptr = new int(*other.ptr);
+    }
+
+    // 4. Copy Assignment Operator
+    Test& operator=(const Test& other)
+    {
+        cout << "Copy Assignment Operator\n";
+
+        if(this != &other)
+        {
+            delete ptr;
+            ptr = new int(*other.ptr);
+        }
+
+        return *this;
+    }
+
+    // 5. Move Constructor
+    Test(Test&& other) noexcept
+    {
+        cout << "Move Constructor\n";
+
+        ptr = other.ptr;
+        other.ptr = nullptr;
+    }
+
+    // 6. Move Assignment Operator
+    Test& operator=(Test&& other) noexcept
+    {
+        cout << "Move Assignment Operator\n";
+
+        if(this != &other)
+        {
+            delete ptr;
+
+            ptr = other.ptr;
+            other.ptr = nullptr;
+        }
+
+        return *this;
+    }
+
+    void display() const
+    {
+        if(ptr)
+            cout << *ptr << endl;
+        else
+            cout << "nullptr\n";
+    }
+};
+
+int main()
+{
+    Test t1(10);
+
+    // Copy Constructor
+    Test t2 = t1;
+
+    // Copy Assignment
+    Test t3(20);
+    t3 = t1;
+
+    // Move Constructor
+    Test t4 = std::move(t1);
+
+    // Move Assignment
+    Test t5(50);
+    t5 = std::move(t2);
+
+    t3.display();
+    t4.display();
+    t5.display();
+}
+
+=========================================================
+RULE OF FIVE - INTERVIEW QUESTIONS & ANSWERS
+=========================================================
+
+Q1. What is Rule of Five?
+
+A:
+If a class manages a resource (dynamic memory, file,
+socket, mutex, etc.) and defines one special member
+function, it usually needs all five:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+4. Move Constructor
+5. Move Assignment Operator
+
+---------------------------------------------------------
+
+Q2. What is Rule of Three?
+
+A:
+If a class defines any one of:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+it usually needs all three.
+
+Rule of Five is an extension of Rule of Three in C++11.
+
+---------------------------------------------------------
+
+Q3. Why was Rule of Three extended to Rule of Five?
+
+A:
+C++11 introduced move semantics.
+
+Therefore:
+
+4. Move Constructor
+5. Move Assignment Operator
+
+were added.
+
+---------------------------------------------------------
+
+Q4. What is a Copy Constructor?
+
+A:
+A constructor that creates a new object from an
+existing object.
+
+Syntax:
+
+ClassName(const ClassName& other);
+
+Example:
+
+Test t2 = t1;
+
+---------------------------------------------------------
+
+Q5. What is a Copy Assignment Operator?
+
+A:
+Copies data into an already existing object.
+
+Syntax:
+
+ClassName& operator=(const ClassName& other);
+
+Example:
+
+t2 = t1;
+
+---------------------------------------------------------
+
+Q6. Difference between Copy Constructor and
+Copy Assignment Operator?
+
+A:
+
+Copy Constructor:
+Creates a NEW object.
+
+Example:
+
+Test t2 = t1;
+
+Copy Assignment:
+Assigns to an EXISTING object.
+
+Example:
+
+t2 = t1;
+
+---------------------------------------------------------
+
+Q7. What is a Move Constructor?
+
+A:
+Transfers ownership of resources from one object
+to another without copying.
+
+Syntax:
+
+ClassName(ClassName&& other);
+
+Example:
+
+Test t2 = std::move(t1);
+
+---------------------------------------------------------
+
+Q8. What is a Move Assignment Operator?
+
+A:
+Transfers ownership of resources into an already
+existing object.
+
+Syntax:
+
+ClassName& operator=(ClassName&& other);
+
+Example:
+
+t2 = std::move(t1);
+
+---------------------------------------------------------
+
+Q9. What is std::move()?
+
+A:
+std::move does not move anything by itself.
+
+It converts an lvalue into an rvalue reference,
+allowing move constructor or move assignment
+to be called.
+
+Example:
+
+Test t2 = std::move(t1);
+
+---------------------------------------------------------
+
+Q10. Why set source pointer to nullptr after move?
+
+A:
+
+ptr = other.ptr;
+other.ptr = nullptr;
+
+This prevents both objects from owning the same
+resource and avoids double deletion.
+
+---------------------------------------------------------
+
+Q11. Why is self-assignment check needed?
+
+A:
+
+if(this != &other)
+
+Protects against:
+
+obj = obj;
+
+Without the check, the object may delete its own
+resource and then try to copy from itself.
+
+---------------------------------------------------------
+
+Q12. Why is self-assignment check not needed in
+Move Constructor?
+
+A:
+Move Constructor creates a NEW object.
+
+Source and destination can never be the same object.
+
+Therefore:
+
+this == &other
+
+is impossible.
+
+---------------------------------------------------------
+
+Q13. What is shallow copy?
+
+A:
+Only pointer addresses are copied.
+
+Example:
+
+obj2.ptr = obj1.ptr;
+
+Both objects point to the same memory.
+
+Problems:
+
+1. Shared ownership
+2. Double delete
+3. Undefined behavior
+
+---------------------------------------------------------
+
+Q14. What is deep copy?
+
+A:
+Allocate new memory and copy actual data.
+
+Example:
+
+ptr = new int(*other.ptr);
+
+Each object owns separate memory.
+
+---------------------------------------------------------
+
+Q15. Why does shallow copy cause double delete?
+
+A:
+
+obj1.ptr ----+
+             |
+             v
+           Memory
+             ^
+             |
+obj2.ptr ----+
+
+When destructors run:
+
+delete ptr;
+delete ptr;
+
+Same memory is deleted twice.
+
+---------------------------------------------------------
+
+Q16. Why pass Copy Constructor parameter as
+const reference?
+
+A:
+
+Correct:
+
+Test(const Test& other);
+
+Wrong:
+
+Test(Test other);
+
+Passing by value invokes copy constructor again,
+causing infinite recursion.
+
+---------------------------------------------------------
+
+Q17. Why return reference from assignment operator?
+
+A:
+
+Test& operator=(const Test& other);
+
+Allows chaining:
+
+a = b = c;
+
+Returning reference avoids unnecessary copies.
+
+---------------------------------------------------------
+
+Q18. Why mark move operations noexcept?
+
+A:
+
+Test(Test&& other) noexcept
+
+STL containers such as vector prefer move
+operations only when they are noexcept.
+
+Improves performance during reallocation.
+
+---------------------------------------------------------
+
+Q19. What happens after moving an object?
+
+A:
+
+The moved-from object remains valid but its state
+is unspecified.
+
+Common practice:
+
+other.ptr = nullptr;
+
+---------------------------------------------------------
+
+Q20. Can Copy Constructor call Copy Assignment?
+
+A:
+No.
+
+Copy Constructor initializes a new object.
+
+Copy Assignment works on an already existing object.
+
+They serve different purposes.
+
+---------------------------------------------------------
+
+Q21. Can Move Constructor call Move Assignment?
+
+A:
+Possible but not recommended.
+
+Usually implement them separately for clarity
+and efficiency.
+
+---------------------------------------------------------
+
+Q22. What is resource ownership?
+
+A:
+Responsibility for releasing a resource.
+
+Example:
+
+int* ptr = new int(10);
+
+Owner must call:
+
+delete ptr;
+
+---------------------------------------------------------
+
+Q23. Why does unique_ptr delete copy operations?
+
+A:
+
+unique_ptr provides exclusive ownership.
+
+Two unique_ptr objects cannot own the same resource.
+
+Therefore:
+
+unique_ptr(const unique_ptr&) = delete;
+
+unique_ptr& operator=(const unique_ptr&) = delete;
+
+---------------------------------------------------------
+
+Q24. Why does unique_ptr allow move operations?
+
+A:
+
+Ownership can be transferred safely.
+
+Example:
+
+unique_ptr<int> p2 = std::move(p1);
+
+After move:
+
+p1 -> nullptr
+p2 -> owns resource
+
+---------------------------------------------------------
+
+Q25. What is the most common Rule of Five interview
+example?
+
+A:
+
+A class owning dynamic memory:
+
+class Test
+{
+    int* ptr;
+};
+
+Such classes require:
+
+Destructor
+Copy Constructor
+Copy Assignment
+Move Constructor
+Move Assignment
+
+=========================================================
+ONE-LINE REVISION
+=========================================================
+
+Copy Constructor:
+Creates a new object from an existing object.
+
+Copy Assignment:
+Copies into an existing object.
+
+Move Constructor:
+Transfers ownership while creating a new object.
+
+Move Assignment:
+Transfers ownership into an existing object.
+
+Shallow Copy:
+Copies pointer addresses only.
+
+Deep Copy:
+Allocates new memory and copies actual data.
+
+Rule of Three:
+Destructor + Copy Constructor + Copy Assignment.
+
+Rule of Five:
+Rule of Three + Move Constructor + Move Assignment.
+
+std::move:
+Converts lvalue to rvalue reference.
+
+noexcept:
+Enables efficient moves in STL containers.
+
+unique_ptr Copy:
+Deleted because ownership must be unique.
+
+unique_ptr Move:
+Allowed because ownership can be transferred.
