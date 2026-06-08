@@ -135,7 +135,9 @@ b is null
 9. ONE-LINE INTERVIEW ANSWER
 -----------------------------
 
-std::auto_ptr is an old C++98 smart pointer that transfers ownership on copy, which leads to unsafe and confusing behavior, especially with STL containers, and is therefore deprecated in favor of unique_ptr.
+std::auto_ptr is an old C++98 smart pointer that transfers ownership on copy, 
+which leads to unsafe and confusing behavior, especially with STL containers, and 
+is therefore deprecated in favor of unique_ptr.
 
 =========================================
 
