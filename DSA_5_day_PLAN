@@ -1,0 +1,255 @@
+=========================================================
+5-DAY DSA ROADMAP + PATTERN RECOGNITION QUESTIONS
+TARGET: 10+ YEARS C++ INTERVIEWS
+=========================================================
+
+RULE:
+Solve all PRIMARY questions first.
+
+Then solve PATTERN RECOGNITION questions WITHOUT
+looking at topic names.
+
+If you can identify the pattern yourself,
+you are interview-ready for that topic.
+
+=========================================================
+DAY 1 : ARRAYS + HASHING + TWO POINTERS
+=========================================================
+
+PRIMARY QUESTIONS
+-----------------
+
+1. Two Sum
+2. Contains Duplicate
+3. Valid Anagram
+4. Group Anagrams
+5. Top K Frequent Elements
+
+6. Valid Palindrome
+7. Two Sum II
+8. Container With Most Water
+9. 3Sum
+
+PATTERNS
+--------
+✓ HashMap
+✓ HashSet
+✓ Frequency Counting
+✓ Sorting
+✓ Two Pointers
+
+PATTERN RECOGNITION QUESTIONS
+-----------------------------
+
+1. Product Of Array Except Self
+2. Longest Consecutive Sequence
+3. 4Sum
+4. Trapping Rain Water
+
+Expected Recognition:
+---------------------
+Product Of Array Except Self  -> Prefix/Suffix
+Longest Consecutive Sequence  -> HashSet
+4Sum                          -> Sorting + Two Pointers
+Trapping Rain Water           -> Two Pointers
+
+=========================================================
+DAY 2 : SLIDING WINDOW
+=========================================================
+
+PRIMARY QUESTIONS
+-----------------
+
+1. Best Time To Buy And Sell Stock
+2. Longest Substring Without Repeating Characters
+3. Longest Repeating Character Replacement
+4. Permutation In String
+5. Minimum Window Substring
+6. Sliding Window Maximum
+
+PATTERNS
+--------
+✓ Fixed Window
+✓ Variable Window
+✓ Frequency Map
+✓ Monotonic Queue
+
+PATTERN RECOGNITION QUESTIONS
+-----------------------------
+
+1. Maximum Sum Subarray Of Size K
+2. Fruit Into Baskets
+3. Subarrays With K Distinct Integers
+4. Longest Ones After Replacement
+
+Expected Recognition:
+---------------------
+Maximum Sum Subarray      -> Fixed Window
+Fruit Into Baskets        -> Variable Window
+K Distinct Integers       -> Variable Window
+Longest Ones Replacement  -> Variable Window
+
+=========================================================
+DAY 3 : BINARY SEARCH + INTERVALS
+=========================================================
+
+PRIMARY QUESTIONS
+-----------------
+
+1. Binary Search
+2. Search In Rotated Sorted Array
+3. Find Minimum In Rotated Sorted Array
+4. Search 2D Matrix
+
+5. Merge Intervals
+6. Insert Interval
+7. Meeting Rooms
+8. Meeting Rooms II
+
+PATTERNS
+--------
+✓ Binary Search
+✓ Modified Binary Search
+✓ Interval Merge
+
+PATTERN RECOGNITION QUESTIONS
+-----------------------------
+
+1. First Bad Version
+2. Find Peak Element
+3. Koko Eating Bananas
+4. Non-overlapping Intervals
+
+Expected Recognition:
+---------------------
+First Bad Version         -> Binary Search
+Find Peak Element         -> Binary Search
+Koko Eating Bananas       -> Binary Search On Answer
+Non-overlapping Intervals -> Intervals
+
+=========================================================
+DAY 4 : LINKED LIST + STACK + HEAP
+=========================================================
+
+PRIMARY QUESTIONS
+-----------------
+
+1. Reverse Linked List
+2. Middle Of Linked List
+3. Linked List Cycle
+4. Merge Two Sorted Lists
+5. Remove Nth Node From End
+6. LRU Cache
+
+7. Valid Parentheses
+8. Min Stack
+9. Daily Temperatures
+10. Evaluate Reverse Polish Notation
+
+11. Kth Largest Element
+12. Top K Frequent Elements
+13. Find Median From Data Stream
+
+PATTERNS
+--------
+✓ Fast Slow Pointer
+✓ Linked List
+✓ Stack
+✓ Monotonic Stack
+✓ Heap
+
+PATTERN RECOGNITION QUESTIONS
+-----------------------------
+
+1. Reorder List
+2. Next Greater Element
+3. Merge K Sorted Lists
+4. Task Scheduler
+
+Expected Recognition:
+---------------------
+Reorder List          -> Fast/Slow Pointer
+Next Greater Element  -> Monotonic Stack
+Merge K Sorted Lists  -> Heap
+Task Scheduler        -> Heap
+
+=========================================================
+DAY 5 : TREES + GRAPHS + DP
+=========================================================
+
+PRIMARY QUESTIONS
+-----------------
+
+Trees
+
+1. Maximum Depth Of Binary Tree
+2. Invert Binary Tree
+3. Same Tree
+4. Level Order Traversal
+5. Validate BST
+6. Kth Smallest In BST
+7. Lowest Common Ancestor BST
+
+Graphs
+
+8. Number Of Islands
+9. Clone Graph
+10. Course Schedule
+11. Graph BFS
+12. Graph DFS
+
+DP
+
+13. Climbing Stairs
+14. House Robber
+15. Coin Change
+16. Longest Increasing Subsequence
+
+PATTERNS
+--------
+✓ DFS
+✓ BFS
+✓ Tree Traversal
+✓ Graph Traversal
+✓ Recursion
+✓ DP
+
+PATTERN RECOGNITION QUESTIONS
+-----------------------------
+
+1. Diameter Of Binary Tree
+2. Binary Tree Right Side View
+3. Rotten Oranges
+4. Pacific Atlantic Water Flow
+5. Unique Paths
+
+Expected Recognition:
+---------------------
+Diameter Of Tree       -> DFS
+Right Side View        -> BFS
+Rotten Oranges         -> Multi-source BFS
+Pacific Atlantic       -> DFS/BFS
+Unique Paths           -> DP
+
+=========================================================
+FINAL PATTERN TEST (AFTER DAY 5)
+=========================================================
+
+Without looking at solutions, identify pattern only:
+
+1. Trapping Rain Water
+2. Fruit Into Baskets
+3. Koko Eating Bananas
+4. Merge K Sorted Lists
+5. Next Greater Element
+6. Diameter Of Binary Tree
+7. Rotten Oranges
+8. Unique Paths
+9. House Robber
+10. Pacific Atlantic Water Flow
+
+If you can correctly identify the pattern for
+8-10 out of these problems within 30 seconds,
+your DSA pattern recognition is at a good level
+for most senior C++ interviews.
+=========================================================
