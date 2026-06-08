@@ -289,6 +289,94 @@ std::unique_ptr<int, decltype(deleter)> p(new int(10), deleter);
 
 ✔ Used for custom cleanup logic
 
+********vvvimp 
+=========================================
+CUSTOM DELETER IN std::unique_ptr
+=========================================
+
+Why?
+-----
+Used when a resource cannot be released with delete.
+
+Examples:
+FILE*    -> fclose()
+Socket   -> close()
+DB Conn  -> db_close()
+
+-----------------------------------------
+1. Function Pointer Deleter
+-----------------------------------------
+
+void myDeleter(int* p)
+{
+    delete p;
+}
+
+std::unique_ptr<int, void(*)(int*)>
+    ptr(new int(10), myDeleter);
+
+-----------------------------------------
+2. Lambda Deleter
+-----------------------------------------
+
+auto deleter = [](int* p)
+{
+    delete p;
+};
+
+std::unique_ptr<int, decltype(deleter)>
+    ptr(new int(10), deleter);
+
+-----------------------------------------
+3. Functor Deleter
+-----------------------------------------
+
+struct MyDeleter
+{
+    void operator()(int* p) const
+    {
+        delete p;
+    }
+};
+
+std::unique_ptr<int, MyDeleter>
+    ptr(new int(10));
+
+-----------------------------------------
+4. Stateful Lambda
+-----------------------------------------
+
+int id = 100;
+
+auto deleter = [id](int* p)
+{
+    delete p;
+};
+
+std::unique_ptr<int, decltype(deleter)>
+    ptr(new int(10), deleter);
+
+-----------------------------------------
+5. std::function Deleter
+-----------------------------------------
+
+std::function<void(int*)> deleter =
+[](int* p)
+{
+    delete p;
+};
+
+std::unique_ptr<int,
+                std::function<void(int*)>>
+    ptr(new int(10), deleter);
+
+-----------------------------------------
+Interview One-Liner
+-----------------------------------------
+
+A custom deleter allows std::unique_ptr to manage
+resources that require special cleanup instead of
+the default delete operation.
 =========================================
 12. COMMON MISTAKE (IMPORTANT)
 =========================================
