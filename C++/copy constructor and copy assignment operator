@@ -1,1 +1,529 @@
+Copy Constructor:
+Creates a new object from an existing object.
 
+Copy Assignment Operator:
+Copies data into an already existing object.
+
+Copy Constructor is called during initialization.
+Copy Assignment Operator is called during assignment.
+
+
+=========================================================
+COPY CONSTRUCTOR & COPY ASSIGNMENT OPERATOR
+COMPLETE INTERVIEW EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Test
+{
+private:
+    int* ptr;
+
+public:
+
+    // Constructor
+    Test(int val)
+    {
+        ptr = new int(val);
+        cout << "Constructor\n";
+    }
+
+    // Copy Constructor (Deep Copy)
+    Test(const Test& other)
+    {
+        cout << "Copy Constructor\n";
+        ptr = new int(*other.ptr);
+    }
+
+    // Copy Assignment Operator (Deep Copy)
+    Test& operator=(const Test& other)
+    {
+        cout << "Copy Assignment Operator\n";
+
+        if(this != &other)
+        {
+            delete ptr;
+            ptr = new int(*other.ptr);
+        }
+
+        return *this;
+    }
+
+    void display()
+    {
+        cout << *ptr << endl;
+    }
+
+    ~Test()
+    {
+        delete ptr;
+        cout << "Destructor\n";
+    }
+};
+
+int main()
+{
+    Test t1(10);
+
+    // Copy Constructor
+    Test t2 = t1;
+
+    // Copy Assignment Operator
+    Test t3(20);
+    t3 = t1;
+
+    t1.display();
+    t2.display();
+    t3.display();
+}
+
+Constructor
+Copy Constructor
+Constructor
+Copy Assignment Operator
+10
+10
+10
+Destructor
+Destructor
+Destructor
+
+
+=========================================================
+INTERVIEW CHEAT SHEET
+=========================================================
+
+Copy Constructor
+---------------
+Test(const Test& other);
+
+Used when:
+- Creating a new object from existing object
+
+Example:
+Test t2 = t1;
+
+---------------------------------------------------------
+
+Copy Assignment Operator
+------------------------
+Test& operator=(const Test& other);
+
+Used when:
+- Assigning to an existing object
+
+Example:
+t2 = t1;
+
+---------------------------------------------------------
+
+Move Constructor
+----------------
+Test(Test&& other);
+
+Used when:
+Test t2(std::move(t1));
+
+---------------------------------------------------------
+
+Move Assignment Operator
+------------------------
+Test& operator=(Test&& other);
+
+Used when:
+t2 = std::move(t1);
+
+---------------------------------------------------------
+
+Rule of Three
+-------------
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+---------------------------------------------------------
+
+Rule of Five
+------------
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+4. Move Constructor
+5. Move Assignment Operator
+
+
+
+
+=========================================================
+COPY CONSTRUCTOR & COPY ASSIGNMENT OPERATOR
+INTERVIEW NOTES
+=========================================================
+
+=========================================================
+1. COPY CONSTRUCTOR
+=========================================================
+
+Definition:
+Creates a new object from an existing object.
+
+Syntax:
+
+ClassName(const ClassName& other);
+
+Example:
+
+MyClass a;
+MyClass b = a;      // Copy Constructor
+
+OR
+
+MyClass b(a);       // Copy Constructor
+
+When is it called?
+
+1. Object initialization
+
+   MyClass b = a;
+
+2. Pass by value
+
+   void fun(MyClass obj);
+
+3. Return by value
+   (if copy elision doesn't occur)
+
+=========================================================
+2. COPY ASSIGNMENT OPERATOR
+=========================================================
+
+Definition:
+Copies data into an already existing object.
+
+Syntax:
+
+ClassName& operator=(const ClassName& other);
+
+Example:
+
+MyClass a;
+MyClass b;
+
+b = a;              // Copy Assignment Operator
+
+When is it called?
+
+When assigning one existing object to another.
+
+=========================================================
+3. COPY CONSTRUCTOR vs COPY ASSIGNMENT
+=========================================================
+
+Example:
+
+MyClass a;
+
+MyClass b = a;   // Copy Constructor
+
+MyClass c;
+c = a;           // Copy Assignment Operator
+
+Key Difference:
+
+Copy Constructor:
+Creates a NEW object.
+
+Copy Assignment:
+Assigns to an EXISTING object.
+
+=========================================================
+4. DEFAULT COPY BEHAVIOR
+=========================================================
+
+Compiler-generated copy constructor and assignment
+perform SHALLOW COPY.
+
+Example:
+
+class Test
+{
+    int* ptr;
+};
+
+Default copy:
+
+obj2.ptr = obj1.ptr;
+
+Both objects point to the same memory.
+
+Problem:
+
+obj1 ---> Memory <--- obj2
+
+When destructors run:
+
+delete ptr;
+delete ptr;
+
+Result:
+Double Deletion (Undefined Behavior)
+
+=========================================================
+5. DEEP COPY
+=========================================================
+
+Allocate new memory and copy actual data.
+
+Example:
+
+Test(const Test& other)
+{
+    ptr = new int(*other.ptr);
+}
+
+Now each object owns separate memory.
+
+=========================================================
+6. COPY ASSIGNMENT OPERATOR (DEEP COPY)
+=========================================================
+
+Test& operator=(const Test& other)
+{
+    if(this != &other)
+    {
+        delete ptr;
+
+        ptr = new int(*other.ptr);
+    }
+
+    return *this;
+}
+
+=========================================================
+7. WHY SELF-ASSIGNMENT CHECK?
+=========================================================
+
+Without check:
+
+obj = obj;
+
+delete ptr;
+
+Now ptr is deleted.
+
+Trying to copy from same object causes problems.
+
+Solution:
+
+if(this != &other)
+
+=========================================================
+8. RULE OF THREE
+=========================================================
+
+If a class defines any one of:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+It usually needs all three.
+
+Reason:
+Class manages a resource.
+
+=========================================================
+9. RULE OF FIVE (C++11)
+=========================================================
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+4. Move Constructor
+5. Move Assignment Operator
+
+=========================================================
+10. WHY unique_ptr DELETES COPY OPERATIONS?
+=========================================================
+
+std::unique_ptr provides exclusive ownership.
+
+Two unique_ptr objects cannot own the same resource.
+
+Therefore:
+
+unique_ptr(const unique_ptr&) = delete;
+
+unique_ptr& operator=(const unique_ptr&) = delete;
+
+=========================================================
+11. WHY unique_ptr ALLOWS MOVE?
+=========================================================
+
+Move transfers ownership.
+
+Example:
+
+unique_ptr<int> p1(new int(10));
+
+unique_ptr<int> p2(std::move(p1));
+
+After move:
+
+p1 --> nullptr
+p2 --> owns resource
+
+=========================================================
+12. MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Copy Constructor?
+
+A:
+A constructor that creates a new object from an
+existing object.
+
+---------------------------------------------------------
+
+Q2. What is a Copy Assignment Operator?
+
+A:
+An operator that copies data from one object into
+another already existing object.
+
+---------------------------------------------------------
+
+Q3. Difference between Copy Constructor and
+Copy Assignment Operator?
+
+A:
+
+Copy Constructor:
+Creates a new object.
+
+Copy Assignment:
+Assigns to an existing object.
+
+Example:
+
+MyClass b = a;   // Copy Constructor
+
+MyClass c;
+c = a;           // Copy Assignment
+
+---------------------------------------------------------
+
+Q4. When is Copy Constructor called?
+
+A:
+
+1. Object initialization
+2. Pass by value
+3. Return by value (if copy elision not applied)
+
+---------------------------------------------------------
+
+Q5. Why is self-assignment check needed?
+
+A:
+
+To safely handle:
+
+obj = obj;
+
+and avoid deleting the resource before copying it.
+
+---------------------------------------------------------
+
+Q6. What is shallow copy?
+
+A:
+
+Copying pointer values only.
+
+Both objects point to the same memory.
+
+---------------------------------------------------------
+
+Q7. What is deep copy?
+
+A:
+
+Allocating new memory and copying actual data.
+
+Each object owns separate memory.
+
+---------------------------------------------------------
+
+Q8. What problem does shallow copy cause?
+
+A:
+
+Double deletion and undefined behavior.
+
+---------------------------------------------------------
+
+Q9. What is Rule of Three?
+
+A:
+
+If a class defines Destructor, Copy Constructor,
+or Copy Assignment Operator, it usually needs all three.
+
+---------------------------------------------------------
+
+Q10. What is Rule of Five?
+
+A:
+
+Destructor
+Copy Constructor
+Copy Assignment
+Move Constructor
+Move Assignment
+
+---------------------------------------------------------
+
+Q11. Why is Copy Constructor parameter passed as
+const reference?
+
+A:
+
+Passing by value would invoke the copy constructor
+again, causing infinite recursion.
+
+Correct:
+
+MyClass(const MyClass& other);
+
+=========================================================
+ONE-LINE INTERVIEW ANSWERS
+=========================================================
+
+Copy Constructor:
+Creates a new object from an existing object.
+
+Copy Assignment:
+Copies data into an already existing object.
+
+Shallow Copy:
+Copies pointer addresses only.
+
+Deep Copy:
+Allocates new memory and copies actual data.
+
+Rule of Three:
+Destructor + Copy Constructor + Copy Assignment.
+
+Rule of Five:
+Rule of Three + Move Constructor + Move Assignment.
+
+Self-Assignment Check:
+Prevents problems when an object is assigned to itself.
+
+unique_ptr Copy:
+Deleted because ownership must be unique.
+
+unique_ptr Move:
+Allowed because ownership can be transferred.
