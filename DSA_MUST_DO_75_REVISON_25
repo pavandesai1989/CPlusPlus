@@ -1,0 +1,218 @@
+=========================================================
+TOP 70 DSA QUESTIONS FOR REVISION
+(ORDERED: MOST IMPORTANT → LESS IMPORTANT)
+TARGET: 10+ YEARS C++ INTERVIEWS
+=========================================================
+
+=========================================================
+SLIDING WINDOW (HIGHEST PRIORITY)
+=========================================================
+
+1. Best Time To Buy And Sell Stock
+2. Longest Substring Without Repeating Characters
+3. Longest Repeating Character Replacement
+4. Permutation In String
+5. Minimum Window Substring
+6. Sliding Window Maximum
+7. Fruit Into Baskets
+8. Subarrays With K Distinct Integers
+
+=========================================================
+ARRAYS + HASHING
+=========================================================
+
+9. Two Sum
+10. Contains Duplicate
+11. Valid Anagram
+12. Group Anagrams
+13. Top K Frequent Elements
+14. Product Of Array Except Self
+15. Longest Consecutive Sequence
+
+=========================================================
+TWO POINTERS
+=========================================================
+
+16. Valid Palindrome
+17. Two Sum II
+18. Container With Most Water
+19. 3Sum
+20. 4Sum
+21. Trapping Rain Water
+
+=========================================================
+BINARY SEARCH
+=========================================================
+
+22. Binary Search
+23. Search In Rotated Sorted Array
+24. Find Minimum In Rotated Sorted Array
+25. Search 2D Matrix
+26. First Bad Version
+27. Find Peak Element
+28. Koko Eating Bananas
+
+=========================================================
+LINKED LIST
+=========================================================
+
+29. Reverse Linked List
+30. Middle Of Linked List
+31. Linked List Cycle
+32. Merge Two Sorted Lists
+33. Remove Nth Node From End
+34. Reorder List
+35. LRU Cache
+
+=========================================================
+STACK
+=========================================================
+
+36. Valid Parentheses
+37. Min Stack
+38. Daily Temperatures
+39. Evaluate Reverse Polish Notation
+40. Next Greater Element
+
+=========================================================
+HEAP
+=========================================================
+
+41. Kth Largest Element In Array
+42. Top K Frequent Elements
+43. Merge K Sorted Lists
+44. Task Scheduler
+45. Find Median From Data Stream
+
+=========================================================
+INTERVALS
+=========================================================
+
+46. Merge Intervals
+47. Insert Interval
+48. Meeting Rooms
+49. Meeting Rooms II
+50. Non-overlapping Intervals
+
+=========================================================
+TREES
+=========================================================
+
+51. Maximum Depth Of Binary Tree
+52. Invert Binary Tree
+53. Same Tree
+54. Binary Tree Level Order Traversal
+55. Validate BST
+56. Kth Smallest Element In BST
+57. Lowest Common Ancestor BST
+58. Diameter Of Binary Tree
+59. Binary Tree Right Side View
+
+=========================================================
+GRAPHS
+=========================================================
+
+60. Number Of Islands
+61. Clone Graph
+62. Course Schedule
+63. Graph BFS
+64. Graph DFS
+65. Rotten Oranges
+66. Pacific Atlantic Water Flow
+
+=========================================================
+DYNAMIC PROGRAMMING
+=========================================================
+
+67. Climbing Stairs
+68. House Robber
+69. Coin Change
+70. Longest Increasing Subsequence
+
+=========================================================
+TOP 25 ABSOLUTE MUST-REVISE
+(REVISE EVERY WEEK)
+=========================================================
+
+1. Two Sum
+2. Group Anagrams
+3. Product Of Array Except Self
+4. Container With Most Water
+5. 3Sum
+
+6. Longest Substring Without Repeating Characters
+7. Longest Repeating Character Replacement
+8. Minimum Window Substring
+9. Sliding Window Maximum
+
+10. Binary Search
+11. Search In Rotated Sorted Array
+12. Koko Eating Bananas
+
+13. Reverse Linked List
+14. Linked List Cycle
+15. LRU Cache
+
+16. Valid Parentheses
+17. Daily Temperatures
+
+18. Kth Largest Element
+19. Merge K Sorted Lists
+
+20. Binary Tree Level Order Traversal
+21. Validate BST
+22. Diameter Of Binary Tree
+
+23. Number Of Islands
+24. Course Schedule
+
+25. House Robber
+
+=========================================================
+PATTERNS COVERED
+=========================================================
+
+✓ HashMap
+✓ HashSet
+✓ Frequency Counting
+✓ Two Pointers
+✓ Sliding Window
+✓ Binary Search
+✓ Binary Search On Answer
+✓ Fast Slow Pointer
+✓ Linked List Manipulation
+✓ Stack
+✓ Monotonic Stack
+✓ Heap
+✓ Interval Merge
+✓ DFS
+✓ BFS
+✓ Tree Traversal
+✓ Graph Traversal
+✓ Recursion
+✓ Dynamic Programming
+
+=========================================================
+STOPPING POINT
+=========================================================
+
+If you can solve and explain these 70 questions,
+you have covered the vast majority of DSA patterns
+commonly asked in senior C++ interviews.
+
+After this, spend time on:
+
+- STL
+- Smart Pointers
+- Rule of 5
+- Templates
+- Move Semantics
+- Multithreading
+- SOLID
+- Design Patterns
+- Linux
+- Project Discussions
+
+These areas usually carry more weight than
+additional DSA for a 10+ year C++ candidate.
+=========================================================
