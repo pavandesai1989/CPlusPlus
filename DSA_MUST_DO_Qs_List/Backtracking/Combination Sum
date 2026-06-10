@@ -1,0 +1,149 @@
+https://leetcode.com/problems/combination-sum/
+=========================================
+COMBINATION SUM (I) - BACKTRACKING
+=========================================
+
+PROBLEM
+-----------------------------------------
+Find all combinations where numbers
+(can be reused unlimited times)
+sum to target.
+
+=========================================
+INTUITION
+=========================================
+
+At each index:
+
+We have 2 choices:
+
+1. NOT PICK current element
+   → move to previous index (idx-1)
+
+2. PICK current element
+   → reduce target
+   → stay at same index (reuse allowed)
+
+=========================================
+KEY IDEA
+=========================================
+
+Pick → idx (reuse same element again)
+
+Not Pick → idx-1
+
+This is UNBOUNDED KNAPSACK style recursion.
+
+=========================================
+BASE CASES
+=========================================
+
+if (target == 0)
+    store current subset
+
+if (idx < 0)
+    return
+
+=========================================
+FLOW
+=========================================
+
+helper(idx, target)
+
+→ exclude candidates[idx]
+→ include candidates[idx] (if valid)
+
+=========================================
+WHY SAME IDX IN PICK?
+=========================================
+
+Because repetition is allowed.
+
+Example:
+
+target = 7, candidate = 2
+
+2 can be used multiple times:
+2 + 2 + 2 + 1
+
+So we stay on same index.
+
+=========================================
+TIME & SPACE
+=========================================
+
+Time  : Exponential O(2^T)
+Space : O(T) recursion depth
+
+=========================================
+INTERVIEW ONE-LINER
+=========================================
+
+At each index, either skip the number
+or pick it and stay on the same index
+to allow unlimited reuse until target is met.
+
+=========================================
+class Solution {
+public:
+    void helper(int idx,vector<int>& candidates,vector<int> ds,int target,vector<vector<int>>& res)
+    {
+       if(idx<0) return;
+
+       if(target==0)
+       {
+          res.push_back(ds);
+          return;
+       }
+
+       //not pick 
+       helper(idx-1,candidates,ds,target,res);
+
+       //pick
+       if(candidates[idx]<=target)
+       {
+       ds.push_back(candidates[idx]);
+       helper(idx,candidates,ds,target-candidates[idx],res);
+       }
+
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) 
+    {
+        vector<vector<int>> res;
+        int n=candidates.size();
+        vector<int> ds;
+        helper(n-1,candidates,ds,target,res);
+        return res;
+    }
+};class Solution {
+public:
+    void helper(int idx,vector<int>& candidates,vector<int> ds,int target,vector<vector<int>>& res)
+    {
+       if(idx<0) return;
+
+       if(target==0)
+       {
+          res.push_back(ds);
+          return;
+       }
+
+       //not pick 
+       helper(idx-1,candidates,ds,target,res);
+
+       //pick
+       if(candidates[idx]<=target)
+       {
+       ds.push_back(candidates[idx]);
+       helper(idx,candidates,ds,target-candidates[idx],res);
+       }
+
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) 
+    {
+        vector<vector<int>> res;
+        int n=candidates.size();
+        vector<int> ds;
+        helper(n-1,candidates,ds,target,res);
+        return res;
+    }
+};
