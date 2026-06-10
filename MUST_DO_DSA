@@ -1,393 +1,175 @@
-=========================================================
-DSA TOPICS ORDER (MOST IMPORTANT → LEAST IMPORTANT)
-=========================================================
+==============================
+🔥 TIER 1: MUST MASTER (VERY HIGH FREQUENCY)
+==============================
 
-1. Arrays & Hashing
-   - HashMap
-   - HashSet
-   - Frequency Counting
-
-2. Two Pointers
-   - Left/Right Pointer
-   - Sorted Array Problems
-
-3. Sliding Window
-   - Fixed Window
-   - Variable Window
-
-4. Binary Search
-   - Standard Binary Search
-   - Modified Binary Search
-   - Binary Search On Answer
-
-5. Linked List
-   - Fast/Slow Pointer
-   - Reversal
-   - Merging
-
-6. Heap / Priority Queue
-   - Top K Problems
-   - Min Heap
-   - Max Heap
-
-7. Recursion
-
-8. Backtracking
-   - Subsets
-   - Combination Sum
-   - Permutations
-
-9. Trees
-   - DFS
-   - BFS
-   - BST
-
-10. Graphs
-    - DFS
-    - BFS
-    - Topological Sort (Course Schedule)
-
-11. Stack
-    - Stack
-    - Monotonic Stack
-
-12. Intervals
-    - Sorting
-    - Merge Intervals
-
-13. Dynamic Programming
-    - Climbing Stairs
-    - House Robber
-    - Coin Change
-    - LIS
-
-=========================================================
-IF YOU HAVE VERY LIMITED TIME
-=========================================================
-
-Focus heavily on:
-
-1. Arrays & Hashing
-2. Sliding Window
-3. Binary Search
-4. Linked List
-5. Heap
-6. Trees
-7. Graphs
-
-Then do:
-
-8. Stack
-9. Intervals
-10. Basic DP
-11. Backtracking
-
-=========================================================
-WHY THIS ORDER?
-=========================================================
-
-Hashing
-    ↓
-Two Pointers
-    ↓
-Sliding Window
-    ↓
-Binary Search
-    ↓
-Linked List
-    ↓
-Heap
-    ↓
-Recursion
-    ↓
-Backtracking
-    ↓
-Trees
-    ↓
-Graphs
-    ↓
-Stack
-    ↓
-Intervals
-    ↓
-DP
-
-Reason:
-- Early topics are asked most frequently.
-- Recursion helps with Trees and Backtracking.
-- Trees help with Graph DFS/BFS.
-- DP becomes easier after Recursion.
-
-=========================================================
-MY RECOMMENDED STOPPING POINT
-=========================================================
-
-After completing:
-
-✓ Arrays & Hashing
-✓ Two Pointers
-✓ Sliding Window
-✓ Binary Search
-✓ Linked List
-✓ Heap
-✓ Recursion
-✓ Backtracking
-✓ Trees
-✓ Graphs
-✓ Stack
-✓ Intervals
-✓ Basic DP
-
-Stop adding new DSA topics.
-
-Move to:
-
-✓ STL
-✓ Smart Pointers
-✓ Rule of 5
-✓ Templates
-✓ Move Semantics
-✓ Multithreading
-✓ SOLID
-✓ Design Patterns
-✓ Linux
-✓ Project Discussions
-
-For a 10+ year C++ developer interview,
-these areas often contribute more to success
-than learning additional advanced DSA topics.
-=========================================================
-
-
-
-
-
-
-
-
-
-***********MUST DO Qs***********
-
-Arrays & Hashing
-Two Pointers
-Sliding Window
-Binary Search
-Linked List
-Stack
-Trees (DFS/BFS)
-Heap
-Intervals
-Graph BFS/DFS
-Basic Backtracking
-Basic DP
-
-
-=========================================
-DSA MUST-DO (MINIMUM SET)
-=========================================
-
-1. ARRAYS & HASHING ⭐⭐⭐⭐⭐
------------------------------------------
-Two Sum
-Contains Duplicate
-Valid Anagram
-Group Anagrams
-Top K Frequent Elements
-
-=========================================
-
-2. TWO POINTERS ⭐⭐⭐⭐⭐
------------------------------------------
-1. Two Sum II
-2. Valid Palindrome
-3. Move Zeroes
-4. Remove Duplicates from Sorted Array
-5. Merge Sorted Array
-6. Sort Colors
-7. Container With Most Water
-8. 3Sum
-9. Trapping Rain Water
-
-=========================================
-
-3. SLIDING WINDOW ⭐⭐⭐⭐⭐
------------------------------------------
-Sliding Window (Most Asked → Least Asked)
-
-1. Longest Substring Without Repeating Characters - DONE
-2. Best Time To Buy And Sell Stock  - DONE 
-3. Minimum Window Substring  HARDDDDD - TODO ******
-4. Sliding Window Maximum  - DONE
-5. Permutation In String - DONE 
-6. Longest Repeating Character Replacement - DONE 
-7. Maximum Sum Subarray of Size K TODO*********
-https://leetcode.com/problems/find-all-anagrams-in-a-string/description/  ****TODO
-
-=========================================
-
-4. BINARY SEARCH ⭐⭐⭐⭐⭐
------------------------------------------
-Binary Search
-Search In Rotated Sorted Array
-Find Minimum In Rotated Sorted Array
-Search 2D Matrix
-
-=========================================
-
-5. LINKED LIST ⭐⭐⭐⭐
------------------------------------------
-Reverse Linked List
-Middle Of Linked List
-Linked List Cycle
-Merge Two Sorted Lists
-Remove Nth Node From End
-LRU Cache (Important)
-
-=========================================
-
-6. STACK ⭐⭐⭐⭐
------------------------------------------
-Valid Parentheses
-Min Stack
-Evaluate Reverse Polish Notation
-Daily Temperatures
-
-=========================================
-
-7. TREES ⭐⭐⭐⭐⭐
------------------------------------------
-Maximum Depth Of Binary Tree
-Invert Binary Tree
-Same Tree
-Subtree Of Another Tree
-Lowest Common Ancestor BST
-Binary Tree Level Order Traversal
-Validate BST
-Kth Smallest In BST
-
-=========================================
-
-8. HEAP ⭐⭐⭐⭐
------------------------------------------
-Kth Largest Element
-Top K Frequent Elements
-Find Median From Data Stream
-
-=========================================
-
-9. INTERVALS ⭐⭐⭐⭐
------------------------------------------
+1. Arrays
+Move Zeroes
+Product of Array Except Self
+Maximum Subarray (Kadane’s)
+Best Time to Buy and Sell Stock
+Rotate Array
 Merge Intervals
 Insert Interval
-Meeting Rooms
-Meeting Rooms II
+First Missing Positive
+Find Duplicate Number
+Trapping Rain Water
 
-=========================================
+2. Two Pointers
+Two Sum II
+3Sum
+Container With Most Water
+Sort Colors
+Remove Duplicates from Sorted Array
+Valid Palindrome
 
-10. GRAPHS ⭐⭐⭐⭐
------------------------------------------
-Number Of Islands
+3. Sliding Window
+Longest Substring Without Repeating Characters
+Minimum Window Substring
+Longest Repeating Character Replacement
+Sliding Window Maximum
+
+4. Linked List
+Reverse Linked List
+Merge Two Sorted Lists
+Remove Nth Node From End
+Linked List Cycle
+Linked List Cycle II
+Middle of Linked List
+
+5. Binary Search
+Binary Search
+Search in Rotated Sorted Array
+Find Minimum in Rotated Sorted Array
+First & Last Position of Element
+
+6. Stack
+Valid Parentheses
+Daily Temperatures
+Largest Rectangle in Histogram
+Min Stack
+
+7. Trees (DFS/BFS)
+Maximum Depth of Binary Tree
+Diameter of Binary Tree
+Path Sum
+Binary Tree Level Order Traversal
+Lowest Common Ancestor
+
+8. Graphs
+Number of Islands
 Clone Graph
 Course Schedule
-Graph BFS
-Graph DFS
+Rotting Oranges
+Number of Provinces
 
-=========================================
-
-11. BACKTRACKING ⭐⭐⭐⭐
------------------------------------------
-Subsets
-https://leetcode.com/problems/subsets/description/  DONE
-https://leetcode.com/problems/subsets-ii/
-
-Combination Sum
-https://leetcode.com/problems/combination-sum/description/  DONE 
-https://leetcode.com/problems/combination-sum-ii/description/ 
-
-Permutations
-https://leetcode.com/problems/permutations/description/
-
-https://leetcode.com/problems/generate-parentheses/description/
-https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/
-=========================================
-
-12. DYNAMIC PROGRAMMING ⭐⭐⭐
------------------------------------------
+9. DP
 Climbing Stairs
 House Robber
 Coin Change
-Longest Increasing Subsequence
+Longest Common Subsequence
+0/1 Knapsack
+Unique Paths
 
-=========================================
-TOP 25 ABSOLUTE MUST-DO
-=========================================
+10. Heap
+Top K Frequent Elements
+Kth Largest Element in Array
+K Closest Points to Origin
 
-1. Two Sum
-2. Valid Anagram
-3. Group Anagrams
-4. Container With Most Water
-5. Best Time To Buy And Sell Stock
-6. Longest Substring Without Repeating Characters
-7. Longest Repeating Character Replacement
-8. Minimum Window Substring
-9. Sliding Window Maximum
-10. Binary Search
-11. Search Rotated Sorted Array
-12. Reverse Linked List
-13. Linked List Cycle
-14. Merge Two Sorted Lists
-15. LRU Cache
-16. Valid Parentheses
-17. Daily Temperatures
-18. Maximum Depth Binary Tree
-19. Level Order Traversal
-20. Validate BST
-21. Number Of Islands
-22. Course Schedule
-23. Subsets
-24. Combination Sum
-25. House Robber
 
-=========================================
-TOPICS TO FOCUS MOST
-=========================================
+==============================
+⚡ TIER 2: IMPORTANT (COMMON BUT NOT DAILY)
+==============================
 
-1. Sliding Window
-2. Binary Search
-3. Trees (DFS/BFS)
-4. Linked List
-5. Graph BFS/DFS
-6. Heap
-7. Intervals
-8. HashMap / HashSet
+11. Arrays (extra)
+Best Time to Buy and Sell Stock II
+Maximum Product Subarray
+Game of Life
+Product of Array Except Self (repeat variant)
 
-=========================================
-CAN SKIP FOR NOW
-=========================================
+12. Sliding Window (extra)
+Permutation in String
+Find All Anagrams in a String
+Minimum Size Subarray Sum
 
-- Hard DP
-- Segment Tree
-- Fenwick Tree
-- Trie (unless company specifically asks)
-- Advanced Graph Algorithms
-- Heavy Math Problems
-- Hard Backtracking
-- Hard Greedy
+13. Hashing
+Group Anagrams
+Longest Consecutive Sequence
+Isomorphic Strings
+Word Pattern
+Happy Number
 
-=========================================
-MY RECOMMENDED STOPPING POINT
-=========================================
+14. Backtracking
+Subsets
+Permutations
+Combination Sum
+Palindrome Partitioning
+Subsets II
 
-NeetCode 150 +
-Above 25 problems +
-1-2 LRU Cache implementations
+15. BST
+Validate BST
+Kth Smallest Element
+Lowest Common Ancestor in BST
 
-After that:
-Move your effort to
-- LLD
-- C++
-- Multithreading
-- OOP/SOLID
-- Design Patterns
+16. Greedy
+Jump Game
+Gas Station
+Partition Labels
+Non-overlapping Intervals
 
-For a 10+ year C++ developer interview, these areas often matter more than solving additional hard LeetCode problems.
+17. Union Find
+Redundant Connection
+Accounts Merge
+Graph Valid Tree
+
+18. Bit Manipulation
+Single Number
+Counting Bits
+Missing Number
+
+
+==============================
+🟡 TIER 3: LOW FREQUENCY / EDGE CASES
+==============================
+
+19. Advanced Stack
+Asteroid Collision
+Basic Calculator
+
+20. Advanced DP
+Edit Distance
+Minimum Path Sum
+
+21. Trie
+Implement Trie
+Word Search II
+Replace Words
+
+22. Advanced Graphs
+Dijkstra (basic)
+Bipartite Graph Check
+Pacific Atlantic Water Flow
+
+23. Advanced Trees
+Serialize & Deserialize Binary Tree
+Binary Tree Maximum Path Sum
+Right Side View
+Symmetric Tree
+
+24. Advanced Arrays
+132 Pattern
+Range Sum Query 2D
+Game of Life
+Koko Eating Bananas
+
+🎯 FINAL INSIGHT
+If you ONLY study Tier 1:
+
+👉 You will clear 80–90% of coding rounds
+
+If you add Tier 2:
+
+👉 You reach 95% interview coverage
+
+Tier 3:
+
+👉 Only for extra edge / product companies / harder rounds
