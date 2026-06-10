@@ -214,13 +214,14 @@ Top K Frequent Elements
 -----------------------------------------
 Sliding Window (Most Asked → Least Asked)
 
-1. Longest Substring Without Repeating Characters
-2. Best Time To Buy And Sell Stock
-3. Minimum Window Substring
-4. Sliding Window Maximum
-5. Permutation In String
-6. Longest Repeating Character Replacement
-7. Maximum Sum Subarray of Size K
+1. Longest Substring Without Repeating Characters - DONE
+2. Best Time To Buy And Sell Stock  - DONE 
+3. Minimum Window Substring  HARDDDDD - TODO ******
+4. Sliding Window Maximum  - DONE
+5. Permutation In String - DONE 
+6. Longest Repeating Character Replacement - DONE 
+7. Maximum Sum Subarray of Size K TODO*********
+https://leetcode.com/problems/find-all-anagrams-in-a-string/description/  ****TODO
 
 =========================================
 
