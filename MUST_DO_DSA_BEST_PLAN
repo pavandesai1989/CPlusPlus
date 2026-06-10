@@ -1,0 +1,148 @@
+==============================
+PHASE 1: CORE PATTERNS (70% INTERVIEW COVERAGE)
+Build brute → optimal thinking
+==============================
+
+Arrays
+- Move Zeroes
+- Product of Array Except Self
+- Maximum Subarray (Kadane’s)
+- Best Time to Buy and Sell Stock
+- Rotate Array
+- Merge Intervals
+- Insert Interval
+- First Missing Positive
+- Find Duplicate Number
+- Trapping Rain Water
+
+Two Pointers
+- Two Sum II
+- 3Sum
+- Container With Most Water
+- Sort Colors
+- Remove Duplicates from Sorted Array
+- Valid Palindrome
+
+Sliding Window
+- Longest Substring Without Repeating Characters
+- Minimum Window Substring
+- Longest Repeating Character Replacement
+- Sliding Window Maximum
+
+Binary Search
+- Binary Search
+- Search in Rotated Sorted Array
+- Find Minimum in Rotated Sorted Array
+- First & Last Position of Element
+
+Hashing
+- Two Sum
+- Group Anagrams
+- Isomorphic Strings
+- Word Pattern
+- Happy Number
+
+Prefix Sum
+- Subarray Sum Equals K
+- Continuous Subarray Sum
+- Range Sum Query
+- Product of Array Except Self
+
+
+==============================
+PHASE 2: LINEAR STRUCTURES + RECURSION CONTROL
+==============================
+
+Linked List
+- Reverse Linked List
+- Merge Two Sorted Lists
+- Remove Nth Node From End
+- Linked List Cycle
+- Linked List Cycle II
+- Middle of Linked List
+
+Stack
+- Valid Parentheses
+- Daily Temperatures
+- Largest Rectangle in Histogram
+- Min Stack
+
+Heap / Priority Queue
+- Top K Frequent Elements
+- Kth Largest Element in Array
+- K Closest Points to Origin
+
+Backtracking
+- Subsets
+- Permutations
+- Combination Sum
+- Palindrome Partitioning
+- Subsets II
+
+
+==============================
+PHASE 3: TREES + DP (HIGH VALUE ROUND CORE)
+==============================
+
+Trees (DFS / BFS)
+- Maximum Depth of Binary Tree
+- Diameter of Binary Tree
+- Path Sum
+- Binary Tree Level Order Traversal
+- Lowest Common Ancestor
+
+BST
+- Validate BST
+- Kth Smallest Element
+- Lowest Common Ancestor in BST
+
+Dynamic Programming
+- Climbing Stairs
+- House Robber
+- Coin Change
+- Longest Common Subsequence
+- 0/1 Knapsack
+- Unique Paths
+
+
+==============================
+PHASE 4: ADVANCED PATTERNS (FILTER + EDGE ROUNDS)
+==============================
+
+Graphs
+- Number of Islands
+- Clone Graph
+- Course Schedule
+- Rotting Oranges
+- Number of Provinces
+
+Trie
+- Implement Trie
+- Word Search II
+- Replace Words
+
+Greedy
+- Jump Game
+- Gas Station
+- Partition Labels
+- Non-overlapping Intervals
+
+Bit Manipulation
+- Single Number
+- Counting Bits
+- Missing Number
+
+
+==============================
+IMPORTANT RULE (NON-NEGOTIABLE)
+==============================
+
+For every problem:
+1. First solve brute force
+2. Then optimize
+3. Then identify pattern
+4. Then re-solve after 2–3 days
+
+NO skipping revision.
+NO new topics.
+ONLY repetition + speed improvement.
