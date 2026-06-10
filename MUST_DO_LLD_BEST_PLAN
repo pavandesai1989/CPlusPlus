@@ -193,3 +193,105 @@ HLD (HIGH LEVEL DESIGN)
 - Notification System
 - Search Autocomplete
 - BookMyShow
+
+*******************************IN SHORT IMP *****
+==============================
+1. OOP CORE (MUST KNOW)
+==============================
+
+Encapsulation — hide internal state, expose behavior via methods
+Abstraction — show what, hide how
+Inheritance — is-a relationship (prefer composition over inheritance)
+Polymorphism — same interface, different implementations
+
+Key rule:
+→ Prefer composition over deep inheritance
+
+
+==============================
+2. SOLID (ONLY WHAT MATTERS)
+==============================
+
+SRP — one class = one responsibility
+OCP — extend, don’t modify existing code
+DIP — depend on interfaces, not concrete classes
+
+
+==============================
+3. MUST-DO DESIGN PATTERNS (CORE 7)
+==============================
+
+CREATIONAL
+- Singleton (thread-safe)
+- Factory Method
+- Builder
+
+STRUCTURAL
+- Adapter
+- Decorator
+- Facade
+
+BEHAVIORAL (MOST IMPORTANT)
+- Strategy
+- Observer
+- State
+
+
+==============================
+4. PATTERN IDENTIFICATION (VERY IMPORTANT)
+==============================
+
+Strategy → swap algorithm (payment, sorting)
+State → behavior changes with status (order, vending machine)
+Observer → notify many (notifications, events)
+Decorator → add features dynamically (toppings, addons)
+Factory → choose object type (payment, notifications)
+Builder → step-by-step object creation
+Singleton → only one instance (logger, config)
+
+
+==============================
+5. MUST-DO LLD PROBLEMS
+==============================
+
+- Parking Lot System
+- LRU Cache
+- Elevator System
+- Splitwise
+- Vending Machine
+- URL Shortener
+- Movie Ticket Booking System
+
+
+==============================
+6. BASIC CONCURRENCY (ONLY ESSENTIAL)
+==============================
+
+- synchronized / mutex
+- thread-safe singleton
+- producer-consumer (BlockingQueue idea)
+- race condition basics
+
+
+==============================
+7. INTERVIEW ATTACK FLOW
+==============================
+
+Step 1: Identify entities (nouns → classes)
+Step 2: Identify actions (verbs → methods)
+Step 3: Identify variation point:
+        - behavior changes → Strategy / State
+        - object creation → Factory
+        - add features → Decorator
+        - notifications → Observer
+Step 4: Start simple, then add pattern if needed
+
+
+==============================
+8. MOST IMPORTANT RULE
+==============================
+
+DO NOT force patterns.
+
+Only use pattern when:
+→ requirement changes OR interviewer asks flexibility
