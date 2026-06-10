@@ -1,0 +1,195 @@
+https://docs.google.com/document/u/0/d/1EB1WlFVIPCJHpH4HEHDyTvEmg9QY4YzlY5IG8xrhk6I/mobilebasic?urp=gmail_link 
+
+
+LLD + OOP + SYSTEM DESIGN ROADMAP
+
+==============================
+PHASE 1: OOP FOUNDATIONS (Week 1)
+==============================
+
+Must-Know Concepts
+
+Encapsulation — Private state with public behaviour — hide internal details behind a clean API.
+Abstraction — Define what an object does (interface) without specifying how it does it.
+Inheritance — Model is-a relationships — but prefer composition; avoid deep hierarchies.
+Polymorphism — Runtime polymorphism (overriding) is more useful than compile-time.
+UML Diagrams — Class diagrams, sequence diagrams — essential for communicating design in interviews.
+
+Interview Expectations
+- Assign correct responsibilities to each class
+- Use proper access modifiers (private, protected, public)
+- Write clean, minimal constructors
+
+Practice Mini-Designs
+- Design a Printer
+- Design a BankAccount
+- Design a Car with Engine abstraction
+
+
+==============================
+PHASE 2: SOLID PRINCIPLES (Week 2)
+==============================
+
+Non-negotiable for SDE-2 interviews.
+
+SRP (Single Responsibility Principle)
+One class = one reason to change.
+
+OCP (Open / Closed Principle)
+Open for extension, closed for modification.
+
+LSP (Liskov Substitution Principle)
+Child class must be substitutable without breaking behaviour.
+
+ISP (Interface Segregation Principle)
+Many small interfaces are better than one fat interface.
+
+DIP (Dependency Inversion Principle)
+Depend on abstractions, not concrete implementations.
+
+
+==============================
+PHASE 3: DESIGN PATTERNS (Week 3–4)
+==============================
+
+Focus on WHEN & WHY to use patterns (not memorisation).
+
+Key Insight:
+Most LLD problems reduce to Strategy + Factory + Composition
+
+CREATIONAL PATTERNS
+- Singleton (thread-safe)
+- Factory Method
+- Abstract Factory
+- Builder
+
+STRUCTURAL PATTERNS
+- Adapter
+- Decorator
+- Facade
+- Composite
+
+BEHAVIORAL PATTERNS (MOST IMPORTANT)
+- Strategy
+- Observer
+- Command
+- State
+- Chain of Responsibility
+
+🔥 MUST MASTER (NON-NEGOTIABLE) *****************
+
+Creational:
+- Singleton (thread-safe)
+- Factory Method
+- Builder
+
+Structural:
+- Adapter
+- Decorator
+- Facade
+
+Behavioral:
+- Strategy
+- Observer
+- State
+
+
+==============================
+PHASE 4: CONCURRENCY IN LLD (Week 5)
+==============================
+
+Must-Know Primitives
+- synchronized keyword
+- volatile keyword
+- Lock & ReentrantLock
+- Executors & thread pools
+- Thread-safe Singleton
+- Producer-Consumer pattern
+
+Apply in Real Designs
+- Thread-safe Cache (ConcurrentHashMap + locks)
+- Rate Limiter (token bucket / sliding window)
+- Parking Lot system with concurrent access
+
+
+==============================
+PHASE 5: CORE LLD INTERVIEW PROBLEMS (Week 6–8)
+==============================
+
+Beginner
+- Design a Logger
+- Design a File System (simplified)
+- Design a Vending Machine
+
+Intermediate (SDE-2 SWEET SPOT)
+- Parking Lot System
+- Elevator System
+- LRU Cache
+- Rate Limiter
+- Online Chess Game
+- Splitwise (Expense Sharing System)
+- Movie Ticket Booking System
+- ATM System
+- Notification System
+- File System (Simplified)
+- Ride Booking System (Uber/Ola)
+- URL Shortener
+- Logger System
+- Vending Machine
+- Online Shopping Cart
+- Hotel Booking System
+- Snake and Ladder Game
+- Library Management System
+- Task Scheduler
+- Cache with Expiry (TTL Cache)
+
+
+==============================
+CONCURRENCY CONCEPTS (DETAILED)
+==============================
+
+Core Topics
+- Threads & Processes
+- Locks & Mutex
+- Synchronized blocks
+- Deadlock, Livelock, Starvation
+- Race conditions
+- Semaphores
+- wait() / notify() / notifyAll()
+- Thread pools & Executor framework
+- volatile keyword
+- Atomic variables
+- ReentrantLock & ReadWriteLock
+- Producer-Consumer pattern
+- CountDownLatch & CyclicBarrier
+- BlockingQueue
+- CompletableFuture / async patterns
+
+
+Top Interview Questions
+- Design a thread-safe Singleton (double-checked locking)
+- Producer-Consumer using BlockingQueue
+- Rate limiter across threads
+- synchronized vs ReentrantLock
+- Connection pool design
+- Cache with read-write locks
+- Avoiding deadlock in dining philosophers
+- Task scheduler using thread pools
+- Implement CountDownLatch
+- Thread-safe Parking Lot system
+
+
+==============================
+HLD (HIGH LEVEL DESIGN)
+==============================
+
+- URL Shortener (TinyURL)
+- Twitter / X Feed
+- WhatsApp Messenger
+- YouTube
+- Uber Ride Sharing
+- Google Drive
+- Rate Limiter
+- Notification System
+- Search Autocomplete
+- BookMyShow
