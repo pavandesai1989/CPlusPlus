@@ -1,4 +1,3 @@
-
 #include <iostream>
 using namespace std;
 
@@ -11,15 +10,15 @@ public:
     // Constructor
     explicit MyUniquePtr(T* p = nullptr) : ptr(p) {}
 
-    // Destructor
-    ~MyUniquePtr() {
+    // Destructor (RAII cleanup)
+    ~MyUniquePtr() noexcept {
         delete ptr;
     }
 
-    // Delete copy constructor (NO copying allowed)
+    // Delete copy constructor (no copying allowed)
     MyUniquePtr(const MyUniquePtr&) = delete;
 
-    // Delete copy assignment
+    // Delete copy assignment (no copying allowed)
     MyUniquePtr& operator=(const MyUniquePtr&) = delete;
 
     // Move constructor
@@ -28,12 +27,12 @@ public:
         other.ptr = nullptr;
     }
 
-    // Move assignment
+    // Move assignment operator
     MyUniquePtr& operator=(MyUniquePtr&& other) noexcept {
         if (this != &other) {
-            delete ptr;          // free existing resource
-            ptr = other.ptr;     // take ownership
-            other.ptr = nullptr; // release ownership
+            delete ptr;            // release current resource
+            ptr = other.ptr;       // take ownership
+            other.ptr = nullptr;   // nullify source
         }
         return *this;
     }
@@ -44,30 +43,4 @@ public:
     }
 
     // Arrow operator
-    T* operator->() const {
-        return ptr;
-    }
-
-    // Get raw pointer
-    T* get() const {
-        return ptr;
-    }
-
-    // Release ownership (returns raw pointer, does NOT delete)
-    T* release() {
-        T* temp = ptr;
-        ptr = nullptr;
-        return temp;
-    }
-
-    // Reset pointer
-    void reset(T* p = nullptr) {
-        delete ptr;
-        ptr = p;
-    }
-
-    // Check if not null
-    explicit operator bool() const {
-        return ptr != nullptr;
-    }
-};
+    T* operator->()
