@@ -1,0 +1,237 @@
+========================================
+C++ INTERVIEW PRIORITY ROADMAP (10+ YEARS)
+========================================
+
+==================================================
+1. CORE HIGH-PRIORITY (MUST MASTER FIRST)
+==================================================
+
+--------------------------------------------------
+1. OOP (VERY VERY IMPORTANT)
+--------------------------------------------------
+□ Class and Object
+□ Encapsulation / Abstraction
+□ Inheritance (Types, Multiple, Virtual Inheritance)
+□ Polymorphism (Compile-time + Runtime)
+□ Virtual Functions / vtable / vptr
+□ Function Overloading / Overriding
+□ Constructor / Destructor
+□ Copy Constructor / Copy Assignment
+□ Virtual Destructor
+□ Object Slicing
+□ Diamond Problem
+□ Abstract Classes / Pure Virtual Functions
+□ Dynamic Binding
+
+--------------------------------------------------
+2. MEMORY MANAGEMENT (CRITICAL)
+--------------------------------------------------
+□ Stack vs Heap
+□ new / delete / new[] / delete[]
+□ malloc vs new
+□ Memory Leaks / Dangling / Wild pointers
+□ Shallow vs Deep Copy
+□ Rule of 3 / 5 / 0
+□ RAII (VERY IMPORTANT)
+□ Memory Layout of C++ program
+□ Placement new
+
+--------------------------------------------------
+3. SMART POINTERS (CRITICAL MODERN C++)
+--------------------------------------------------
+□ unique_ptr
+□ shared_ptr
+□ weak_ptr (cyclic dependency breaking)
+□ make_shared / make_unique
+□ Reference counting
+□ Control block internals
+
+--------------------------------------------------
+4. MOVE SEMANTICS (VERY IMPORTANT MODERN C++)
+--------------------------------------------------
+□ Lvalue / Rvalue
+□ std::move
+□ Move constructor / Move assignment
+□ Perfect forwarding
+□ std::forward
+□ Copy elision / RVO / NRVO
+
+--------------------------------------------------
+5. STL CONTAINERS (VERY IMPORTANT)
+--------------------------------------------------
+□ vector (MOST IMPORTANT)
+□ map / unordered_map
+□ set / unordered_set
+□ deque
+□ list
+□ stack / queue / priority_queue
+
+For each container:
+□ Internal implementation
+□ Time complexity
+□ Iterator invalidation
+□ Memory behavior
+□ When to use
+
+--------------------------------------------------
+6. MULTITHREADING (VERY IMPORTANT FOR SENIOR ROLES)
+--------------------------------------------------
+□ std::thread
+□ mutex / lock_guard / unique_lock
+□ condition_variable
+□ race condition / deadlock
+□ future / promise / async
+□ atomic
+□ producer-consumer problem
+□ shared_mutex
+
+--------------------------------------------------
+7. STL ALGORITHMS (IMPORTANT)
+--------------------------------------------------
+□ sort / stable_sort
+□ lower_bound / upper_bound
+□ binary_search
+□ find / count
+□ reverse / rotate
+□ next_permutation
+□ accumulate
+□ remove / remove_if
+□ transform
+□ all_of / any_of / none_of
+
+--------------------------------------------------
+8. TEMPLATES (IMPORTANT)
+--------------------------------------------------
+□ Function / Class templates
+□ Specialization
+□ Variadic templates
+□ Parameter packs
+□ Fold expressions
+□ Template deduction
+
+--------------------------------------------------
+9. MODERN C++ (C++11/14/17 CORE FEATURES)
+--------------------------------------------------
+□ auto / decltype
+□ nullptr
+□ range-based for loop
+□ lambdas
+□ structured bindings
+□ if constexpr
+□ std::optional / variant / any
+□ string_view
+□ enum class
+□ inline variables
+
+--------------------------------------------------
+10. DESIGN PATTERNS (VERY IMPORTANT FOR SENIORS)
+--------------------------------------------------
+□ Singleton
+□ Factory / Abstract Factory
+□ Builder
+□ Prototype
+□ Adapter
+□ Decorator
+□ Observer
+□ Strategy
+□ Command
+
+--------------------------------------------------
+11. SOLID PRINCIPLES (IMPORTANT)
+--------------------------------------------------
+□ SRP
+□ OCP
+□ LSP
+□ ISP
+□ DIP
+
+==================================================
+2. MEDIUM PRIORITY (EXPECTED IN SENIOR INTERVIEWS)
+==================================================
+
+--------------------------------------------------
+12. ITERATORS
+--------------------------------------------------
+□ Iterator types
+□ Iterator invalidation
+□ Iterator adapters
+
+--------------------------------------------------
+13. EXCEPTION HANDLING
+--------------------------------------------------
+□ try / catch / throw
+□ custom exceptions
+□ noexcept
+□ stack unwinding
+□ exception safety
+
+--------------------------------------------------
+14. STRINGS
+--------------------------------------------------
+□ std::string internals
+□ substr / find / erase / insert
+□ stringstream
+□ stoi / getline
+
+--------------------------------------------------
+15. FUNCTIONAL PROGRAMMING
+--------------------------------------------------
+□ lambda captures
+□ mutable lambdas
+□ std::function
+□ functors
+□ function pointers
+
+--------------------------------------------------
+16. C++ CORE LANGUAGE FEATURES
+--------------------------------------------------
+□ static / extern
+□ const / constexpr
+□ inline
+□ explicit
+□ friend
+□ this pointer
+□ macros
+□ include guards
+□ enums
+
+==================================================
+3. LOWER PRIORITY (BUT STILL GOOD FOR REVISIONS)
+==================================================
+
+--------------------------------------------------
+17. C++14 / C++17 EXTENSIONS DETAILS
+--------------------------------------------------
+□ make_unique
+□ generic lambdas
+□ variable templates
+□ filesystem
+□ advanced STL additions
+
+--------------------------------------------------
+18. FREQUENT SENIOR INTERVIEW QUESTIONS
+--------------------------------------------------
+□ shared_ptr internals
+□ vector growth strategy
+□ vtable working
+□ unordered_map collision handling
+□ RAII + exception safety
+□ move semantics need
+□ mutex vs lock_guard
+□ deadlock prevention
+□ map vs unordered_map
+□ Rule of 5 vs Rule of 0
+□ make_shared advantage
+□ placement new use cases
+
+==================================================
+FINAL PREP STRATEGY
+==================================================
+
+STEP 1 → OOP + Memory + RAII
+STEP 2 → Smart pointers + Move semantics
+STEP 3 → STL containers + algorithms
+STEP 4 → Multithreading
+STEP 5 → Templates + Modern C++
+STEP 6 → Design Patterns + SOLID
+STEP 7 → Revision + interview questions
