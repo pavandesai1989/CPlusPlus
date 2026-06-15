@@ -1,0 +1,350 @@
+========================
+C++ INTERVIEW MASTER CHECKLIST (10+ YEARS EXPERIENCE)
+========================
+
+--------------------------------------------------
+1. C++ FUNDAMENTALS
+--------------------------------------------------
+□ Compilation Process (Preprocessor → Compiler → Assembler → Linker)
+□ Namespaces
+□ Scope Resolution Operator (::)
+□ Storage Classes
+□ static keyword
+□ extern keyword
+□ const and constexpr
+□ inline functions
+□ typedef and using
+□ enum and enum class
+□ Macros (#define)
+□ Include Guards
+□ Preprocessor Directives
+□ mutable keyword
+□ explicit keyword
+□ this pointer
+□ friend function
+□ friend class
+
+--------------------------------------------------
+2. OOP (VERY IMPORTANT)
+--------------------------------------------------
+□ Class and Object
+□ Access Specifiers
+□ Encapsulation
+□ Abstraction
+□ Inheritance
+□ Types of Inheritance
+□ Constructor
+□ Destructor
+□ Constructor Chaining
+□ Copy Constructor
+□ Copy Assignment Operator
+□ Polymorphism
+□ Compile-Time Polymorphism
+□ Runtime Polymorphism
+□ Function Overloading
+□ Operator Overloading
+□ Function Overriding
+□ Virtual Functions
+□ Pure Virtual Functions
+□ Abstract Classes
+□ Virtual Destructor
+□ Object Slicing
+□ Diamond Problem
+□ Multiple Inheritance
+□ Virtual Inheritance
+□ vtable and vptr
+□ Dynamic Binding
+
+--------------------------------------------------
+3. MEMORY MANAGEMENT (MUST)
+--------------------------------------------------
+□ Stack vs Heap
+□ Memory Layout of C++ Program
+□ new and delete
+□ new[] and delete[]
+□ malloc vs new
+□ calloc vs malloc
+□ realloc
+□ Placement new
+□ Memory Leaks
+□ Dangling Pointer
+□ Wild Pointer
+□ Null Pointer
+□ Shallow Copy
+□ Deep Copy
+□ RAII
+□ Rule of 3
+□ Rule of 5
+□ Rule of 0
+
+--------------------------------------------------
+4. MOVE SEMANTICS (VERY IMPORTANT)
+--------------------------------------------------
+□ Lvalue and Rvalue
+□ Lvalue Reference
+□ Rvalue Reference
+□ std::move
+□ Move Constructor
+□ Move Assignment Operator
+□ Perfect Forwarding
+□ std::forward
+□ Copy Elision
+□ RVO
+□ NRVO
+
+--------------------------------------------------
+5. SMART POINTERS (VERY IMPORTANT)
+--------------------------------------------------
+□ unique_ptr
+□ shared_ptr
+□ weak_ptr
+□ auto_ptr (Deprecated)
+□ make_unique
+□ make_shared
+□ Control Block
+□ Reference Counting
+□ Circular Dependency
+□ weak_ptr Use Cases
+
+--------------------------------------------------
+6. TEMPLATES (VERY IMPORTANT)
+--------------------------------------------------
+□ Function Templates
+□ Class Templates
+□ Template Specialization
+□ Partial Specialization
+□ Variadic Templates
+□ Parameter Packs
+□ Fold Expressions (C++17)
+□ Template Type Deduction
+□ Non-Type Template Parameters
+
+--------------------------------------------------
+7. STL CONTAINERS (MUST)
+--------------------------------------------------
+□ array
+□ vector
+□ deque
+□ list
+□ forward_list
+□ stack
+□ queue
+□ priority_queue
+□ set
+□ multiset
+□ map
+□ multimap
+□ unordered_set
+□ unordered_map
+
+For EVERY container know:
+□ Internal Implementation
+□ Time Complexity
+□ Memory Allocation
+□ Iterator Invalidation
+□ Advantages
+□ Disadvantages
+□ When to Use
+
+--------------------------------------------------
+8. STL ALGORITHMS (MUST)
+--------------------------------------------------
+□ sort
+□ stable_sort
+□ lower_bound
+□ upper_bound
+□ binary_search
+□ find
+□ count
+□ reverse
+□ rotate
+□ next_permutation
+□ min_element
+□ max_element
+□ accumulate
+□ unique
+□ remove
+□ remove_if
+□ copy
+□ transform
+□ all_of
+□ any_of
+□ none_of
+
+--------------------------------------------------
+9. ITERATORS
+--------------------------------------------------
+□ Input Iterator
+□ Output Iterator
+□ Forward Iterator
+□ Bidirectional Iterator
+□ Random Access Iterator
+□ Iterator Adapters
+□ Iterator Invalidation
+
+--------------------------------------------------
+10. STRINGS
+--------------------------------------------------
+□ std::string Internals
+□ String Functions
+□ stringstream
+□ getline
+□ stoi
+□ substr
+□ find
+□ erase
+□ insert
+
+--------------------------------------------------
+11. LAMBDAS & FUNCTIONAL PROGRAMMING
+--------------------------------------------------
+□ Lambda Syntax
+□ Capture by Value
+□ Capture by Reference
+□ Mutable Lambdas
+□ Generic Lambdas
+□ std::function
+□ Function Pointers
+□ Functors
+□ operator()
+
+--------------------------------------------------
+12. EXCEPTION HANDLING
+--------------------------------------------------
+□ try
+□ catch
+□ throw
+□ Custom Exceptions
+□ Stack Unwinding
+□ noexcept
+□ std::terminate
+□ Exception Safety Guarantees
+
+--------------------------------------------------
+13. MULTITHREADING (MUST)
+--------------------------------------------------
+□ std::thread
+□ join
+□ detach
+□ mutex
+□ recursive_mutex
+□ shared_mutex
+□ timed_mutex
+□ lock_guard
+□ unique_lock
+□ scoped_lock
+□ Deadlock
+□ Race Condition
+□ condition_variable
+□ Producer Consumer Problem
+□ future
+□ promise
+□ packaged_task
+□ async
+□ atomic
+
+--------------------------------------------------
+14. C++11 FEATURES
+--------------------------------------------------
+□ auto
+□ decltype
+□ nullptr
+□ Range-Based For Loop
+□ override
+□ final
+□ enum class
+□ Move Semantics
+□ Smart Pointers
+□ Lambdas
+□ initializer_list
+□ Thread Library
+
+--------------------------------------------------
+15. C++14 FEATURES
+--------------------------------------------------
+□ Generic Lambdas
+□ make_unique
+□ Return Type Deduction
+□ Variable Templates
+
+--------------------------------------------------
+16. C++17 FEATURES (VERY IMPORTANT)
+--------------------------------------------------
+□ Structured Bindings
+□ if constexpr
+□ Fold Expressions
+□ Inline Variables
+□ Inline Static Data Members
+□ std::optional
+□ std::variant
+□ std::any
+□ filesystem
+□ string_view
+
+--------------------------------------------------
+17. DESIGN PATTERNS (MUST)
+--------------------------------------------------
+□ Singleton
+□ Factory
+□ Abstract Factory
+□ Builder
+□ Prototype
+□ Adapter
+□ Decorator
+□ Observer
+□ Strategy
+□ Command
+
+--------------------------------------------------
+18. SOLID PRINCIPLES
+--------------------------------------------------
+□ Single Responsibility Principle (SRP)
+□ Open Closed Principle (OCP)
+□ Liskov Substitution Principle (LSP)
+□ Interface Segregation Principle (ISP)
+□ Dependency Inversion Principle (DIP)
+
+--------------------------------------------------
+19. FREQUENTLY ASKED SENIOR C++ QUESTIONS
+--------------------------------------------------
+□ How does shared_ptr work internally?
+□ How does weak_ptr break cyclic dependency?
+□ How does vector grow internally?
+□ Why do we need virtual destructor?
+□ How does vtable and vptr work?
+□ How does unordered_map handle collisions?
+□ Difference between map and unordered_map?
+□ Rule of 5 vs Rule of 0?
+□ RAII and Exception Safety?
+□ Why Move Semantics?
+□ Iterator Invalidation Rules?
+□ Producer Consumer using condition_variable?
+□ Deadlock Prevention Techniques?
+□ Why make_shared?
+□ Difference between mutex and lock_guard?
+□ unique_lock vs lock_guard?
+□ shared_mutex vs mutex?
+□ How is memory allocated in STL containers?
+□ What happens during object construction and destruction?
+□ Difference between shallow copy and deep copy?
+□ Why use explicit keyword?
+□ Difference between constexpr and const?
+□ What is Placement new?
+□ How does std::function work internally?
+
+--------------------------------------------------
+RECOMMENDED PREPARATION ORDER
+--------------------------------------------------
+1. OOP
+2. Memory Management
+3. Smart Pointers
+4. STL Containers + Algorithms
+5. Templates
+6. Modern C++11/14/17
+7. Exception Handling
+8. Multithreading
+9. SOLID Principles + Design Patterns
+10. DSA Revision
+
+For Philips, GE, Siemens, Airbus, OpenText, Deloitte, Accenture, etc.,
+mastering the above topics deeply is sufficient for senior C++ interview preparation.
