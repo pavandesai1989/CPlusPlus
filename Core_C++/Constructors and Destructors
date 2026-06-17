@@ -1,0 +1,621 @@
+=========================================================
+CONSTRUCTORS AND DESTRUCTORS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+CONSTRUCTOR
+=========================================================
+
+Definition:
+A Constructor is a special member function that is automatically called
+when an object is created.
+
+Purpose:
+Initialize the object.
+
+Syntax:
+
+class Test
+{
+public:
+    Test()
+    {
+    }
+};
+
+=========================================================
+CHARACTERISTICS OF CONSTRUCTORS
+=========================================================
+
+1. Same name as class.
+2. No return type (not even void).
+3. Called automatically.
+4. Can be overloaded.
+5. Cannot be virtual.
+6. Cannot be static.
+7. Can have default arguments.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor Called\n";
+    }
+};
+
+int main()
+{
+    Test t;
+}
+
+Output:
+Constructor Called
+
+=========================================================
+WHY DO WE NEED CONSTRUCTORS?
+=========================================================
+
+Without Constructor:
+
+class Employee
+{
+public:
+    int id;
+};
+
+Employee e;
+
+id contains garbage value.
+
+Constructor initializes the object.
+
+=========================================================
+TYPES OF CONSTRUCTORS
+=========================================================
+
+1. Default Constructor
+2. Parameterized Constructor
+3. Copy Constructor
+4. Move Constructor (C++11)
+
+=========================================================
+1. DEFAULT CONSTRUCTOR
+=========================================================
+
+Constructor with no parameters.
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Default Constructor";
+    }
+};
+
+=========================================================
+2. PARAMETERIZED CONSTRUCTOR
+=========================================================
+
+class Employee
+{
+public:
+    int id;
+
+    Employee(int x)
+    {
+        id = x;
+    }
+};
+
+Employee e(100);
+
+=========================================================
+3. COPY CONSTRUCTOR
+=========================================================
+
+Definition:
+Creates a new object as a copy of an existing object.
+
+Syntax:
+
+ClassName(const ClassName& obj);
+
+Example:
+
+class Test
+{
+public:
+    int x;
+
+    Test(int a)
+    {
+        x = a;
+    }
+
+    Test(const Test& obj)
+    {
+        x = obj.x;
+    }
+};
+
+Test t1(10);
+Test t2 = t1;
+
+=========================================================
+WHEN IS COPY CONSTRUCTOR CALLED?
+=========================================================
+
+1. Object initialization
+
+Test t2 = t1;
+
+2. Pass by value
+
+fun(Test t);
+
+3. Return by value (before copy elision)
+
+=========================================================
+4. MOVE CONSTRUCTOR (C++11)
+=========================================================
+
+Definition:
+Transfers ownership of resources from a temporary object.
+
+Syntax:
+
+ClassName(ClassName&& obj);
+
+Example:
+
+class Test
+{
+public:
+    Test(Test&& obj)
+    {
+        cout << "Move Constructor";
+    }
+};
+
+=========================================================
+INITIALIZER LIST
+=========================================================
+
+Preferred way of initialization.
+
+class Test
+{
+    int x;
+
+public:
+    Test(int a) : x(a)
+    {
+    }
+};
+
+Advantages:
+• Faster
+• Mandatory for const members
+• Mandatory for reference members
+
+=========================================================
+CAN CONSTRUCTORS BE OVERLOADED?
+=========================================================
+
+YES.
+
+class Test
+{
+public:
+    Test()
+    {
+    }
+
+    Test(int x)
+    {
+    }
+};
+
+=========================================================
+CONSTRUCTOR CHAINING
+=========================================================
+
+Base Constructor
+        ↓
+Derived Constructor
+
+Example:
+
+class A
+{
+public:
+    A()
+    {
+        cout << "A\n";
+    }
+};
+
+class B : public A
+{
+public:
+    B()
+    {
+        cout << "B\n";
+    }
+};
+
+Output:
+
+A
+B
+
+=========================================================
+ORDER OF CONSTRUCTOR CALLS
+=========================================================
+
+1. Base Class Constructor
+2. Member Object Constructors
+3. Derived Constructor Body
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Engine
+{
+};
+
+class Car
+{
+    Engine e;
+};
+
+Construction Order:
+
+Engine
+↓
+Car
+
+=========================================================
+CAN CONSTRUCTOR BE VIRTUAL?
+=========================================================
+
+NO.
+
+Reason:
+Virtual functions need an object (vptr).
+
+Constructor creates the object.
+
+Object doesn't exist completely yet.
+
+Therefore:
+
+Virtual Constructor is impossible.
+
+=========================================================
+CAN CONSTRUCTOR BE STATIC?
+=========================================================
+
+NO.
+
+Constructors are associated with object creation.
+
+Static functions belong to the class.
+
+=========================================================
+CAN CONSTRUCTOR BE PRIVATE?
+=========================================================
+
+YES.
+
+Used in:
+Singleton Design Pattern.
+
+=========================================================
+DESTRUCTOR
+=========================================================
+
+Definition:
+A Destructor is a special member function automatically called when an
+object is destroyed.
+
+Purpose:
+Release resources.
+
+Syntax:
+
+~ClassName()
+{
+}
+
+=========================================================
+CHARACTERISTICS OF DESTRUCTOR
+=========================================================
+
+1. Same name as class prefixed with ~
+2. No return type
+3. Called automatically
+4. Only one destructor allowed
+5. Cannot be overloaded
+6. Can be virtual
+7. Cannot be static
+8. Cannot have arguments
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    ~Test()
+    {
+        cout << "Destructor";
+    }
+};
+
+=========================================================
+WHY DO WE NEED DESTRUCTORS?
+=========================================================
+
+To release:
+
+• Dynamic Memory
+• File Handles
+• Database Connections
+• Sockets
+• Mutexes
+
+RAII principle depends on destructors.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+    int* ptr;
+
+public:
+    Test()
+    {
+        ptr = new int(10);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+=========================================================
+ORDER OF DESTRUCTOR CALLS
+=========================================================
+
+Reverse of construction.
+
+Derived Destructor
+        ↓
+Member Object Destructor
+        ↓
+Base Destructor
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class A
+{
+public:
+    ~A()
+    {
+        cout << "A";
+    }
+};
+
+class B : public A
+{
+public:
+    ~B()
+    {
+        cout << "B";
+    }
+};
+
+Output:
+
+BA
+
+=========================================================
+VIRTUAL DESTRUCTOR
+=========================================================
+
+Very Important Interview Question.
+
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base()
+    {
+        cout << "Base Destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived()
+    {
+        cout << "Derived Destructor\n";
+    }
+};
+
+Base* ptr = new Derived();
+
+delete ptr;
+
+Output:
+
+Derived Destructor
+Base Destructor
+
+=========================================================
+WITHOUT VIRTUAL DESTRUCTOR
+=========================================================
+
+Base* ptr = new Derived();
+
+delete ptr;
+
+Output:
+
+Base Destructor
+
+Derived Destructor NOT called.
+
+Causes:
+
+Resource Leak.
+
+=========================================================
+RULE
+=========================================================
+
+If a class has any virtual function,
+make its destructor virtual.
+
+=========================================================
+CONSTRUCTOR vs DESTRUCTOR
+=========================================================
+
+Feature            Constructor          Destructor
+---------------------------------------------------------
+Purpose            Initialize Object    Cleanup Object
+Name               Same as Class        ~ClassName
+Arguments          Allowed              Not Allowed
+Overloading        Yes                  No
+Virtual            No                   Yes
+Automatic Call     Object Creation      Object Destruction
+Count              Multiple Allowed     Only One
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Why constructors have no return type?
+
+Answer:
+Constructors initialize objects and are called automatically.
+Returning a value makes no sense.
+
+---------------------------------------------------------
+
+Q2. Can constructors be virtual?
+
+NO.
+
+Object doesn't exist completely yet.
+
+---------------------------------------------------------
+
+Q3. Can constructors be overloaded?
+
+YES.
+
+---------------------------------------------------------
+
+Q4. Can destructors be overloaded?
+
+NO.
+
+Only one destructor per class.
+
+---------------------------------------------------------
+
+Q5. Can destructors be virtual?
+
+YES.
+
+Required for polymorphic deletion.
+
+---------------------------------------------------------
+
+Q6. Why virtual destructor?
+
+Answer:
+Ensures complete destruction of derived objects through base pointers.
+
+---------------------------------------------------------
+
+Q7. What is the order of constructor calls?
+
+Base
+↓
+Members
+↓
+Derived
+
+---------------------------------------------------------
+
+Q8. What is the order of destructor calls?
+
+Derived
+↓
+Members
+↓
+Base
+
+---------------------------------------------------------
+
+Q9. Can constructor be private?
+
+YES.
+
+Used in Singleton Pattern.
+
+---------------------------------------------------------
+
+Q10. Can destructor be pure virtual?
+
+YES.
+
+But definition is mandatory.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Constructors are special member functions used for object initialization
+and are automatically called during object creation. They can be
+default, parameterized, copy, or move constructors. Destructors are
+special member functions used for resource cleanup and are automatically
+called during object destruction. In polymorphic base classes,
+destructors should always be virtual to ensure proper cleanup.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Constructor
+     ↓
+Initialization
+     ↓
+Object Creation
+
+Destructor
+     ↓
+Cleanup
+     ↓
+Object Destruction
+=========================================================
