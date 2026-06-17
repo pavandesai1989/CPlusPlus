@@ -1,0 +1,129 @@
+=========================================
+🔥 STACK UNWINDING (C++ EXCEPTION HANDLING)
+=========================================
+
+1. What is Stack Unwinding?
+----------------------------
+- Stack unwinding is the process of cleaning up stack frames
+  when an exception is thrown.
+- It happens automatically during exception handling in C++.
+
+-----------------------------------------
+2. How it works?
+-----------------------------------------
+When an exception is thrown:
+
+1. Current function stops execution immediately
+2. Control moves backward through call stack
+3. Each function in reverse order is destroyed
+4. Local objects (stack objects) are destructed
+5. Matching catch block is searched
+
+-----------------------------------------
+3. Example Flow
+-----------------------------------------
+
+main()
+  └── funcA()
+        └── funcB()
+              └── funcC()  → throw exception
+
+Flow after throw:
+
+funcC() exits immediately
+↓
+funcB() is unwound (destructors called)
+↓
+funcA() is unwound (destructors called)
+↓
+main() reaches matching catch block
+
+-----------------------------------------
+4. Key Point (VERY IMPORTANT)
+-----------------------------------------
+
+✔ Stack objects → automatically destroyed
+✔ Destructors are called in reverse order
+✔ Resources are safely released (RAII works here)
+
+-----------------------------------------
+5. Example Code
+-----------------------------------------
+
+#include <iostream>
+using namespace std;
+
+class Test {
+public:
+    Test() { cout << "Constructor\n"; }
+    ~Test() { cout << "Destructor\n"; }
+};
+
+void funcC() {
+    Test t;
+    throw runtime_error("Error in funcC");
+}
+
+void funcB() {
+    Test t;
+    funcC();
+}
+
+void funcA() {
+    Test t;
+    funcB();
+}
+
+int main() {
+    try {
+        funcA();
+    }
+    catch (exception &e) {
+        cout << "Caught: " << e.what() << endl;
+    }
+}
+
+-----------------------------------------
+Expected Output:
+-----------------------------------------
+Constructor
+Constructor
+Constructor
+Destructor
+Destructor
+Destructor
+Caught: Error in funcC
+
+-----------------------------------------
+6. Why Stack Unwinding is Important?
+-----------------------------------------
+✔ Prevents resource leaks
+✔ Ensures proper destructor calls
+✔ Core of RAII (Resource Acquisition Is Initialization)
+✔ Makes exception-safe code possible
+
+-----------------------------------------
+7. Important Interview Points
+-----------------------------------------
+✔ Happens only during exception handling
+✔ Works only for stack objects
+✔ Heap objects are NOT automatically deleted
+✔ Destructors MUST NOT throw exceptions
+✔ Works automatically (no manual handling needed)
+
+-----------------------------------------
+8. Stack Unwinding + RAII Relation
+-----------------------------------------
+- RAII ensures resources are tied to object lifetime
+- During stack unwinding, destructors release resources
+
+Example:
+- file close
+- mutex unlock
+- memory free (via smart pointers)
+
+-----------------------------------------
+🔥 ONE-LINE SUMMARY
+-----------------------------------------
+Stack unwinding = automatic destruction of stack objects
+during exception propagation to maintain safety and cleanup.
