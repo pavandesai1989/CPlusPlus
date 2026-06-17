@@ -1,0 +1,362 @@
+=========================================================
+C++ OOP QUICK REVISION NOTES (1 PAGE INTERVIEW SHEET)
+=========================================================
+
+1. ENCAPSULATION
+=========================================================
+Definition:
+Bundling data and methods together and controlling access to data.
+
+Achieved Using:
+Class + Access Specifiers (private/public/protected)
+
+Purpose:
+Data Hiding, Security, Validation.
+
+Example:
+class Employee
+{
+private:
+    int salary;
+public:
+    void setSalary(int s){ salary=s; }
+};
+
+Interview Line:
+Data + Methods + Access Control = Encapsulation.
+
+=========================================================
+2. ABSTRACTION
+=========================================================
+Definition:
+Show WHAT to do and hide HOW it is done.
+
+Achieved Using:
+• Abstract Classes
+• Pure Virtual Functions
+• Interfaces
+
+Purpose:
+Reduce complexity and hide implementation details.
+
+Example:
+class Shape
+{
+public:
+    virtual void draw()=0;
+};
+
+Interview Line:
+Expose essential behavior and hide implementation details.
+
+=========================================================
+3. INHERITANCE
+=========================================================
+Definition:
+Derived class acquires properties and behaviors of base class.
+
+Relationship:
+IS-A Relationship
+
+Example:
+Dog IS-A Animal.
+
+Benefits:
+• Code Reuse
+• Extensibility
+• Polymorphism
+
+Constructor Order:
+Base → Derived
+
+Destructor Order:
+Derived → Base
+
+Interview Line:
+Inheritance models an IS-A relationship.
+
+=========================================================
+4. POLYMORPHISM
+=========================================================
+Definition:
+One Interface, Multiple Forms.
+
+Types:
+
+1. Compile-Time Polymorphism
+   • Function Overloading
+   • Operator Overloading
+
+2. Runtime Polymorphism
+   • Virtual Functions
+   • Function Overriding
+
+Interview Line:
+Same interface, different implementations.
+
+=========================================================
+5. STATIC MEMBERS
+=========================================================
+Static Data Member:
+Single copy shared by all objects.
+
+Static Function:
+• Belongs to class
+• No this pointer
+• Can access only static members.
+
+Example:
+class Test
+{
+public:
+    inline static int count=0;
+};
+
+(C++17 Inline Variables)
+
+Interview Line:
+Static members belong to the class, not objects.
+
+=========================================================
+6. FRIEND FUNCTIONS
+=========================================================
+Definition:
+A non-member function that can access private/protected members.
+
+Syntax:
+
+friend void fun(Test&);
+
+Characteristics:
+• Not a member function
+• No this pointer
+• Can access private members
+
+Use Cases:
+• Operator Overloading
+• Utility Functions
+
+Interview Line:
+Friend breaks encapsulation in a controlled manner.
+
+=========================================================
+7. VIRTUAL FUNCTIONS
+=========================================================
+Definition:
+A member function that can be overridden and resolved at runtime.
+
+Syntax:
+
+virtual void show();
+
+Requirements:
+1. Inheritance
+2. Overriding
+3. Base Pointer/Reference
+
+Works Using:
+vptr → vtable
+
+Interview Line:
+Virtual functions enable Runtime Polymorphism.
+
+=========================================================
+8. PURE VIRTUAL FUNCTIONS
+=========================================================
+Definition:
+
+virtual void draw() = 0;
+
+Properties:
+• Makes class abstract
+• Forces overriding
+• Used for abstraction/interfaces
+
+Interview Line:
+Virtual Function + =0 = Pure Virtual Function.
+
+=========================================================
+9. ABSTRACT CLASSES
+=========================================================
+Definition:
+Class containing at least one Pure Virtual Function.
+
+Properties:
+• Cannot create objects
+• Can have:
+  - Data members
+  - Constructors
+  - Destructors
+  - Normal functions
+  - Static members
+
+Example:
+class Shape
+{
+public:
+    virtual void draw()=0;
+};
+
+Interview Line:
+Pure Virtual Function → Abstract Class.
+
+=========================================================
+10. INTERFACE CONCEPT
+=========================================================
+Definition:
+An abstract class containing only Pure Virtual Functions.
+
+Purpose:
+Defines a contract.
+
+Example:
+class ILogger
+{
+public:
+    virtual void log()=0;
+    virtual ~ILogger()=default;
+};
+
+Benefits:
+• Loose Coupling
+• Extensibility
+• Dependency Injection
+
+Interview Line:
+Interface specifies WHAT, not HOW.
+
+=========================================================
+11. MULTIPLE INHERITANCE
+=========================================================
+Definition:
+One class inherits from multiple base classes.
+
+Syntax:
+class C : public A, public B
+{
+};
+
+Advantages:
+• Code Reuse
+• Combines functionalities
+
+Disadvantages:
+• Ambiguity
+• Diamond Problem
+
+Interview Line:
+One Derived Class ← Multiple Base Classes.
+
+=========================================================
+12. DIAMOND PROBLEM
+=========================================================
+Diagram:
+
+      A
+     / \
+    B   C
+     \ /
+      D
+
+Problem:
+D gets TWO copies of A.
+
+Issues:
+• Duplicate data
+• Ambiguous access
+• Extra memory
+
+Solution:
+Virtual Inheritance.
+
+Interview Line:
+Diamond Problem = Duplicate Base Class Copies.
+
+=========================================================
+13. VIRTUAL INHERITANCE
+=========================================================
+Definition:
+Ensures only ONE shared copy of common base class exists.
+
+Syntax:
+
+class B : virtual public A
+{
+};
+
+class C : virtual public A
+{
+};
+
+Result:
+
+      A
+     / \
+    B   C
+     \ /
+      D
+
+Only ONE copy of A.
+
+Interview Line:
+Virtual Inheritance solves the Diamond Problem.
+
+=========================================================
+14. OBJECT SLICING
+=========================================================
+Definition:
+Assigning a derived object to a base object removes the derived part.
+
+Example:
+
+Derived d;
+Base b = d;
+
+Only Base portion copied.
+
+Lost:
+• Derived data
+• Derived behavior
+
+Avoid Using:
+Base pointers/references.
+
+Correct:
+
+Base* ptr = &d;
+Base& ref = d;
+
+Interview Line:
+Derived → Base object copy = Object Slicing.
+
+=========================================================
+SUPER QUICK INTERVIEW FLOW
+=========================================================
+
+Encapsulation
+    ↓
+Abstraction
+    ↓
+Inheritance
+    ↓
+Polymorphism
+    ↓
+Virtual Function
+    ↓
+Pure Virtual Function
+    ↓
+Abstract Class
+    ↓
+Interface
+    ↓
+Multiple Inheritance
+    ↓
+Diamond Problem
+    ↓
+Virtual Inheritance
+    ↓
+Object Slicing
+
+This sequence alone can answer almost every OOP follow-up question in a
+C++ interview.
+=========================================================
