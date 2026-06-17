@@ -1,0 +1,169 @@
+=========================================
+VARIADIC TEMPLATES (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is a Variadic Template?
+------------------------------
+- Variadic templates (C++11 feature) allow a template to accept
+  ANY number of arguments.
+- It is used when number of parameters is unknown at compile time.
+- Uses "parameter packs".
+
+-----------------------------------------
+
+2. Syntax
+---------
+template<typename... Args>
+void func(Args... args);
+
+- Args...  → template parameter pack
+- args...  → function parameter pack expansion
+
+-----------------------------------------
+
+3. Why Variadic Templates are needed?
+-------------------------------------
+Before C++11:
+- We had to write multiple overloaded functions:
+
+func(int)
+func(int, int)
+func(int, int, int)
+
+Problems:
+- Code duplication
+- Not scalable
+- Maintenance issues
+
+Solution:
+- One variadic template handles all cases
+
+-----------------------------------------
+
+4. Basic Example
+----------------
+
+#include <iostream>
+using namespace std;
+
+void print() {
+    cout << endl;
+}
+
+template<typename T, typename... Args>
+void print(T first, Args... rest) {
+    cout << first << " ";
+    print(rest...);
+}
+
+int main() {
+    print(1, 2, 3, 4, "hello");
+}
+
+-----------------------------------------
+
+5. How it works (IMPORTANT)
+--------------------------
+This works using RECURSION:
+
+Step-by-step:
+print(1,2,3)
+→ prints 1
+→ calls print(2,3)
+→ prints 2
+→ calls print(3)
+→ prints 3
+→ calls print()
+→ stops (base case)
+
+-----------------------------------------
+
+6. Base Case (VERY IMPORTANT)
+----------------------------
+You MUST define a base case:
+
+void print() {
+    // stops recursion
+}
+
+Without base case → compile error / infinite recursion
+
+-----------------------------------------
+
+7. Pack Expansion
+-----------------
+Example:
+template<typename... Args>
+void show(Args... args) {
+    (cout << ... << args);  // C++17 fold expression (advanced)
+}
+
+C++11 version uses recursion instead.
+
+-----------------------------------------
+
+8. Real-world Usage
+-------------------
+- STL: make_shared, make_unique
+- tuple
+- emplace_back
+- factory functions
+- logging frameworks
+- forwarding functions
+
+-----------------------------------------
+
+9. Example: Logging Function
+---------------------------
+
+template<typename... Args>
+void log(Args... args) {
+    print(args...);
+}
+
+log("Error:", 404, "Not Found");
+
+-----------------------------------------
+
+10. Example: sum of values
+--------------------------
+
+template<typename T>
+T sum(T x) {
+    return x;
+}
+
+template<typename T, typename... Args>
+T sum(T first, Args... rest) {
+    return first + sum(rest...);
+}
+
+-----------------------------------------
+
+11. Advantages
+-------------
+✔ Works with any number of arguments
+✔ Reduces function overloading
+✔ Used heavily in STL
+✔ Enables generic programming
+✔ Core part of modern C++ libraries
+
+-----------------------------------------
+
+12. Disadvantages
+-----------------
+- Hard to debug compile errors
+- Recursive implementation complexity
+- Can reduce readability if overused
+
+-----------------------------------------
+
+13. Interview Key Points
+------------------------
+- Introduced in C++11
+- Uses parameter packs (Args...)
+- Requires recursion + base case (C++11 style)
+- Used in STL internals (make_shared, emplace)
+- Foundation of modern template metaprogramming
+
+=========================================
