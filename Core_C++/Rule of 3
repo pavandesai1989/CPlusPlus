@@ -1,0 +1,369 @@
+=========================================================
+RULE OF 3 IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+If a class manages a resource (typically dynamic memory using new/delete)
+and defines ANY ONE of the following:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+then it should usually define ALL THREE.
+
+This is called the Rule of 3.
+
+=========================================================
+WHY DO WE NEED RULE OF 3?
+=========================================================
+
+Default copy operations perform a SHALLOW COPY.
+
+For classes owning dynamic memory, shallow copy causes:
+
+• Double Delete
+• Dangling Pointers
+• Memory Corruption
+• Undefined Behavior
+
+=========================================================
+PROBLEM EXAMPLE (WITHOUT RULE OF 3)
+=========================================================
+
+class String
+{
+    char* data;
+
+public:
+    String(const char* str)
+    {
+        data = new char[strlen(str) + 1];
+        strcpy(data, str);
+    }
+
+    ~String()
+    {
+        delete[] data;
+    }
+};
+
+int main()
+{
+    String s1("Hello");
+    String s2 = s1;      // Shallow Copy
+}
+
+=========================================================
+MEMORY
+=========================================================
+
+s1.data -----> "Hello"
+s2.data -----^
+
+Both point to SAME memory.
+
+Program ends:
+
+~s2() → delete memory
+~s1() → delete same memory again
+
+DOUBLE DELETE
+UNDEFINED BEHAVIOR
+
+=========================================================
+RULE OF 3 SOLUTION
+=========================================================
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Implement Deep Copy.
+
+=========================================================
+COMPLETE INTERVIEW EXAMPLE
+=========================================================
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class String
+{
+private:
+    char* data;
+
+public:
+
+    // Constructor
+    String(const char* str = "")
+    {
+        data = new char[strlen(str) + 1];
+        strcpy(data, str);
+    }
+
+    // Copy Constructor
+    String(const String& other)
+    {
+        data = new char[strlen(other.data) + 1];
+        strcpy(data, other.data);
+
+        cout << "Copy Constructor\n";
+    }
+
+    // Copy Assignment Operator
+    String& operator=(const String& other)
+    {
+        cout << "Copy Assignment\n";
+
+        if (this != &other)
+        {
+            delete[] data;
+
+            data = new char[strlen(other.data) + 1];
+            strcpy(data, other.data);
+        }
+
+        return *this;
+    }
+
+    // Destructor
+    ~String()
+    {
+        delete[] data;
+    }
+
+    void print()
+    {
+        cout << data << endl;
+    }
+};
+
+int main()
+{
+    String s1("Hello");
+
+    String s2 = s1;      // Copy Constructor
+
+    String s3("ABC");
+    s3 = s1;             // Copy Assignment
+
+    s2.print();
+    s3.print();
+}
+
+Output:
+
+Copy Constructor
+Copy Assignment
+Hello
+Hello
+
+=========================================================
+MEMORY AFTER DEEP COPY
+=========================================================
+
+s1.data -----> "Hello"
+
+s2.data -----> "Hello"
+
+s3.data -----> "Hello"
+
+Each object has its OWN memory.
+
+No double delete.
+
+=========================================================
+WHEN IS COPY CONSTRUCTOR CALLED?
+=========================================================
+
+1.
+
+String s2 = s1;
+
+2.
+
+fun(s1);
+
+(pass by value)
+
+3.
+
+return obj;
+
+(before copy elision)
+
+=========================================================
+WHEN IS COPY ASSIGNMENT OPERATOR CALLED?
+=========================================================
+
+Objects already exist.
+
+String s1("Hello");
+String s2("ABC");
+
+s2 = s1;
+
+Copy Assignment called.
+
+=========================================================
+COPY CONSTRUCTOR vs COPY ASSIGNMENT
+=========================================================
+
+Copy Constructor
+----------------
+Creates NEW object.
+
+String s2 = s1;
+
+Copy Assignment
+---------------
+Assigns to EXISTING object.
+
+s2 = s1;
+
+=========================================================
+WHY CHECK SELF ASSIGNMENT?
+=========================================================
+
+if (this != &other)
+
+Example:
+
+s1 = s1;
+
+Without check:
+
+delete[] data;
+
+Now:
+
+other.data also deleted.
+
+Then:
+
+strlen(other.data)
+
+Undefined Behavior.
+
+=========================================================
+INTERVIEW DIAGRAM
+=========================================================
+
+String s1("Hello");
+
+String s2 = s1;
+          ↑
+Copy Constructor
+
+---------------------------------------------------------
+
+String s3("ABC");
+s3 = s1;
+↑
+Copy Assignment
+
+=========================================================
+WHEN SHOULD YOU THINK OF RULE OF 3?
+=========================================================
+
+Whenever you see:
+
+new
+malloc
+fopen
+socket
+mutex
+database handle
+file descriptor
+
+Any class OWNING a resource.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Rule of 3?
+
+Answer:
+If a class defines either destructor, copy constructor, or copy
+assignment operator, it usually needs to define all three.
+
+---------------------------------------------------------
+
+Q2. Why is Rule of 3 needed?
+
+Answer:
+To avoid shallow copy problems like:
+
+• Double delete
+• Dangling pointers
+• Memory corruption
+
+---------------------------------------------------------
+
+Q3. What problem does Rule of 3 solve?
+
+Answer:
+Resource ownership issues.
+
+---------------------------------------------------------
+
+Q4. What is shallow copy?
+
+Answer:
+Copying pointer values only.
+
+Both objects point to same memory.
+
+---------------------------------------------------------
+
+Q5. What is deep copy?
+
+Answer:
+Allocating new memory and copying contents.
+
+---------------------------------------------------------
+
+Q6. Why return *this from assignment operator?
+
+Answer:
+Supports chaining.
+
+s1 = s2 = s3;
+
+---------------------------------------------------------
+
+Q7. Why check:
+
+if (this != &other)
+
+Answer:
+To avoid self-assignment problems.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Rule of 3 states that if a class manages a resource and defines a
+destructor, copy constructor, or copy assignment operator, then it
+should usually define all three. This is required because the compiler's
+default copy operations perform shallow copies, which can lead to
+double deletion and resource corruption. Implementing all three ensures
+proper resource ownership through deep copying.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Owns Resource
+      ↓
+Destructor Needed
+      ↓
+Copy Constructor Needed
+      ↓
+Copy Assignment Needed
+      ↓
+Rule of 3
+=========================================================
