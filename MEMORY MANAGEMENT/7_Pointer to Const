@@ -1,0 +1,340 @@
+=========================================================
+POINTER TO CONST IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Pointer to Const is a pointer that cannot modify the data it points to,
+but the pointer itself can point to another variable.
+
+Syntax:
+
+const int* ptr;
+
+or
+
+int const* ptr;
+
+Both are EXACTLY the same.
+
+Read Right to Left:
+
+ptr is a pointer to const int.
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+int x = 10;
+int y = 20;
+
+const int* ptr = &x;
+
+        +------+
+x ----> |  10  |
+        +------+
+
+ptr ----> x
+
+Pointer can change.
+Data cannot be modified through ptr.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int x = 10;
+    int y = 20;
+
+    const int* ptr = &x;
+
+    // *ptr = 100;   // ERROR
+
+    ptr = &y;        // OK
+}
+
+=========================================================
+WHAT IS ALLOWED?
+=========================================================
+
+int x = 10;
+int y = 20;
+
+const int* ptr = &x;
+
+ptr = &y;      // OK
+
+Reason:
+Pointer is not const.
+
+=========================================================
+WHAT IS NOT ALLOWED?
+=========================================================
+
+int x = 10;
+
+const int* ptr = &x;
+
+*ptr = 100;    // ERROR
+
+Reason:
+Data is const through this pointer.
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+Initially:
+
+ptr ----> x
+
+After:
+
+ptr = &y;
+
+ptr ----> y
+
+Pointer can point elsewhere.
+
+=========================================================
+IMPORTANT INTERVIEW POINT
+=========================================================
+
+"Pointer to Const" means:
+
+You cannot modify the data THROUGH THIS POINTER.
+
+It does NOT mean the original object is immutable.
+
+Example:
+
+int x = 10;
+
+const int* ptr = &x;
+
+x = 100;          // OK
+
+cout << *ptr;     // 100
+
+=========================================================
+EXAMPLE
+=========================================================
+
+int x = 10;
+
+const int* ptr = &x;
+
+// *ptr = 50;   // ERROR
+
+x = 50;           // OK
+
+cout << *ptr;
+
+Output:
+
+50
+
+=========================================================
+POINTER TO CONST vs CONST POINTER
+=========================================================
+
+1. Pointer to Const
+
+const int* ptr;
+
+Meaning:
+Data constant.
+Pointer modifiable.
+
+---------------------------------------------------------
+
+2. Const Pointer
+
+int* const ptr;
+
+Meaning:
+Data modifiable.
+Pointer constant.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Declaration               Data      Pointer
+------------------------------------------------
+const int* ptr            No        Yes
+int* const ptr            Yes       No
+const int* const ptr      No        No
+
+=========================================================
+EXAMPLE 1
+=========================================================
+
+int x = 10;
+int y = 20;
+
+const int* ptr = &x;
+
+*ptr = 100;      // ERROR
+ptr = &y;        // OK
+
+=========================================================
+EXAMPLE 2
+=========================================================
+
+int x = 10;
+int y = 20;
+
+int* const ptr = &x;
+
+*ptr = 100;      // OK
+ptr = &y;        // ERROR
+
+=========================================================
+EXAMPLE 3
+=========================================================
+
+int x = 10;
+
+const int* const ptr = &x;
+
+*ptr = 100;      // ERROR
+ptr = nullptr;   // ERROR
+
+=========================================================
+WHY DO WE USE POINTER TO CONST?
+=========================================================
+
+1. Prevent accidental modification.
+2. Improve API safety.
+3. Pass large objects efficiently.
+4. Support const correctness.
+
+=========================================================
+MOST COMMON USE
+=========================================================
+
+void print(const string* str)
+{
+    cout << *str;
+}
+
+Function guarantees:
+
+String will not be modified.
+
+=========================================================
+INTERVIEW FAVORITE
+=========================================================
+
+const int* ptr;
+
+means
+
+int const* ptr;
+
+Both are identical.
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+Read Right to Left:
+
+const int* ptr
+
+ptr
+↓
+pointer
+↓
+to const int
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Pointer to Const?
+
+Answer:
+A pointer through which data cannot be modified, but the pointer itself
+can point to another object.
+
+---------------------------------------------------------
+
+Q2. Can Pointer to Const point to another variable?
+
+Answer:
+YES.
+
+ptr = &y;   // Allowed
+
+---------------------------------------------------------
+
+Q3. Can Pointer to Const modify data?
+
+Answer:
+NO.
+
+*ptr = 100;   // Compilation Error
+
+---------------------------------------------------------
+
+Q4. Is the original object itself const?
+
+Answer:
+Not necessarily.
+
+Example:
+
+int x = 10;
+
+const int* ptr = &x;
+
+x = 20;      // Valid
+
+---------------------------------------------------------
+
+Q5. Difference between:
+
+const int* ptr
+and
+int* const ptr ?
+
+Answer:
+
+const int* ptr
+→ Data constant.
+
+int* const ptr
+→ Pointer constant.
+
+=========================================================
+INTERVIEW READY ANSWER (20 Seconds)
+=========================================================
+
+A Pointer to Const is declared as:
+
+const int* ptr;
+
+It means the data being pointed to cannot be modified through the
+pointer, but the pointer itself can point to another object. It is
+commonly used for const correctness and API safety. Remember that it
+does not necessarily make the original object immutable; it only
+restricts modification through that particular pointer.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+const int* ptr
+      ↓
+Pointer to Const Data
+      ↓
+Cannot Modify Data
+      ↓
+Can Change Address
+=========================================================
