@@ -1,0 +1,116 @@
+=========================================
+final (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is final?
+-----------------
+- final is a C++11 keyword used with classes and virtual functions.
+- It is used to prevent inheritance or overriding.
+- It is a compile-time restriction.
+
+-----------------------------------------
+
+2. final with Class (Prevent Inheritance)
+-----------------------------------------
+- If a class is marked as final, it cannot be inherited.
+
+Example:
+
+class Base final {
+public:
+    void show() {}
+};
+
+// ❌ ERROR: cannot inherit from final class
+class Derived : public Base {
+};
+
+-----------------------------------------
+
+3. final with Virtual Function (Prevent Overriding)
+---------------------------------------------------
+- If a virtual function is marked final, derived classes cannot override it.
+
+Example:
+
+class Base {
+public:
+    virtual void show() final {
+        cout << "Base show";
+    }
+};
+
+class Derived : public Base {
+public:
+    // ❌ ERROR: cannot override final function
+    void show() override {
+        cout << "Derived show";
+    }
+};
+
+-----------------------------------------
+
+4. Why final is needed?
+-----------------------
+- To restrict inheritance when design should not be extended.
+- To prevent overriding of critical functions.
+- Helps in design safety and performance optimization (compiler may optimize calls).
+
+-----------------------------------------
+
+5. final vs override
+--------------------
+override:
+- Ensures function is overriding base virtual function
+- Used in derived class
+
+final:
+- Prevents further overriding
+- Used in base or derived class
+
+-----------------------------------------
+
+6. real-world usage
+-------------------
+- Security-sensitive classes (prevent modification via inheritance)
+- Core framework classes
+- Performance-critical functions (prevent virtual dispatch chain extension)
+
+-----------------------------------------
+
+7. Example Combined
+-------------------
+
+class A {
+public:
+    virtual void func() {
+        cout << "A";
+    }
+};
+
+class B : public A {
+public:
+    void func() override final {
+        cout << "B";
+    }
+};
+
+class C : public B {
+public:
+    // ❌ ERROR: cannot override final function
+    void func() override {
+        cout << "C";
+    }
+};
+
+-----------------------------------------
+
+8. Interview Key Points
+-----------------------
+- Introduced in C++11
+- final class → cannot be inherited
+- final function → cannot be overridden
+- Helps enforce design constraints
+- Works only with classes and virtual functions
+
+=========================================
