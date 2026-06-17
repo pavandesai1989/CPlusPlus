@@ -1,0 +1,327 @@
+=========================================
+C++ std::forward_list (Singly Linked List)
+INTERVIEW NOTES (CLEAN & FINAL)
+=========================================
+
+1. What is forward_list?
+------------------------
+std::forward_list is a singly linked list in STL.
+
+Each node contains:
+[data | next]
+
+Example:
+10 -> 20 -> 30 -> NULL
+
+- Stores only forward link
+- Memory efficient compared to std::list
+
+-----------------------------------------
+
+2. Internal Implementation (IMPORTANT)
+--------------------------------------
+- Implemented as singly linked list
+- Each node has:
+  1. data
+  2. pointer to next node only
+
+Unlike std::list:
+- NO prev pointer
+
+-----------------------------------------
+
+3. Why use forward_list?
+------------------------
+✔ Lower memory usage than list
+✔ Fast insertion/deletion after a node
+✔ Useful when backward traversal not needed
+
+-----------------------------------------
+
+4. Difference: list vs forward_list
+------------------------------------
+
+list (doubly linked list):
+- prev + next pointers
+- bidirectional traversal
+- more memory
+
+forward_list (singly linked list):
+- only next pointer
+- forward traversal only
+- less memory
+
+-----------------------------------------
+
+5. Why no push_back()?
+-----------------------
+- No tail pointer tracking
+- Must traverse entire list to reach end
+
+Cost:
+O(n)
+
+👉 So STL does NOT provide push_back()
+
+-----------------------------------------
+
+6. Why insert_after() instead of insert()?
+------------------------------------------
+Because each node knows ONLY next node.
+
+Example:
+10 -> 20 -> 30
+
+Insert after 10:
+insert_after(it, 15)
+
+Result:
+10 -> 15 -> 20 -> 30
+
+-----------------------------------------
+
+7. Complexity (VERY IMPORTANT)
+------------------------------
+push_front()     -> O(1)
+pop_front()      -> O(1)
+insert_after()   -> O(1)
+erase_after()    -> O(1)
+access/search    -> O(n)
+size()           -> O(n) or O(1) depending on implementation
+
+-----------------------------------------
+
+8. Random Access
+-----------------
+❌ Not supported
+
+Example:
+fl[5] // ERROR
+
+Reason:
+- Nodes are not contiguous
+- Must traverse sequentially
+
+-----------------------------------------
+
+9. Iterator Behavior
+---------------------
+✔ Iterators are forward-only
+✔ No backward traversal
+
+-----------------------------------------
+
+10. When to use forward_list?
+-----------------------------
+Use when:
+✔ Memory is critical
+✔ Only forward traversal needed
+✔ Frequent insert/delete after known node
+
+Avoid when:
+✗ Need backward traversal
+✗ Need random access
+✗ Need frequent tail operations
+
+-----------------------------------------
+
+11. Common Functions
+--------------------
+push_front()
+pop_front()
+
+front()
+
+insert_after()
+erase_after()
+
+begin()
+end()
+
+empty()
+clear()
+
+remove()
+sort()
+reverse()
+unique()
+
+-----------------------------------------
+
+12. Key Functions Explained
+---------------------------
+
+insert_after(it, value)
+- Inserts after given iterator
+- O(1)
+
+erase_after(it)
+- Deletes next node
+- O(1)
+
+remove(x)
+- Removes all occurrences of x
+
+sort()
+- Sorts list (custom implementation)
+
+unique()
+- Removes consecutive duplicates
+
+reverse()
+- Reverses list
+
+-----------------------------------------
+
+13. Memory Advantage
+---------------------
+Each node stores:
+[data + next]
+
+vs list:
+[data + prev + next]
+
+👉 forward_list uses less memory per node
+
+-----------------------------------------
+
+14. One-line Interview Answer
+-----------------------------
+std::forward_list is a singly linked list that supports O(1) insertion and deletion after a known position, uses less memory than std::list, but allows only forward traversal and no random access.
+
+-----------------------------------------
+
+15. QUICK REVISION
+------------------
+1. Singly linked list
+2. Only next pointer
+3. No random access
+4. No push_back()
+5. insert_after O(1)
+6. erase_after O(1)
+7. Less memory than list
+8. Forward traversal only
+9. No backward iteration
+10. Used for memory-efficient linked operations
+
+=========================================
+END
+=========================================
+
+
+#include <iostream>
+#include <forward_list>
+using namespace std;
+
+int main() {
+
+    forward_list<int> fl;
+
+    // -------------------------
+    // push_front()
+    // -------------------------
+    fl.push_front(30);
+    fl.push_front(20);
+    fl.push_front(10);
+
+    cout << "After push_front: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // front()
+    // -------------------------
+    cout << "Front element: " << fl.front() << "\n";
+
+    // -------------------------
+    // insert_after()
+    // -------------------------
+    auto it = fl.begin();   // points to 10
+    fl.insert_after(it, 15);
+
+    cout << "After insert_after(10, 15): ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // erase_after()
+    // -------------------------
+    fl.erase_after(it); // removes 15
+
+    cout << "After erase_after: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // pop_front()
+    // -------------------------
+    fl.pop_front();
+
+    cout << "After pop_front: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // push more elements
+    // -------------------------
+    fl.push_front(5);
+    fl.push_front(10);
+    fl.push_front(20);
+
+    cout << "Before remove/sort: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // remove() - remove all occurrences
+    // -------------------------
+    fl.remove(10);
+
+    cout << "After remove(10): ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // sort()
+    // -------------------------
+    fl.sort();
+
+    cout << "After sort: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // unique()
+    // -------------------------
+    fl.push_front(30);
+    fl.push_front(30);
+    fl.sort();
+    fl.unique();
+
+    cout << "After sort + unique: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // reverse()
+    // -------------------------
+    fl.reverse();
+
+    cout << "After reverse: ";
+    for (auto x : fl) cout << x << " ";
+    cout << "\n";
+
+    // -------------------------
+    // empty()
+    // -------------------------
+    cout << "Is empty? " << (fl.empty() ? "Yes" : "No") << "\n";
+
+    // -------------------------
+    // clear()
+    // -------------------------
+    fl.clear();
+
+    cout << "After clear, empty? " << (fl.empty() ? "Yes" : "No") << "\n";
+
+    return 0;
+}
