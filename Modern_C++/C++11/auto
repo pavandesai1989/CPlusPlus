@@ -1,0 +1,207 @@
+=========================================================
+auto (C++11) – INTERVIEW NOTES
+=========================================================
+
+1. What is auto?
+----------------
+- auto is a keyword introduced in C++11.
+- It tells the compiler to automatically deduce the type of a variable
+  from its initializer.
+
+Interview Line:
+"auto enables compile-time type inference."
+
+=========================================================
+2. BASIC EXAMPLE
+=========================================================
+
+auto x = 10;        // int
+auto y = 10.5;      // double
+auto z = 'A';       // char
+
+Compiler infers types automatically.
+
+=========================================================
+3. WHY auto IS USED?
+=========================================================
+
+✔ Reduces code verbosity
+✔ Improves readability
+✔ Useful with complex STL types
+✔ Avoids type mistakes
+✔ Makes code maintainable
+
+=========================================================
+4. VERY COMMON USE (STL)
+=========================================================
+
+WITHOUT auto:
+---------------------------------
+vector<int>::iterator it = v.begin();
+
+WITH auto:
+---------------------------------
+auto it = v.begin();
+
+=========================================================
+5. LOOP EXAMPLE
+=========================================================
+
+vector<int> v = {1,2,3,4};
+
+WITHOUT auto:
+for(vector<int>::iterator it = v.begin(); it != v.end(); it++)
+
+WITH auto:
+for(auto it = v.begin(); it != v.end(); it++)
+
+=========================================================
+6. RANGE-BASED FOR LOOP (BEST USE)
+=========================================================
+
+vector<int> v = {1,2,3,4};
+
+for(auto x : v)
+{
+    cout << x << endl;
+}
+
+=========================================================
+7. auto WITH REFERENCES
+=========================================================
+
+vector<int> v = {1,2,3};
+
+for(auto& x : v)
+{
+    x = x * 2;   // modifies original vector
+}
+
+Important:
+- auto  → copy
+- auto& → reference
+- const auto& → read-only reference
+
+=========================================================
+8. CONST WITH auto
+=========================================================
+
+const auto x = 10;   // const int
+
+auto y = x;          // int (const removed)
+
+Note:
+auto may drop const unless explicitly used.
+
+=========================================================
+9. FUNCTION RETURN TYPE (C++11 limitation)
+=========================================================
+
+auto add(int a, int b)
+{
+    return a + b;
+}
+
+Compiler deduces return type automatically.
+
+=========================================================
+10. auto WITH POINTERS
+=========================================================
+
+int x = 10;
+
+auto p = &x;   // int*
+
+=========================================================
+11. IMPORTANT LIMITATION (C++11)
+=========================================================
+
+❌ Cannot declare uninitialized auto:
+
+auto x;   // ERROR
+
+Must have initializer.
+
+=========================================================
+12. AUTO DOES NOT MEAN "DYNAMIC TYPE"
+=========================================================
+
+Wrong misconception:
+auto = runtime typing ❌
+
+Correct:
+auto = compile-time type deduction ✔
+
+=========================================================
+13. TRAILING RETURN TYPE (advanced C++11)
+=========================================================
+
+auto add(int a, int b) -> int
+{
+    return a + b;
+}
+
+Used when return type depends on parameters.
+
+=========================================================
+14. COMMON INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is auto in C++11?
+
+Answer:
+auto allows the compiler to deduce variable type from initializer.
+
+---------------------------------------------------------
+
+Q2. Is auto runtime or compile-time?
+
+Answer:
+Compile-time type deduction.
+
+---------------------------------------------------------
+
+Q3. Can auto be used without initialization?
+
+Answer:
+No.
+
+---------------------------------------------------------
+
+Q4. Difference between auto, auto&, const auto&?
+
+Answer:
+
+auto        → copy
+auto&       → reference
+const auto& → read-only reference
+
+---------------------------------------------------------
+
+Q5. Does auto affect performance?
+
+Answer:
+No, it is resolved at compile time.
+
+=========================================================
+15. INTERVIEW READY ANSWER (20–30 sec)
+=========================================================
+
+auto in C++11 is a keyword that enables compile-time type inference,
+allowing the compiler to deduce the variable type from its initializer.
+It reduces code verbosity, improves readability, and is widely used in
+STL iterators and range-based loops. However, auto requires initialization
+and does not mean dynamic typing.
+
+=========================================================
+16. ONE-LINE MEMORY TRICK
+=========================================================
+
+auto
+ ↓
+Compiler Deduces Type
+ ↓
+Compile-Time (NOT Runtime)
+ ↓
+Used for STL + Clean Code
+=========================================================
