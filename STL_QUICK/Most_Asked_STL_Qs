@@ -1,326 +1,203 @@
 =========================================
-MOST ASKED STL INTERVIEW QUESTIONS & ANSWERS
+🔥 TOP 50 STL INTERVIEW QUESTIONS (C++ STl)
 =========================================
 
-=========================================
-1. GENERAL STL QUESTIONS
-=========================================
+========================
+1. STL BASICS (1–10)
+========================
 
-Q1. What is STL in C++?
------------------------------------------
-A:
-STL (Standard Template Library) is a collection of template-based classes and functions
-that provide common data structures and algorithms like vector, map, set, stack, queue, etc.
+1. What is STL?
+A: Standard Template Library (containers + algorithms + iterators).
 
------------------------------------------
+2. What are STL components?
+A: Containers, Algorithms, Iterators.
 
-Q2. What are components of STL?
------------------------------------------
-A:
-1. Containers (vector, list, map, set, etc.)
-2. Algorithms (sort, find, count, etc.)
-3. Iterators (connect containers and algorithms)
+3. Why STL is used?
+A: Reusability, efficiency, faster development.
 
------------------------------------------
+4. What are containers?
+A: Objects that store data (vector, map, set).
 
-Q3. Why is STL used?
------------------------------------------
-A:
-- Saves development time
-- Highly optimized implementation
-- Reduces code complexity
-- Reusable components
+5. Types of containers?
+A: Sequence, Associative, Unordered, Adapters.
 
-=========================================
-2. VECTOR QUESTIONS
-=========================================
+6. What are algorithms in STL?
+A: Predefined functions (sort, find, count).
 
-Q1. Why is vector called dynamic array?
------------------------------------------
-A:
-Because it automatically resizes itself when capacity is full.
+7. What are iterators?
+A: Pointer-like objects to access containers.
+
+8. What is begin()?
+A: Points to first element.
+
+9. What is end()?
+A: Points past last element.
+
+10. What is STL advantage?
+A: Generic, fast, reusable code.
 
 -----------------------------------------
 
-Q2. Difference between vector and array?
------------------------------------------
-A:
-vector:
-- dynamic size
-- heap memory
-- resizable
+========================
+2. VECTOR (11–18)
+========================
 
-array:
-- fixed size
-- stack/heap
-- not resizable
+11. What is vector?
+A: Dynamic array.
 
------------------------------------------
+12. Is vector contiguous?
+A: Yes.
 
-Q3. What happens when vector grows?
------------------------------------------
-A:
-- New larger memory allocated
-- Elements copied to new memory
-- Old memory freed
-Time complexity = O(n)
+13. Time complexity of push_back?
+A: O(1) amortized.
 
------------------------------------------
+14. Why vector reallocation happens?
+A: Capacity full.
 
-Q4. Why is push_back amortized O(1)?
------------------------------------------
-A:
-Because resizing happens occasionally, but most insertions are O(1).
+15. What is vector growth?
+A: Usually doubles size.
 
-=========================================
-3. MAP / UNORDERED_MAP
-=========================================
+16. Difference size vs capacity?
+A: size = elements, capacity = allocated memory.
 
-Q1. Difference between map and unordered_map?
------------------------------------------
-A:
-map:
-- Red-black tree
-- O(log n)
-- sorted keys
+17. What is vector reallocation?
+A: New memory + copy old elements.
 
-unordered_map:
-- hash table
-- O(1) average
-- no order
+18. Is vector good for front insertion?
+A: No (O(n)).
 
 -----------------------------------------
 
-Q2. Why is unordered_map faster?
------------------------------------------
-A:
-Because it uses hashing instead of tree traversal.
+========================
+3. DEQUE (19–23)
+========================
+
+19. What is deque?
+A: Double-ended queue.
+
+20. Is deque contiguous?
+A: No.
+
+21. Complexity of push_front?
+A: O(1)
+
+22. Difference vector vs deque?
+A: vector = contiguous, deque = block memory.
+
+23. Why deque used in STL?
+A: Fast front and back operations.
 
 -----------------------------------------
 
-Q3. Worst case of unordered_map?
------------------------------------------
-A:
-O(n) due to hash collisions.
+========================
+4. LIST (24–28)
+========================
+
+24. What is list?
+A: Doubly linked list.
+
+25. Is list contiguous?
+A: No.
+
+26. Why list used?
+A: Fast insert/erase anywhere.
+
+27. Random access in list?
+A: Not supported.
+
+28. Why list slower in practice?
+A: Poor cache locality.
 
 -----------------------------------------
 
-Q4. When to use map?
------------------------------------------
-A:
-- Need sorted keys
-- Need range queries (lower_bound, upper_bound)
+========================
+5. STACK / QUEUE (29–35)
+========================
 
-=========================================
-4. SET QUESTIONS
-=========================================
+29. What is stack?
+A: LIFO container adaptor.
 
-Q1. Difference between set and unordered_set?
------------------------------------------
-A:
-set:
-- ordered (tree)
-- O(log n)
+30. What is queue?
+A: FIFO container adaptor.
 
-unordered_set:
-- hash table
-- O(1) average
+31. Default container for stack?
+A: deque.
 
------------------------------------------
+32. Default container for queue?
+A: deque.
 
-Q2. Does set allow duplicates?
------------------------------------------
-A:
-No, set stores only unique elements.
+33. Can stack use vector?
+A: Yes.
+
+34. Can queue use vector?
+A: No (needs pop_front).
+
+35. Do stack/queue support iterators?
+A: No.
 
 -----------------------------------------
 
-Q3. Difference between set and multiset?
------------------------------------------
-A:
-set → unique elements
-multiset → allows duplicates
+========================
+6. PRIORITY QUEUE (36–40)
+========================
 
-=========================================
-5. LIST / VECTOR / DEQUE
-=========================================
+36. What is priority queue?
+A: Heap-based container.
 
-Q1. Difference between vector, list, deque?
------------------------------------------
-A:
-vector:
-- contiguous memory
-- fast traversal
+37. Default behavior?
+A: Max heap.
 
-list:
-- doubly linked list
-- fast insertion/deletion in middle
+38. How to make min heap?
+A: priority_queue<int, vector<int>, greater<int>>.
 
-deque:
-- multiple blocks
-- fast front + back operations
+39. Underlying structure?
+A: Heap (vector-based).
+
+40. Time complexity of push/pop?
+A: O(log n)
 
 -----------------------------------------
 
-Q2. Why list is slower in practice?
------------------------------------------
-A:
-Due to poor cache locality.
+========================
+7. SET / MAP (41–46)
+========================
 
-=========================================
-6. STACK / QUEUE / PRIORITY_QUEUE
-=========================================
+41. What is set?
+A: Sorted unique elements.
 
-Q1. Difference between stack and queue?
------------------------------------------
-A:
-stack → LIFO
-queue → FIFO
+42. What is multiset?
+A: Sorted elements with duplicates.
 
------------------------------------------
+43. What is map?
+A: Key-value sorted structure.
 
-Q2. Why is deque default container?
------------------------------------------
-A:
-Because it supports both front and back operations efficiently in O(1).
+44. What is multimap?
+A: Map with duplicate keys.
 
------------------------------------------
+45. Internal structure of map?
+A: Red-Black Tree.
 
-Q3. Why priority_queue is called heap?
------------------------------------------
-A:
-Because internally it is implemented using a binary heap.
+46. Complexity of map operations?
+A: O(log n)
 
 -----------------------------------------
 
-Q4. Complexity of priority_queue?
------------------------------------------
-A:
-push → O(log n)
-pop → O(log n)
-top → O(1)
+========================
+8. UNORDERED MAP / SET (47–50)
+========================
+
+47. What is unordered_map?
+A: Hash table key-value store.
+
+48. What is unordered_set?
+A: Hash set.
+
+49. Average complexity unordered_map?
+A: O(1)
+
+50. Difference map vs unordered_map?
+A: map = sorted (tree), unordered_map = hash table.
 
 =========================================
-7. ITERATORS
-=========================================
-
-Q1. What is iterator?
------------------------------------------
-A:
-An object that points to elements in a container and allows traversal.
-
------------------------------------------
-
-Q2. Types of iterators?
------------------------------------------
-A:
-1. Input iterator
-2. Output iterator
-3. Forward iterator
-4. Bidirectional iterator
-5. Random access iterator
-
------------------------------------------
-
-Q3. Which containers support random access iterators?
------------------------------------------
-A:
-vector, deque, array
-
-=========================================
-8. PAIR QUESTIONS
-=========================================
-
-Q1. What is pair?
------------------------------------------
-A:
-A container that stores two values together.
-
-Example:
-pair<int,int> p = {1,2};
-
------------------------------------------
-
-Q2. Where is pair used?
------------------------------------------
-A:
-- map (key-value)
-- graph edges
-- returning multiple values
-
-=========================================
-9. IMPORTANT REAL INTERVIEW QUESTIONS
-=========================================
-
-Q1. Why is vector preferred over list?
------------------------------------------
-A:
-Because vector has better cache locality and faster traversal.
-
------------------------------------------
-
-Q2. Why is unordered_map not always used?
------------------------------------------
-A:
-Because worst case becomes O(n) due to collisions.
-
------------------------------------------
-
-Q3. Why does map keep elements sorted?
------------------------------------------
-A:
-Because it uses a balanced BST (Red-Black Tree).
-
------------------------------------------
-
-Q4. Why is priority_queue used?
------------------------------------------
-A:
-To always access max/min element efficiently.
-
------------------------------------------
-
-Q5. Why STL is important in interviews?
------------------------------------------
-A:
-It helps solve problems quickly with optimized implementations.
-
-=========================================
-10. RAPID FIRE (VERY IMPORTANT)
-=========================================
-
-Q: map vs unordered_map?
-A: tree vs hash
-
-Q: set vs unordered_set?
-A: ordered vs hash
-
-Q: vector vs deque?
-A: single block vs multiple blocks
-
-Q: stack vs queue?
-A: LIFO vs FIFO
-
-Q: priority_queue?
-A: heap
-
-Q: list vs vector?
-A: linked list vs array
-
-=========================================
-11. ONE-LINE FINAL REVISION
-=========================================
-
-- vector = fastest traversal
-- list = fastest middle insertion
-- deque = both ends fast
-- map = sorted key-value
-- unordered_map = fastest lookup
-- set = sorted unique
-- stack = LIFO
-- queue = FIFO
-- priority_queue = heap (top element access)
-
-=========================================
-END OF STL MASTER QUESTIONS
+🔥 END OF STL TOP 50 QUESTIONS
 =========================================
