@@ -1,0 +1,138 @@
+=========================================
+DELETED FUNCTIONS (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What are Deleted Functions?
+------------------------------
+- Deleted functions are a C++11 feature using the keyword = delete.
+- It is used to explicitly disable certain functions.
+- If a deleted function is used, compilation fails.
+
+Syntax:
+function_signature = delete;
+
+-----------------------------------------
+
+2. Why Deleted Functions are needed?
+-----------------------------------
+Before C++11, some unwanted operations were allowed by default:
+- Copying objects unintentionally
+- Implicit function generation by compiler
+
+Deleted functions help to:
+- Prevent copying/moving of objects
+- Disable unwanted conversions
+- Enforce strict class design
+
+-----------------------------------------
+
+3. Example: Prevent Copying
+--------------------------
+
+class MyClass {
+public:
+    MyClass() {}
+
+    // disable copy constructor
+    MyClass(const MyClass&) = delete;
+
+    // disable copy assignment
+    MyClass& operator=(const MyClass&) = delete;
+};
+
+int main() {
+    MyClass a;
+    MyClass b = a;   // ❌ ERROR (copy constructor deleted)
+}
+
+-----------------------------------------
+
+4. Example: Prevent Function Usage
+----------------------------------
+
+void process(int) = delete;
+
+int main() {
+    process(10);  // ❌ ERROR: function is deleted
+}
+
+-----------------------------------------
+
+5. Why use = delete instead of private?
+---------------------------------------
+Before C++11:
+
+class A {
+private:
+    A(const A&);
+};
+
+Problems:
+- Error messages were unclear
+- Function still existed but inaccessible
+
+With = delete:
+- Clear intent
+- Better compiler error messages
+- Stronger design enforcement
+
+-----------------------------------------
+
+6. Delete Defaulted Functions
+----------------------------
+You can also delete compiler-generated functions.
+
+Example:
+
+class Test {
+public:
+    Test() = default;
+    Test(const Test&) = delete;
+    Test& operator=(const Test&) = delete;
+};
+
+-----------------------------------------
+
+7. Preventing implicit conversions
+----------------------------------
+
+void show(double) = delete;
+
+int main() {
+    show(10);   // ❌ ERROR (int → double conversion blocked)
+}
+
+-----------------------------------------
+
+8. Real-world Usage
+-------------------
+- Singleton classes (prevent copying)
+- Unique ownership classes (like unique_ptr behavior)
+- Utility classes with static-only usage
+- Prevent unwanted overloads
+
+-----------------------------------------
+
+9. Relation with Rule of 5
+-------------------------
+If you define or delete:
+- destructor
+- copy constructor
+- copy assignment
+- move constructor
+- move assignment
+
+You control object lifetime strictly.
+
+-----------------------------------------
+
+10. Interview Key Points
+-----------------------
+- Introduced in C++11
+- Used to disable functions explicitly
+- Syntax: = delete
+- Provides clear compile-time errors
+- Commonly used to prevent copying and unwanted usage
+- Better alternative to private declarations
+
+=========================================
