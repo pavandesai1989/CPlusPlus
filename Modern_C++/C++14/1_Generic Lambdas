@@ -1,0 +1,150 @@
+=========================================
+GENERIC LAMBDAS (C++14) – INTERVIEW NOTES
+=========================================
+
+1. What is a Generic Lambda?
+----------------------------
+- Generic lambda is a C++14 feature.
+- It allows lambda parameters to use "auto".
+- This makes the lambda work with multiple data types.
+- Also called "polymorphic lambda".
+
+-----------------------------------------
+
+2. Syntax
+---------
+auto lambdaName = [](auto param) {
+    // logic
+};
+
+-----------------------------------------
+
+3. Basic Example
+----------------
+#include <iostream>
+using namespace std;
+
+int main() {
+
+    auto print = [](auto x) {
+        cout << x << endl;
+    };
+
+    print(10);        // int
+    print(3.14);      // double
+    print("Hello");   // string
+
+    return 0;
+}
+
+-----------------------------------------
+
+4. Why Generic Lambdas are Needed?
+-----------------------------------
+Before C++14:
+- Lambda needed fixed parameter types
+
+Example (C++11 limitation):
+[](int x) { ... }  // only int
+
+Problem:
+- Needed multiple overloads or templates
+
+Solution:
+- Generic lambda removes duplication
+
+-----------------------------------------
+
+5. How it works internally
+--------------------------
+- Compiler treats it like a templated call operator:
+
+Equivalent concept:
+
+struct Lambda {
+    template <typename T>
+    void operator()(T x) const {
+        cout << x;
+    }
+};
+
+-----------------------------------------
+
+6. Multiple Parameters
+----------------------
+
+auto add = [](auto a, auto b) {
+    return a + b;
+};
+
+cout << add(10, 20);
+cout << add(2.5, 3.5);
+
+-----------------------------------------
+
+7. Mix with STL (VERY IMPORTANT)
+-------------------------------
+
+#include <vector>
+#include <algorithm>
+
+vector<int> v = {1, 2, 3, 4};
+
+for_each(v.begin(), v.end(), [](auto &x) {
+    x = x * 2;
+});
+
+-----------------------------------------
+
+8. Generic Lambda with Reference
+-------------------------------
+
+auto modify = [](auto &x) {
+    x += 10;
+};
+
+int a = 5;
+modify(a);  // a becomes 15
+
+-----------------------------------------
+
+9. Capture + Generic Lambda
+--------------------------
+
+int factor = 2;
+
+auto multiply = [factor](auto x) {
+    return x * factor;
+};
+
+cout << multiply(10);    // 20
+cout << multiply(2.5);   // 5.0
+
+-----------------------------------------
+
+10. Limitations
+--------------
+- Cannot partially specialize lambdas
+- Complex templates inside lambda may reduce readability
+- Overuse can make code unclear
+
+-----------------------------------------
+
+11. When to use?
+---------------
+- STL algorithms (for_each, transform, sort)
+- Generic utilities
+- Callback functions
+- Quick reusable logic
+
+-----------------------------------------
+
+12. Interview Key Points
+------------------------
+- Introduced in C++14
+- Uses "auto" in lambda parameters
+- Equivalent to templated function operator()
+- Works with any data type
+- Commonly used with STL algorithms
+
+=========================================
