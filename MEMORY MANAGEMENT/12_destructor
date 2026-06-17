@@ -1,0 +1,441 @@
+=========================================================
+DESTRUCTOR (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Destructor is a special member function that is automatically called
+when an object is destroyed. It is mainly used to release resources such
+as dynamically allocated memory, files, sockets, mutexes, etc.
+
+Interview Line:
+"Constructor acquires resources, Destructor releases resources."
+
+=========================================================
+SYNTAX
+=========================================================
+
+class Test
+{
+public:
+    ~Test()
+    {
+    }
+};
+
+Rules:
+• Same name as class prefixed with ~
+• No return type
+• No parameters
+• Cannot be overloaded
+• Called automatically
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor\n";
+    }
+
+    ~Test()
+    {
+        cout << "Destructor\n";
+    }
+};
+
+int main()
+{
+    Test t;
+}
+
+Output:
+
+Constructor
+Destructor
+
+=========================================================
+WHEN IS DESTRUCTOR CALLED?
+=========================================================
+
+1. Object goes out of scope.
+2. Function returns.
+3. delete is called on dynamically allocated object.
+4. Program terminates (for global/static objects).
+
+=========================================================
+EXAMPLE 1: LOCAL OBJECT
+=========================================================
+
+void fun()
+{
+    Test t;
+}
+
+int main()
+{
+    fun();
+}
+
+Destructor called when:
+
+fun() returns.
+
+=========================================================
+EXAMPLE 2: DYNAMIC OBJECT
+=========================================================
+
+Test* ptr = new Test();
+
+delete ptr;
+
+Destructor called during:
+
+delete ptr;
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+Test* ptr = new Test();
+
+Stack                     Heap
+------                    ------
+ptr ----------------->    [Object]
+
+delete ptr;
+
+1. Destructor called
+2. Heap memory released
+
+=========================================================
+RESOURCE CLEANUP
+=========================================================
+
+class Test
+{
+    int* ptr;
+
+public:
+    Test()
+    {
+        ptr = new int(10);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+Purpose:
+Prevent memory leaks.
+
+=========================================================
+DESTRUCTOR ORDER
+=========================================================
+
+Objects are destroyed in:
+
+Reverse order of creation.
+
+Example:
+
+int main()
+{
+    Test t1;
+    Test t2;
+    Test t3;
+}
+
+Output:
+
+t3 Destructor
+t2 Destructor
+t1 Destructor
+
+LIFO order.
+
+=========================================================
+CONSTRUCTOR/DESTRUCTOR ORDER IN INHERITANCE
+=========================================================
+
+class Base
+{
+public:
+    Base()
+    {
+        cout << "Base Constructor\n";
+    }
+
+    ~Base()
+    {
+        cout << "Base Destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    Derived()
+    {
+        cout << "Derived Constructor\n";
+    }
+
+    ~Derived()
+    {
+        cout << "Derived Destructor\n";
+    }
+};
+
+Output:
+
+Base Constructor
+Derived Constructor
+Derived Destructor
+Base Destructor
+
+Rule:
+
+Construction:
+Base → Derived
+
+Destruction:
+Derived → Base
+
+=========================================================
+VIRTUAL DESTRUCTOR (VERY IMPORTANT)
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base()
+    {
+        cout << "Base Destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived()
+    {
+        cout << "Derived Destructor\n";
+    }
+};
+
+Base* ptr = new Derived();
+
+delete ptr;
+
+Output:
+
+Derived Destructor
+Base Destructor
+
+=========================================================
+WITHOUT VIRTUAL DESTRUCTOR
+=========================================================
+
+class Base
+{
+public:
+    ~Base()
+    {
+        cout << "Base Destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived()
+    {
+        cout << "Derived Destructor\n";
+    }
+};
+
+Base* ptr = new Derived();
+
+delete ptr;
+
+Output:
+
+Base Destructor
+
+Derived destructor NOT called.
+
+Resource leak possible.
+
+=========================================================
+INTERVIEW RULE
+=========================================================
+
+If a class has ANY virtual function,
+its destructor should usually be virtual.
+
+=========================================================
+PURE VIRTUAL DESTRUCTOR
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base() = 0;
+};
+
+Definition still required:
+
+Base::~Base()
+{
+}
+
+=========================================================
+CAN DESTRUCTOR BE:
+=========================================================
+
+Overloaded?      NO
+Virtual?         YES
+Pure Virtual?    YES
+Static?          NO
+Inherited?       YES
+
+=========================================================
+DEFAULT DESTRUCTOR
+=========================================================
+
+If you don't write one, compiler generates:
+
+~Test()
+{
+}
+
+Performs member-wise destruction.
+
+=========================================================
+RULE OF 3 CONNECTION
+=========================================================
+
+If class owns resources:
+
+Implement:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Reason:
+Need proper resource cleanup.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Destructor?
+
+Answer:
+A special function automatically called when an object is destroyed.
+
+---------------------------------------------------------
+
+Q2. Syntax?
+
+Answer:
+
+~ClassName()
+{
+}
+
+---------------------------------------------------------
+
+Q3. Can Destructor have parameters?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q4. Can Destructor be overloaded?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q5. Can Destructor be virtual?
+
+Answer:
+YES.
+
+---------------------------------------------------------
+
+Q6. Why do we need virtual destructors?
+
+Answer:
+To ensure proper destruction through base class pointers.
+
+---------------------------------------------------------
+
+Q7. What happens if base destructor is not virtual?
+
+Answer:
+Derived destructor may not execute, causing resource leaks.
+
+---------------------------------------------------------
+
+Q8. Order of destruction in inheritance?
+
+Answer:
+
+Derived → Base
+
+---------------------------------------------------------
+
+Q9. Order of destruction of local objects?
+
+Answer:
+
+Reverse order of creation (LIFO).
+
+---------------------------------------------------------
+
+Q10. Can Destructor be pure virtual?
+
+Answer:
+YES.
+
+But definition is still required.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A Destructor is a special member function used for resource cleanup and
+is automatically called when an object is destroyed. It has no return
+type or parameters and cannot be overloaded. Destructors are commonly
+used to release dynamic memory, files, sockets, and other resources.
+When using polymorphism, base class destructors should be virtual to
+ensure proper destruction of derived objects and avoid resource leaks.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Constructor
+      ↓
+Acquire Resources
+
+Destructor
+      ↓
+Release Resources
+      ↓
+Automatic Call
+      ↓
+LIFO Order
+      ↓
+Virtual for Polymorphic Base Classes
+=========================================================
