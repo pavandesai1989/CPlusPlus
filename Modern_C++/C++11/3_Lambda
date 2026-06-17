@@ -1,0 +1,189 @@
+=========================================
+LAMBDA EXPRESSIONS (C++11 onwards) – INTERVIEW NOTES
+=========================================
+
+1. What is a Lambda Expression?
+------------------------------
+- A lambda is an anonymous (unnamed) function.
+- Introduced in C++11.
+- Used to write inline, short functions without defining a separate function.
+- Very commonly used with STL algorithms.
+
+Syntax:
+[capture](parameters) -> return_type {
+    function_body
+};
+
+Example:
+auto add = [](int a, int b) -> int {
+    return a + b;
+};
+
+-----------------------------------------
+
+2. Basic Example (Most Common)
+------------------------------
+#include <iostream>
+using namespace std;
+
+int main() {
+    auto greet = []() {
+        cout << "Hello Lambda!" << endl;
+    };
+
+    greet();
+}
+
+-----------------------------------------
+
+3. Lambda with Parameters
+-------------------------
+auto sum = [](int a, int b) {
+    return a + b;
+};
+
+cout << sum(10, 20);
+
+-----------------------------------------
+
+4. Return Type (Optional in most cases)
+--------------------------------------
+- Compiler can deduce return type automatically.
+
+auto mul = [](int a, int b) {
+    return a * b;   // return type deduced as int
+};
+
+Explicit return type:
+auto div = [](int a, int b) -> double {
+    return (double)a / b;
+};
+
+-----------------------------------------
+
+5. Capture List (VERY IMPORTANT)
+--------------------------------
+- Used to access outside variables inside lambda.
+
+Types of capture:
+
+(a) []  -> captures nothing
+(b) [=]  -> capture all external variables by VALUE
+(c) [&]  -> capture all external variables by REFERENCE
+(d) [x]  -> capture specific variable by VALUE
+(e) [&x] -> capture specific variable by REFERENCE
+(f) [=, &x] -> default value capture, x by reference
+(g) [&, x]  -> default reference capture, x by value
+
+-----------------------------------------
+
+Example:
+int x = 10, y = 20;
+
+auto f1 = [=]() { return x + y; };   // by value
+auto f2 = [&]() { x++; };            // modifies original x
+
+-----------------------------------------
+
+6. Mutable Lambda
+-----------------
+- By default, captured-by-value variables are read-only inside lambda.
+- mutable allows modification of copied values.
+
+int x = 10;
+
+auto f = [x]() mutable {
+    x++;   // allowed (modifies copy)
+    cout << x;
+};
+
+f();
+cout << x;  // original x unchanged
+
+-----------------------------------------
+
+7. Lambda with STL (VERY IMPORTANT)
+-----------------------------------
+Example with for_each:
+
+#include <vector>
+#include <algorithm>
+
+vector<int> v = {1,2,3,4};
+
+for_each(v.begin(), v.end(), [](int &x) {
+    x = x * 2;
+});
+
+-----------------------------------------
+
+8. Lambda in Sorting
+--------------------
+vector<int> v = {5, 2, 8, 1};
+
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a < b;   // ascending order
+});
+
+-----------------------------------------
+
+9. Generic Lambdas (C++14)
+--------------------------
+- Uses auto in parameters.
+
+auto print = [](auto x) {
+    cout << x << endl;
+};
+
+print(10);
+print(3.14);
+print("hello");
+
+-----------------------------------------
+
+10. Lambda with std::function
+----------------------------
+#include <functional>
+
+std::function<int(int,int)> f = [](int a, int b) {
+    return a + b;
+};
+
+-----------------------------------------
+
+11. Common Interview Questions
+-----------------------------
+Q1: Why use lambda expressions?
+- For short, inline functions
+- Cleaner code with STL algorithms
+- Avoids writing separate function
+
+Q2: Difference between lambda and function?
+- Lambda: anonymous, inline, can capture variables
+- Function: named, no capture feature
+
+Q3: What is capture list?
+- Mechanism to access outer scope variables
+
+Q4: Can lambda be stored?
+- Yes, using auto or std::function
+
+-----------------------------------------
+
+12. Important Pitfalls
+----------------------
+- Dangling reference if capturing local variable by reference and lambda outlives scope
+- Overusing [&] can lead to bugs
+- Prefer explicit capture over [=] or [&] in production code
+
+-----------------------------------------
+
+13. Real-world Usage
+--------------------
+- STL algorithms (sort, for_each, count_if)
+- Event handlers
+- Callbacks
+- Thread functions
+- Functional programming style in C++
+
+=========================================
