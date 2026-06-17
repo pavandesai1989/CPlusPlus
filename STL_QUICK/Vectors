@@ -1,0 +1,400 @@
+=========================================
+C++ STL VECTOR – FINAL INTERVIEW MASTER NOTES
+=========================================
+
+1. What is vector?
+- std::vector is a dynamic array (STL container)
+- Stores elements in contiguous memory (like array)
+- Provides O(1) random access
+- Automatically manages memory (heap-based)
+
+-----------------------------------------
+
+2. Why vector?
+- C-style array = fixed size ❌
+- vector = dynamic size ✔
+- No manual memory management (no new/delete)
+- Safe + STL-compatible
+
+-----------------------------------------
+
+3. Internal working (VERY IMPORTANT)
+Vector maintains:
+- pointer to heap memory
+- size (current elements)
+- capacity (allocated memory)
+
+When capacity is full:
+1. Allocate new memory (usually 2x growth)
+2. Move/Copy elements
+3. Delete old memory
+4. Insert new element
+
+👉 This process = RELOCATION / REALLOCATION
+
+-----------------------------------------
+
+4. Size vs Capacity (MOST ASKED)
+
+size():
+- number of elements present
+
+capacity():
+- total allocated memory
+
+Rules:
+- size <= capacity
+- capacity changes only on reallocation
+
+-----------------------------------------
+
+5. reserve vs resize
+
+reserve(n):
+- increases capacity only
+- size unchanged
+
+resize(n):
+- changes size
+- adds/removes elements
+
+-----------------------------------------
+
+6. push_back vs emplace_back (VERY IMPORTANT)
+
+push_back:
+- inserts object (copy/move happens)
+
+emplace_back:
+- constructs object directly in memory
+- avoids extra copy/move (more efficient)
+
+-----------------------------------------
+
+7. Iterator invalidation (CRITICAL)
+
+Invalid when:
+- reallocation occurs
+- insert/erase shifts elements
+
+👉 After reallocation: ALL iterators, pointers, references become invalid
+
+-----------------------------------------
+
+8. Complexity (VERY IMPORTANT)
+
+- operator[] / at()   : O(1)
+- push_back          : amortized O(1)
+- insert/erase mid   : O(n)
+- search             : O(n)
+
+Why amortized O(1)?
+- reallocation is rare due to geometric growth
+
+-----------------------------------------
+
+9. at() vs operator[]
+
+operator[]:
+- no bounds check (fast, unsafe)
+
+at():
+- bounds check (safe, throws exception)
+
+-----------------------------------------
+
+10. clear vs shrink_to_fit
+
+clear():
+- removes elements
+- size = 0
+- capacity unchanged
+
+shrink_to_fit():
+- requests memory reduction (not guaranteed)
+
+-----------------------------------------
+
+11. copy vs move vector
+
+copy:
+- O(n), copies all elements
+
+move:
+- O(1), transfers ownership of memory
+
+-----------------------------------------
+
+12. Contiguous memory (IMPORTANT)
+
+- elements stored in continuous memory
+- benefits:
+  ✔ fast iteration
+  ✔ cache friendly
+  ✔ pointer arithmetic works
+  ✔ C API compatibility (via data())
+
+-----------------------------------------
+
+13. data()
+
+- returns pointer to underlying array
+- useful for C APIs
+
+-----------------------------------------
+
+14. swap()
+
+- swaps two vectors in O(1)
+- only pointer exchange happens
+
+-----------------------------------------
+
+15. Vector vs List (COMMON QUESTION)
+
+vector:
+- contiguous memory
+- fast access O(1)
+- cache friendly
+
+list:
+- node-based
+- slow traversal
+- high memory overhead
+
+👉 vector preferred in most cases
+
+-----------------------------------------
+
+16. Ways to initialize vector
+
+- vector<int> v = {1,2,3};
+- vector<int> v(n, value);
+- vector<int> v(arr, arr+n);
+- vector<int> v(other.begin(), other.end());
+
+-----------------------------------------
+
+17. Reallocation details
+
+When push_back causes overflow:
+- new memory allocated (usually 2x)
+- elements moved/copied
+- old memory freed
+- iterators invalidated
+
+-----------------------------------------
+
+18. Why push_back is amortized O(1)
+
+- most insertions are O(1)
+- occasional O(n) reallocation
+- average cost per insertion = O(1)
+
+-----------------------------------------
+
+19. Vector of objects (IMPORTANT)
+
+During reallocation:
+- copy constructor or move constructor called
+- old objects destroyed
+- move preferred over copy
+
+-----------------------------------------
+
+20. TOP INTERVIEW QUESTIONS
+
+1. How vector works internally?
+2. size vs capacity?
+3. reserve vs resize?
+4. push_back vs emplace_back?
+5. what happens during reallocation?
+6. iterator invalidation rules?
+7. vector vs list?
+8. copy vs move vector?
+9. at vs operator[]?
+10. why push_back amortized O(1)?
+11. why vector is contiguous memory?
+12. what happens during vector growth?
+
+-----------------------------------------
+
+21. FINAL SUMMARY (VERY IMPORTANT)
+
+vector = dynamic array
+       = contiguous memory
+       = fast O(1) access
+       = automatic resizing
+       = amortized O(1) insertion at end
+       = STL standard container
+
+
+
+=========================================
+std::vector – INTERVIEW MASTER NOTES + CODE
+=========================================
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+    // -------------------------------------
+    // 1. INITIALIZATION
+    // -------------------------------------
+
+    vector<int> v1 = {1, 2, 3};            // initializer list
+
+    vector<int> v2(5, 10);                 // size = 5, all values = 10
+
+    int arr[] = {4, 5, 6};
+    vector<int> v3(arr, arr + 3);          // from array
+
+    vector<int> v4(v1.begin(), v1.end());  // from another vector
+
+
+    // -------------------------------------
+    // 2. BASIC OPERATIONS
+    // -------------------------------------
+
+    v1.push_back(100);     // add element
+    v1.pop_back();         // remove last element
+
+    cout << v1.size() << endl;      // number of elements
+    cout << v1.capacity() << endl;  // allocated memory
+
+    cout << v1.empty() << endl;     // check empty
+
+
+    // -------------------------------------
+    // 3. ACCESS ELEMENTS
+    // -------------------------------------
+
+    cout << v1[0] << endl;      // no bounds check
+    cout << v1.at(0) << endl;    // bounds check
+
+    cout << v1.front() << endl;  // first element
+    cout << v1.back() << endl;   // last element
+
+
+    // -------------------------------------
+    // 4. INSERT / ERASE (IMPORTANT)
+    // -------------------------------------
+
+    v1.insert(v1.begin(), 50);        // insert at beginning
+    v1.erase(v1.begin());             // erase first element
+
+    v1.insert(v1.begin() + 1, 99);    // insert middle
+    v1.erase(v1.begin() + 1);        // erase middle
+
+
+    // -------------------------------------
+    // 5. CLEAR / SHRINK
+    // -------------------------------------
+
+    v1.clear();              // remove all elements
+    v1.shrink_to_fit();      // reduce capacity (not guaranteed)
+
+
+    // -------------------------------------
+    // 6. RESERVE vs RESIZE
+    // -------------------------------------
+
+    v1.reserve(100);         // only capacity increases
+
+    v1.resize(5);            // size = 5, new elements = 0
+    v1.resize(10, 7);        // size = 10, new elements = 7
+
+
+    // -------------------------------------
+    // 7. ITERATORS
+    // -------------------------------------
+
+    for (auto it = v2.begin(); it != v2.end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    for (auto it = v2.rbegin(); it != v2.rend(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+
+    // -------------------------------------
+    // 8. DATA POINTER (C API USE CASE)
+    // -------------------------------------
+
+    int* ptr = v2.data();
+    cout << ptr[0] << endl;
+
+
+    // -------------------------------------
+    // 9. SWAP (O(1))
+    // -------------------------------------
+
+    vector<int> a = {1, 2, 3};
+    vector<int> b = {9, 8, 7};
+
+    a.swap(b);
+
+
+    // -------------------------------------
+    // 10. SORT (VERY COMMON)
+    // -------------------------------------
+
+    vector<int> s = {5, 2, 9, 1};
+    sort(s.begin(), s.end());
+
+
+    // -------------------------------------
+    // 11. EMPLACE vs PUSH_BACK
+    // -------------------------------------
+
+    vector<pair<int, int>> vp;
+
+    vp.push_back({1, 2});        // copy/move
+    vp.emplace_back(3, 4);       // constructs in place (faster)
+
+
+    // -------------------------------------
+    // 12. COPY vs MOVE
+    // -------------------------------------
+
+    vector<int> c1 = {1, 2, 3};
+    vector<int> c2 = c1;              // COPY (O(n))
+
+    vector<int> m1 = {4, 5, 6};
+    vector<int> m2 = move(m1);       // MOVE (O(1))
+
+
+    // -------------------------------------
+    // 13. LOOPING
+    // -------------------------------------
+
+    for (int x : v2) {
+        cout << x << " ";
+    }
+    cout << endl;
+
+
+    return 0;
+}
+
+=========================================
+VECTOR KEY POINTS (REVISION)
+=========================================
+
+- Dynamic array (heap)
+- Contiguous memory
+- O(1) random access
+- push_back amortized O(1)
+- reallocation = capacity full → new memory (usually 2x)
+- iterators invalid on reallocation
+- emplace_back avoids extra copy
+- move is faster than copy
+=========================================
+
+=========================================
