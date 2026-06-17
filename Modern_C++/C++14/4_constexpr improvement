@@ -1,0 +1,126 @@
+=========================================
+constexpr IMPROVEMENTS (C++14 vs C++11) – NOTES
+=========================================
+
+1. What is constexpr (recap)?
+----------------------------
+- constexpr means the value/function can be evaluated at compile time.
+- Introduced in C++11, significantly improved in C++14.
+
+-----------------------------------------
+
+2. BIG CHANGE in C++14 constexpr
+--------------------------------
+C++11 limitation:
+- constexpr functions were very restricted
+- Only allowed:
+  ✔ single return statement
+  ✔ no loops
+  ✔ no multiple statements
+  ✔ no local variables (practical restriction)
+
+C++14 improvement:
+✔ Supports multiple statements
+✔ Supports loops (for, while)
+✔ Supports local variables
+✔ More complex logic allowed
+✔ Still eligible for compile-time evaluation
+
+-----------------------------------------
+
+3. Example: C++11 vs C++14
+
+C++11 style (limited):
+----------------------
+constexpr int square(int x) {
+    return x * x;
+}
+
+-----------------------------------------
+
+C++14 style (improved):
+-----------------------
+constexpr int sum(int n) {
+    int s = 0;
+    for (int i = 1; i <= n; i++) {
+        s += i;
+    }
+    return s;
+}
+
+✔ This was NOT possible in C++11 constexpr
+
+-----------------------------------------
+
+4. Why this improvement matters?
+--------------------------------
+- Allows real algorithm-like logic at compile time
+- Reduces runtime computation
+- Enables better template metaprogramming
+- Makes constexpr practical (not just theoretical)
+
+-----------------------------------------
+
+5. Compile-time vs Runtime behavior
+-----------------------------------
+
+constexpr function can work in BOTH ways:
+
+constexpr int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    constexpr int x = add(2, 3); // compile-time
+    int y = add(5, 6);          // runtime
+}
+
+-----------------------------------------
+
+6. Key rule still applicable
+----------------------------
+- If inputs are compile-time constants → evaluated at compile time
+- Otherwise → evaluated at runtime
+
+-----------------------------------------
+
+7. Restrictions STILL remaining in C++14
+----------------------------------------
+Even after improvement:
+- No dynamic memory (new/delete) in constexpr (C++14)
+- No virtual functions
+- No try/catch
+- No system calls / I/O
+
+-----------------------------------------
+
+8. Real-world usage
+-------------------
+- Compile-time calculations (math, constants)
+- Template metaprogramming
+- Array size calculations
+- Embedded systems optimization
+- Performance-critical code paths
+
+-----------------------------------------
+
+9. Example: Compile-time array size
+-----------------------------------
+
+constexpr int size(int n) {
+    return n * 2;
+}
+
+int arr[size(5)];  // valid compile-time size
+
+-----------------------------------------
+
+10. Interview Key Points
+------------------------
+- C++14 relaxed constexpr rules significantly
+- Allowed loops and multiple statements
+- Made compile-time programming practical
+- Still supports compile-time evaluation when possible
+- Important improvement over C++11 constexpr
+
+=========================================
