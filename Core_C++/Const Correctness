@@ -1,0 +1,515 @@
+=========================================================
+CONST CORRECTNESS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Const Correctness means using the const keyword appropriately to prevent
+unintended modification of data and to make code safer, more readable,
+and more efficient.
+
+Interview Line:
+"Use const wherever an object should not be modified."
+
+=========================================================
+WHY DO WE NEED CONST CORRECTNESS?
+=========================================================
+
+Benefits:
+• Prevents accidental modification
+• Makes code self-documenting
+• Improves code safety
+• Enables compiler optimizations
+• Allows passing large objects efficiently using const references
+• Helps design better APIs
+
+=========================================================
+1. CONST VARIABLE
+=========================================================
+
+const int x = 10;
+
+x = 20;     // ERROR
+
+Meaning:
+Value cannot be modified.
+
+=========================================================
+2. POINTER TO CONST
+=========================================================
+
+Syntax:
+
+const int* ptr;
+or
+int const* ptr;
+
+Meaning:
+Pointer can change.
+Data cannot change.
+
+Example:
+
+int a = 10;
+int b = 20;
+
+const int* ptr = &a;
+
+ptr = &b;      // OK
+*ptr = 100;    // ERROR
+
+Diagram:
+
+ptr -----> a
+      ↓
+Can point elsewhere
+
+Value cannot be modified.
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+const int* ptr
+
+Read Right to Left:
+
+ptr is a pointer to const int.
+
+=========================================================
+3. CONST POINTER
+=========================================================
+
+Syntax:
+
+int* const ptr = &a;
+
+Meaning:
+Pointer cannot change.
+Data can change.
+
+Example:
+
+int a = 10;
+int b = 20;
+
+int* const ptr = &a;
+
+*ptr = 100;     // OK
+ptr = &b;       // ERROR
+
+Diagram:
+
+ptr -----> a
+
+Pointer fixed.
+Value modifiable.
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+int* const ptr
+
+Read Right to Left:
+
+ptr is a const pointer to int.
+
+=========================================================
+4. CONST POINTER TO CONST
+=========================================================
+
+Syntax:
+
+const int* const ptr = &a;
+
+Meaning:
+Neither pointer nor data can change.
+
+Example:
+
+int a = 10;
+
+const int* const ptr = &a;
+
+*ptr = 100;     // ERROR
+ptr = nullptr;  // ERROR
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Declaration               Data    Pointer
+-------------------------------------------------
+const int* ptr            No      Yes
+int* const ptr            Yes     No
+const int* const ptr      No      No
+
+=========================================================
+5. CONST REFERENCE
+=========================================================
+
+Syntax:
+
+const int& ref = x;
+
+Meaning:
+Cannot modify through reference.
+
+Example:
+
+int x = 10;
+
+const int& ref = x;
+
+ref = 20;      // ERROR
+
+=========================================================
+WHY CONST REFERENCE?
+=========================================================
+
+Avoid copying large objects.
+
+Example:
+
+void print(const string& s)
+{
+}
+
+Benefits:
+• No copy
+• Read-only
+• Faster
+
+=========================================================
+INTERVIEW FAVORITE
+=========================================================
+
+void fun(string s);
+
+Creates copy.
+
+---------------------------------------------------------
+
+void fun(const string& s);
+
+No copy.
+
+Preferred.
+
+=========================================================
+6. CONST MEMBER FUNCTION
+=========================================================
+
+Syntax:
+
+return_type fun() const
+{
+}
+
+Meaning:
+Function promises not to modify object state.
+
+Example:
+
+class Test
+{
+    int x;
+
+public:
+    int getX() const
+    {
+        return x;
+    }
+};
+
+=========================================================
+Compiler Internally
+=========================================================
+
+int getX(const Test* this)
+{
+}
+
+this becomes:
+
+const Test*
+
+Therefore:
+
+Non-const members cannot be modified.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+    int x;
+
+public:
+    void show() const
+    {
+        x = 10;      // ERROR
+    }
+};
+
+=========================================================
+WHY DO WE NEED CONST MEMBER FUNCTIONS?
+=========================================================
+
+Allows calling functions on const objects.
+
+Example:
+
+class Test
+{
+public:
+    void display() const
+    {
+        cout << "Display";
+    }
+};
+
+const Test t;
+
+t.display();      // OK
+
+=========================================================
+WITHOUT CONST
+=========================================================
+
+class Test
+{
+public:
+    void display()
+    {
+    }
+};
+
+const Test t;
+
+t.display();      // ERROR
+
+=========================================================
+RULE
+=========================================================
+
+Const objects can call ONLY const member functions.
+
+=========================================================
+INTERVIEW FAVORITE
+=========================================================
+
+class Test
+{
+public:
+    void fun()
+    {
+    }
+
+    void fun() const
+    {
+    }
+};
+
+This is VALID.
+
+Compiler treats them as:
+
+fun(Test* this)
+
+and
+
+fun(const Test* this)
+
+Different signatures.
+
+=========================================================
+7. MUTABLE KEYWORD
+=========================================================
+
+mutable allows modification even inside const functions.
+
+Example:
+
+class Test
+{
+    mutable int counter;
+
+public:
+    void display() const
+    {
+        counter++;
+    }
+};
+
+Used for:
+• Caching
+• Logging
+• Statistics
+
+=========================================================
+8. CONST RETURN TYPE
+=========================================================
+
+const int getX()
+{
+    return 10;
+}
+
+Rarely useful for primitive types.
+
+More useful:
+
+const string& getName() const;
+
+=========================================================
+9. CONST OBJECT
+=========================================================
+
+const Test t;
+
+Properties:
+
+• Cannot modify data members.
+• Can call only const member functions.
+
+=========================================================
+10. CONST WITH PASSING PARAMETERS
+=========================================================
+
+Pass by Value
+
+void fun(string s);
+
+Copy created.
+
+---------------------------------------------------------
+
+Pass by Reference
+
+void fun(string& s);
+
+No copy.
+Can modify.
+
+---------------------------------------------------------
+
+Pass by Const Reference
+
+void fun(const string& s);
+
+No copy.
+Cannot modify.
+
+BEST OPTION.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Const Correctness?
+
+Answer:
+Using const to prevent unintended modification and make APIs safer.
+
+---------------------------------------------------------
+
+Q2. Difference between:
+
+const int* ptr
+and
+int* const ptr ?
+
+Answer:
+
+const int* ptr
+→ Data constant.
+
+int* const ptr
+→ Pointer constant.
+
+---------------------------------------------------------
+
+Q3. What is:
+
+const int* const ptr ?
+
+Answer:
+Both pointer and data are constant.
+
+---------------------------------------------------------
+
+Q4. Why use const reference?
+
+Answer:
+Avoid copying and prevent modification.
+
+---------------------------------------------------------
+
+Q5. Why use const member functions?
+
+Answer:
+To guarantee object state won't change and to support const objects.
+
+---------------------------------------------------------
+
+Q6. Can const object call non-const function?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q7. Can const and non-const versions coexist?
+
+Answer:
+YES.
+
+Example:
+
+T& get();
+const T& get() const;
+
+---------------------------------------------------------
+
+Q8. What is mutable?
+
+Answer:
+Allows modification inside const functions.
+
+---------------------------------------------------------
+
+Q9. Which parameter passing style is preferred?
+
+Answer:
+
+void fun(const string& s);
+
+Most efficient.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Const Correctness is the practice of applying const wherever objects
+should not be modified. It improves safety, readability, and API design.
+Important concepts include const variables, pointer to const, const
+pointer, const references, const member functions, and mutable.
+In modern C++, passing large objects as const references and marking
+read-only member functions as const are considered best practices.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+const Variable
+      ↓
+const Pointer
+      ↓
+const Reference
+      ↓
+const Member Function
+      ↓
+Safer APIs + Better Performance
+=========================================================
