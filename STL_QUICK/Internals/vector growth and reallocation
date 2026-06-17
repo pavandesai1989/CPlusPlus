@@ -1,0 +1,232 @@
+=========================================
+C++ VECTOR GROWTH & REALLOCATION
+INTERVIEW NOTES
+=========================================
+
+1. What is vector growth?
+-----------------------------------------
+Vector is a dynamic array.
+When capacity becomes full, it automatically:
+→ Allocates new larger memory
+→ Copies old elements
+→ Deletes old memory
+
+This process is called:
+➡ Reallocation
+
+-----------------------------------------
+
+2. Why does vector need reallocation?
+-----------------------------------------
+Because vector uses contiguous memory.
+
+Example:
+
+Capacity = 4
+Size = 4
+
+[10][20][30][40]  → FULL
+
+Now insert 50:
+
+No space available → reallocation happens
+
+-----------------------------------------
+
+3. What happens during reallocation?
+-----------------------------------------
+
+Step 1:
+New memory allocated (larger size, usually 2x)
+
+Step 2:
+Old elements copied to new memory
+
+Step 3:
+Old memory freed
+
+Example:
+
+Before:
+[10][20][30][40]
+
+After reallocation:
+[10][20][30][40][50][ _ ][ _ ][ _ ]
+
+-----------------------------------------
+
+4. Growth Factor (VERY IMPORTANT)
+-----------------------------------------
+
+Vector does NOT grow by +1.
+
+It grows exponentially.
+
+Common strategy:
+➡ Capacity doubles each time
+
+Example:
+
+Size:      1 → 2 → 4 → 8 → 16 → 32
+Capacity:  1 → 2 → 4 → 8 → 16 → 32
+
+This reduces frequent reallocations.
+
+-----------------------------------------
+
+5. Time Complexity Impact
+-----------------------------------------
+
+push_back():
+
+- Most of the time → O(1)
+- During reallocation → O(n)
+
+Overall:
+➡ Amortized O(1)
+
+-----------------------------------------
+
+6. What is amortized O(1)?
+-----------------------------------------
+
+Although some operations are costly,
+average cost over many operations is constant.
+
+Example:
+
+10 inserts:
+- 9 inserts → O(1)
+- 1 insert → O(n)
+
+Average → O(1)
+
+-----------------------------------------
+
+7. Iterator Invalidation (VERY IMPORTANT)
+-----------------------------------------
+
+During reallocation:
+
+❌ All iterators become INVALID
+❌ All pointers become INVALID
+❌ All references become INVALID
+
+Reason:
+Memory is moved to new location
+
+-----------------------------------------
+
+8. Difference between size and capacity
+-----------------------------------------
+
+SIZE:
+→ Number of elements actually stored
+
+CAPACITY:
+→ Total allocated memory slots
+
+Example:
+
+vector<int> v = {1,2,3}
+
+Size = 3
+Capacity = 4 or 8 (depends on implementation)
+
+-----------------------------------------
+
+9. shrink_to_fit()
+-----------------------------------------
+
+Used to reduce excess capacity.
+
+v.shrink_to_fit();
+
+But:
+➡ Not guaranteed (request only)
+
+-----------------------------------------
+
+10. reserve() (IMPORTANT)
+-----------------------------------------
+
+Used to pre-allocate memory.
+
+v.reserve(100);
+
+Meaning:
+→ Allocate memory for 100 elements
+→ Avoid frequent reallocations
+
+-----------------------------------------
+
+11. resize() vs reserve()
+-----------------------------------------
+
+resize():
+→ Changes actual size
+→ Initializes elements
+
+reserve():
+→ Changes capacity only
+→ Does NOT change size
+
+-----------------------------------------
+
+12. Why vector grows exponentially?
+-----------------------------------------
+
+If vector grew linearly (+1 each time):
+→ Too many reallocations
+→ Very slow (O(n²))
+
+Exponential growth:
+→ Reduces reallocations
+→ Efficient performance
+
+-----------------------------------------
+
+13. Why reallocation is expensive?
+-----------------------------------------
+
+Because:
+- New memory allocation
+- Copying all elements O(n)
+- Free old memory
+
+-----------------------------------------
+
+14. Best Practice (INTERVIEW TIP)
+-----------------------------------------
+
+If size is known:
+
+✔ Always use reserve()
+
+Example:
+vector<int> v;
+v.reserve(1000);
+
+Avoids multiple reallocations.
+
+-----------------------------------------
+
+15. Real Interview Insight
+-----------------------------------------
+
+push_back performance depends on:
+
+✔ current capacity
+✔ reallocation frequency
+✔ memory copying cost
+
+-----------------------------------------
+
+16. One-Liner Interview Answer
+-----------------------------------------
+
+Vector grows by allocating a larger memory block (usually double), copying existing elements to it, and freeing the old memory, making push_back amortized O(1), but reallocation causes O(n) cost and invalidates all iterators.
+
+=========================================
+END OF NOTES
+=========================================
