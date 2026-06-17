@@ -1,0 +1,279 @@
+=========================================
+C++ STL SET - INTERVIEW NOTES
+=========================================
+
+1. What is set?
+---------------
+- std::set is an associative container in STL.
+- Stores UNIQUE elements only.
+- Elements are always stored in SORTED order (ascending by default).
+
+Example:
+set<int> s;
+
+Insert:
+10, 20, 10, 30
+
+Stored:
+10 20 30   (duplicates removed + sorted)
+
+-----------------------------------------
+
+2. Internal Implementation
+--------------------------
+- Implemented using SELF-BALANCING BINARY SEARCH TREE
+  (usually Red-Black Tree)
+
+Properties:
+✔ Balanced BST
+✔ O(log n) operations
+✔ Sorted order maintained automatically
+
+-----------------------------------------
+
+3. Key Properties
+-----------------
+✔ Stores unique elements only
+✔ Always sorted
+✔ No indexing allowed
+✔ Bidirectional iterators supported
+
+-----------------------------------------
+
+4. Complexity
+-------------
+insert()   -> O(log n)
+erase()    -> O(log n)
+find()     -> O(log n)
+count()    -> O(log n)
+size()     -> O(1)
+empty()    -> O(1)
+
+-----------------------------------------
+
+5. Why set is used?
+-------------------
+✔ Maintain sorted data
+✔ Remove duplicates automatically
+✔ Fast search (O(log n))
+
+-----------------------------------------
+
+6. set vs unordered_set
+-----------------------
+
+set:
+- Sorted
+- O(log n)
+
+unordered_set:
+- Unsorted
+- Average O(1)
+- Worst O(n)
+
+Use set when:
+✔ order matters
+✔ need range queries
+
+-----------------------------------------
+
+7. set vs vector
+----------------
+
+vector:
+- Duplicates allowed
+- Not sorted (unless sorted manually)
+- O(n) search
+
+set:
+- Unique elements
+- Always sorted
+- O(log n) operations
+
+-----------------------------------------
+
+8. Iterator In set
+------------------
+- Bidirectional iterator
+- Used for traversal
+
+Example:
+for(auto it : s)
+
+-----------------------------------------
+
+9. Important Operations
+-----------------------
+
+✔ insert(x)
+✔ erase(x)
+✔ find(x)
+✔ count(x)
+✔ lower_bound(x)
+✔ upper_bound(x)
+✔ begin()
+✔ end()
+
+-----------------------------------------
+
+10. lower_bound vs upper_bound
+------------------------------
+
+lower_bound(x):
+- First element >= x
+
+upper_bound(x):
+- First element > x
+
+Example:
+set = {10, 20, 30}
+
+lower_bound(20) -> 20
+upper_bound(20) -> 30
+
+-----------------------------------------
+
+11. erase types
+---------------
+
+1. erase(value)
+   removes element
+
+2. erase(iterator)
+   removes single element
+
+3. erase(range)
+   removes multiple elements
+
+-----------------------------------------
+
+12. Why no indexing?
+--------------------
+- set is not stored in contiguous memory
+- it is a tree structure
+- so s[i] is not allowed
+
+-----------------------------------------
+
+13. When to use set?
+---------------------
+✔ need sorted unique values
+✔ need fast search
+✔ need ordered traversal
+✔ range queries required
+
+Avoid when:
+✗ duplicates needed
+✗ random access needed
+✗ performance critical (use unordered_set instead)
+
+-----------------------------------------
+
+14. Real-world uses
+-------------------
+✔ Finding duplicates
+✔ Sorted unique elements
+✔ Leaderboards (sorted IDs)
+✔ Range queries
+✔ Graph algorithms
+
+-----------------------------------------
+
+15. MOST FREQUENTLY USED FUNCTIONS (INTERVIEW)
+---------------------------------------------
+
+insert(x)
+---------
+s.insert(10);
+
+erase(x)
+--------
+s.erase(10);
+
+find(x)
+------
+if(s.find(10) != s.end())
+
+count(x)
+--------
+s.count(10)
+
+size()
+-----
+s.size()
+
+empty()
+------
+s.empty()
+
+begin(), end()
+-------------
+for(auto it = s.begin(); it != s.end(); it++)
+
+lower_bound(x)
+-------------
+auto it = s.lower_bound(20);
+
+upper_bound(x)
+-------------
+auto it = s.upper_bound(20);
+
+-----------------------------------------
+
+16. Sample Code (Most Used in Interviews)
+-----------------------------------------
+
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+
+    set<int> s;
+
+    // insert
+    s.insert(10);
+    s.insert(30);
+    s.insert(20);
+    s.insert(10); // duplicate ignored
+
+    cout << "Set elements: ";
+    for(auto x : s)
+        cout << x << " ";
+    cout << endl;
+
+    // find
+    if(s.find(20) != s.end())
+        cout << "20 found" << endl;
+
+    // erase
+    s.erase(30);
+
+    cout << "After erase: ";
+    for(auto x : s)
+        cout << x << " ";
+    cout << endl;
+
+    // lower_bound
+    auto it = s.lower_bound(15);
+    if(it != s.end())
+        cout << "Lower bound of 15: " << *it << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+17. KEY INTERVIEW SUMMARY
+-------------------------
+- set = sorted + unique elements
+- implemented using Red-Black Tree
+- all operations O(log n)
+- no indexing allowed
+- very useful for search + ordering + duplicates removal
+
+-----------------------------------------
+
+ONE-LINE INTERVIEW ANSWER
+-------------------------
+std::set is a balanced BST-based associative container that stores unique elements in sorted order and provides O(log n) insert, delete, and search operations.
