@@ -1,0 +1,459 @@
+=========================================================
+MULTIPLE INHERITANCE IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Multiple Inheritance is an OOP mechanism in which a class inherits from
+more than one base class.
+
+In simple words:
+
+One Derived Class
+          ↓
+Inherits from
+          ↓
+Multiple Base Classes
+
+=========================================================
+SYNTAX
+=========================================================
+
+class Base1
+{
+};
+
+class Base2
+{
+};
+
+class Derived : public Base1, public Base2
+{
+};
+
+=========================================================
+DIAGRAM
+=========================================================
+
+        Base1        Base2
+           \          /
+            \        /
+             \      /
+              Derived
+
+=========================================================
+WHY DO WE NEED MULTIPLE INHERITANCE?
+=========================================================
+
+Sometimes an object naturally possesses features from multiple classes.
+
+Examples:
+
+SmartPhone
+   IS-A Camera
+   IS-A MusicPlayer
+
+MultiFunctionPrinter
+   IS-A Printer
+   IS-A Scanner
+
+FlyingCar
+   IS-A Car
+   IS-A Aircraft
+
+Multiple Inheritance allows code reuse from multiple base classes.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Printer
+{
+public:
+    void print()
+    {
+        cout << "Printing\n";
+    }
+};
+
+class Scanner
+{
+public:
+    void scan()
+    {
+        cout << "Scanning\n";
+    }
+};
+
+class MultiFunctionPrinter :
+        public Printer,
+        public Scanner
+{
+};
+
+int main()
+{
+    MultiFunctionPrinter m;
+
+    m.print();
+    m.scan();
+}
+
+Output:
+
+Printing
+Scanning
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+class A
+{
+public:
+    int x;
+};
+
+class B
+{
+public:
+    int y;
+};
+
+class C : public A, public B
+{
+public:
+    int z;
+};
+
+Memory Layout:
+
+C Object
+------------------
+A::x
+------------------
+B::y
+------------------
+C::z
+------------------
+
+Derived object contains:
+
+Base1 Part + Base2 Part + Derived Part
+
+=========================================================
+CONSTRUCTOR CALL ORDER
+=========================================================
+
+class A
+{
+public:
+    A()
+    {
+        cout << "A\n";
+    }
+};
+
+class B
+{
+public:
+    B()
+    {
+        cout << "B\n";
+    }
+};
+
+class C : public A, public B
+{
+public:
+    C()
+    {
+        cout << "C\n";
+    }
+};
+
+int main()
+{
+    C obj;
+}
+
+Output:
+
+A
+B
+C
+
+Rule:
+
+Base constructors execute in the order of inheritance declaration.
+
+=========================================================
+DESTRUCTOR ORDER
+=========================================================
+
+Output:
+
+C
+B
+A
+
+Rule:
+
+Destructors execute in reverse order.
+
+=========================================================
+FUNCTION NAME CONFLICT (AMBIGUITY)
+=========================================================
+
+class A
+{
+public:
+    void show()
+    {
+        cout << "A\n";
+    }
+};
+
+class B
+{
+public:
+    void show()
+    {
+        cout << "B\n";
+    }
+};
+
+class C : public A, public B
+{
+};
+
+int main()
+{
+    C obj;
+
+    // obj.show();   // ERROR
+}
+
+Compilation Error:
+
+Reference to show() is ambiguous.
+
+=========================================================
+HOW TO RESOLVE AMBIGUITY?
+=========================================================
+
+Use Scope Resolution Operator.
+
+=========================================================
+
+obj.A::show();
+
+obj.B::show();
+
+=========================================================
+
+Output:
+
+A
+B
+
+=========================================================
+ACCESS SPECIFIERS IN MULTIPLE INHERITANCE
+=========================================================
+
+class C :
+      public A,
+      protected B,
+      private D
+{
+};
+
+Each base class can have its own inheritance mode.
+
+=========================================================
+ADVANTAGES OF MULTIPLE INHERITANCE
+=========================================================
+
+1. Code Reusability
+2. Combines multiple functionalities
+3. Better modeling of real-world entities
+4. Reduces code duplication
+5. Supports interface implementation
+
+=========================================================
+DISADVANTAGES OF MULTIPLE INHERITANCE
+=========================================================
+
+1. Ambiguity
+2. Increased Complexity
+3. Tight Coupling
+4. Diamond Problem
+5. Difficult Maintenance
+
+=========================================================
+MOST FAMOUS PROBLEM
+=========================================================
+
+Diamond Problem
+
+            A
+           / \
+          /   \
+         B     C
+          \   /
+           \ /
+            D
+
+D gets TWO copies of A.
+
+Causes:
+• Ambiguity
+• Duplicate Data
+• Memory Overhead
+
+Solution:
+Virtual Inheritance
+
+=========================================================
+MULTIPLE INHERITANCE AND INTERFACES
+=========================================================
+
+Multiple inheritance is commonly used for interfaces.
+
+=========================================================
+
+class IPrinter
+{
+public:
+    virtual void print() = 0;
+};
+
+class IScanner
+{
+public:
+    virtual void scan() = 0;
+};
+
+class MultiFunctionPrinter :
+        public IPrinter,
+        public IScanner
+{
+public:
+    void print() override
+    {
+        cout << "Printing\n";
+    }
+
+    void scan() override
+    {
+        cout << "Scanning\n";
+    }
+};
+
+=========================================================
+
+This is a very common real-world use of Multiple Inheritance.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Multiple Inheritance?
+
+Answer:
+Multiple inheritance allows a class to inherit from more than one base
+class.
+
+---------------------------------------------------------
+
+Q2. Why do we need Multiple Inheritance?
+
+Answer:
+To combine functionalities from multiple classes and improve code reuse.
+
+---------------------------------------------------------
+
+Q3. Does C++ support Multiple Inheritance?
+
+Answer:
+YES.
+
+Java classes do not support it directly due to the Diamond Problem.
+
+---------------------------------------------------------
+
+Q4. What are the disadvantages of Multiple Inheritance?
+
+Answer:
+• Ambiguity
+• Complexity
+• Diamond Problem
+• Tight Coupling
+
+---------------------------------------------------------
+
+Q5. How do you resolve function ambiguity?
+
+Answer:
+Using Scope Resolution Operator.
+
+Example:
+
+obj.A::show();
+obj.B::show();
+
+---------------------------------------------------------
+
+Q6. What is the biggest issue with Multiple Inheritance?
+
+Answer:
+Diamond Problem.
+
+---------------------------------------------------------
+
+Q7. How do you solve the Diamond Problem?
+
+Answer:
+Virtual Inheritance.
+
+---------------------------------------------------------
+
+Q8. In what order are constructors called?
+
+Answer:
+Base classes are constructed in the order they appear in the inheritance
+list.
+
+---------------------------------------------------------
+
+Q9. In what order are destructors called?
+
+Answer:
+Reverse order of construction.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Multiple Inheritance is a feature of C++ in which a class inherits from
+more than one base class. It allows combining functionalities from
+multiple classes and improves code reuse. However, it can introduce
+ambiguity and the Diamond Problem, making the design more complex. These
+issues can be managed using scope resolution and virtual inheritance.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+One Derived Class
+        ↓
+Multiple Base Classes
+        ↓
+Code Reuse
+        ↓
+Ambiguity & Diamond Problem
+        ↓
+Virtual Inheritance as Solution
+=========================================================
