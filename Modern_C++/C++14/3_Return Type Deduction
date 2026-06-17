@@ -1,0 +1,160 @@
+=========================================
+RETURN TYPE DEDUCTION (C++14) – INTERVIEW NOTES
+=========================================
+
+1. What is Return Type Deduction?
+----------------------------------
+- C++14 allows the compiler to automatically deduce the return type of a function.
+- You can use `auto` instead of explicitly specifying return type.
+- This reduces boilerplate code and improves readability.
+
+-----------------------------------------
+
+2. Basic Syntax
+--------------
+auto functionName(parameters) {
+    return expression;
+}
+
+-----------------------------------------
+
+3. Simple Example
+----------------
+
+#include <iostream>
+using namespace std;
+
+auto add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    cout << add(10, 20);
+}
+
+-----------------------------------------
+
+4. Before C++14 (C++11 style)
+-----------------------------
+
+C++11 required trailing return type:
+
+int add(int a, int b) {
+    return a + b;
+}
+
+OR (for complex cases):
+
+auto add(int a, int b) -> int {
+    return a + b;
+}
+
+-----------------------------------------
+
+5. Why Return Type Deduction is Useful?
+----------------------------------------
+✔ Reduces boilerplate code
+✔ Improves readability
+✔ Useful in templates and generic code
+✔ Makes lambda-style functions cleaner
+
+-----------------------------------------
+
+6. Works Like This (Conceptually)
+---------------------------------
+Compiler infers return type from return statement:
+
+auto add(int a, int b) {
+    return a + b;  // int inferred
+}
+
+Equivalent to:
+int add(int a, int b);
+
+-----------------------------------------
+
+7. IMPORTANT RULE: Consistent Return Type
+------------------------------------------
+All return statements must return SAME type.
+
+Example (OK):
+auto func(bool flag) {
+    if (flag) return 10;
+    return 20;
+}
+
+Example (❌ ERROR):
+auto func(bool flag) {
+    if (flag) return 10;
+    return 3.14;   // int vs double → compile error
+}
+
+-----------------------------------------
+
+8. No Deduction Without Return (Important)
+------------------------------------------
+auto func() {
+    // ❌ ERROR: no return statement
+}
+
+Compiler cannot deduce type.
+
+-----------------------------------------
+
+9. Recursive Functions Limitation (Interview Trap)
+---------------------------------------------------
+This does NOT work well:
+
+auto fact(int n) {
+    if (n == 0) return 1;
+    return n * fact(n - 1); // can cause issues in deduction context
+}
+
+Better:
+int fact(int n) { ... }
+
+-----------------------------------------
+
+10. Works with Lambda (Related Concept)
+---------------------------------------
+Generic usage:
+
+auto lambda = [](int x) {
+    return x * 2;
+};
+
+-----------------------------------------
+
+11. Best Use Cases
+------------------
+✔ Short utility functions
+✔ Template-heavy code
+✔ Lambda-style APIs
+✔ STL-like helper functions
+
+Avoid:
+✘ Very complex functions (reduces readability)
+✘ Functions with multiple inconsistent returns
+
+-----------------------------------------
+
+12. Difference: auto return vs trailing return type
+---------------------------------------------------
+
+C++11:
+auto add(int a, int b) -> int;
+
+C++14:
+auto add(int a, int b);  // deduced automatically
+
+-----------------------------------------
+
+13. Interview Key Points
+------------------------
+- Introduced in C++14
+- Compiler deduces return type from return statement
+- All return paths must have same type
+- No function body → no deduction possible
+- Commonly used in modern generic code
+
+=========================================
