@@ -1,0 +1,475 @@
+=========================================================
+FUNCTION OVERLOADING IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Function Overloading allows multiple functions to have the same name
+but different parameter lists in the same scope.
+
+It is an example of:
+
+Compile-Time Polymorphism
+(Early Binding / Static Binding)
+
+=========================================================
+WHY DO WE NEED FUNCTION OVERLOADING?
+=========================================================
+
+Without Overloading:
+
+addInt()
+addDouble()
+addFloat()
+
+Different names for similar operations.
+
+With Overloading:
+
+add()
+
+Same interface, different implementations.
+
+Improves:
+• Readability
+• Reusability
+• Maintainability
+
+=========================================================
+BASIC SYNTAX
+=========================================================
+
+return_type function_name(parameter_list);
+
+Functions can differ by:
+
+1. Number of parameters
+2. Type of parameters
+3. Order of parameters
+
+=========================================================
+EXAMPLE 1: DIFFERENT NUMBER OF PARAMETERS
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+
+    int add(int a, int b, int c)
+    {
+        return a + b + c;
+    }
+};
+
+Output:
+
+add(1,2);
+add(1,2,3);
+
+=========================================================
+EXAMPLE 2: DIFFERENT PARAMETER TYPES
+=========================================================
+
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+
+    double add(double a, double b)
+    {
+        return a + b;
+    }
+};
+
+Output:
+
+add(10,20);
+add(10.5,20.5);
+
+=========================================================
+EXAMPLE 3: DIFFERENT ORDER OF PARAMETERS
+=========================================================
+
+class Test
+{
+public:
+    void fun(int x, double y)
+    {
+        cout << "Function 1";
+    }
+
+    void fun(double y, int x)
+    {
+        cout << "Function 2";
+    }
+};
+
+=========================================================
+HOW DOES COMPILER RESOLVE OVERLOADING?
+=========================================================
+
+Compiler performs:
+
+Overload Resolution
+
+Steps:
+
+1. Exact Match
+2. Promotion
+3. Standard Conversion
+4. User-defined Conversion
+
+=========================================================
+EXAMPLE
+=========================================================
+
+void fun(int)
+{
+    cout << "int";
+}
+
+void fun(double)
+{
+    cout << "double";
+}
+
+fun(10);
+
+Output:
+
+int
+
+Exact match wins.
+
+=========================================================
+TYPE PROMOTION
+=========================================================
+
+void fun(int)
+{
+    cout << "int";
+}
+
+void fun(double)
+{
+    cout << "double";
+}
+
+char c = 'A';
+
+fun(c);
+
+Output:
+
+int
+
+Reason:
+char → int promotion.
+
+=========================================================
+AMBIGUOUS OVERLOADING
+=========================================================
+
+void fun(long)
+{
+}
+
+void fun(double)
+{
+}
+
+fun(10);
+
+Compilation Error:
+
+Ambiguous call.
+
+Reason:
+Compiler cannot determine the best match.
+
+=========================================================
+FUNCTIONS CANNOT BE OVERLOADED BY
+=========================================================
+
+1. Return Type Alone
+2. Parameter Names
+3. Default Arguments (if ambiguity occurs)
+
+=========================================================
+NOT ALLOWED: RETURN TYPE ONLY
+=========================================================
+
+int fun()
+{
+    return 1;
+}
+
+double fun()
+{
+    return 1.0;
+}
+
+Compilation Error.
+
+Reason:
+
+Return type is NOT part of function signature.
+
+=========================================================
+NOT ALLOWED: PARAMETER NAMES ONLY
+=========================================================
+
+void fun(int x)
+{
+}
+
+void fun(int y)
+{
+}
+
+Compilation Error.
+
+Reason:
+
+Parameter names are ignored.
+
+=========================================================
+DEFAULT ARGUMENT AMBIGUITY
+=========================================================
+
+void fun(int x)
+{
+}
+
+void fun(int x, int y = 0)
+{
+}
+
+fun(10);
+
+Compilation Error.
+
+Reason:
+Both functions match.
+
+=========================================================
+FUNCTION SIGNATURE
+=========================================================
+
+Includes:
+
+• Function Name
+• Number of Parameters
+• Parameter Types
+• Parameter Order
+
+Does NOT Include:
+
+• Return Type
+• Parameter Names
+• Default Values
+
+=========================================================
+OVERLOADING WITH CONST
+=========================================================
+
+Allowed:
+
+void fun(int)
+{
+}
+
+void fun(const int)
+{
+}
+
+Not allowed.
+
+Reason:
+Top-level const is ignored.
+
+---------------------------------------------------------
+
+Allowed:
+
+void fun(int*)
+{
+}
+
+void fun(const int*)
+{
+}
+
+Reason:
+Pointer types are different.
+
+=========================================================
+FUNCTION OVERLOADING vs FUNCTION OVERRIDING
+=========================================================
+
+Feature              Overloading          Overriding
+-----------------------------------------------------------
+Polymorphism         Compile-Time         Runtime
+Inheritance Needed   No                   Yes
+Function Name        Same                 Same
+Parameters           Different            Same
+Virtual Needed       No                   Yes
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+class Logger
+{
+public:
+    void log(string msg)
+    {
+    }
+
+    void log(int errorCode)
+    {
+    }
+
+    void log(string msg, int severity)
+    {
+    }
+};
+
+Same operation:
+
+log()
+
+Different parameter types.
+
+=========================================================
+ADVANTAGES
+=========================================================
+
+1. Compile-Time Polymorphism
+2. Better Readability
+3. Code Reusability
+4. Easier Maintenance
+5. Same Interface for Similar Operations
+
+=========================================================
+DISADVANTAGES
+=========================================================
+
+1. Ambiguous Calls
+2. Increased Complexity
+3. Difficult to Debug if Overused
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Function Overloading?
+
+Answer:
+Having multiple functions with the same name but different parameter
+lists in the same scope.
+
+---------------------------------------------------------
+
+Q2. Which type of polymorphism is it?
+
+Answer:
+Compile-Time Polymorphism.
+
+---------------------------------------------------------
+
+Q3. Can functions be overloaded by return type only?
+
+Answer:
+NO.
+
+Return type is not part of function signature.
+
+---------------------------------------------------------
+
+Q4. Can functions be overloaded by parameter names?
+
+Answer:
+NO.
+
+Parameter names are ignored.
+
+---------------------------------------------------------
+
+Q5. Can constructors be overloaded?
+
+Answer:
+YES.
+
+Constructors are commonly overloaded.
+
+---------------------------------------------------------
+
+Q6. Can default arguments cause ambiguity?
+
+Answer:
+YES.
+
+Example:
+
+void fun(int);
+void fun(int,int=0);
+
+fun(10);
+
+Compilation Error.
+
+---------------------------------------------------------
+
+Q7. What is considered for overload resolution?
+
+Answer:
+1. Exact Match
+2. Promotion
+3. Standard Conversion
+4. User-defined Conversion
+
+---------------------------------------------------------
+
+Q8. Difference between Overloading and Overriding?
+
+Answer:
+
+Overloading:
+Compile-Time Polymorphism.
+
+Overriding:
+Runtime Polymorphism.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Function Overloading is a compile-time polymorphism feature in which
+multiple functions have the same name but different parameter lists.
+The compiler selects the appropriate function through overload
+resolution based on parameter matching. Functions cannot be overloaded
+by return type alone because return type is not part of the function
+signature.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Same Function Name
+        ↓
+Different Parameters
+        ↓
+Compile-Time Resolution
+        ↓
+Function Overloading
+=========================================================
