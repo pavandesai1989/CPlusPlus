@@ -1,0 +1,165 @@
+=========================================
+std::make_unique (C++14) – INTERVIEW NOTES
+=========================================
+
+1. What is std::make_unique?
+----------------------------
+- std::make_unique is a C++14 utility function.
+- It creates an object and returns a std::unique_ptr to it.
+- It is the recommended way to create unique_ptr.
+
+Header:
+#include <memory>
+
+-----------------------------------------
+
+2. Basic Syntax
+---------------
+auto ptr = std::make_unique<Type>(constructor_args);
+
+-----------------------------------------
+
+3. Simple Example
+----------------
+
+#include <memory>
+#include <iostream>
+using namespace std;
+
+int main() {
+
+    auto p = std::make_unique<int>(10);
+
+    cout << *p << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+4. Why make_unique is needed?
+-----------------------------
+Before C++14:
+We used:
+
+std::unique_ptr<int> p(new int(10));
+
+Problems:
+- verbose
+- error-prone
+- unsafe in complex expressions
+
+-----------------------------------------
+
+5. Advantages of make_unique
+----------------------------
+✔ Exception safety (VERY IMPORTANT)
+✔ No manual new/delete
+✔ Cleaner syntax
+✔ Prevents memory leaks in complex expressions
+✔ Preferred modern C++ style
+
+-----------------------------------------
+
+6. Exception Safety Example
+---------------------------
+
+Problem with new:
+
+foo(std::unique_ptr<int>(new int(10)), bar());
+
+If bar() throws exception:
+- memory leak can happen in complex evaluation order
+
+Solution:
+
+foo(std::make_unique<int>(10), bar());
+
+✔ Safe: object created in controlled way
+
+-----------------------------------------
+
+7. make_unique vs new
+---------------------
+
+new:
+- manual memory management
+- error-prone
+- not exception safe in complex calls
+
+make_unique:
+- automatic memory handling
+- safer
+- recommended
+
+-----------------------------------------
+
+8. make_unique vs make_shared
+------------------------------
+
+make_unique:
+- single owner
+- no reference counting
+- lighter and faster
+
+make_shared:
+- shared ownership
+- reference counting
+- slightly more overhead
+
+-----------------------------------------
+
+9. Example with Class
+--------------------
+
+#include <memory>
+#include <iostream>
+using namespace std;
+
+class Test {
+public:
+    Test(int x) {
+        cout << "Constructor: " << x << endl;
+    }
+};
+
+int main() {
+
+    auto obj = std::make_unique<Test>(100);
+
+    return 0;
+}
+
+-----------------------------------------
+
+10. Array with make_unique
+--------------------------
+
+auto arr = std::make_unique<int[]>(5);
+
+for(int i = 0; i < 5; i++) {
+    arr[i] = i * 10;
+}
+
+-----------------------------------------
+
+11. Why prefer make_unique in modern C++?
+-----------------------------------------
+- Safer memory management
+- Avoids raw new/delete
+- Exception-safe construction
+- Clean and readable code
+- Standard best practice
+
+-----------------------------------------
+
+12. Interview Key Points
+------------------------
+- Introduced in C++14
+- Returns std::unique_ptr
+- Preferred over new for unique_ptr creation
+- Exception safe
+- Cannot be copied (only moved via unique_ptr)
+- Lightweight compared to shared_ptr
+
+=========================================
