@@ -1,0 +1,226 @@
+=========================================
+C++ QUEUE STL - INTERVIEW NOTES
+=========================================
+
+1. What is Queue?
+-----------------
+- std::queue is an STL container adaptor.
+- Follows FIFO (First In First Out).
+- First element inserted is first removed.
+
+Example:
+push(10)
+push(20)
+push(30)
+
+Front -> 10
+pop() removes 10 first
+
+-----------------------------------------
+
+2. FIFO Principle
+-----------------
+FIFO = First In First Out
+
+Real example:
+Ticket queue / line in bank
+
+Front -> 10 20 30 -> Back
+Remove order: 10 → 20 → 30
+
+-----------------------------------------
+
+3. Internal Implementation
+--------------------------
+- queue does NOT store data itself.
+- It wraps another STL container.
+
+Default container:
+    deque<T>
+
+Internally:
+    deque<T>
+
+Can also use:
+    list<T>
+
+-----------------------------------------
+
+4. Why deque is default?
+------------------------
+Because it supports:
+✔ O(1) push_back()
+✔ O(1) pop_front()
+
+These are essential for queue operations.
+
+-----------------------------------------
+
+5. Complexity
+-------------
+push()   -> O(1)
+pop()    -> O(1)
+front()  -> O(1)
+back()   -> O(1)
+size()   -> O(1)
+empty()  -> O(1)
+
+-----------------------------------------
+
+6. Allowed Operations
+---------------------
+✔ push()
+✔ pop()
+✔ front()
+✔ back()
+✔ size()
+✔ empty()
+
+❌ No iteration
+❌ No random access
+❌ No begin()/end()
+
+Reason:
+To maintain strict FIFO behavior
+
+-----------------------------------------
+
+7. Why queue is called a Container Adaptor?
+-------------------------------------------
+- It does not store elements directly.
+- It adapts another container (deque/list).
+- Exposes only FIFO interface.
+
+-----------------------------------------
+
+8. Vector vs Queue (Important)
+------------------------------
+Queue cannot use vector because:
+✗ vector has no efficient pop_front()
+
+Queue requires:
+- push_back()
+- pop_front()
+
+Only deque/list support both efficiently.
+
+-----------------------------------------
+
+9. Queue vs Stack
+-----------------
+
+Stack:
+- LIFO
+- top() used
+
+Queue:
+- FIFO
+- front() used
+
+-----------------------------------------
+
+10. Queue vs Deque
+------------------
+
+Queue:
+- Restricted interface (FIFO only)
+- No iteration
+
+Deque:
+- Full container
+- Supports front + back operations
+- Random access supported
+
+-----------------------------------------
+
+11. Real-world Applications
+--------------------------
+✔ BFS traversal (Graphs, Trees)
+✔ Task scheduling
+✔ Producer-consumer systems
+✔ Web server request handling
+✔ CPU scheduling
+✔ Messaging systems
+✔ Simulation problems
+
+-----------------------------------------
+
+12. Most Used Functions
+-----------------------
+push(x)   -> insert at back
+pop()     -> remove front
+front()   -> first element
+back()    -> last element
+size()    -> number of elements
+empty()   -> check empty
+
+-----------------------------------------
+
+13. Sample Code
+---------------
+
+#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+
+    queue<int> q;
+
+    q.push(10);
+    q.push(20);
+    q.push(30);
+
+    cout << "Front: " << q.front() << endl;
+    cout << "Back: " << q.back() << endl;
+
+    q.pop();
+
+    cout << "Front after pop: " << q.front() << endl;
+
+    cout << "Size: " << q.size() << endl;
+
+    cout << "Empty: " << (q.empty() ? "Yes" : "No") << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+14. Key Limitations
+-------------------
+❌ No indexing (q[i])
+❌ No iteration
+❌ No random access
+
+-----------------------------------------
+
+15. TOP INTERVIEW QUESTIONS
+---------------------------
+1. What is queue?
+2. Explain FIFO.
+3. How is queue implemented internally?
+4. Why is deque default container?
+5. Why not vector?
+6. Complexity of queue operations?
+7. Why no iteration in queue?
+8. Queue vs stack difference?
+9. Queue vs deque difference?
+10. Real-world use cases?
+
+-----------------------------------------
+
+QUICK REVISION
+--------------
+- Queue = FIFO
+- Container adaptor
+- Default container = deque
+- push/pop/front/back = O(1)
+- No iteration
+- Used in BFS + scheduling systems
+
+-----------------------------------------
+
+ONE-LINE ANSWER
+----------------
+std::queue is a FIFO container adaptor that provides O(1) push, pop, front, and back operations using deque as the default underlying container.
