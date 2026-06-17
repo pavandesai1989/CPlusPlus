@@ -1,0 +1,165 @@
+=========================================
+C++ noexcept (C++11) - INTERVIEW NOTES
+=========================================
+
+1. What is noexcept?
+---------------------
+noexcept is a C++11 specifier used to declare that a function
+will NOT throw exceptions.
+
+Syntax:
+void func() noexcept;
+
+Meaning:
+- Function guarantees no exception will be thrown.
+
+-----------------------------------------
+
+2. Why noexcept is used?
+-------------------------
+- Improves performance
+- Enables compiler optimizations
+- Avoids stack unwinding overhead
+- Used in STL optimizations (vector, move operations)
+
+-----------------------------------------
+
+3. Syntax Variants
+-------------------
+void f() noexcept;          // no exception
+void f() noexcept(true);    // same as above
+void f() noexcept(false);   // may throw exception
+
+-----------------------------------------
+
+4. Example
+-----------
+#include <iostream>
+using namespace std;
+
+void safeFunc() noexcept
+{
+    cout << "Safe function\n";
+}
+
+void riskyFunc() noexcept(false)
+{
+    throw runtime_error("Error");
+}
+
+-----------------------------------------
+
+5. noexcept vs throw()
+-----------------------
+Old C++:
+void f() throw();   // no exception (deprecated)
+
+Modern C++:
+void f() noexcept;
+
+- noexcept is faster and optimized
+- throw() is deprecated
+
+-----------------------------------------
+
+6. Important STL Usage
+----------------------
+- vector uses noexcept move constructor for optimization
+- If move constructor is NOT noexcept → vector uses copy (slow)
+
+-----------------------------------------
+
+7. noexcept with Move Constructor (IMPORTANT)
+---------------------------------------------
+class A {
+public:
+    A(A&& other) noexcept {
+        // move implementation
+    }
+};
+
+WHY IMPORTANT:
+- Enables efficient vector reallocation
+- Improves performance
+- Avoids copying large objects
+
+-----------------------------------------
+
+8. What happens if noexcept function throws?
+--------------------------------------------
+If a noexcept function throws:
+→ std::terminate() is called
+→ program crashes immediately
+
+Example:
+void f() noexcept {
+    throw 10;   // terminate
+}
+
+-----------------------------------------
+
+9. Compile-time check
+---------------------
+noexcept(expression)
+
+Example:
+cout << noexcept(func) << endl;
+
+Returns:
+true / false
+
+-----------------------------------------
+
+10. Conditional noexcept
+------------------------
+template <typename T>
+void func(T t) noexcept(noexcept(T()))
+{
+}
+
+Meaning:
+Function is noexcept only if condition is true.
+
+-----------------------------------------
+
+11. Use Cases
+-------------
+- Move constructors
+- STL containers (vector, map)
+- High-performance systems
+- Embedded systems
+- Exception-safe APIs
+
+-----------------------------------------
+
+12. Interview Questions
+-----------------------
+Q: What is noexcept?
+A: It tells compiler function will not throw exceptions.
+
+Q: What if noexcept function throws?
+A: Program calls std::terminate().
+
+Q: Why important in move semantics?
+A: Enables STL optimizations like move instead of copy.
+
+Q: Is noexcept better than throw()?
+A: Yes, throw() is deprecated.
+
+-----------------------------------------
+
+13. QUICK REVISION
+------------------
+- noexcept = no exception guarantee
+- Improves performance
+- Used in move constructors
+- Helps STL optimization
+- If violated → program terminates
+- Replaces throw()
+
+-----------------------------------------
+
+14. ONE-LINE ANSWER
+-------------------
+noexcept specifies that a function will not throw exceptions and allows compiler and STL optimizations, especially in move semantics and container operations.
+=========================================
