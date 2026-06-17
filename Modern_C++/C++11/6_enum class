@@ -1,0 +1,146 @@
+=========================================
+enum class (SCOPED ENUM) – C++11 NOTES
+=========================================
+
+1. What is enum class?
+----------------------
+- enum class (also called scoped enum) is introduced in C++11.
+- It is a strongly typed version of traditional enum.
+- It avoids name pollution and type conflicts.
+
+Syntax:
+enum class Color {
+    Red,
+    Green,
+    Blue
+};
+
+-----------------------------------------
+
+2. Basic Example
+---------------
+enum class Color {
+    Red,
+    Green,
+    Blue
+};
+
+int main() {
+    Color c = Color::Red;
+
+    if (c == Color::Red) {
+        // do something
+    }
+}
+
+Key point:
+- Must use scope resolution operator (::)
+
+-----------------------------------------
+
+3. Difference: enum vs enum class
+----------------------------------
+
+TRADITIONAL ENUM:
+enum Color {
+    Red,
+    Green,
+    Blue
+};
+
+- Values are in global scope
+- Implicit conversion to int allowed
+
+Example problem:
+Color c = Red;
+int x = Red;   // allowed (unsafe)
+
+-----------------------------------------
+
+ENUM CLASS:
+enum class Color {
+    Red,
+    Green,
+    Blue
+};
+
+- Values are scoped inside enum
+- No implicit conversion to int
+- Type-safe
+
+Example:
+Color c = Color::Red;
+// int x = Color::Red; ❌ error
+
+-----------------------------------------
+
+4. Type Safety Advantage
+-----------------------
+enum class ensures:
+- No accidental mixing with integers
+- No naming conflicts
+
+Example:
+
+enum class Status { OK, ERROR };
+enum class Result { OK, FAIL };
+
+// No conflict because scoped
+Status s = Status::OK;
+Result r = Result::OK;
+
+-----------------------------------------
+
+5. Underlying Type (Important)
+-----------------------------
+By default, underlying type is int.
+
+You can specify it:
+
+enum class Color : char {
+    Red,
+    Green,
+    Blue
+};
+
+-----------------------------------------
+
+6. Printing enum class values
+----------------------------
+Since no implicit conversion to int, we must cast:
+
+Color c = Color::Red;
+
+cout << static_cast<int>(c);
+
+-----------------------------------------
+
+7. Why enum class is preferred?
+------------------------------
+- Strong type safety
+- Avoids name conflicts
+- No implicit conversions
+- Better for large projects and STL usage
+- Modern C++ best practice
+
+-----------------------------------------
+
+8. Real-world Usage
+-------------------
+- Status codes (Success, Failure)
+- States in state machines
+- Flags (with bit operations using underlying type)
+- Configuration options
+
+-----------------------------------------
+
+9. Interview Key Points
+-----------------------
+- Introduced in C++11
+- Scoped enum (enum class)
+- Type-safe replacement for enum
+- No implicit conversion to int
+- Access using EnumName::Value
+- Prevents naming collisions
+
+=========================================
