@@ -1,0 +1,447 @@
+=========================================================
+PURE VIRTUAL FUNCTIONS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Pure Virtual Function is a virtual function that has no implementation
+in the base class and is declared using '= 0'.
+
+Syntax:
+
+virtual ReturnType functionName(parameters) = 0;
+
+Example:
+
+virtual void draw() = 0;
+
+=========================================================
+WHY DO WE NEED PURE VIRTUAL FUNCTIONS?
+=========================================================
+
+Suppose every derived class MUST provide its own implementation of a
+function.
+
+Example:
+
+Shape
+ ├── Circle
+ ├── Rectangle
+ └── Triangle
+
+Every shape should implement:
+
+draw()
+
+But there is no meaningful generic implementation of draw() in Shape.
+
+Hence:
+
+draw() should be Pure Virtual.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Drawing Circle\n";
+    }
+};
+
+int main()
+{
+    Shape* ptr = new Circle();
+
+    ptr->draw();
+}
+
+Output:
+
+Drawing Circle
+
+=========================================================
+WHAT DOES '= 0' MEAN?
+=========================================================
+
+'= 0' tells the compiler:
+
+1. This function is Pure Virtual.
+2. No implementation is required in this class.
+3. Derived classes must implement it.
+4. The class becomes an Abstract Class.
+
+=========================================================
+PURE VIRTUAL FUNCTION CREATES
+=========================================================
+
+Pure Virtual Function
+         ↓
+Abstract Class
+         ↓
+Cannot Create Objects
+         ↓
+Forces Derived Classes to Implement Function
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+Shape s;      // ERROR
+
+Compilation Error:
+
+Cannot instantiate abstract class.
+
+=========================================================
+MUST DERIVED CLASS OVERRIDE IT?
+=========================================================
+
+YES.
+
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+};
+
+int main()
+{
+    Circle c;     // ERROR
+}
+
+=========================================================
+
+Reason:
+
+Circle also becomes an Abstract Class because draw() was not overridden.
+
+=========================================================
+CORRECT VERSION
+=========================================================
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle";
+    }
+};
+
+=========================================================
+CAN PURE VIRTUAL FUNCTIONS HAVE IMPLEMENTATION?
+=========================================================
+
+YES.
+
+This is a very common interview question.
+
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+void Shape::draw()
+{
+    cout << "Shape Draw\n";
+}
+
+=========================================================
+
+Even though implementation exists:
+
+Shape is STILL an Abstract Class.
+
+=========================================================
+CAN DERIVED CLASS CALL BASE IMPLEMENTATION?
+=========================================================
+
+YES.
+
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+void Shape::draw()
+{
+    cout << "Base Draw\n";
+}
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        Shape::draw();
+        cout << "Circle Draw\n";
+    }
+};
+
+Output:
+
+Base Draw
+Circle Draw
+
+=========================================================
+PURE VIRTUAL DESTRUCTOR
+=========================================================
+
+Another favorite interview question.
+
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base() = 0;
+};
+
+Base::~Base()
+{
+}
+
+=========================================================
+
+Rule:
+
+Pure Virtual Destructor MUST have a definition.
+
+Reason:
+Destructor is always called during object destruction.
+
+=========================================================
+INTERNAL WORKING
+=========================================================
+
+Pure Virtual Functions are also stored in:
+
+vtable
+
+Objects still contain:
+
+vptr
+
+Therefore:
+
+Runtime Polymorphism still works.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle\n";
+    }
+};
+
+Shape* ptr = new Circle();
+
+ptr->draw();
+
+Output:
+
+Circle
+
+=========================================================
+USES OF PURE VIRTUAL FUNCTIONS
+=========================================================
+
+1. Achieve Abstraction
+2. Create Abstract Classes
+3. Define Interfaces
+4. Force Derived Classes to Implement Behavior
+5. Support Runtime Polymorphism
+6. Enable Loose Coupling
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+class Payment
+{
+public:
+    virtual void pay() = 0;
+};
+
+class UPIPayment : public Payment
+{
+public:
+    void pay() override
+    {
+        cout << "UPI Payment\n";
+    }
+};
+
+class CreditCardPayment : public Payment
+{
+public:
+    void pay() override
+    {
+        cout << "Credit Card Payment\n";
+    }
+};
+
+Payment* p;
+
+p = new UPIPayment();
+p->pay();
+
+p = new CreditCardPayment();
+p->pay();
+
+Same interface:
+
+pay()
+
+Different implementations.
+
+=========================================================
+PURE VIRTUAL FUNCTION vs VIRTUAL FUNCTION
+=========================================================
+
+Feature              Virtual        Pure Virtual
+----------------------------------------------------------
+Implementation       Usually Yes    Not Required
+Syntax               virtual f()    virtual f() = 0
+Instantiation        Allowed        Makes class abstract
+Override Required    No             Yes
+Purpose              Default Impl   Contract/Interface
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Pure Virtual Function?
+
+Answer:
+A virtual function declared using '=0' that makes the class abstract
+and forces derived classes to implement the function.
+
+---------------------------------------------------------
+
+Q2. Why do we use Pure Virtual Functions?
+
+Answer:
+To achieve abstraction and define mandatory behavior for derived
+classes.
+
+---------------------------------------------------------
+
+Q3. What does '=0' mean?
+
+Answer:
+It tells the compiler that the function is Pure Virtual and the class
+becomes abstract.
+
+---------------------------------------------------------
+
+Q4. Can Pure Virtual Functions have implementation?
+
+Answer:
+YES.
+
+Example:
+
+virtual void draw() = 0;
+
+void Shape::draw()
+{
+}
+
+---------------------------------------------------------
+
+Q5. Can we create objects of a class containing a Pure Virtual Function?
+
+NO.
+
+---------------------------------------------------------
+
+Q6. If derived class doesn't override Pure Virtual Function?
+
+Answer:
+The derived class also becomes abstract.
+
+---------------------------------------------------------
+
+Q7. Can Pure Virtual Functions participate in Runtime Polymorphism?
+
+YES.
+
+They are stored in vtable and use vptr.
+
+---------------------------------------------------------
+
+Q8. Can destructor be Pure Virtual?
+
+YES.
+
+But its definition is mandatory.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A Pure Virtual Function is a virtual function declared using '=0'. It
+has no mandatory implementation in the base class and forces derived
+classes to provide their own implementation. A class containing at least
+one pure virtual function becomes an Abstract Class and cannot be
+instantiated. Pure virtual functions are widely used to achieve
+abstraction and create interfaces in C++.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+virtual function
+        +
+       =0
+        ↓
+Pure Virtual Function
+        ↓
+Abstract Class
+        ↓
+Must Override
+        ↓
+Abstraction & Interfaces
+=========================================================
