@@ -1,0 +1,174 @@
+=========================================
+ITERATOR INVALIDATION IN C++ STL
+=========================================
+
+1. What is Iterator Invalidation?
+----------------------------------
+Iterator invalidation means an iterator becomes unsafe to use after certain operations on a container.
+
+Using an invalid iterator leads to undefined behavior (crash or wrong output).
+
+-----------------------------------------
+2. Why does it happen?
+-----------------------------------------
+Because STL containers may:
+- Reallocate memory
+- Move elements
+- Delete internal nodes
+- Reorganize structure
+
+So old iterators may no longer point to valid elements.
+
+=========================================
+3. VECTOR - Iterator Invalidation (VERY IMPORTANT)
+=========================================
+
+A) Reallocation case (MOST IMPORTANT)
+--------------------------------------
+Operations:
+- push_back()
+- insert()
+- resize()
+
+If capacity is exceeded → reallocation happens
+
+Effect:
+- ALL iterators become INVALID
+- ALL pointers become INVALID
+- ALL references become INVALID
+
+Example:
+vector<int> v = {1,2,3};
+auto it = v.begin();
+v.push_back(4);  // may reallocate
+// it is now INVALID ❌
+
+-----------------------------------------
+
+B) No reallocation case
+-----------------------
+If capacity is not exceeded:
+- iterators remain valid (except affected by insert/erase rules)
+
+-----------------------------------------
+
+C) insert() in vector
+----------------------
+Invalidates:
+- iterators at and after insertion position
+- pointers/references at and after insertion position
+
+-----------------------------------------
+
+D) erase() in vector
+---------------------
+Invalidates:
+- iterators at and after erased position
+
+Example:
+[10,20,30,40]
+erase(20)
+
+Invalid:
+- iterator pointing to 20
+- iterators after 20 (30,40 affected)
+
+=========================================
+4. DEQUE
+=========================================
+
+Operations like insert/erase:
+- May invalidate ALL iterators
+
+push_front/push_back:
+- May invalidate iterators due to internal reorganization
+
+Note:
+Deque is more stable than vector in some cases but still not fully stable.
+
+=========================================
+5. LIST (Doubly Linked List)
+=========================================
+
+Most stable iterator container.
+
+insert():
+- Does NOT invalidate iterators
+
+erase():
+- Only erased element iterator becomes invalid
+
+All other iterators remain valid
+
+=========================================
+6. FORWARD_LIST
+=========================================
+
+insert_after / erase_after:
+- Only affected element iterator invalid
+
+Previous iterator remains valid
+
+=========================================
+7. SET / MAP (TREE BASED - RED BLACK TREE)
+=========================================
+
+insert():
+- Does NOT invalidate iterators
+
+erase():
+- Only erased element invalid
+
+Tree rotations do NOT invalidate iterators
+
+=========================================
+8. UNORDERED_MAP / UNORDERED_SET (HASH TABLE)
+=========================================
+
+insert():
+- Usually safe
+- BUT rehashing may invalidate ALL iterators
+
+erase():
+- Only erased element invalid
+
+IMPORTANT:
+Rehash = ALL iterators invalid
+
+=========================================
+9. STACK / QUEUE / PRIORITY_QUEUE
+=========================================
+
+Container adaptors:
+- Do not expose iterators
+- Iterator invalidation not typically applicable
+
+=========================================
+10. QUICK SUMMARY TABLE
+=========================================
+
+Container         Iterator Stability
+-----------------------------------------
+vector            ❌ unstable (reallocation breaks all)
+deque             ⚠️ medium stability
+list              ✅ very stable
+forward_list      ✅ stable (special rules)
+set/map           ✅ stable (except erased element)
+unordered_*       ❌ unstable on rehash
+stack/queue       ❌ no iterators exposed
+
+=========================================
+11. MOST IMPORTANT INTERVIEW POINTS
+=========================================
+
+- Vector invalidates ALL iterators on reallocation
+- insert/erase in vector invalidates part of iterators
+- list has safest iterators
+- set/map iterators are stable (except erased ones)
+- unordered_map invalidates all iterators on rehash
+
+=========================================
+12. ONE-LINE INTERVIEW ANSWER
+=========================================
+
+Iterator invalidation is when operations on an STL container make existing iterators unsafe; vectors invalidate on reallocation, lists and trees are stable except erased elements, and unordered containers invalidate on rehash.
