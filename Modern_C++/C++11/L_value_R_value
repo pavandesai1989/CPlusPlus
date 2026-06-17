@@ -1,0 +1,136 @@
+=========================================
+LVALUE vs RVALUE (C++ INTERVIEW NOTES)
+=========================================
+
+1. What is an LVALUE?
+----------------------
+- LVALUE (Left Value) refers to an object that has a persistent memory address.
+- It can appear on the LEFT side of assignment.
+- It has a name and identifiable location in memory.
+
+Example:
+int x = 10;   // x is LVALUE
+x = 20;       // valid
+
+Another example:
+int a = 5;
+int &ref = a; // reference must bind to LVALUE
+
+Key property:
+- Has identity (you can take its address using &)
+
+-----------------------------------------
+
+2. What is an RVALUE?
+----------------------
+- RVALUE (Right Value) refers to temporary values that do NOT have a persistent memory address.
+- It typically appears on the RIGHT side of assignment.
+- It is short-lived (temporary expression result).
+
+Example:
+int x = 10 + 5;   // (10 + 5) is RVALUE
+
+Another example:
+int y = 20;       // 20 is RVALUE
+
+Key property:
+- No stable memory address (temporary)
+
+-----------------------------------------
+
+3. Simple Difference
+--------------------
+LVALUE:
+- Has name
+- Has address
+- Persistent object
+
+RVALUE:
+- Temporary
+- No stable address
+- Usually literal or expression result
+
+-----------------------------------------
+
+4. Examples Together
+--------------------
+int x = 10;      // x is LVALUE, 10 is RVALUE
+x = x + 5;       // x is LVALUE, (x + 5) is RVALUE
+
+-----------------------------------------
+
+5. LVALUE Reference (&)
+-----------------------
+- Can only bind to LVALUE
+
+Example:
+int x = 10;
+int &a = x;   // OK
+
+int &b = 10;  // ERROR (cannot bind RVALUE to LVALUE ref)
+
+-----------------------------------------
+
+6. RVALUE Reference (&&) – C++11
+---------------------------------
+- Introduced in C++11
+- Used to bind to temporary objects (RVALUEs)
+- Enables MOVE SEMANTICS
+
+Example:
+int &&r = 10;   // OK (binds to temporary)
+
+-----------------------------------------
+
+7. Move Semantics Concept
+-------------------------
+- RVALUE references enable resource transfer instead of copying
+- Improves performance
+
+Example:
+std::string s1 = "Hello";
+std::string s2 = std::move(s1); // moves data instead of copy
+
+After move:
+s1 becomes empty/valid-but-unspecified state
+
+-----------------------------------------
+
+8. Function Overloading with LVALUE/RVALUE
+------------------------------------------
+void func(int &x) {
+    cout << "LVALUE reference";
+}
+
+void func(int &&x) {
+    cout << "RVALUE reference";
+}
+
+Usage:
+int a = 10;
+func(a);     // calls LVALUE version
+func(20);    // calls RVALUE version
+
+-----------------------------------------
+
+9. std::move (Important)
+------------------------
+- Converts LVALUE into RVALUE reference
+- Does NOT move anything itself
+- It is just a type cast
+
+Example:
+int a = 10;
+int b = std::move(a);
+
+-----------------------------------------
+
+10. Interview Key Points
+------------------------
+- LVALUE = has identity + address
+- RVALUE = temporary value
+- C++11 introduced RVALUE references (&&)
+- Enables move semantics and performance optimization
+- std::move converts LVALUE → RVALUE
+
+=========================================
