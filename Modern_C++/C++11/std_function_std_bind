@@ -1,0 +1,250 @@
+=========================================
+🔥 std::function & std::bind (C++11)
+INTERVIEW NOTES
+=========================================
+
+=========================================
+1. What is std::function?
+=========================================
+
+std::function is a type-erased wrapper that can store
+ANY callable object.
+
+Callable objects include:
+✓ normal functions
+✓ lambda functions
+✓ functors (function objects)
+✓ std::bind expressions
+
+Header:
+#include <functional>
+
+-----------------------------------------
+
+2. Basic Example
+
+#include <iostream>
+#include <functional>
+using namespace std;
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+
+    std::function<int(int,int)> f;
+
+    f = add;   // function pointer
+
+    cout << f(2, 3);
+}
+
+Output:
+5
+
+-----------------------------------------
+
+3. std::function with Lambda
+
+std::function<int(int,int)> f = [](int a, int b) {
+    return a + b;
+};
+
+-----------------------------------------
+
+4. std::function with Functor
+
+struct Multiply {
+    int operator()(int a, int b) {
+        return a * b;
+    }
+};
+
+std::function<int(int,int)> f = Multiply();
+
+-----------------------------------------
+
+5. Why use std::function?
+
+Advantages:
+✓ Can store ANY callable type
+✓ Useful for callbacks
+✓ Used in STL algorithms and APIs
+✓ Runtime polymorphism for functions
+
+-----------------------------------------
+
+6. std::function overhead
+
+Disadvantages:
+✗ Slight performance overhead (type erasure)
+✗ Slower than direct function calls
+✗ Uses heap in some cases
+
+-----------------------------------------
+
+7. Real Use Cases
+
+✓ Callbacks
+✓ Event handlers
+✓ Strategy pattern
+✓ STL algorithms (rare usage)
+✓ Thread functions
+
+-----------------------------------------
+=========================================
+🔥 std::bind
+=========================================
+
+=========================================
+8. What is std::bind?
+=========================================
+
+std::bind is used to:
+👉 fix (bind) arguments of a function
+👉 create a new callable object
+
+It allows partial function application.
+
+-----------------------------------------
+
+9. Basic Example
+
+#include <iostream>
+#include <functional>
+using namespace std;
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+
+    auto f = std::bind(add, 10, 20);
+
+    cout << f();
+}
+
+Output:
+30
+
+-----------------------------------------
+
+10. Placeholder Concept
+
+#include <iostream>
+#include <functional>
+using namespace std;
+
+int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+
+    auto f = std::bind(add, std::placeholders::_1, 10);
+
+    cout << f(5);   // 5 + 10
+}
+
+Output:
+15
+
+-----------------------------------------
+
+11. std::bind with Class Member Function
+
+#include <iostream>
+#include <functional>
+using namespace std;
+
+class Test {
+public:
+    void print(int x) {
+        cout << x;
+    }
+};
+
+int main() {
+
+    Test t;
+
+    auto f = std::bind(&Test::print, &t, std::placeholders::_1);
+
+    f(100);
+}
+
+Output:
+100
+
+-----------------------------------------
+
+12. Why std::bind is used?
+
+Use cases:
+✓ Callback adaptation
+✓ Fixing arguments
+✓ Converting functions to required signature
+
+-----------------------------------------
+
+13. std::bind drawbacks (IMPORTANT)
+
+✗ Hard to read
+✗ Error-prone
+✗ Replaced by lambdas in modern C++
+
+Modern C++ prefers:
+👉 Lambdas instead of bind
+
+Example:
+
+auto f = [](int x) { return add(x, 10); };
+
+-----------------------------------------
+=========================================
+14. std::function vs std::bind vs lambda
+=========================================
+
+Lambda:
+✓ Best modern choice
+✓ Fast
+✓ Readable
+
+std::function:
+✓ Stores callable objects
+✓ Good for APIs/callbacks
+
+std::bind:
+✗ Older approach
+✗ Mostly replaced by lambda
+
+-----------------------------------------
+=========================================
+15. Interview Answer
+=========================================
+
+Q: What is std::function?
+
+A:
+std::function is a type-erased wrapper that can store and invoke any callable object like functions, lambdas, functors, or bind expressions.
+
+-----------------------------------------
+
+Q: What is std::bind?
+
+A:
+std::bind is used to create a new callable by binding arguments of an existing function.
+
+-----------------------------------------
+=========================================
+ONE-LINE REVISION
+=========================================
+
+std::function = universal callable wrapper
+
+std::bind = argument fixer (creates new function)
+
+Modern C++ prefers lambda over std::bind
+=========================================
