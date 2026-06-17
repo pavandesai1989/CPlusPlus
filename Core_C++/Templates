@@ -1,0 +1,450 @@
+=========================================
+C++ TEMPLATES – INTERVIEW NOTES
+=========================================
+
+1. WHAT ARE TEMPLATES?
+-----------------------
+- Templates allow writing GENERIC code (works with any data type).
+- They enable compile-time polymorphism.
+- Used in STL heavily (vector, map, etc.)
+
+Types:
+1. Function Templates
+2. Class Templates
+3. (Advanced) Template Specialization
+4. Variadic Templates (C++11+)
+
+-----------------------------------------
+2. FUNCTION TEMPLATE
+-----------------------------------------
+
+Definition:
+- A function that works with any data type.
+
+Syntax:
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+Usage:
+add<int>(10, 20);
+add<double>(2.5, 3.5);
+
+Key Points:
+- Compiler generates function at compile time.
+- Same logic, different types.
+
+-----------------------------------------
+3. CLASS TEMPLATE
+-----------------------------------------
+
+Definition:
+- A class that works with generic data types.
+
+Syntax:
+template <typename T>
+class Box {
+    T value;
+public:
+    void set(T v) { value = v; }
+    T get() { return value; }
+};
+
+Usage:
+Box<int> b1;
+b1.set(10);
+
+Box<string> b2;
+b2.set("hello");
+
+-----------------------------------------
+4. MULTIPLE TEMPLATE PARAMETERS
+-----------------------------------------
+
+template <typename T, typename U>
+class Pair {
+    T first;
+    U second;
+};
+
+Pair<int, string> p(1, "C++");
+
+-----------------------------------------
+5. DEFAULT TEMPLATE PARAMETERS
+-----------------------------------------
+
+template <typename T = int>
+class Data {
+    T value;
+};
+
+Data<> d1;        // int by default
+Data<double> d2;
+
+-----------------------------------------
+6. FUNCTION TEMPLATE OVERLOADING
+-----------------------------------------
+
+template <typename T>
+void print(T a) {
+    cout << a << endl;
+}
+
+template <>
+void print<int>(int a) {
+    cout << "Integer: " << a << endl;
+}
+
+-----------------------------------------
+7. TEMPLATE SPECIALIZATION
+-----------------------------------------
+
+Full specialization:
+
+template <>
+class Box<int> {
+public:
+    void show() {
+        cout << "Integer specialization" << endl;
+    }
+};
+
+-----------------------------------------
+8. PARTIAL SPECIALIZATION (Class only)
+-----------------------------------------
+
+template <typename T>
+class MyClass<T*> {
+    // specialized for pointer types
+};
+
+-----------------------------------------
+9. TEMPLATE INHERITANCE
+-----------------------------------------
+
+template <typename T>
+class Base {
+public:
+    T data;
+};
+
+template <typename T>
+class Derived : public Base<T> {
+public:
+    void show() {
+        cout << this->data;
+    }
+};
+
+-----------------------------------------
+10. TEMPLATE vs MACROS
+-----------------------------------------
+
+Templates:
+- Type-safe
+- Compile-time checking
+- Debuggable
+- Preferred in C++
+
+Macros:
+- No type safety
+- Preprocessor based
+- Hard to debug
+
+-----------------------------------------
+11. ADVANTAGES
+-----------------------------------------
+- Code reusability
+- Type safety
+- Performance (compile-time binding)
+- Reduces duplication
+
+-----------------------------------------
+12. DISADVANTAGES
+-----------------------------------------
+- Larger binary size (code bloat)
+- Harder to debug errors
+- Complex error messages
+
+-----------------------------------------
+13. STL RELATION
+-----------------------------------------
+STL is built using templates:
+
+vector<int>
+map<string, int>
+set<int>
+
+All are template classes.
+
+-----------------------------------------
+14. COMMON INTERVIEW QUESTIONS
+-----------------------------------------
+
+Q1. What are templates?
+Ans: Generic programming feature in C++ allowing type-independent code.
+
+Q2. Function vs Class template?
+Ans:
+- Function template → functions
+- Class template → classes/containers
+
+Q3. Why templates?
+Ans:
+- Code reuse
+- Type safety
+- STL foundation
+
+Q4. What is template specialization?
+Ans:
+- Custom implementation for specific data type.
+
+Q5. Are templates runtime or compile-time?
+Ans:
+- Compile-time mechanism.
+
+Q6. Why templates instead of inheritance?
+Ans:
+- Templates provide compile-time polymorphism
+- No runtime overhead
+
+-----------------------------------------
+15. KEY TAKEAWAY
+-----------------------------------------
+- Templates = backbone of STL
+- Used for generic programming
+- Prefer over macros and manual duplication
+=========================================
+
+
+=========================================
+C++ TEMPLATES – MOST ASKED Q&A
+=========================================
+
+1. What is a template in C++?
+--------------------------------
+Ans:
+A template is a feature in C++ that allows writing generic code
+so that the same function/class works with different data types.
+It is resolved at compile time.
+
+-----------------------------------------
+
+2. Why do we need templates?
+--------------------------------
+Ans:
+- To avoid code duplication
+- To achieve type safety
+- To support generic programming
+- Used heavily in STL (vector, map, etc.)
+
+-----------------------------------------
+
+3. Difference between function template and class template?
+--------------------------------
+Ans:
+
+Function Template:
+- Works for functions
+- Example: add<T>(T a, T b)
+
+Class Template:
+- Works for classes/objects
+- Example: vector<T>, map<K,V>
+
+-----------------------------------------
+
+4. Are templates runtime or compile-time?
+--------------------------------
+Ans:
+Templates are COMPILE-TIME mechanisms.
+Compiler generates code for each type used.
+
+-----------------------------------------
+
+5. What is template specialization?
+--------------------------------
+Ans:
+Providing a specific implementation of a template
+for a particular data type.
+
+Example:
+template <>
+class Box<int> {
+    // custom implementation for int
+};
+
+-----------------------------------------
+
+6. What is function template overloading?
+--------------------------------
+Ans:
+You can overload function templates or specialize them
+for specific types.
+
+Example:
+template <typename T>
+void print(T a);
+
+template <>
+void print<int>(int a);
+
+-----------------------------------------
+
+7. What is partial specialization?
+--------------------------------
+Ans:
+Specializing a template for a subset of types.
+
+NOTE:
+- Allowed only for class templates
+- Not allowed for function templates
+
+Example:
+template <typename T>
+class MyClass<T*> {  // pointer specialization
+};
+
+-----------------------------------------
+
+8. Can templates be inherited?
+--------------------------------
+Ans:
+Yes. Template classes can inherit from other templates.
+
+Example:
+template <typename T>
+class Base {};
+
+template <typename T>
+class Derived : public Base<T> {};
+
+-----------------------------------------
+
+9. What is template instantiation?
+--------------------------------
+Ans:
+When compiler generates actual code for a given type.
+
+Example:
+vector<int> → compiler creates vector<int> class.
+
+-----------------------------------------
+
+10. What is code bloat in templates?
+--------------------------------
+Ans:
+Templates generate separate code for each type,
+which can increase binary size.
+
+-----------------------------------------
+
+11. Why are templates better than macros?
+--------------------------------
+Ans:
+Templates:
+- Type-safe
+- Debuggable
+- Compile-time checking
+
+Macros:
+- No type safety
+- Preprocessor based
+- Hard to debug
+
+-----------------------------------------
+
+12. What is default template parameter?
+--------------------------------
+Ans:
+You can assign default type to template.
+
+Example:
+template <typename T = int>
+class Data {};
+
+Data<> d;  // int used by default
+
+-----------------------------------------
+
+13. Can templates be overloaded?
+--------------------------------
+Ans:
+Yes, function templates can be overloaded.
+But class template overloading is not typical;
+instead specialization is used.
+
+-----------------------------------------
+
+14. What is STL relation with templates?
+--------------------------------
+Ans:
+STL is fully built using templates:
+- vector<T>
+- map<K,V>
+- set<T>
+
+All are template classes.
+
+-----------------------------------------
+
+15. What is variadic template?
+--------------------------------
+Ans:
+Template that accepts variable number of arguments.
+
+Example:
+template <typename... Args>
+void func(Args... args);
+
+Used in modern C++ (C++11+).
+
+-----------------------------------------
+
+16. What happens if template code has error?
+--------------------------------
+Ans:
+Errors appear during instantiation,
+often producing long and complex compiler messages.
+
+-----------------------------------------
+
+17. Can we use templates for non-type parameters?
+--------------------------------
+Ans:
+Yes.
+
+Example:
+template <int N>
+class Array {
+    int arr[N];
+};
+
+-----------------------------------------
+
+18. Are templates polymorphism?
+--------------------------------
+Ans:
+Yes → compile-time polymorphism (static binding),
+unlike virtual functions (runtime polymorphism).
+
+-----------------------------------------
+
+19. Can we separate template declaration and definition?
+--------------------------------
+Ans:
+Usually NO (must be in header file)
+because compiler needs full definition during instantiation.
+
+-----------------------------------------
+
+20. Key Interview Summary
+--------------------------------
+- Templates = generic programming
+- Compile-time mechanism
+- Backbone of STL
+- Replace repetitive code
+=========================================
+
+
