@@ -1,0 +1,359 @@
+=========================================================
+MEMORY LAYOUT OF A C++ PROGRAM (INTERVIEW NOTES)
+=========================================================
+
+A typical C++ program memory is divided into:
+
+---------------------------------------------------------
+| Command Line Arguments / Environment Variables        |
+---------------------------------------------------------
+|                        Stack                          |
+---------------------------------------------------------
+|                         ↓                             |
+|                    Free Memory                        |
+|                         ↑                             |
+---------------------------------------------------------
+|                         Heap                          |
+---------------------------------------------------------
+|                  BSS Segment (.bss)                  |
+---------------------------------------------------------
+|               Initialized Data (.data)               |
+---------------------------------------------------------
+|              Read-Only Data (.rodata)                |
+---------------------------------------------------------
+|               Text/Code Segment (.text)              |
+---------------------------------------------------------
+
+=========================================================
+1. TEXT / CODE SEGMENT (.text)
+=========================================================
+
+Stores:
+• Compiled machine instructions
+• Function code
+• Read-only executable code
+
+Characteristics:
+• Read-only
+• Shared among processes
+• Exists throughout program execution
+
+Example:
+
+void fun()
+{
+    cout << "Hello";
+}
+
+Machine code of fun() is stored in .text.
+
+=========================================================
+2. READ-ONLY DATA SEGMENT (.rodata)
+=========================================================
+
+Stores:
+• String literals
+• const global variables (typically)
+
+Example:
+
+char* str = "Hello";
+
+"Hello" is stored in:
+
+.rodata
+
+Attempting modification:
+
+str[0] = 'A';
+
+Undefined Behavior.
+
+=========================================================
+3. INITIALIZED DATA SEGMENT (.data)
+=========================================================
+
+Stores:
+• Global variables
+• Static variables
+• Explicitly initialized
+
+Example:
+
+int x = 100;
+
+static int y = 200;
+
+Stored in:
+
+.data
+
+Characteristics:
+• Read/Write
+• Lifetime = Entire program execution
+
+=========================================================
+4. BSS SEGMENT (.bss)
+=========================================================
+
+(BSS = Block Started by Symbol)
+
+Stores:
+• Uninitialized global variables
+• Uninitialized static variables
+• Variables initialized to zero
+
+Example:
+
+int x;
+
+static int y;
+
+int z = 0;
+
+Stored in:
+
+.bss
+
+Characteristics:
+• Automatically initialized to 0.
+• Lifetime = Entire program execution.
+
+=========================================================
+5. HEAP SEGMENT
+=========================================================
+
+Stores:
+• Dynamically allocated memory
+
+Allocated using:
+
+new
+delete
+
+Example:
+
+int* ptr = new int(10);
+
+Memory:
+
+ptr (Stack)
+ ↓
+[10] (Heap)
+
+Characteristics:
+• Runtime allocation
+• Programmer managed
+• Large memory area
+• Can cause memory leaks
+
+=========================================================
+6. STACK SEGMENT
+=========================================================
+
+Stores:
+• Local variables
+• Function parameters
+• Return addresses
+• Function call information
+
+Example:
+
+void fun()
+{
+    int x = 10;
+}
+
+x is stored on:
+
+Stack
+
+Characteristics:
+• Automatic allocation/deallocation
+• Fast
+• Limited size
+• Scope based
+
+=========================================================
+EXAMPLE PROGRAM
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+int g = 100;          // .data
+int g2;               // .bss
+const int c = 50;     // .rodata (typically)
+
+void fun()
+{
+    int x = 10;       // Stack
+
+    int* ptr =
+        new int(20);  // Heap
+}
+
+int main()
+{
+    fun();
+}
+
+=========================================================
+MEMORY MAPPING
+=========================================================
+
+int g = 100;          → .data
+int g2;               → .bss
+const int c = 50;     → .rodata
+fun() code            → .text
+int x                 → Stack
+new int(20)           → Heap
+
+=========================================================
+INTERVIEW DIAGRAM
+=========================================================
+
+High Address
+-------------------------------------------------
+| Command Line Arguments                        |
+-------------------------------------------------
+| Stack                                         |
+| int x                                         |
+| function parameters                           |
+-------------------------------------------------
+|                                               |
+|               Free Memory                     |
+|                                               |
+-------------------------------------------------
+| Heap                                          |
+| new int                                       |
+| new objects                                   |
+-------------------------------------------------
+| .bss                                          |
+| int g2;                                       |
+-------------------------------------------------
+| .data                                         |
+| int g=100;                                    |
+-------------------------------------------------
+| .rodata                                       |
+| "Hello"                                       |
+| const globals                                 |
+-------------------------------------------------
+| .text                                         |
+| main()                                        |
+| fun()                                         |
+-------------------------------------------------
+Low Address
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Where are local variables stored?
+
+Answer:
+Stack.
+
+---------------------------------------------------------
+
+Q2. Where is dynamically allocated memory stored?
+
+Answer:
+Heap.
+
+---------------------------------------------------------
+
+Q3. Where are global initialized variables stored?
+
+Answer:
+.data segment.
+
+---------------------------------------------------------
+
+Q4. Where are uninitialized global/static variables stored?
+
+Answer:
+.bss segment.
+
+---------------------------------------------------------
+
+Q5. Where are string literals stored?
+
+Answer:
+.rodata (Read-only data segment).
+
+---------------------------------------------------------
+
+Q6. Where is function code stored?
+
+Answer:
+.text segment.
+
+---------------------------------------------------------
+
+Q7. Why is Stack faster than Heap?
+
+Answer:
+Stack allocation is simple push/pop operation.
+Heap requires complex allocation algorithms.
+
+---------------------------------------------------------
+
+Q8. Which memory region can cause memory leaks?
+
+Answer:
+Heap.
+
+---------------------------------------------------------
+
+Q9. Lifetime of global variables?
+
+Answer:
+Entire program execution.
+
+---------------------------------------------------------
+
+Q10. Lifetime of local variables?
+
+Answer:
+Till the function scope ends.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A C++ program's memory is divided into Text (.text), Read-Only Data
+(.rodata), Initialized Data (.data), BSS (.bss), Heap, and Stack.
+Function code resides in .text, string literals in .rodata, initialized
+globals/statics in .data, uninitialized globals/statics in .bss,
+dynamic memory in Heap, and local variables and function call frames in
+Stack.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+.text
+   ↓
+Function Code
+
+.rodata
+   ↓
+String Literals / Const Globals
+
+.data
+   ↓
+Initialized Globals/Statics
+
+.bss
+   ↓
+Uninitialized Globals/Statics
+
+Heap
+   ↓
+Dynamic Memory (new/delete)
+
+Stack
+   ↓
+Local Variables & Function Calls
+=========================================================
