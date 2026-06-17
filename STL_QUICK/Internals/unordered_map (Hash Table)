@@ -1,0 +1,200 @@
+=========================================
+C++ UNORDERED_MAP (HASH TABLE) - STL NOTES
+=========================================
+
+1. What is std::unordered_map?
+-------------------------------
+std::unordered_map is an associative container that stores:
+(key, value) pairs with UNIQUE keys.
+
+It does NOT maintain any order of keys.
+
+Example:
+unordered_map<int, string> um;
+
+um[2] = "two";
+um[1] = "one";
+
+Output order is NOT guaranteed:
+1 -> "one"
+2 -> "two"
+(or any random order)
+
+-----------------------------------------
+2. Internal Implementation
+-----------------------------------------
+std::unordered_map is implemented using:
+
+👉 HASH TABLE
+
+Structure:
+- Array of buckets
+- Hash function maps key → bucket index
+- Each bucket stores entries (collision handled internally)
+
+Example:
+
+key → hash(key) → index → bucket
+
+-----------------------------------------
+3. Why Hash Table?
+-----------------------------------------
+Because it provides:
+
+✔ O(1) average time for insert
+✔ O(1) average time for search
+✔ O(1) average time for delete
+
+BUT:
+❌ Worst case can become O(n) due to collisions
+
+-----------------------------------------
+4. Key Properties
+-----------------------------------------
+- Stores unique keys
+- No ordering of keys
+- Faster than map (average case)
+- Uses hash function
+- Allows custom hash function
+
+-----------------------------------------
+5. Time Complexities
+-----------------------------------------
+Operation        Complexity
+--------------------------------
+insert           O(1) avg, O(n) worst
+erase            O(1) avg, O(n) worst
+find             O(1) avg, O(n) worst
+operator[]       O(1) avg, O(n) worst
+
+-----------------------------------------
+6. Hash Function
+-----------------------------------------
+Internal process:
+
+key → hash_function(key) → bucket_index
+
+Example:
+hash(10) % bucket_size = index
+
+Collisions handled using:
+- chaining (linked list / list inside bucket)
+
+-----------------------------------------
+7. Important Functions
+-----------------------------------------
+insert()
+erase()
+find()
+count()
+clear()
+
+operator[]
+at()
+begin(), end()
+
+-----------------------------------------
+8. insert() vs operator[]
+-----------------------------------------
+
+insert():
+- Inserts only if key NOT present
+- Does NOT overwrite
+
+um.insert({1, "A"});
+
+operator[]:
+- Inserts if key not present
+- Overwrites if key exists
+
+um[1] = "A";
+
+-----------------------------------------
+9. find() Function
+-----------------------------------------
+Returns iterator if found
+Else returns end()
+
+if(um.find(10) != um.end())
+    cout << "Found";
+
+-----------------------------------------
+10. Iterator Behavior
+-----------------------------------------
+VERY IMPORTANT:
+
+✔ Iterators are NOT sorted
+✔ Order can change after insert/erase
+✔ Rehash can invalidate ALL iterators
+
+-----------------------------------------
+11. Rehashing
+-----------------------------------------
+When bucket load increases:
+
+👉 rehash happens
+
+Effects:
+- Bucket size increases
+- Elements redistributed
+- ALL iterators become INVALID
+
+-----------------------------------------
+12. map vs unordered_map
+-----------------------------------------
+
+map (Red-Black Tree):
+- O(log n)
+- Sorted keys
+- Stable ordering
+
+unordered_map (Hash Table):
+- O(1) average
+- No order
+- Faster in most cases
+
+-----------------------------------------
+13. When to use unordered_map?
+-----------------------------------------
+Use when:
+✔ Need fast lookup
+✔ Order not required
+✔ Frequency counting problems
+✔ Hash-based problems
+
+Avoid when:
+✗ Need sorted output
+✗ Need range queries (use map)
+
+-----------------------------------------
+14. Real-world Use Cases
+-----------------------------------------
+- Frequency counting
+- Caching (LRU concepts)
+- Index mapping
+- Lookup tables
+- Competitive programming hashing problems
+
+-----------------------------------------
+15. Common Interview Questions
+-----------------------------------------
+
+Q1. What is unordered_map?
+A: Hash table-based associative container.
+
+Q2. Time complexity?
+A: O(1) average, O(n) worst.
+
+Q3. Difference from map?
+A: map = ordered (tree), unordered_map = hash table.
+
+Q4. Why faster than map?
+A: Direct indexing via hash function.
+
+Q5. When rehash happens?
+A: When load factor exceeds threshold.
+
+-----------------------------------------
+16. ONE-LINE INTERVIEW ANSWER
+-----------------------------------------
+std::unordered_map is a hash table-based associative container that stores key-value pairs with average O(1) lookup, insertion, and deletion, but does not maintain any ordering of keys.
