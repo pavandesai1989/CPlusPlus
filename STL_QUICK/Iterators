@@ -1,0 +1,163 @@
+=========================================
+🔥 STL Iterator Types (VERY IMPORTANT)
+=========================================
+
+1. What is an Iterator?
+------------------------
+- An iterator is an object that points to an element in a container.
+- Works like a generalized pointer.
+- Used to traverse STL containers uniformly.
+
+Example:
+vector<int>::iterator it;
+
+-----------------------------------------
+2. Types of Iterators (VERY IMPORTANT)
+-----------------------------------------
+
+STL defines 5 main iterator categories:
+
+-----------------------------------------
+A. Input Iterator
+-----------------------------------------
+- Reads data only (one direction).
+- Can move forward only.
+- Can be used only once.
+
+Used in:
+- istream_iterator
+- reading streams
+
+Example:
+InputIterator it = container.begin();
+
+Key points:
+✔ Read-only access
+✔ Single pass
+✔ Cannot go backward
+
+-----------------------------------------
+B. Output Iterator
+-----------------------------------------
+- Writes data only.
+- Forward moving only.
+- Cannot read values.
+
+Used in:
+- ostream_iterator
+- copy output operations
+
+Example:
+OutputIterator it = container.begin();
+
+Key points:
+✔ Write-only
+✔ Single pass
+✔ No reading allowed
+
+-----------------------------------------
+C. Forward Iterator
+-----------------------------------------
+- Combines input + output capability.
+- Can read and write.
+- Can move forward multiple times.
+
+Used in:
+- forward_list
+- unordered containers (conceptually)
+
+Example:
+forward_list<int>::iterator it;
+
+Key points:
+✔ Read + Write
+✔ Multi-pass
+✔ Only forward movement
+
+-----------------------------------------
+D. Bidirectional Iterator
+-----------------------------------------
+- Can move forward and backward.
+- Supports ++ and --
+
+Used in:
+- list
+- set
+- map
+
+Example:
+list<int>::iterator it;
+
+Operations:
+++it  → move forward
+--it  → move backward
+
+Key points:
+✔ Forward + backward traversal
+✔ No random access
+
+-----------------------------------------
+E. Random Access Iterator (VERY IMPORTANT)
+-----------------------------------------
+- Most powerful iterator type.
+- Supports full pointer arithmetic.
+
+Used in:
+- vector
+- deque
+- array
+
+Example:
+vector<int>::iterator it;
+
+Operations:
+it + 5
+it - 2
+it[n]
+it < it2
+
+Key points:
+✔ Fast access (O(1))
+✔ Supports indexing
+✔ Supports arithmetic operations
+
+-----------------------------------------
+3. Iterator Hierarchy (IMPORTANT)
+-----------------------------------------
+
+Input Iterator
+     ↓
+Forward Iterator
+     ↓
+Bidirectional Iterator
+     ↓
+Random Access Iterator
+
+(Output iterator is separate concept)
+
+-----------------------------------------
+4. Iterator Invalidation (Quick Recap)
+-----------------------------------------
+- Happens when container structure changes.
+
+vector:
+- push_back → may invalidate all iterators (reallocation)
+- erase → invalidates iterators after erased element
+
+list:
+- stable iterators except erased elements
+
+map/set:
+- stable except erased element
+
+-----------------------------------------
+🔥 INTERVIEW SUMMARY
+-----------------------------------------
+✔ Input → read-only, single pass
+✔ Output → write-only
+✔ Forward → multi-pass, single direction
+✔ Bidirectional → + and -
+✔ Random Access → full pointer arithmetic (fastest)
+✔ vector uses random access iterators
+✔ list uses bidirectional iterators
+✔ iterator invalidation depends on container type
