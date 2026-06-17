@@ -1,0 +1,482 @@
+=========================================================
+POLYMORPHISM IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Polymorphism means:
+
+"One Interface, Multiple Forms"
+
+or
+
+"The ability of the same function/interface to behave differently
+depending on the object or arguments."
+
+Poly  = Many
+Morph = Forms
+
+=========================================================
+WHY DO WE NEED POLYMORPHISM?
+=========================================================
+
+Without Polymorphism:
+• Lots of if-else/switch statements
+• Tight coupling
+• Difficult to extend code
+• Hard to maintain
+
+Polymorphism provides:
+• Flexibility
+• Extensibility
+• Loose Coupling
+• Code Reusability
+• Runtime Behavior Changes
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+Shape* s;
+
+s can point to:
+
+Circle
+Rectangle
+Triangle
+
+All support:
+
+draw()
+
+But implementation differs.
+
+This is Polymorphism.
+
+=========================================================
+TYPES OF POLYMORPHISM IN C++
+=========================================================
+
+1. Compile-Time Polymorphism
+2. Runtime Polymorphism
+
+=========================================================
+1. COMPILE-TIME POLYMORPHISM
+=========================================================
+
+Definition:
+Function call is resolved by the compiler during compilation.
+
+Also called:
+
+• Static Binding
+• Early Binding
+
+Achieved Using:
+
+1. Function Overloading
+2. Operator Overloading
+
+=========================================================
+FUNCTION OVERLOADING EXAMPLE
+=========================================================
+
+class Calculator
+{
+public:
+    int add(int a, int b)
+    {
+        return a + b;
+    }
+
+    double add(double a, double b)
+    {
+        return a + b;
+    }
+};
+
+Compiler chooses the correct function during compilation.
+
+=========================================================
+OPERATOR OVERLOADING EXAMPLE
+=========================================================
+
+class Complex
+{
+public:
+    int real;
+    int imag;
+
+    Complex(int r, int i)
+    {
+        real = r;
+        imag = i;
+    }
+
+    Complex operator+(Complex c)
+    {
+        return Complex(
+                    real + c.real,
+                    imag + c.imag
+               );
+    }
+};
+
+=========================================================
+WHY IS IT CALLED COMPILE-TIME POLYMORPHISM?
+=========================================================
+
+Compiler knows exactly which function to call.
+
+No runtime decision.
+
+Therefore:
+
+Fast execution.
+
+=========================================================
+2. RUNTIME POLYMORPHISM
+=========================================================
+
+Definition:
+Function call is resolved during execution.
+
+Also called:
+
+• Dynamic Binding
+• Late Binding
+• Dynamic Dispatch
+
+Achieved Using:
+
+1. Inheritance
+2. Function Overriding
+3. Virtual Functions
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Animal
+{
+public:
+    virtual void sound()
+    {
+        cout << "Animal\n";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void sound() override
+    {
+        cout << "Dog\n";
+    }
+};
+
+int main()
+{
+    Animal* ptr = new Dog();
+
+    ptr->sound();
+}
+
+Output:
+
+Dog
+
+=========================================================
+WITHOUT virtual
+=========================================================
+
+class Animal
+{
+public:
+    void sound()
+    {
+        cout << "Animal\n";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void sound()
+    {
+        cout << "Dog\n";
+    }
+};
+
+Animal* ptr = new Dog();
+
+ptr->sound();
+
+Output:
+
+Animal
+
+Reason:
+Compiler checks pointer type:
+
+Animal*
+
+Not actual object.
+
+=========================================================
+WITH virtual
+=========================================================
+
+Animal* ptr = new Dog();
+
+ptr->sound();
+
+Output:
+
+Dog
+
+Compiler checks:
+
+Actual object at runtime:
+
+Dog
+
+=========================================================
+HOW RUNTIME POLYMORPHISM WORKS INTERNALLY
+=========================================================
+
+Compiler creates:
+
+1. vtable (Virtual Table)
+2. vptr (Virtual Pointer)
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+Dog Object
+
+---------------------
+vptr
+---------------------
+Base Members
+---------------------
+Derived Members
+---------------------
+
+vptr
+  |
+  |
+  V
+vtable
+  |
+  +----> Animal::sound()
+  +----> Dog::sound()
+
+Function call is resolved through:
+
+vptr → vtable
+
+This is called:
+
+Dynamic Dispatch.
+
+=========================================================
+REQUIREMENTS FOR RUNTIME POLYMORPHISM
+=========================================================
+
+1. Inheritance
+2. Function Overriding
+3. Virtual Function
+4. Base Pointer or Base Reference
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle\n";
+    }
+};
+
+Shape* ptr = new Circle();
+
+ptr->draw();
+
+=========================================================
+ADVANTAGES OF POLYMORPHISM
+=========================================================
+
+1. Loose Coupling
+2. Extensibility
+3. Code Reusability
+4. Better Maintainability
+5. Runtime Flexibility
+6. Easier Testing
+7. Supports Design Patterns
+
+=========================================================
+DISADVANTAGES OF RUNTIME POLYMORPHISM
+=========================================================
+
+1. vptr Memory Overhead
+2. vtable Lookup Overhead
+3. Function call cannot always be inlined
+4. Slightly slower than static binding
+
+=========================================================
+COMPILE-TIME vs RUNTIME POLYMORPHISM
+=========================================================
+
+Feature            Compile-Time         Runtime
+-------------------------------------------------------
+Binding            Early                Late
+Resolved By        Compiler             Runtime
+Mechanism          Overloading          Virtual Functions
+Performance        Faster               Slightly Slower
+Inheritance Req.   No                   Yes
+Virtual Req.       No                   Yes
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+Payment System
+
+class Payment
+{
+public:
+    virtual void pay() = 0;
+};
+
+class UPIPayment : public Payment
+{
+};
+
+class CreditCardPayment : public Payment
+{
+};
+
+Payment* p;
+
+p = new UPIPayment();
+p->pay();
+
+p = new CreditCardPayment();
+p->pay();
+
+Same interface:
+
+pay()
+
+Different implementations.
+
+This is Polymorphism.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Polymorphism?
+
+Answer:
+Polymorphism means one interface having multiple implementations or
+forms.
+
+---------------------------------------------------------
+
+Q2. Types of Polymorphism?
+
+Answer:
+1. Compile-Time Polymorphism
+2. Runtime Polymorphism
+
+---------------------------------------------------------
+
+Q3. How is Compile-Time Polymorphism achieved?
+
+Answer:
+• Function Overloading
+• Operator Overloading
+
+---------------------------------------------------------
+
+Q4. How is Runtime Polymorphism achieved?
+
+Answer:
+• Inheritance
+• Function Overriding
+• Virtual Functions
+
+---------------------------------------------------------
+
+Q5. Requirements for Runtime Polymorphism?
+
+Answer:
+1. Inheritance
+2. Virtual Function
+3. Function Overriding
+4. Base Pointer/Base Reference
+
+---------------------------------------------------------
+
+Q6. Why are virtual functions required?
+
+Answer:
+To resolve function calls based on the actual object at runtime.
+
+---------------------------------------------------------
+
+Q7. Why is Runtime Polymorphism slower?
+
+Answer:
+Because function calls are resolved through:
+
+vptr → vtable
+
+which introduces an extra level of indirection.
+
+---------------------------------------------------------
+
+Q8. What are vptr and vtable?
+
+vptr:
+Hidden pointer inside object.
+
+vtable:
+Table containing addresses of virtual functions.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Polymorphism is one of the four pillars of OOP and means one interface
+having multiple implementations. In C++, it is of two types:
+Compile-Time Polymorphism, achieved through function and operator
+overloading, and Runtime Polymorphism, achieved using inheritance,
+function overriding, and virtual functions. Runtime polymorphism works
+through vptr and vtable and enables flexible and extensible designs.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+One Interface
+       ↓
+Multiple Forms
+       ↓
+Compile-Time (Overloading)
+       +
+Runtime (Virtual Functions)
+       ↓
+Polymorphism
+=========================================================
