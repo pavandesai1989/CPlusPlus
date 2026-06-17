@@ -1,0 +1,167 @@
+=========================================================
+STACK vs HEAP (INTERVIEW QUICK REVISION NOTES)
+=========================================================
+
+STACK MEMORY
+=========================================================
+Definition:
+Memory managed automatically by the compiler.
+
+Characteristics:
+• Stores local variables and function call information.
+• Allocation/Deallocation is automatic.
+• Faster access.
+• Limited size.
+• Lifetime depends on scope.
+
+Example:
+
+void fun()
+{
+    int x = 10;     // Stack
+}
+
+x is destroyed when function returns.
+
+=========================================================
+HEAP MEMORY
+=========================================================
+Definition:
+Memory allocated dynamically during runtime.
+
+Characteristics:
+• Managed by programmer (new/delete).
+• Slower than stack.
+• Larger memory area.
+• Lifetime until explicitly deleted.
+• Can cause memory leaks.
+
+Example:
+
+int* ptr = new int(10);   // Heap
+delete ptr;
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Feature              Stack                     Heap
+-------------------------------------------------------------
+Allocation           Automatic                 Manual (new/delete)
+Managed By           Compiler                  Programmer
+Speed                Faster                    Slower
+Memory Size          Limited                   Large
+Lifetime             Scope Based               Until delete/free
+Fragmentation        Very Less                 Possible
+Memory Leak          No                        Yes
+Access               Direct                    Through Pointer
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+Stack:
+
+main()
+{
+    int x;
+    int y;
+}
+
++------+
+|  y   |
++------+
+|  x   |
++------+
+
+Destroyed automatically.
+
+---------------------------------------------------------
+
+Heap:
+
+int* ptr = new int(10);
+
+ptr ---> +------+
+         |  10  |
+         +------+
+
+Memory remains until:
+
+delete ptr;
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Why is Stack faster than Heap?
+
+Answer:
+Stack uses simple push/pop operations and memory is contiguous.
+Heap requires dynamic allocation algorithms and bookkeeping.
+
+---------------------------------------------------------
+
+Q2. Which memory can cause memory leaks?
+
+Answer:
+Heap memory.
+
+---------------------------------------------------------
+
+Q3. Where are local variables stored?
+
+Answer:
+Stack.
+
+---------------------------------------------------------
+
+Q4. Where is dynamically allocated memory stored?
+
+Answer:
+Heap.
+
+---------------------------------------------------------
+
+Q5. Which memory is automatically cleaned?
+
+Answer:
+Stack.
+
+---------------------------------------------------------
+
+Q6. Why use Heap if Stack is faster?
+
+Answer:
+Because:
+• Size is decided at runtime.
+• Data needs to survive beyond function scope.
+• Large objects may not fit on stack.
+
+=========================================================
+INTERVIEW READY ANSWER (20 Seconds)
+=========================================================
+
+Stack memory is automatically managed by the compiler and stores local
+variables and function call information. It is fast and scope-based.
+Heap memory is dynamically allocated using new/delete, is larger in size,
+but requires manual management and can lead to memory leaks and
+fragmentation if not handled properly.
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+Stack
+   ↓
+Automatic
+Fast
+Scope-Based
+
+Heap
+   ↓
+Dynamic
+Manual
+Large
+Memory Leak Possible
+=========================================================
