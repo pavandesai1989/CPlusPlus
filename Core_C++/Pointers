@@ -1,0 +1,542 @@
+=========================================================
+POINTERS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A pointer is a variable that stores the memory address of another
+variable.
+
+Syntax:
+
+datatype* ptr;
+
+Example:
+
+int x = 10;
+int* ptr = &x;
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+int x = 10;
+int* ptr = &x;
+
+        Address 1000
+        +-------+
+x ----> |  10   |
+        +-------+
+
+ptr ----> 1000
+
+ptr stores the address of x.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    int* ptr = &x;
+
+    cout << ptr << endl;   // Address of x
+    cout << *ptr << endl;  // 10
+}
+
+=========================================================
+IMPORTANT OPERATORS
+=========================================================
+
+1. Address-of Operator (&)
+2. Dereference Operator (*)
+
+=========================================================
+ADDRESS OPERATOR (&)
+=========================================================
+
+int x = 10;
+
+cout << &x;
+
+Returns:
+
+Address of x.
+
+=========================================================
+DEREFERENCE OPERATOR (*)
+=========================================================
+
+int x = 10;
+
+int* ptr = &x;
+
+cout << *ptr;
+
+Output:
+
+10
+
+*ptr means:
+
+Value stored at address pointed by ptr.
+
+=========================================================
+MODIFYING VALUE USING POINTER
+=========================================================
+
+int x = 10;
+
+int* ptr = &x;
+
+*ptr = 100;
+
+cout << x;
+
+Output:
+
+100
+
+=========================================================
+POINTER DECLARATION
+=========================================================
+
+int* p1;
+char* p2;
+double* p3;
+
+Pointer size depends on architecture.
+
+32-bit system : 4 bytes
+64-bit system : 8 bytes
+
+Regardless of datatype.
+
+=========================================================
+NULL POINTER
+=========================================================
+
+int* ptr = nullptr;      // C++11
+
+or
+
+int* ptr = NULL;
+
+Preferred:
+
+nullptr
+
+Reason:
+Type-safe.
+
+=========================================================
+WHY NULL POINTER?
+=========================================================
+
+Represents:
+
+Pointer points to nothing.
+
+Prevents garbage addresses.
+
+=========================================================
+DANGLING POINTER
+=========================================================
+
+Definition:
+Pointer pointing to memory that has already been freed.
+
+Example:
+
+int* ptr = new int(10);
+
+delete ptr;
+
+cout << *ptr;      // Undefined Behavior
+
+ptr is dangling.
+
+=========================================================
+SOLUTION
+=========================================================
+
+delete ptr;
+ptr = nullptr;
+
+=========================================================
+WILD POINTER
+=========================================================
+
+Definition:
+Uninitialized pointer.
+
+Example:
+
+int* ptr;
+
+cout << *ptr;
+
+Undefined Behavior.
+
+=========================================================
+SOLUTION
+=========================================================
+
+int* ptr = nullptr;
+
+=========================================================
+VOID POINTER
+=========================================================
+
+Definition:
+Generic pointer capable of storing address of any datatype.
+
+Example:
+
+int x = 10;
+
+void* ptr = &x;
+
+Cannot dereference directly.
+
+Wrong:
+
+cout << *ptr;
+
+Correct:
+
+cout << *(int*)ptr;
+
+=========================================================
+POINTER TO POINTER
+=========================================================
+
+int x = 10;
+
+int* ptr = &x;
+
+int** pptr = &ptr;
+
+Memory:
+
+pptr
+  ↓
+ ptr
+  ↓
+  x
+
+Access:
+
+**pptr
+
+Output:
+
+10
+
+=========================================================
+POINTER ARITHMETIC
+=========================================================
+
+int arr[] = {10,20,30};
+
+int* ptr = arr;
+
+ptr++;
+
+Moves by:
+
+sizeof(int)
+
+Not by 1 byte.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+int arr[] = {10,20,30};
+
+int* ptr = arr;
+
+cout << *ptr;      // 10
+
+ptr++;
+
+cout << *ptr;      // 20
+
+=========================================================
+ARRAYS AND POINTERS
+=========================================================
+
+int arr[3]={10,20,30};
+
+int* ptr = arr;
+
+Equivalent:
+
+ptr = &arr[0];
+
+=========================================================
+ACCESS ARRAY USING POINTER
+=========================================================
+
+cout << *(ptr+0);
+
+cout << *(ptr+1);
+
+cout << *(ptr+2);
+
+=========================================================
+RELATIONSHIP
+=========================================================
+
+arr[i]
+
+Equivalent:
+
+*(arr+i)
+
+=========================================================
+POINTER TO OBJECT
+=========================================================
+
+class Test
+{
+public:
+    int x=10;
+};
+
+Test obj;
+
+Test* ptr = &obj;
+
+cout << ptr->x;
+
+Equivalent:
+
+cout << (*ptr).x;
+
+=========================================================
+THIS POINTER
+=========================================================
+
+Every non-static member function receives:
+
+this
+
+Example:
+
+class Test
+{
+    int x;
+
+public:
+    void setX(int x)
+    {
+        this->x = x;
+    }
+};
+
+Compiler internally:
+
+void setX(Test* this,int x)
+{
+    this->x = x;
+}
+
+=========================================================
+PASS BY POINTER
+=========================================================
+
+void increment(int* x)
+{
+    (*x)++;
+}
+
+int a = 10;
+
+increment(&a);
+
+Output:
+
+11
+
+=========================================================
+DYNAMIC MEMORY ALLOCATION
+=========================================================
+
+int* ptr = new int(10);
+
+cout << *ptr;
+
+delete ptr;
+
+=========================================================
+DYNAMIC ARRAY
+=========================================================
+
+int n = 5;
+
+int* arr = new int[n];
+
+delete[] arr;
+
+=========================================================
+MEMORY LEAK
+=========================================================
+
+int* ptr = new int(10);
+
+ptr = nullptr;
+
+Allocated memory lost.
+
+Memory Leak.
+
+=========================================================
+SMART POINTERS (C++11)
+=========================================================
+
+1. unique_ptr
+2. shared_ptr
+3. weak_ptr
+
+Purpose:
+Automatic memory management.
+
+=========================================================
+POINTER vs REFERENCE
+=========================================================
+
+Feature             Pointer            Reference
+---------------------------------------------------------
+Can be NULL         Yes                No
+Must Initialize     No                 Yes
+Can Reassign        Yes                No
+Arithmetic          Yes                No
+Dereference         Required           Not Required
+Syntax              Complex            Easier
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Pointer?
+
+Answer:
+A variable that stores the address of another variable.
+
+---------------------------------------------------------
+
+Q2. Difference between * and & ?
+
+Answer:
+
+&
+→ Address-of operator.
+
+*
+→ Dereference operator.
+
+---------------------------------------------------------
+
+Q3. What is nullptr?
+
+Answer:
+Type-safe null pointer introduced in C++11.
+
+---------------------------------------------------------
+
+Q4. Difference between NULL and nullptr?
+
+Answer:
+
+NULL
+→ Typically integer 0.
+
+nullptr
+→ Dedicated pointer type (std::nullptr_t).
+
+Prefer:
+nullptr.
+
+---------------------------------------------------------
+
+Q5. What is a Wild Pointer?
+
+Answer:
+Uninitialized pointer.
+
+---------------------------------------------------------
+
+Q6. What is a Dangling Pointer?
+
+Answer:
+Pointer referring to freed memory.
+
+---------------------------------------------------------
+
+Q7. How to avoid Dangling Pointer?
+
+Answer:
+
+delete ptr;
+ptr = nullptr;
+
+---------------------------------------------------------
+
+Q8. What is a Void Pointer?
+
+Answer:
+Generic pointer that can hold address of any datatype.
+
+---------------------------------------------------------
+
+Q9. Why can't void* be dereferenced directly?
+
+Answer:
+Compiler does not know object type and size.
+
+---------------------------------------------------------
+
+Q10. Why is pointer arithmetic scaled?
+
+Answer:
+Pointer increments by size of datatype.
+
+int*
+→ +4 bytes
+
+double*
+→ +8 bytes
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A pointer is a variable that stores the address of another variable.
+Pointers enable dynamic memory allocation, pass-by-reference semantics,
+efficient array traversal, and implementation of complex data structures
+like linked lists and trees. Important concepts include null pointers,
+dangling pointers, wild pointers, void pointers, pointer arithmetic, and
+dynamic memory management using new/delete.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Pointer
+     ↓
+Stores Address
+     ↓
+Dereference using *
+     ↓
+Dynamic Memory
+     ↓
+Pointer Arithmetic
+     ↓
+Linked Lists/Trees/STL Internals
+=========================================================
