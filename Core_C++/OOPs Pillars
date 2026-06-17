@@ -1,0 +1,425 @@
+=========================================================
+OOP INTERVIEW NOTES (INTERVIEW PERSPECTIVE)
+Encapsulation | Abstraction | Inheritance | Polymorphism
+=========================================================
+
+1. ENCAPSULATION
+=========================================================
+
+Definition:
+Encapsulation is the process of binding data (variables) and methods
+(functions) together into a single unit (class) and restricting direct
+access to data using access specifiers.
+
+Achieved Using:
+• Class
+• private
+• protected
+• public
+
+Example:
+
+class Employee
+{
+private:
+    int salary;
+
+public:
+    void setSalary(int s)
+    {
+        salary = s;
+    }
+
+    int getSalary()
+    {
+        return salary;
+    }
+};
+
+Advantages:
+• Data Hiding
+• Controlled Access
+• Better Security
+• Easier Maintenance
+• Low Coupling
+
+Real World Example:
+ATM Machine
+You can withdraw money without direct access to bank's internal data.
+
+Interview Questions:
+
+Q1. What is Encapsulation?
+
+Answer:
+Wrapping data and functions into a single unit and restricting direct
+access to data.
+
+Q2. How is Encapsulation achieved in C++?
+
+Answer:
+Using classes and access specifiers.
+
+Q3. Why is Encapsulation important?
+
+Answer:
+It provides data hiding, security, controlled access and better
+maintainability.
+
+Q4. Does private keyword mean Encapsulation?
+
+Answer:
+No.
+
+private is one way to implement Encapsulation.
+Encapsulation is a broader concept of bundling data and methods together.
+
+=========================================================
+ENCAPSULATION vs DATA HIDING
+=========================================================
+
+Encapsulation:
+Binding data and methods together.
+
+Data Hiding:
+Restricting access to implementation details.
+
+Data Hiding is a subset of Encapsulation.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Encapsulation is the process of bundling data and functions together and
+controlling access to data through access specifiers.
+
+=========================================================
+2. ABSTRACTION
+=========================================================
+
+Definition:
+Abstraction means exposing only essential information and hiding
+implementation details.
+
+Achieved Using:
+• Abstract Classes
+• Pure Virtual Functions
+• Interfaces
+
+Example:
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout<<"Circle";
+    }
+};
+
+Advantages:
+• Reduces Complexity
+• Improves Security
+• Loose Coupling
+• Easy Code Changes
+
+Real World Example:
+Driving a car.
+
+You know:
+• Steering
+• Accelerator
+• Brake
+
+You don't know:
+• Engine internals
+• Fuel injection mechanism
+
+Interview Questions:
+
+Q1. What is Abstraction?
+
+Answer:
+Showing only necessary information and hiding implementation details.
+
+Q2. How is Abstraction achieved in C++?
+
+Answer:
+Using abstract classes and pure virtual functions.
+
+Q3. Why do we need Abstraction?
+
+Answer:
+To reduce complexity and hide implementation details.
+
+Q4. Can an abstract class have normal methods?
+
+Answer:
+Yes.
+
+Q5. Can an abstract class have constructors?
+
+Answer:
+Yes.
+
+=========================================================
+ENCAPSULATION vs ABSTRACTION
+=========================================================
+
+Encapsulation:
+How data is protected.
+
+Abstraction:
+What functionality is exposed.
+
+Encapsulation:
+Implementation level.
+
+Abstraction:
+Design level.
+
+Encapsulation:
+Achieved using access specifiers.
+
+Abstraction:
+Achieved using abstract classes/interfaces.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Abstraction means exposing only essential behaviour to the user and
+hiding implementation details.
+
+=========================================================
+3. INHERITANCE
+=========================================================
+
+Definition:
+Inheritance is a mechanism in which one class acquires properties and
+behaviour of another class.
+
+Syntax:
+
+class Derived : public Base
+{
+};
+
+Purpose:
+Code Reusability and IS-A relationship.
+
+Example:
+
+class Vehicle
+{
+};
+
+class Car : public Vehicle
+{
+};
+
+Car IS-A Vehicle.
+
+Types of Inheritance:
+1. Single
+2. Multiple
+3. Multilevel
+4. Hierarchical
+5. Hybrid
+
+Advantages:
+• Code Reusability
+• Extensibility
+• Easy Maintenance
+• Reduced Redundancy
+
+Interview Questions:
+
+Q1. Why do we use Inheritance?
+
+Answer:
+To reuse existing code and establish IS-A relationship.
+
+Q2. Difference between IS-A and HAS-A?
+
+IS-A:
+Inheritance
+
+Example:
+Car IS-A Vehicle.
+
+HAS-A:
+Composition
+
+Example:
+Car HAS-A Engine.
+
+Q3. Which is preferred in design?
+
+Answer:
+Composition over Inheritance.
+
+Because inheritance creates tight coupling.
+
+Q4. Disadvantages of Inheritance?
+
+• Tight Coupling
+• Fragile Base Class Problem
+• Multiple Inheritance Ambiguity
+
+Q5. What is Protected Access Specifier?
+
+Answer:
+Accessible inside class and derived classes but not outside.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Inheritance allows one class to reuse properties and behaviour of another
+class and represents an IS-A relationship.
+
+=========================================================
+4. POLYMORPHISM
+=========================================================
+
+Definition:
+Polymorphism means One Interface, Multiple Forms.
+
+Types:
+1. Compile-Time Polymorphism
+2. Runtime Polymorphism
+
+=========================================================
+Compile-Time Polymorphism
+=========================================================
+
+Achieved By:
+• Function Overloading
+• Operator Overloading
+
+Resolved By:
+Compiler
+
+Example:
+
+add(int,int)
+add(double,double)
+
+=========================================================
+Runtime Polymorphism
+=========================================================
+
+Achieved By:
+• Function Overriding
+• Virtual Functions
+
+Resolved During:
+Execution Time
+
+Example:
+
+class Base
+{
+public:
+    virtual void display()
+    {
+        cout<<"Base";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    void display() override
+    {
+        cout<<"Derived";
+    }
+};
+
+Base* ptr = new Derived;
+ptr->display();
+
+Output:
+Derived
+
+=========================================================
+HOW RUNTIME POLYMORPHISM WORKS INTERNALLY
+=========================================================
+
+1. Compiler creates vtable.
+2. Every object contains hidden vptr.
+3. vptr points to vtable.
+4. Function call is resolved at runtime.
+
+This is called Dynamic Dispatch.
+
+=========================================================
+INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Polymorphism?
+
+Answer:
+Ability of an object to take multiple forms.
+
+Q2. Types of Polymorphism?
+
+Answer:
+Compile-Time and Runtime.
+
+Q3. Difference between Compile-Time and Runtime Polymorphism?
+
+Compile-Time:
+• Function Overloading
+• Faster
+• Resolved by Compiler
+
+Runtime:
+• Function Overriding
+• Uses Virtual Functions
+• Resolved at Runtime
+• Slight Runtime Overhead
+
+Q4. Why are Virtual Functions required?
+
+Answer:
+To achieve Runtime Polymorphism.
+
+Q5. Why does Runtime Polymorphism have overhead?
+
+Answer:
+Because function resolution happens through vtable/vptr at runtime.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Polymorphism means one interface can represent multiple implementations.
+Compile-time polymorphism is achieved through overloading, whereas
+runtime polymorphism is achieved through virtual functions and overriding.
+
+=========================================================
+30-SECOND INTERVIEW SUMMARY
+=========================================================
+
+Encapsulation:
+Bundling data and methods together and controlling access to data.
+
+Abstraction:
+Showing only essential information and hiding implementation details.
+
+Inheritance:
+Acquiring properties and behaviour of another class to achieve code reuse
+and IS-A relationship.
+
+Polymorphism:
+One interface with multiple implementations; achieved using overloading
+(compile-time) and virtual functions (runtime).
+=========================================================
