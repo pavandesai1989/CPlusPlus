@@ -1,0 +1,468 @@
+=========================================================
+NEW AND DELETE IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+new:
+Allocates memory dynamically on the Heap and optionally initializes it.
+
+delete:
+Releases dynamically allocated memory from the Heap.
+
+=========================================================
+WHY DO WE NEED DYNAMIC MEMORY ALLOCATION?
+=========================================================
+
+Used when:
+• Size is known only at runtime
+• Object lifetime must extend beyond function scope
+• Large objects need to be allocated
+• Dynamic data structures (Linked List, Tree, Graph)
+
+=========================================================
+SYNTAX OF NEW
+=========================================================
+
+datatype* ptr = new datatype;
+
+Example:
+
+int* ptr = new int;
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+int* ptr = new int(10);
+
+Stack                Heap
+------               ------
+ptr ------------->   [10]
+
+ptr itself is on Stack.
+Allocated integer is on Heap.
+
+=========================================================
+INITIALIZATION USING NEW
+=========================================================
+
+int* p1 = new int;
+int* p2 = new int();
+int* p3 = new int(10);
+
+---------------------------------------------------------
+Statement                 Value
+---------------------------------------------------------
+new int                   Garbage Value
+new int()                 0
+new int(10)               10
+
+=========================================================
+DYNAMIC ARRAY ALLOCATION
+=========================================================
+
+int n = 5;
+
+int* arr = new int[n];
+
+Memory:
+
+arr ---> [ ][ ][ ][ ][ ]
+
+=========================================================
+INITIALIZE DYNAMIC ARRAY
+=========================================================
+
+int* arr = new int[5]();
+
+All elements initialized to:
+
+0
+
+=========================================================
+DELETE
+=========================================================
+
+delete ptr;
+
+Frees memory allocated by:
+
+new
+
+Example:
+
+int* ptr = new int(10);
+
+delete ptr;
+
+=========================================================
+DELETE FOR ARRAYS
+=========================================================
+
+delete[] arr;
+
+Example:
+
+int* arr = new int[5];
+
+delete[] arr;
+
+=========================================================
+VERY IMPORTANT
+=========================================================
+
+new
+     ↔
+delete
+
+new[]
+     ↔
+delete[]
+
+Never mix them.
+
+Wrong:
+
+int* arr = new int[5];
+
+delete arr;       // Undefined Behavior
+
+Correct:
+
+delete[] arr;
+
+=========================================================
+WHAT DOES NEW DO INTERNALLY?
+=========================================================
+
+new performs TWO operations:
+
+1. Allocates memory
+2. Calls constructor
+
+Example:
+
+Test* ptr = new Test();
+
+Steps:
+
+1. Allocate memory on Heap
+2. Call constructor
+3. Return pointer
+
+=========================================================
+WHAT DOES DELETE DO INTERNALLY?
+=========================================================
+
+delete performs TWO operations:
+
+1. Calls destructor
+2. Releases memory
+
+Example:
+
+delete ptr;
+
+Steps:
+
+1. Destructor called
+2. Memory freed
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor\n";
+    }
+
+    ~Test()
+    {
+        cout << "Destructor\n";
+    }
+};
+
+int main()
+{
+    Test* ptr = new Test();
+
+    delete ptr;
+}
+
+Output:
+
+Constructor
+Destructor
+
+=========================================================
+NEW WITH OBJECTS
+=========================================================
+
+class Test
+{
+};
+
+Test* ptr = new Test();
+
+delete ptr;
+
+=========================================================
+DYNAMIC ARRAY OF OBJECTS
+=========================================================
+
+Test* ptr = new Test[3];
+
+delete[] ptr;
+
+Constructor called:
+
+3 times.
+
+Destructor called:
+
+3 times.
+
+=========================================================
+MEMORY LEAK
+=========================================================
+
+Definition:
+Allocated memory becomes inaccessible.
+
+Example:
+
+int* ptr = new int(10);
+
+ptr = nullptr;
+
+Memory lost.
+
+Leak occurred.
+
+=========================================================
+CORRECT WAY
+=========================================================
+
+delete ptr;
+ptr = nullptr;
+
+=========================================================
+DANGLING POINTER
+=========================================================
+
+int* ptr = new int(10);
+
+delete ptr;
+
+cout << *ptr;      // Undefined Behavior
+
+ptr points to freed memory.
+
+Solution:
+
+delete ptr;
+ptr = nullptr;
+
+=========================================================
+NEW vs MALLOC
+=========================================================
+
+Feature              new                  malloc()
+--------------------------------------------------------------
+Language             C++                  C
+Return Type          Typed Pointer        void*
+Constructor Call     Yes                  No
+Initialization       Yes                  No
+Failure              Throws Exception     Returns NULL
+Operator             Yes                  Library Function
+delete Required      Yes                  free()
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor";
+    }
+};
+
+Test* ptr =
+    (Test*)malloc(sizeof(Test));
+
+Constructor NOT called.
+
+---------------------------------------------------------
+
+Test* ptr =
+    new Test();
+
+Constructor called.
+
+=========================================================
+ALLOCATION FAILURE
+=========================================================
+
+int* ptr = new int;
+
+If allocation fails:
+
+Throws:
+
+std::bad_alloc
+
+=========================================================
+NO-THROW VERSION
+=========================================================
+
+int* ptr =
+    new(nothrow) int;
+
+if(ptr == nullptr)
+{
+    cout << "Allocation Failed";
+}
+
+=========================================================
+PLACEMENT NEW (ADVANCED)
+=========================================================
+
+char buffer[sizeof(int)];
+
+int* ptr =
+    new(buffer) int(10);
+
+Constructs object in pre-allocated memory.
+
+Used in:
+• Memory pools
+• STL Allocators
+• Embedded Systems
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Where does new allocate memory?
+
+Answer:
+Heap.
+
+---------------------------------------------------------
+
+Q2. Where is pointer variable stored?
+
+Answer:
+Usually on Stack.
+
+---------------------------------------------------------
+
+Q3. What does new do internally?
+
+Answer:
+1. Allocates memory.
+2. Calls constructor.
+
+---------------------------------------------------------
+
+Q4. What does delete do internally?
+
+Answer:
+1. Calls destructor.
+2. Frees memory.
+
+---------------------------------------------------------
+
+Q5. Difference between delete and delete[]?
+
+Answer:
+
+delete
+→ Single object.
+
+delete[]
+→ Array of objects.
+
+---------------------------------------------------------
+
+Q6. Difference between new and malloc()?
+
+Answer:
+
+new:
+• Typed
+• Calls constructor
+• Throws exception
+
+malloc:
+• Returns void*
+• No constructor call
+• Returns NULL
+
+---------------------------------------------------------
+
+Q7. Why set pointer to nullptr after delete?
+
+Answer:
+Prevents dangling pointers.
+
+---------------------------------------------------------
+
+Q8. What happens if delete is called twice?
+
+Answer:
+Undefined Behavior.
+
+---------------------------------------------------------
+
+Q9. What happens if delete is not called?
+
+Answer:
+Memory Leak.
+
+---------------------------------------------------------
+
+Q10. Which modern C++ feature avoids manual delete?
+
+Answer:
+Smart Pointers:
+• unique_ptr
+• shared_ptr
+• weak_ptr
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+new dynamically allocates memory on the Heap and automatically calls
+constructors, while delete calls destructors and releases the allocated
+memory. Arrays allocated using new[] must be freed using delete[].
+Improper use can lead to memory leaks and dangling pointers. Modern C++
+prefers smart pointers over raw new/delete to ensure automatic resource
+management.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+new
+   ↓
+Allocate Memory
+   +
+Call Constructor
+
+delete
+   ↓
+Call Destructor
+   +
+Free Memory
+
+new[] ↔ delete[]
+=========================================================
