@@ -1,0 +1,132 @@
+=========================================
+override (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is override?
+--------------------
+- override is a C++11 keyword used in inheritance.
+- It indicates that a derived class function is overriding a virtual function of base class.
+- It is NOT mandatory, but highly recommended.
+
+Syntax:
+class Base {
+public:
+    virtual void show() {}
+};
+
+class Derived : public Base {
+public:
+    void show() override {
+        // overridden function
+    }
+};
+
+-----------------------------------------
+
+2. Why override is needed?
+--------------------------
+Without override, mistakes can happen silently.
+
+Example problem (bug):
+
+class Base {
+public:
+    virtual void show(int x) {}
+};
+
+class Derived : public Base {
+public:
+    void show(double x) { }  // ❌ NOT overriding (different signature)
+};
+
+- No compile error
+- But NOT overriding base function
+- Leads to unexpected behavior
+
+-----------------------------------------
+
+3. How override helps?
+----------------------
+If you use override:
+
+class Derived : public Base {
+public:
+    void show(double x) override { }  // ❌ ERROR (compiler catches it)
+};
+
+Compiler error:
+- ensures correct function is overridden
+- prevents signature mismatch bugs
+
+-----------------------------------------
+
+4. Rules of override
+--------------------
+To use override:
+- Base function must be virtual
+- Function signature must match exactly
+- Same name, parameters, constness
+
+Example:
+
+class Base {
+public:
+    virtual void display() const {}
+};
+
+class Derived : public Base {
+public:
+    void display() const override {}  // correct
+};
+
+-----------------------------------------
+
+5. override vs virtual
+----------------------
+
+virtual:
+- Used in base class
+- Enables runtime polymorphism
+
+override:
+- Used in derived class
+- Ensures correct overriding
+
+-----------------------------------------
+
+6. Benefits of override
+-----------------------
+- Catches signature mistakes at compile time
+- Improves code readability
+- Avoids silent bugs
+- Makes intent clear ("this function overrides base")
+
+-----------------------------------------
+
+7. Real-world Example
+---------------------
+class Animal {
+public:
+    virtual void speak() {
+        cout << "Animal sound";
+    }
+};
+
+class Dog : public Animal {
+public:
+    void speak() override {
+        cout << "Bark";
+    }
+};
+
+-----------------------------------------
+
+8. Interview Key Points
+-----------------------
+- Introduced in C++11
+- Used in inheritance with virtual functions
+- Ensures correct overriding
+- Helps prevent subtle bugs
+- Improves maintainability
+
+=========================================
