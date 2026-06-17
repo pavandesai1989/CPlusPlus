@@ -1,0 +1,153 @@
+=========================================
+DEFAULTED FUNCTIONS (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What are Defaulted Functions?
+-------------------------------
+- Defaulted functions are a C++11 feature using = default.
+- It tells the compiler to generate the default implementation.
+- Used for special member functions like constructors, destructors, copy/move operations.
+
+Syntax:
+function_signature = default;
+
+-----------------------------------------
+
+2. Why Defaulted Functions are needed?
+--------------------------------------
+Before C++11:
+- If you define any special member function, compiler may stop generating others.
+- You had to manually write boilerplate code.
+
+Defaulted functions help:
+- Restore compiler-generated behavior
+- Reduce boilerplate code
+- Make intent explicit
+
+-----------------------------------------
+
+3. Example: Default Constructor
+------------------------------
+
+class A {
+public:
+    A() = default;   // compiler generates default constructor
+};
+
+-----------------------------------------
+
+4. Example: Copy Constructor Defaulted
+--------------------------------------
+
+class A {
+public:
+    A(const A&) = default;
+    A& operator=(const A&) = default;
+};
+
+int main() {
+    A a1;
+    A a2 = a1;  // copy constructor used
+}
+
+-----------------------------------------
+
+5. Defaulted vs User-defined
+---------------------------
+class A {
+public:
+    A() {}   // user-defined constructor
+};
+
+class B {
+public:
+    B() = default;  // compiler-generated constructor
+};
+
+Key difference:
+- user-defined may change behavior
+- default = compiler standard behavior
+
+-----------------------------------------
+
+6. Where default can be used?
+----------------------------
+You can use = default for:
+- Constructor
+- Destructor
+- Copy constructor
+- Copy assignment operator
+- Move constructor
+- Move assignment operator
+
+Example:
+
+class Test {
+public:
+    Test() = default;
+    ~Test() = default;
+    Test(const Test&) = default;
+    Test& operator=(const Test&) = default;
+};
+
+-----------------------------------------
+
+7. Why use = default instead of empty body?
+------------------------------------------
+Difference:
+
+Test() {}        // user-defined empty constructor
+Test() = default; // compiler-generated constructor
+
+Important difference:
+- = default preserves triviality and optimizations
+- {} makes it user-defined, may affect optimizations
+
+-----------------------------------------
+
+8. Default + Delete together (Common in interviews)
+---------------------------------------------------
+
+class A {
+public:
+    A() = default;
+    A(const A&) = delete;   // disable copying
+};
+
+-----------------------------------------
+
+9. Rule of 5 Context
+--------------------
+If a class manages resources:
+- destructor
+- copy constructor
+- copy assignment
+- move constructor
+- move assignment
+
+You can:
+- default some
+- delete some
+- customize others
+
+-----------------------------------------
+
+10. Real-world Usage
+--------------------
+- Smart pointer implementations
+- STL-like class design
+- Resource-managing classes
+- Clean and maintainable code
+
+-----------------------------------------
+
+11. Interview Key Points
+-----------------------
+- Introduced in C++11
+- = default tells compiler to generate function
+- Used for special member functions
+- Avoids boilerplate code
+- Maintains optimal compiler behavior
+- Often used with = delete in modern C++
+
+=========================================
