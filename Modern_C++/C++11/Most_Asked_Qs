@@ -1,0 +1,353 @@
+=========================================
+🔥 MOST ASKED C++ INTERVIEW Q&A (CORE SHEET)
+=========================================
+
+========================
+1. BASIC C++ (1–10)
+========================
+
+1. What is C++?
+A: A general-purpose, object-oriented programming language.
+
+2. Why C++ is used?
+A: Fast, close to hardware, supports OOP + low-level memory control.
+
+3. What are OOP principles?
+A: Encapsulation, Abstraction, Inheritance, Polymorphism.
+
+4. Difference between C and C++?
+A: C = procedural, C++ = object-oriented + STL.
+
+5. What is class?
+A: Blueprint of an object.
+
+6. What is object?
+A: Instance of a class.
+
+7. What is constructor?
+A: Initializes object automatically.
+
+8. What is destructor?
+A: Cleans up object memory automatically.
+
+9. Can constructor be overloaded?
+A: Yes.
+
+10. Can destructor be overloaded?
+A: No.
+
+-----------------------------------------
+
+========================
+2. MEMORY MANAGEMENT (11–20)
+========================
+
+11. Stack vs Heap?
+A: Stack = automatic, fast. Heap = manual, dynamic.
+
+12. new vs malloc?
+A: new calls constructor, malloc does not.
+
+13. delete vs free?
+A: delete calls destructor, free does not.
+
+14. What is memory leak?
+A: Memory not freed after use.
+
+15. What is dangling pointer?
+A: Pointer pointing to deleted memory.
+
+16. What is RAII?
+A: Resource tied to object lifetime.
+
+17. What is shallow copy?
+A: Copies pointer only.
+
+18. What is deep copy?
+A: Copies actual data.
+
+19. Why use heap memory?
+A: For dynamic lifetime control.
+
+20. What is fragmentation?
+A: Wasted memory gaps.
+
+-----------------------------------------
+
+========================
+3. POINTERS (21–30)
+========================
+
+21. What is pointer?
+A: Stores address of variable.
+
+22. What is reference?
+A: Alias of variable.
+
+23. Pointer vs reference?
+A: Pointer can be null, reference cannot.
+
+24. What is null pointer?
+A: Pointer pointing to nothing.
+
+25. What is wild pointer?
+A: Uninitialized pointer.
+
+26. What is dangling pointer?
+A: Points to freed memory.
+
+27. const pointer?
+A: Pointer cannot change address.
+
+28. pointer to const?
+A: Value cannot change.
+
+29. Can pointer be reassigned?
+A: Yes.
+
+30. Can reference be reassigned?
+A: No.
+
+-----------------------------------------
+
+========================
+4. OOP CONCEPTS (31–45)
+========================
+
+31. What is encapsulation?
+A: Data hiding using classes.
+
+32. What is abstraction?
+A: Hide implementation details.
+
+33. What is inheritance?
+A: One class acquires properties of another.
+
+34. What is polymorphism?
+A: Same function, different behavior.
+
+35. What is virtual function?
+A: Runtime polymorphism.
+
+36. What is pure virtual function?
+A: Function with no body.
+
+37. What is abstract class?
+A: Class with at least one pure virtual function.
+
+38. What is object slicing?
+A: Derived data lost when copied to base object.
+
+39. What is friend function?
+A: Access private members of class.
+
+40. What is static keyword?
+A: Shared across all objects.
+
+41. What is this pointer?
+A: Points to current object.
+
+42. Can constructor be virtual?
+A: No.
+
+43. Can destructor be virtual?
+A: Yes.
+
+44. What is override keyword?
+A: Ensures correct overriding.
+
+45. What is final keyword?
+A: Prevent inheritance or override.
+
+-----------------------------------------
+
+========================
+5. MODERN C++ (46–60)
+========================
+
+46. What is nullptr?
+A: Type-safe null pointer.
+
+47. What is auto?
+A: Automatic type deduction.
+
+48. What is lambda?
+A: Anonymous function.
+
+49. What is move semantics?
+A: Transfers ownership instead of copying.
+
+50. What is std::move?
+A: Converts object to rvalue.
+
+51. What is rvalue?
+A: Temporary object.
+
+52. What is lvalue?
+A: Object with memory address.
+
+53. What is constexpr?
+A: Compile-time evaluation.
+
+54. What is enum class?
+A: Scoped enum.
+
+55. What is initializer list?
+A: Uniform initialization method.
+
+56. What is noexcept?
+A: No exception guarantee.
+
+57. What is variadic template?
+A: Template with variable arguments.
+
+58. What is perfect forwarding?
+A: Preserve value category.
+
+59. What is delete keyword?
+A: Disable function.
+
+60. What is default keyword?
+A: Ask compiler to generate function.
+
+-----------------------------------------
+
+========================
+6. STL BASICS (61–75)
+========================
+
+61. What is STL?
+A: Standard Template Library.
+
+62. Components of STL?
+A: Containers, Algorithms, Iterators.
+
+63. What is vector?
+A: Dynamic array.
+
+64. What is deque?
+A: Double-ended queue.
+
+65. What is list?
+A: Doubly linked list.
+
+66. What is stack?
+A: LIFO container adaptor.
+
+67. What is queue?
+A: FIFO container adaptor.
+
+68. What is priority_queue?
+A: Heap-based structure.
+
+69. What is set?
+A: Sorted unique elements.
+
+70. What is map?
+A: Key-value sorted structure.
+
+71. What is unordered_map?
+A: Hash table.
+
+72. What is iterator?
+A: Pointer-like object.
+
+73. What is begin()?
+A: First element.
+
+74. What is end()?
+A: Past-the-end element.
+
+75. What is STL advantage?
+A: Reusable + efficient + generic.
+
+-----------------------------------------
+
+========================
+7. STL + COMPLEXITY (76–90)
+========================
+
+76. vector access complexity?
+A: O(1)
+
+77. map access complexity?
+A: O(log n)
+
+78. unordered_map complexity?
+A: O(1) average
+
+79. set complexity?
+A: O(log n)
+
+80. priority_queue push?
+A: O(log n)
+
+81. stack push/pop?
+A: O(1)
+
+82. queue push/pop?
+A: O(1)
+
+83. vector reallocation?
+A: Happens when capacity full.
+
+84. Why deque used in STL?
+A: Efficient front + back operations.
+
+85. Why map uses Red-Black Tree?
+A: Keeps data sorted + balanced.
+
+86. Why unordered_map is fast?
+A: Hashing.
+
+87. Why vector faster than list?
+A: Cache locality.
+
+88. Why list is slower?
+A: Pointer-based traversal.
+
+89. Why stack has no iteration?
+A: Enforces LIFO.
+
+90. Why queue has no iteration?
+A: Enforces FIFO.
+
+-----------------------------------------
+
+========================
+8. FINAL INTERVIEW FAVORITES (91–100)
+========================
+
+91. What is RAII?
+A: Resource tied to object lifetime.
+
+92. What is memory leak?
+A: Unreleased memory.
+
+93. What is dangling pointer?
+A: Invalid memory reference.
+
+94. Difference map vs unordered_map?
+A: Tree vs Hash table.
+
+95. Why virtual destructor?
+A: Prevent memory leak in polymorphism.
+
+96. What is slicing?
+A: Loss of derived data.
+
+97. Why STL used?
+A: Faster development + optimized code.
+
+98. What is iterator invalidation?
+A: Iterator becomes invalid after modification.
+
+99. What is move semantics benefit?
+A: Avoid unnecessary copying.
+
+100. Why C++ is fast?
+A: Close to hardware + no GC + manual control.
+
+=========================================
+🔥 END OF CORE C++ INTERVIEW SHEET
+=========================================
