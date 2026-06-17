@@ -1,0 +1,592 @@
+=========================================================
+STATIC MEMBERS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Static members are class members that belong to the CLASS itself rather
+than to individual objects.
+
+There are two types:
+
+1. Static Data Members
+2. Static Member Functions
+
+=========================================================
+WHY DO WE NEED STATIC MEMBERS?
+=========================================================
+
+Normally:
+
+Each object gets its own copy of non-static data members.
+
+Example:
+
+class Test
+{
+    int x;
+};
+
+Test t1, t2;
+
+Memory:
+
+t1 -> x
+t2 -> x
+
+Two copies of x exist.
+
+Sometimes we need a variable shared by ALL objects.
+
+Examples:
+• Number of objects created
+• Application configuration
+• Global counters
+• Shared resources
+
+Static members solve this problem.
+
+=========================================================
+1. STATIC DATA MEMBER
+=========================================================
+
+Definition:
+A static data member is shared among all objects of a class.
+Only ONE copy exists in memory.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Test
+{
+public:
+    static int count;
+};
+
+int Test::count = 0;
+
+int main()
+{
+    Test t1;
+    Test t2;
+
+    t1.count++;
+    t2.count++;
+
+    cout << Test::count;
+}
+
+Output:
+2
+
+Reason:
+Only one shared copy exists.
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+Non-static:
+
+t1 -> x
+t2 -> x
+t3 -> x
+
+Three copies.
+
+---------------------------------------------------------
+
+Static:
+
+Test::count
+
+Only one copy.
+
+t1 ----|
+t2 ----|----> count
+t3 ----|
+
+=========================================================
+CHARACTERISTICS OF STATIC DATA MEMBERS
+=========================================================
+
+1. Shared by all objects.
+2. Memory allocated only once.
+3. Exists even if no object is created.
+4. Belongs to class, not object.
+5. Stored in Static/Data Segment.
+6. Can be accessed using class name.
+
+=========================================================
+DECLARATION AND DEFINITION
+=========================================================
+
+Inside class:
+
+class Test
+{
+public:
+    static int count;
+};
+
+Outside class:
+
+int Test::count = 0;
+
+=========================================================
+WHY DEFINITION OUTSIDE CLASS?
+=========================================================
+
+Inside class:
+
+static int count;
+
+Only declaration.
+
+Memory is allocated by:
+
+int Test::count = 0;
+
+=========================================================
+ACCESSING STATIC MEMBERS
+=========================================================
+
+Preferred:
+
+cout << Test::count;
+
+Allowed:
+
+Test t;
+cout << t.count;
+
+Preferred:
+Use ClassName::member.
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+class Employee
+{
+public:
+    static int totalEmployees;
+
+    Employee()
+    {
+        totalEmployees++;
+    }
+};
+
+int Employee::totalEmployees = 0;
+
+=========================================================
+2. STATIC MEMBER FUNCTION
+=========================================================
+
+Definition:
+A function that belongs to the class rather than objects.
+
+Declared using:
+
+static
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    static void display()
+    {
+        cout << "Hello";
+    }
+};
+
+int main()
+{
+    Test::display();
+}
+
+Output:
+Hello
+
+=========================================================
+CHARACTERISTICS OF STATIC MEMBER FUNCTIONS
+=========================================================
+
+1. Belongs to class.
+2. Called using class name.
+3. No object required.
+4. Has NO this pointer.
+5. Can access only static members.
+
+=========================================================
+WHY NO this POINTER?
+=========================================================
+
+Non-static function:
+
+void fun()
+{
+}
+
+Compiler internally:
+
+void fun(Test* this);
+
+---------------------------------------------------------
+
+Static function:
+
+static void fun()
+{
+}
+
+Compiler internally:
+
+void fun();
+
+No object parameter.
+
+Therefore:
+
+No this pointer.
+
+=========================================================
+CAN STATIC FUNCTION ACCESS NON-STATIC MEMBERS?
+=========================================================
+
+NO.
+
+=========================================================
+
+class Test
+{
+    int x = 10;
+
+public:
+    static void fun()
+    {
+        cout << x; // ERROR
+    }
+};
+
+=========================================================
+
+Reason:
+Static function has no object and therefore no this pointer.
+
+=========================================================
+CAN STATIC FUNCTION ACCESS STATIC MEMBERS?
+=========================================================
+
+YES.
+
+=========================================================
+
+class Test
+{
+public:
+    static int count;
+
+    static void display()
+    {
+        cout << count;
+    }
+};
+
+int Test::count = 100;
+
+=========================================================
+
+=========================================================
+STATIC MEMBER FUNCTION CALL
+=========================================================
+
+Preferred:
+
+Test::display();
+
+Allowed:
+
+Test t;
+t.display();
+
+Preferred:
+ClassName::FunctionName()
+
+=========================================================
+STATIC MEMBER FUNCTION USE CASES
+=========================================================
+
+1. Utility Functions
+2. Factory Functions
+3. Singleton getInstance()
+4. Shared Counters
+5. Helper Methods
+
+=========================================================
+STATIC MEMBER INITIALIZATION (C++17)
+=========================================================
+
+Before C++17:
+
+class Test
+{
+public:
+    static int count;
+};
+
+int Test::count = 100;
+
+=========================================================
+
+C++17:
+
+class Test
+{
+public:
+    inline static int count = 100;
+};
+
+No separate definition required.
+
+Feature:
+Inline Variables (C++17)
+
+=========================================================
+INTERVIEW QUESTION
+=========================================================
+
+Which C++17 feature is this?
+
+Answer:
+Inline Variables.
+
+=========================================================
+STATIC LOCAL VARIABLE
+=========================================================
+
+Definition:
+A local variable that retains its value across function calls.
+
+=========================================================
+
+void fun()
+{
+    static int x = 0;
+
+    x++;
+
+    cout << x << endl;
+}
+
+int main()
+{
+    fun();
+    fun();
+    fun();
+}
+
+Output:
+
+1
+2
+3
+
+=========================================================
+
+Without static:
+
+1
+1
+1
+
+=========================================================
+LIFETIME VS SCOPE
+=========================================================
+
+Static Local Variable:
+
+Scope:
+Inside function only.
+
+Lifetime:
+Entire program execution.
+
+=========================================================
+MEMORY SEGMENT
+=========================================================
+
+Static Members and Static Local Variables are stored in:
+
+Static/Data Segment
+
+NOT:
+
+Stack
+Heap
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a static data member?
+
+Answer:
+A class variable shared among all objects. Only one copy exists.
+
+---------------------------------------------------------
+
+Q2. Where are static variables stored?
+
+Answer:
+Static/Data Segment.
+
+---------------------------------------------------------
+
+Q3. How many copies of a static member exist?
+
+Answer:
+Only one.
+
+---------------------------------------------------------
+
+Q4. Does static member exist if no object is created?
+
+Answer:
+YES.
+
+---------------------------------------------------------
+
+Q5. Why does static function not have this pointer?
+
+Answer:
+Because it belongs to the class, not objects.
+
+---------------------------------------------------------
+
+Q6. Can static function access non-static members?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q7. Can static function access static members?
+
+Answer:
+YES.
+
+---------------------------------------------------------
+
+Q8. Can constructors be static?
+
+Answer:
+NO.
+
+Reason:
+Constructors create objects.
+Static functions belong to class and have no object.
+
+---------------------------------------------------------
+
+Q9. Can destructors be static?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q10. Can static functions be virtual?
+
+Answer:
+NO.
+
+Reason:
+Virtual functions require:
+
+Object
+→ vptr
+→ vtable
+
+Static functions:
+No object
+No this pointer
+
+Therefore cannot participate in Runtime Polymorphism.
+
+---------------------------------------------------------
+
+Q11. Can static data members be private?
+
+Answer:
+YES.
+
+=========================================================
+
+class Test
+{
+private:
+    static int count;
+};
+
+=========================================================
+
+Q12. Can static member functions be overloaded?
+
+Answer:
+YES.
+
+=========================================================
+
+class Test
+{
+public:
+    static void fun()
+    {
+    }
+
+    static void fun(int)
+    {
+    }
+};
+
+=========================================================
+
+Q13. Are static members inherited?
+
+Answer:
+YES.
+
+They are inherited but still only one shared copy exists.
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+Static members belong to the class rather than individual objects.
+Static data members have only one shared copy stored in the static/data
+segment, while static member functions have no this pointer and can
+access only static members. They are commonly used for shared state,
+counters, utility methods, and singleton implementations.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+static
+   ↓
+Belongs to Class
+   ↓
+Single Shared Copy
+   ↓
+No this Pointer (for static functions)
+   ↓
+Stored in Static/Data Segment
+=========================================================
