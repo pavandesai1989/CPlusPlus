@@ -1,0 +1,597 @@
+=========================================================
+C++ INTERVIEW NOTES
+Virtual Functions | Pure Virtual Functions
+Abstract Classes | Interface Concept
+=========================================================
+
+1. VIRTUAL FUNCTIONS
+=========================================================
+
+Definition:
+A virtual function is a member function declared with the 'virtual'
+keyword in the base class and overridden in the derived class.
+
+Purpose:
+To achieve Runtime Polymorphism (Dynamic Binding).
+
+Syntax:
+
+class Base
+{
+public:
+    virtual void display()
+    {
+    }
+};
+
+=========================================================
+Example
+=========================================================
+
+class Base
+{
+public:
+    virtual void display()
+    {
+        cout << "Base\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    void display() override
+    {
+        cout << "Derived\n";
+    }
+};
+
+int main()
+{
+    Base* ptr = new Derived;
+    ptr->display();
+}
+
+Output:
+Derived
+
+Without virtual:
+Output:
+Base
+
+=========================================================
+Why Virtual Functions?
+=========================================================
+
+Without virtual:
+
+Base* ptr = new Derived;
+ptr->display();
+
+Compiler checks:
+Type of ptr = Base*
+
+Hence:
+Base::display()
+
+With virtual:
+Compiler checks:
+Actual object = Derived
+
+Hence:
+Derived::display()
+
+=========================================================
+How Virtual Functions Work Internally?
+=========================================================
+
+Step 1:
+Compiler creates a Virtual Table (vtable).
+
+Step 2:
+Each object contains a hidden pointer called vptr.
+
+Step 3:
+vptr points to the class's vtable.
+
+Step 4:
+At runtime, function call is resolved through vptr.
+
+Diagram:
+
+Object
+------
+vptr ------> vtable
+                |
+                +--> display()
+                +--> show()
+                +--> print()
+
+This mechanism is called:
+Dynamic Dispatch (Late Binding)
+
+=========================================================
+Why Runtime Overhead?
+=========================================================
+
+1. Extra memory for vptr.
+2. Indirection through vtable.
+3. Function cannot always be inlined.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q1. Why use virtual functions?
+
+Answer:
+To achieve Runtime Polymorphism.
+
+---------------------------------------------------------
+
+Q2. What is Dynamic Binding?
+
+Answer:
+Function call resolution at runtime.
+
+---------------------------------------------------------
+
+Q3. What are vtable and vptr?
+
+vtable:
+Table of virtual function addresses.
+
+vptr:
+Hidden pointer inside object pointing to vtable.
+
+---------------------------------------------------------
+
+Q4. Does every object have a vptr?
+
+Only if class contains at least one virtual function.
+
+---------------------------------------------------------
+
+Q5. Can constructors be virtual?
+
+NO.
+
+Reason:
+Object is not fully constructed.
+vptr is not initialized yet.
+
+---------------------------------------------------------
+
+Q6. Can static functions be virtual?
+
+NO.
+
+Reason:
+Virtual functions require object and vptr.
+Static functions belong to class and have no object.
+
+---------------------------------------------------------
+
+Q7. Can virtual functions be private?
+
+YES.
+
+=========================================================
+
+class Base
+{
+private:
+    virtual void fun()
+    {
+        cout<<"Base";
+    }
+};
+
+=========================================================
+
+Q8. Can virtual functions be inlined?
+
+Compiler may inline direct calls.
+
+Calls through base pointer are generally not inlined because
+actual function is decided at runtime.
+
+=========================================================
+
+Q9. Why destructor should be virtual?
+
+=========================================================
+
+class Base
+{
+public:
+    ~Base()
+    {
+        cout<<"Base Destructor\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived()
+    {
+        cout<<"Derived Destructor\n";
+    }
+};
+
+Base* ptr = new Derived;
+delete ptr;
+
+Output:
+Base Destructor
+
+Derived Destructor NOT called.
+
+Memory leak possible.
+
+Correct:
+
+class Base
+{
+public:
+    virtual ~Base()
+    {
+    }
+};
+
+Output:
+Derived Destructor
+Base Destructor
+
+Rule:
+If class has any virtual function or is intended to be inherited,
+make destructor virtual.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Virtual functions enable Runtime Polymorphism by resolving function
+calls through vtable and vptr at runtime.
+
+=========================================================
+2. PURE VIRTUAL FUNCTIONS
+=========================================================
+
+Definition:
+A virtual function having no implementation in the base class.
+
+Syntax:
+
+virtual void display() = 0;
+
+The '=0' makes it pure virtual.
+
+=========================================================
+Example
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout<<"Drawing Circle\n";
+    }
+};
+
+int main()
+{
+    Shape* ptr = new Circle();
+    ptr->draw();
+}
+
+Output:
+Drawing Circle
+
+=========================================================
+Purpose
+=========================================================
+
+1. Create Interfaces.
+2. Force derived classes to implement functions.
+3. Achieve Abstraction.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q1. Why use Pure Virtual Functions?
+
+Answer:
+To enforce derived classes to provide implementation.
+
+---------------------------------------------------------
+
+Q2. Can pure virtual function have implementation?
+
+YES.
+
+=========================================================
+
+class Base
+{
+public:
+    virtual void display() = 0;
+};
+
+void Base::display()
+{
+    cout<<"Base Display";
+}
+
+=========================================================
+
+Still:
+Base remains abstract.
+
+---------------------------------------------------------
+
+Q3. Can pure virtual destructor exist?
+
+YES.
+
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base() = 0;
+};
+
+Base::~Base()
+{
+}
+
+=========================================================
+
+Pure virtual destructor MUST have definition.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+Pure virtual functions are used to create abstract interfaces and force
+derived classes to implement required behavior.
+
+=========================================================
+3. ABSTRACT CLASS
+=========================================================
+
+Definition:
+A class containing at least one pure virtual function.
+
+=========================================================
+Example
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+Shape s;
+
+Compilation Error.
+
+Cannot instantiate abstract class.
+
+=========================================================
+Properties
+=========================================================
+
+1. Cannot create objects.
+2. Can have constructors.
+3. Can have destructors.
+4. Can have data members.
+5. Can have normal functions.
+6. Can have static members.
+7. Can have implemented virtual functions.
+
+=========================================================
+Example
+=========================================================
+
+class Shape
+{
+protected:
+    int color;
+
+public:
+    Shape()
+    {
+        cout<<"Constructor\n";
+    }
+
+    virtual void draw() = 0;
+
+    void print()
+    {
+        cout<<"Print\n";
+    }
+};
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q1. Can abstract class have constructor?
+
+YES.
+
+Used for initialization of common data.
+
+---------------------------------------------------------
+
+Q2. Can abstract class have data members?
+
+YES.
+
+---------------------------------------------------------
+
+Q3. Can abstract class have implemented functions?
+
+YES.
+
+---------------------------------------------------------
+
+Q4. Can abstract class have static functions?
+
+YES.
+
+---------------------------------------------------------
+
+Q5. Can we create pointer/reference of abstract class?
+
+YES.
+
+=========================================================
+
+Shape* ptr;
+Shape& ref = obj;
+
+=========================================================
+
+Cannot create object:
+
+Shape s;
+
+Compilation Error.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+An abstract class is a class containing at least one pure virtual
+function and cannot be instantiated.
+
+=========================================================
+4. INTERFACE CONCEPT IN C++
+=========================================================
+
+C++ has no explicit 'interface' keyword like Java.
+
+Interface is achieved using:
+
+1. All functions are Pure Virtual.
+2. Usually no data members.
+3. Virtual destructor.
+
+=========================================================
+Example
+=========================================================
+
+class IPrinter
+{
+public:
+    virtual void print() = 0;
+    virtual void scan() = 0;
+    virtual ~IPrinter() = default;
+};
+
+class HPPrinter : public IPrinter
+{
+public:
+    void print() override
+    {
+        cout<<"Printing\n";
+    }
+
+    void scan() override
+    {
+        cout<<"Scanning\n";
+    }
+};
+
+=========================================================
+Why Interfaces?
+=========================================================
+
+1. Loose Coupling
+2. Extensibility
+3. Dependency Injection
+4. Better Testing
+5. Runtime Polymorphism
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q1. Difference between Interface and Abstract Class?
+
+Abstract Class:
+---------------
+• May have data members
+• May have implemented methods
+• Partial abstraction
+• Represents IS-A relationship
+
+Interface:
+-----------
+• Usually only pure virtual functions
+• Usually no state
+• Complete abstraction
+• Represents capability/contract
+
+---------------------------------------------------------
+
+Q2. When should you use Interface?
+
+Answer:
+When multiple classes need to provide same behavior but may have
+different implementations.
+
+Example:
+ILogger
+IPaymentGateway
+IShape
+IDatabase
+
+---------------------------------------------------------
+
+Q3. Can interface have destructor?
+
+YES.
+
+Always make it virtual.
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+C++ does not have a separate interface keyword. An interface is usually
+implemented as an abstract class containing only pure virtual functions
+and a virtual destructor.
+
+=========================================================
+30-SECOND INTERVIEW SUMMARY
+=========================================================
+
+Virtual Function:
+A function resolved at runtime using vtable/vptr.
+
+Pure Virtual Function:
+A virtual function declared using '=0' to force derived classes to
+implement it.
+
+Abstract Class:
+A class containing at least one pure virtual function and cannot be
+instantiated.
+
+Interface:
+A fully abstract contract implemented in C++ using a class containing
+only pure virtual functions and a virtual destructor.
+=========================================================
