@@ -1,0 +1,86 @@
+=========================================
+nullptr (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is nullptr?
+-------------------
+- nullptr is a keyword introduced in C++11.
+- It represents a null pointer constant.
+- It is used to indicate that a pointer does NOT point to any valid memory.
+
+Header:
+- No header required (language keyword)
+
+Example:
+int* ptr = nullptr;
+
+-----------------------------------------
+
+2. Why nullptr was introduced?
+-----------------------------
+Before C++11, NULL was used:
+- NULL is typically defined as 0 or (void*)0
+- This caused ambiguity in function overloading
+
+Problem with NULL:
+void func(int);
+void func(char*);
+
+func(NULL);   // may call func(int) -> ambiguity / unexpected behavior
+
+-----------------------------------------
+
+3. Advantages of nullptr
+------------------------
+- Type-safe (has its own type: std::nullptr_t)
+- Eliminates ambiguity in function overloading
+- Works correctly with all pointer types
+- Improves code readability and safety
+- Cannot be implicitly treated as integer (unlike NULL)
+
+-----------------------------------------
+
+4. Type of nullptr
+------------------
+- Type: std::nullptr_t
+
+Example:
+auto x = nullptr;  // x is of type std::nullptr_t
+
+-----------------------------------------
+
+5. Difference: NULL vs nullptr
+------------------------------
+NULL:
+- Macro (usually 0 or (void*)0)
+- Can cause ambiguity
+- Not type-safe
+
+nullptr:
+- Keyword
+- Type-safe
+- Recommended in modern C++
+
+-----------------------------------------
+
+6. Common Usage
+--------------
+- Initialize pointers:
+    int* p = nullptr;
+
+- Check pointer validity:
+    if (p == nullptr) { }
+
+- Reset pointer:
+    p = nullptr;
+
+-----------------------------------------
+
+7. Interview Key Points
+----------------------
+- Introduced in C++11
+- Replaces NULL for safer pointer handling
+- Solves function overload ambiguity issue
+- Preferred in modern C++ codebases
+
+=========================================
