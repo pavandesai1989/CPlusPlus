@@ -1,0 +1,211 @@
+=========================================
+MOVE SEMANTICS (C++11) – DETAILED INTERVIEW NOTES
+=========================================
+
+1. What is Move Semantics?
+--------------------------
+- Move semantics is a feature introduced in C++11.
+- It allows transfer of resources (memory, file handles, buffers) from one object to another
+  instead of copying them.
+- Achieved using rvalue references (&&) and std::move.
+
+Main idea:
+- "Steal resources instead of copying them"
+
+-----------------------------------------
+
+2. Why Move Semantics is Needed?
+---------------------------------
+Before C++11, only COPY semantics existed.
+
+Problem with copying:
+- Expensive (deep copy of heap memory)
+- Slow for large objects (vector, string, map, etc.)
+- Unnecessary duplication of resources
+
+Example problem:
+std::vector<int> v1(1000000, 1);
+std::vector<int> v2 = v1;   // VERY EXPENSIVE (deep copy)
+
+Issues:
+- Performance overhead
+- Extra memory usage
+- Unnecessary duplication
+
+-----------------------------------------
+
+3. What Move Semantics Solves?
+------------------------------
+- Eliminates unnecessary deep copies
+- Transfers ownership of resources
+- Improves performance significantly
+- Essential for modern STL efficiency
+
+-----------------------------------------
+
+4. Core Idea
+------------
+Instead of:
+- Copying data from source → destination
+
+We do:
+- Transfer pointer/resource ownership
+- Nullify source
+
+-----------------------------------------
+
+5. Copy vs Move
+---------------
+COPY:
+- Duplicates resource
+- Both objects own separate memory
+
+MOVE:
+- Transfers resource
+- Source becomes empty but valid
+
+-----------------------------------------
+
+6. Example Without Move (Copy)
+-----------------------------
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> v1(5, 10);
+
+    vector<int> v2 = v1;  // COPY (expensive)
+
+    cout << v1.size();  // still 5
+}
+
+-----------------------------------------
+
+7. Move Semantics Example
+-------------------------
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    vector<int> v1(5, 10);
+
+    vector<int> v2 = std::move(v1);  // MOVE
+
+    cout << v1.size(); // 0 (or valid but unspecified state)
+}
+
+-----------------------------------------
+
+8. std::move (Important)
+------------------------
+- std::move does NOT move anything.
+- It converts lvalue → rvalue reference.
+- It enables move constructor / move assignment.
+
+Example:
+int a = 10;
+int b = std::move(a); // treats a as rvalue
+
+-----------------------------------------
+
+9. Move Constructor
+-------------------
+- Special constructor that steals resources.
+
+Example:
+
+class MyString {
+    char* data;
+
+public:
+    MyString(char* s) {
+        data = s;
+    }
+
+    // COPY constructor
+    MyString(const MyString& other) {
+        data = new char[strlen(other.data) + 1];
+        strcpy(data, other.data);
+    }
+
+    // MOVE constructor
+    MyString(MyString&& other) noexcept {
+        data = other.data;      // steal pointer
+        other.data = nullptr;   // leave source safe
+    }
+};
+
+-----------------------------------------
+
+10. Move Assignment Operator
+---------------------------
+MyString& operator=(MyString&& other) noexcept {
+    if (this != &other) {
+        delete[] data;        // release old resource
+        data = other.data;    // steal
+        other.data = nullptr;
+    }
+    return *this;
+}
+
+-----------------------------------------
+
+11. Key Rules of Move Semantics
+------------------------------
+- Only works with rvalues (temporary objects)
+- Source object must remain valid but unspecified
+- After move, source should be safe to destroy
+- Should use noexcept for performance (STL optimization)
+
+-----------------------------------------
+
+12. When Move Happens Automatically?
+-----------------------------------
+- Returning local objects from function
+- Using std::move explicitly
+- Temporary objects
+
+Example:
+vector<int> createVector() {
+    vector<int> v(1000);
+    return v;   // move optimization (RVO/NRVO)
+}
+
+-----------------------------------------
+
+13. Move vs Copy Summary
+------------------------
+COPY:
+- Expensive
+- Duplicates memory
+- Safe but slow
+
+MOVE:
+- Fast
+- Transfers ownership
+- Efficient for large objects
+
+-----------------------------------------
+
+14. Real-world Usage
+--------------------
+- std::vector
+- std::string
+- std::map / std::unordered_map
+- Smart pointers (std::unique_ptr)
+- Returning objects from functions
+
+-----------------------------------------
+
+15. Interview Key Points
+------------------------
+- Introduced in C++11
+- Uses rvalue references (&&)
+- std::move enables move semantics
+- Move constructor + move assignment operator
+- Solves performance issues of deep copying
+- Improves STL efficiency dramatically
+
+=========================================
