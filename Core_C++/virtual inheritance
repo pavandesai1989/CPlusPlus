@@ -1,0 +1,433 @@
+=========================================================
+VIRTUAL INHERITANCE IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Virtual Inheritance is a mechanism in C++ that ensures only ONE shared
+copy of a base class exists when using Multiple Inheritance.
+
+It is primarily used to solve the Diamond Problem.
+
+=========================================================
+WHY DO WE NEED VIRTUAL INHERITANCE?
+=========================================================
+
+Without virtual inheritance, if two classes inherit from the same base
+class and another class inherits from both of them, the derived class
+contains TWO copies of the common base class.
+
+This causes:
+
+• Ambiguity
+• Duplicate Data Members
+• Increased Memory Usage
+• Data Inconsistency
+
+Virtual Inheritance eliminates duplicate base objects.
+
+=========================================================
+SYNTAX
+=========================================================
+
+class B : virtual public A
+{
+};
+
+class C : virtual public A
+{
+};
+
+=========================================================
+EXAMPLE WITHOUT VIRTUAL INHERITANCE
+=========================================================
+
+class A
+{
+public:
+    int x = 10;
+};
+
+class B : public A
+{
+};
+
+class C : public A
+{
+};
+
+class D : public B, public C
+{
+};
+
+int main()
+{
+    D d;
+
+    // cout << d.x;  // ERROR
+}
+
+Compilation Error:
+request for member 'x' is ambiguous
+
+Reason:
+D contains two copies of A.
+
+=========================================================
+MEMORY LAYOUT WITHOUT VIRTUAL INHERITANCE
+=========================================================
+
+           A
+          / \
+         /   \
+        B     C
+         \   /
+          \ /
+           D
+
+D Object:
+
+---------------------------------
+B Subobject
+    A::x
+---------------------------------
+C Subobject
+    A::x
+---------------------------------
+
+Two copies of A exist.
+
+=========================================================
+EXAMPLE WITH VIRTUAL INHERITANCE
+=========================================================
+
+class A
+{
+public:
+    int x = 10;
+};
+
+class B : virtual public A
+{
+};
+
+class C : virtual public A
+{
+};
+
+class D : public B, public C
+{
+};
+
+int main()
+{
+    D d;
+
+    cout << d.x;
+}
+
+Output:
+10
+
+No ambiguity.
+
+=========================================================
+MEMORY LAYOUT WITH VIRTUAL INHERITANCE
+=========================================================
+
+           A
+          / \
+         /   \
+      virtual virtual
+        B        C
+         \      /
+          \    /
+            D
+
+D Object:
+
+---------------------------------
+B Subobject
+---------------------------------
+C Subobject
+---------------------------------
+Shared A Object
+    x
+---------------------------------
+
+Only ONE copy of A exists.
+
+=========================================================
+PROOF
+=========================================================
+
+D d;
+
+d.x = 100;
+
+cout << d.B::x;   // 100
+cout << d.C::x;   // 100
+
+Both access the SAME object.
+
+=========================================================
+INTERNAL WORKING
+=========================================================
+
+Compiler introduces:
+
+1. vbptr (Virtual Base Pointer)
+2. vbtable (Virtual Base Table)
+
+Object Layout:
+
+Object
+  |
+ vbptr
+  |
+ vbtable
+  |
+Shared Base Class
+
+Compiler uses vbptr and vbtable to locate the shared base object.
+
+=========================================================
+VISUAL REPRESENTATION
+=========================================================
+
+D Object
+---------------------------------
+B
+   vbptr
+---------------------------------
+C
+   vbptr
+---------------------------------
+Shared A
+---------------------------------
+
+=========================================================
+CONSTRUCTOR CALL ORDER
+=========================================================
+
+class A
+{
+public:
+    A()
+    {
+        cout << "A\n";
+    }
+};
+
+class B : virtual public A
+{
+public:
+    B()
+    {
+        cout << "B\n";
+    }
+};
+
+class C : virtual public A
+{
+public:
+    C()
+    {
+        cout << "C\n";
+    }
+};
+
+class D : public B, public C
+{
+public:
+    D()
+    {
+        cout << "D\n";
+    }
+};
+
+int main()
+{
+    D d;
+}
+
+Output:
+
+A
+B
+C
+D
+
+Reason:
+Virtual Base Class is constructed FIRST.
+
+=========================================================
+IMPORTANT RULE
+=========================================================
+
+The Most Derived Class is responsible for constructing the virtual base.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class A
+{
+public:
+    A(int x)
+    {
+        cout << x;
+    }
+};
+
+class B : virtual public A
+{
+public:
+    B() : A(10)
+    {
+    }
+};
+
+class C : virtual public A
+{
+public:
+    C() : A(20)
+    {
+    }
+};
+
+class D : public B, public C
+{
+public:
+    D() : A(100)
+    {
+    }
+};
+
+Output:
+
+100
+
+Reason:
+D is the most derived class.
+
+Only D constructs A.
+
+B and C's initialization of A is ignored.
+
+=========================================================
+ADVANTAGES
+=========================================================
+
+1. Eliminates duplicate base objects.
+2. Removes ambiguity.
+3. Reduces memory waste.
+4. Maintains single shared state.
+
+=========================================================
+DISADVANTAGES
+=========================================================
+
+1. Extra memory for vbptr.
+2. Additional indirection.
+3. Slight runtime overhead.
+4. Increased object size.
+
+=========================================================
+WHEN TO USE?
+=========================================================
+
+Use Virtual Inheritance when:
+
+1. Multiple Inheritance exists.
+2. Common base class is inherited by multiple classes.
+3. Derived class should contain only one copy of base class.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Virtual Inheritance?
+
+Answer:
+Virtual inheritance ensures that only one shared copy of a base class
+exists in a multiple inheritance hierarchy.
+
+---------------------------------------------------------
+
+Q2. Why do we need Virtual Inheritance?
+
+Answer:
+To solve the Diamond Problem and avoid duplicate base objects.
+
+---------------------------------------------------------
+
+Q3. How is Virtual Inheritance implemented internally?
+
+Answer:
+Using vbptr and vbtable.
+
+---------------------------------------------------------
+
+Q4. What is vbptr?
+
+Answer:
+Hidden pointer used to locate the virtual base class.
+
+---------------------------------------------------------
+
+Q5. What is vbtable?
+
+Answer:
+Table containing information about virtual base class location.
+
+---------------------------------------------------------
+
+Q6. Does Virtual Inheritance have overhead?
+
+Answer:
+Yes.
+
+• Extra vbptr
+• Extra indirection
+• Larger object size
+
+---------------------------------------------------------
+
+Q7. Which class constructs the virtual base class?
+
+Answer:
+The Most Derived Class.
+
+---------------------------------------------------------
+
+Q8. Does Virtual Inheritance affect constructor order?
+
+Answer:
+Yes.
+
+Virtual base class is always constructed first.
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+Virtual Inheritance is a C++ mechanism used to solve the Diamond Problem.
+By inheriting a base class using the virtual keyword, all derived classes
+share a single copy of the common base class instead of creating
+multiple copies. Internally, the compiler uses vbptr and vbtable to
+locate the shared virtual base object.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Diamond Problem
+       ↓
+Duplicate Base Objects
+       ↓
+Ambiguity
+       ↓
+Virtual Inheritance
+       ↓
+One Shared Base Object
+=========================================================
