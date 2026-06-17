@@ -1,0 +1,216 @@
+=========================================
+C++ STACK STL - INTERVIEW NOTES
+=========================================
+
+1. What is Stack?
+-----------------
+- std::stack is an STL container adaptor.
+- Follows LIFO (Last In First Out).
+- Only allows access to top element.
+
+Example:
+push(10)
+push(20)
+push(30)
+
+Top -> 30
+pop() removes 30 first
+
+-----------------------------------------
+
+2. Why is Stack called a Container Adaptor?
+-------------------------------------------
+- Stack does NOT store data itself.
+- It adapts (wraps) another container.
+- Provides restricted LIFO interface.
+
+Underlying container:
+- deque (default)
+
+-----------------------------------------
+
+3. LIFO Principle
+-----------------
+Last In First Out
+
+Real example:
+Stack of plates
+- last plate placed is removed first
+
+-----------------------------------------
+
+4. Internal Implementation
+--------------------------
+stack<T> internally uses:
+
+default:
+    deque<T>
+
+Can also use:
+    vector<T>
+    list<T>
+
+Requirement:
+- must support push_back(), pop_back(), back()
+
+Example:
+stack<int, deque<int>> st;
+
+-----------------------------------------
+
+5. Default Container
+--------------------
+- deque is default
+
+Why deque?
+✔ O(1) push_back()
+✔ O(1) pop_back()
+✔ No reallocation issues like vector
+
+-----------------------------------------
+
+6. Complexity
+-------------
+push()   -> O(1)
+pop()    -> O(1)
+top()    -> O(1)
+size()   -> O(1)
+empty()  -> O(1)
+
+-----------------------------------------
+
+7. Allowed Operations
+---------------------
+✔ push()
+✔ pop()
+✔ top()
+✔ size()
+✔ empty()
+
+❌ No iterators
+❌ No random access
+❌ No begin()/end()
+
+Reason:
+To maintain strict LIFO behavior
+
+-----------------------------------------
+
+8. stack vs vector
+------------------
+stack:
+- LIFO only
+- restricted interface
+- no iteration
+
+vector:
+- dynamic array
+- random access
+- flexible
+
+-----------------------------------------
+
+9. stack vs queue
+-----------------
+Stack:
+- LIFO → last in first out
+- uses top()
+
+Queue:
+- FIFO → first in first out
+- uses front()
+
+-----------------------------------------
+
+10. Why no iteration in stack?
+------------------------------
+- Stack hides underlying container
+- Prevents breaking LIFO order
+- Only top should be accessible
+
+-----------------------------------------
+
+11. Underlying Containers
+------------------------
+stack<T, deque<T>>   (default)
+stack<T, vector<T>>
+stack<T, list<T>>
+
+-----------------------------------------
+
+12. Real-world Use Cases
+------------------------
+✔ Function call stack
+✔ Recursion
+✔ DFS traversal
+✔ Undo / Redo
+✔ Browser back tracking
+✔ Parentheses matching
+✔ Expression evaluation
+✔ Backtracking problems
+
+-----------------------------------------
+
+13. Most Used Functions
+-----------------------
+push(x)   -> insert at top
+pop()     -> remove top
+top()     -> access top
+size()    -> number of elements
+empty()   -> check empty
+
+-----------------------------------------
+
+14. Sample Code
+---------------
+
+#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+
+    stack<int> st;
+
+    st.push(10);
+    st.push(20);
+    st.push(30);
+
+    cout << "Top: " << st.top() << endl;
+
+    st.pop();
+
+    cout << "Top after pop: " << st.top() << endl;
+
+    cout << "Size: " << st.size() << endl;
+
+    cout << "Empty: " << (st.empty() ? "Yes" : "No") << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+15. Limitations
+---------------
+❌ No indexing (st[i])
+❌ No iteration
+❌ No random access
+
+-----------------------------------------
+
+16. KEY INTERVIEW SUMMARY
+-------------------------
+- Stack = LIFO container adaptor
+- Default container = deque
+- Only top accessible
+- No iteration allowed
+- push/pop/top are O(1)
+
+-----------------------------------------
+
+ONE-LINE ANSWER
+----------------
+std::stack is a container adaptor that follows LIFO order and provides O(1) push, pop, and top operations using deque as the default underlying container.
+
+
