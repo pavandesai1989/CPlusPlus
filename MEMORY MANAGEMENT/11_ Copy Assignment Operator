@@ -1,0 +1,443 @@
+=========================================================
+COPY ASSIGNMENT OPERATOR (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+The Copy Assignment Operator copies the contents of one EXISTING object
+into another EXISTING object.
+
+Syntax:
+
+ClassName& operator=(const ClassName& other);
+
+Interview Line:
+"Copy Constructor creates a new object, whereas Copy Assignment Operator
+copies data into an already existing object."
+
+=========================================================
+WHEN IS IT CALLED?
+=========================================================
+
+Example:
+
+Test t1(10);
+Test t2(20);
+
+t2 = t1;     // Copy Assignment Operator called
+
+t2 already exists.
+
+=========================================================
+NOT CALLED HERE
+=========================================================
+
+Test t1(10);
+
+Test t2 = t1;
+
+This calls:
+
+Copy Constructor
+
+NOT Assignment Operator.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    int x;
+
+    Test(int a)
+    {
+        x = a;
+    }
+
+    Test& operator=(const Test& other)
+    {
+        x = other.x;
+        return *this;
+    }
+};
+
+=========================================================
+WHY RETURN REFERENCE?
+=========================================================
+
+Return type:
+
+ClassName&
+
+Reason:
+
+Supports chaining.
+
+Example:
+
+t1 = t2 = t3;
+
+Equivalent:
+
+t2.operator=(t3);
+t1.operator=(t2);
+
+=========================================================
+WHY PASS BY CONST REFERENCE?
+=========================================================
+
+Syntax:
+
+Test& operator=(const Test& other)
+
+Reason:
+
+• Avoid object copying
+• Prevent modification
+• Improve efficiency
+
+=========================================================
+DEFAULT COPY ASSIGNMENT OPERATOR
+=========================================================
+
+Compiler generates:
+
+Test& operator=(const Test& other)
+{
+    x = other.x;
+    return *this;
+}
+
+Performs:
+
+Member-wise copy
+(Shallow Copy)
+
+=========================================================
+PROBLEM WITH SHALLOW COPY
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+Test t1(10);
+Test t2(20);
+
+t2 = t1;
+
+Memory:
+
+t1.ptr ----+
+           |
+           ↓
+          [10]
+           ↑
+           |
+t2.ptr ----+
+
+Both objects share memory.
+
+Program end:
+
+delete ptr twice.
+
+Undefined Behavior.
+
+=========================================================
+WRONG IMPLEMENTATION
+=========================================================
+
+Test& operator=(const Test& other)
+{
+    ptr = new int(*other.ptr);
+
+    return *this;
+}
+
+Problem:
+
+Old memory leaked.
+
+=========================================================
+CORRECT IMPLEMENTATION (DEEP COPY)
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+
+    Test& operator=(const Test& other)
+    {
+        if(this == &other)
+            return *this;
+
+        delete ptr;
+
+        ptr = new int(*other.ptr);
+
+        return *this;
+    }
+};
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+Before:
+
+t1.ptr ----> [10]
+
+t2.ptr ----> [20]
+
+After:
+
+t2 = t1;
+
+t1.ptr ----> [10]
+
+t2.ptr ----> [10]
+
+Different heap allocations.
+
+Deep Copy.
+
+=========================================================
+SELF ASSIGNMENT PROBLEM
+=========================================================
+
+Example:
+
+t1 = t1;
+
+Without check:
+
+delete ptr;
+
+ptr = new int(*other.ptr);
+
+other.ptr is already deleted.
+
+Undefined Behavior.
+
+=========================================================
+SOLUTION
+=========================================================
+
+if(this == &other)
+    return *this;
+
+=========================================================
+WHAT IS this?
+=========================================================
+
+Inside:
+
+t2 = t1;
+
+Compiler internally:
+
+t2.operator=(t1);
+
+this
+↓
+
+Address of t2.
+
+=========================================================
+COPY CONSTRUCTOR vs ASSIGNMENT OPERATOR
+=========================================================
+
+Feature              Copy Constructor      Copy Assignment
+--------------------------------------------------------------------
+Purpose              Create new object     Assign existing object
+Syntax               Test(const Test&)    Test& operator=(...)
+Object Exists?       No                   Yes
+Statement            Test t2=t1;          t2=t1;
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Test t1(10);
+
+Test t2 = t1;
+
+Copy Constructor.
+
+---------------------------------------------------------
+
+Test t3(20);
+
+t3 = t1;
+
+Copy Assignment Operator.
+
+=========================================================
+RULE OF 3 CONNECTION
+=========================================================
+
+If class owns resources:
+
+Implement:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Reason:
+Compiler-generated shallow copy may cause:
+
+• Double delete
+• Dangling pointers
+• Memory leaks
+
+=========================================================
+MODERN IMPLEMENTATION (COPY-AND-SWAP)
+=========================================================
+
+Test& operator=(Test other)
+{
+    swap(ptr, other.ptr);
+    return *this;
+}
+
+Advantages:
+
+• Handles self-assignment automatically
+• Exception safe
+• Cleaner implementation
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Copy Assignment Operator?
+
+Answer:
+Copies one existing object into another existing object.
+
+---------------------------------------------------------
+
+Q2. Syntax?
+
+Answer:
+
+ClassName& operator=(const ClassName& other);
+
+---------------------------------------------------------
+
+Q3. When is it called?
+
+Answer:
+
+t2 = t1;
+
+---------------------------------------------------------
+
+Q4. Why return reference?
+
+Answer:
+Supports chaining.
+
+Example:
+
+t1 = t2 = t3;
+
+---------------------------------------------------------
+
+Q5. Why pass by const reference?
+
+Answer:
+Avoid copying and prevent modification.
+
+---------------------------------------------------------
+
+Q6. What does compiler-generated assignment operator do?
+
+Answer:
+Member-wise shallow copy.
+
+---------------------------------------------------------
+
+Q7. Why check self-assignment?
+
+Answer:
+To avoid deleting our own resources.
+
+Example:
+
+t1 = t1;
+
+---------------------------------------------------------
+
+Q8. Difference from Copy Constructor?
+
+Answer:
+
+Copy Constructor
+→ Creates new object.
+
+Copy Assignment Operator
+→ Assigns existing object.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+The Copy Assignment Operator copies the contents of one existing object
+into another existing object. Its syntax is:
+
+ClassName& operator=(const ClassName& other);
+
+The compiler-generated version performs member-wise shallow copying,
+which can cause memory leaks and double deletion for resource-owning
+classes. Therefore, custom implementations usually perform deep copy and
+handle self-assignment using:
+
+if(this == &other)
+
+It is one of the three functions required by the Rule of 3.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Copy Constructor
+      ↓
+Creates New Object
+
+Copy Assignment Operator
+      ↓
+Copies into Existing Object
+      ↓
+Deep Copy
+      ↓
+Self Assignment Check
+      ↓
+Rule of 3
+=========================================================
