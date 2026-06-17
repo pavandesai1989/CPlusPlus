@@ -1,0 +1,262 @@
+=========================================================
+DANGLING POINTER (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Dangling Pointer is a pointer that points to memory that has already
+been deallocated or is no longer valid.
+
+Interview Line:
+"A dangling pointer points to invalid memory."
+
+=========================================================
+HOW DOES A DANGLING POINTER OCCUR?
+=========================================================
+
+1. Deleting dynamically allocated memory.
+2. Returning address of a local variable.
+3. Variable going out of scope.
+
+=========================================================
+CASE 1: AFTER delete
+=========================================================
+
+int* ptr = new int(10);
+
+delete ptr;
+
+// ptr still contains old address
+cout << *ptr;      // Undefined Behavior
+
+Memory:
+
+Before delete:
+
+ptr ----> [10]
+
+After delete:
+
+ptr ----> X (Invalid Memory)
+
+ptr becomes a Dangling Pointer.
+
+=========================================================
+SOLUTION
+=========================================================
+
+delete ptr;
+ptr = nullptr;
+
+=========================================================
+CASE 2: RETURNING ADDRESS OF LOCAL VARIABLE
+=========================================================
+
+int* fun()
+{
+    int x = 10;
+
+    return &x;      // WRONG
+}
+
+int* ptr = fun();
+
+cout << *ptr;       // Undefined Behavior
+
+Reason:
+x is destroyed after function returns.
+
+=========================================================
+CASE 3: VARIABLE GOES OUT OF SCOPE
+=========================================================
+
+int* ptr;
+
+{
+    int x = 10;
+
+    ptr = &x;
+}
+
+cout << *ptr;       // Undefined Behavior
+
+Reason:
+x no longer exists.
+
+=========================================================
+WHY IS DANGLING POINTER DANGEROUS?
+=========================================================
+
+May cause:
+• Crashes (Segmentation Fault)
+• Garbage values
+• Memory corruption
+• Unpredictable bugs
+• Security vulnerabilities
+
+=========================================================
+EXAMPLE
+=========================================================
+
+int* ptr = new int(100);
+
+delete ptr;
+
+cout << *ptr;
+
+Possible Outputs:
+• Crash
+• Garbage value
+• Sometimes 100
+
+All are:
+
+Undefined Behavior.
+
+=========================================================
+UNDEFINED BEHAVIOR (UB)
+=========================================================
+
+Compiler gives NO guarantees.
+
+Program may:
+• Work
+• Crash
+• Produce random output
+
+=========================================================
+HOW TO AVOID DANGLING POINTERS?
+=========================================================
+
+1. Set pointer to nullptr after delete.
+
+delete ptr;
+ptr = nullptr;
+
+---------------------------------------------------------
+
+2. Never return address of local variables.
+
+Wrong:
+
+return &x;
+
+---------------------------------------------------------
+
+3. Avoid storing addresses of objects whose lifetime ends.
+
+---------------------------------------------------------
+
+4. Prefer Smart Pointers.
+
+unique_ptr
+shared_ptr
+
+=========================================================
+EXAMPLE
+=========================================================
+
+std::unique_ptr<int> ptr =
+    std::make_unique<int>(10);
+
+Automatic cleanup.
+
+No dangling pointer.
+
+=========================================================
+DANGLING POINTER vs WILD POINTER
+=========================================================
+
+Feature               Dangling Pointer          Wild Pointer
+-------------------------------------------------------------------
+Meaning               Points to invalid memory  Uninitialized pointer
+Initialization        Was valid earlier         Never initialized
+Example               After delete              int* ptr;
+Danger                High                      High
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Wild Pointer:
+
+int* ptr;
+
+Dangling Pointer:
+
+int* ptr = new int(10);
+
+delete ptr;
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Dangling Pointer?
+
+Answer:
+A pointer that points to memory that is no longer valid.
+
+---------------------------------------------------------
+
+Q2. How does a Dangling Pointer occur?
+
+Answer:
+1. After delete
+2. Returning local variable address
+3. Object going out of scope
+
+---------------------------------------------------------
+
+Q3. Why is it dangerous?
+
+Answer:
+Because accessing invalid memory causes Undefined Behavior.
+
+---------------------------------------------------------
+
+Q4. How do you avoid Dangling Pointers?
+
+Answer:
+
+delete ptr;
+ptr = nullptr;
+
+Use Smart Pointers.
+
+---------------------------------------------------------
+
+Q5. Difference between Dangling and Wild Pointer?
+
+Answer:
+
+Wild Pointer
+→ Never initialized.
+
+Dangling Pointer
+→ Was valid but became invalid.
+
+=========================================================
+INTERVIEW READY ANSWER (20 Seconds)
+=========================================================
+
+A Dangling Pointer is a pointer that refers to memory that has already
+been freed or whose lifetime has ended. It commonly occurs after delete,
+returning addresses of local variables, or when objects go out of scope.
+Dereferencing a dangling pointer leads to Undefined Behavior and may
+cause crashes or memory corruption. A common practice is to set pointers
+to nullptr after deletion and use smart pointers whenever possible.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Valid Pointer
+      ↓
+Memory Destroyed
+      ↓
+Pointer Still Holds Address
+      ↓
+Dangling Pointer
+      ↓
+Undefined Behavior
+=========================================================
