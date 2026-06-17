@@ -1,0 +1,169 @@
+=========================================
+PERFECT FORWARDING (C++11) - BASIC NOTES
+=========================================
+
+1. What is Perfect Forwarding?
+------------------------------
+Perfect forwarding is a technique in C++ that allows us to pass arguments
+to another function while preserving their original value category:
+
+✔ lvalue stays lvalue
+✔ rvalue stays rvalue
+
+-----------------------------------------
+2. Why do we need it?
+----------------------
+Without perfect forwarding:
+
+- rvalues may become lvalues inside functions
+- unnecessary copying happens
+- move semantics may not work correctly
+
+Goal:
+👉 Preserve original argument type while forwarding
+
+-----------------------------------------
+3. Core Idea
+-------------
+We use:
+
+1. Templates
+2. T&& (forwarding reference)
+3. std::forward
+
+Header:
+#include <utility>
+
+-----------------------------------------
+4. Basic Syntax
+---------------
+template <typename T>
+void wrapper(T&& arg)
+{
+    func(std::forward<T>(arg));
+}
+
+-----------------------------------------
+5. What is happening here?
+--------------------------
+T&& in template context = forwarding reference
+
+It can bind to:
+✔ lvalue
+✔ rvalue
+
+std::forward<T>(arg):
+- preserves original type
+- forwards as lvalue or rvalue correctly
+
+-----------------------------------------
+6. Example
+----------
+#include <iostream>
+#include <utility>
+using namespace std;
+
+void show(int& x)
+{
+    cout << "Lvalue called: " << x << endl;
+}
+
+void show(int&& x)
+{
+    cout << "Rvalue called: " << x << endl;
+}
+
+template <typename T>
+void wrapper(T&& arg)
+{
+    show(std::forward<T>(arg));
+}
+
+int main()
+{
+    int a = 10;
+
+    wrapper(a);     // lvalue
+    wrapper(20);    // rvalue
+
+    return 0;
+}
+
+Output:
+Lvalue called: 10
+Rvalue called: 20
+
+-----------------------------------------
+7. std::forward vs std::move
+-----------------------------
+
+std::move:
+- always converts to rvalue
+- does NOT preserve type
+
+std::forward:
+- preserves original type
+- conditionally casts to lvalue or rvalue
+
+-----------------------------------------
+8. Why not just use std::move?
+------------------------------
+If we use std::move always:
+
+❌ lvalues become rvalues
+❌ can cause unwanted moves
+
+Perfect forwarding avoids this problem.
+
+-----------------------------------------
+9. When is Perfect Forwarding used?
+-----------------------------------
+✔ Generic wrapper functions
+✔ STL emplace functions
+✔ Factory functions
+✔ Variadic templates
+✔ Performance-critical APIs
+
+Example:
+emplace_back()
+make_shared()
+make_unique()
+
+-----------------------------------------
+10. Real-world analogy
+----------------------
+Forwarding:
+Like forwarding a courier package
+without opening it or changing it
+
+-----------------------------------------
+11. Key Requirement
+-------------------
+Perfect forwarding works only when:
+
+✔ template type deduction is used
+✔ T&& is forwarding reference
+✔ std::forward is used correctly
+
+-----------------------------------------
+12. Common Mistake
+------------------
+❌ Using std::move inside template wrapper
+
+Result:
+- destroys value category preservation
+- causes unnecessary moves
+
+-----------------------------------------
+13. Summary
+-----------
+- Keeps lvalues as lvalues
+- Keeps rvalues as rvalues
+- Used in generic programming
+- Uses std::forward
+- Enables efficient STL design
+
+-----------------------------------------
+14. ONE-LINE INTERVIEW ANSWER
+-----------------------------------------
+Perfect forwarding is a C++ technique that uses template type deduction and std::forward to preserve the original value category (lvalue or rvalue) of arguments when passing them to another function, enabling efficient and correct move semantics.
