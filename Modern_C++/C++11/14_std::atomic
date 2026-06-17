@@ -1,0 +1,184 @@
+=========================================
+std::atomic (C++11) – MULTITHREADING NOTES
+=========================================
+
+1. What is std::atomic?
+-----------------------
+- std::atomic is a C++11 feature used for lock-free thread-safe operations.
+- It ensures that operations on a variable are performed atomically (indivisible).
+- Defined in <atomic> header.
+
+Header:
+#include <atomic>
+
+-----------------------------------------
+
+2. Why std::atomic is needed?
+----------------------------
+In multithreading, normal variables can cause race conditions.
+
+Example (problem):
+
+int count = 0;
+
+Thread 1: count++
+Thread 2: count++
+
+Internally count++ = read → modify → write
+So both threads may overwrite each other.
+
+Result: incorrect value
+
+-----------------------------------------
+
+3. Solution using std::atomic
+-----------------------------
+
+#include <iostream>
+#include <thread>
+#include <atomic>
+using namespace std;
+
+atomic<int> count(0);
+
+void increment() {
+    for(int i = 0; i < 100000; i++) {
+        count++;
+    }
+}
+
+int main() {
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << count << endl; // correct result: 200000
+}
+
+-----------------------------------------
+
+4. What does "atomic" mean?
+---------------------------
+- Operation is completed in one step
+- No thread can interrupt in between
+- No race condition
+
+Example:
+count++ is internally atomic for std::atomic<int>
+
+-----------------------------------------
+
+5. Common Operations Supported
+-----------------------------
+For std::atomic<T>:
+
+- load()
+- store()
+- exchange()
+- fetch_add()
+- fetch_sub()
+- compare_exchange_weak()
+- compare_exchange_strong()
+
+-----------------------------------------
+
+6. Example: fetch_add
+---------------------
+
+atomic<int> x(10);
+
+x.fetch_add(5); // x = 15
+
+-----------------------------------------
+
+7. Example: store & load
+------------------------
+
+atomic<int> x(0);
+
+x.store(100);     // set value
+int val = x.load(); // get value
+
+-----------------------------------------
+
+8. Compare and Swap (CAS) – IMPORTANT
+-------------------------------------
+
+atomic<int> x(10);
+
+int expected = 10;
+
+if(x.compare_exchange_strong(expected, 20)) {
+    // success: x was 10, now changed to 20
+} else {
+    // failure: x was not 10
+}
+
+Used in:
+- Lock-free programming
+- STL internals
+- High-performance systems
+
+-----------------------------------------
+
+9. atomic vs mutex
+------------------
+
+std::atomic:
+- Lightweight
+- Lock-free (usually)
+- Faster
+- Works for simple variables
+
+std::mutex:
+- Heavier
+- Used for complex critical sections
+- More flexible
+
+-----------------------------------------
+
+10. When NOT to use atomic?
+--------------------------
+- When multiple variables must be updated together
+- Complex critical sections
+- Data structures (vector, map operations)
+
+Use mutex instead.
+
+-----------------------------------------
+
+11. Memory Order (Advanced concept)
+-----------------------------------
+std::atomic supports memory ordering:
+
+- memory_order_relaxed
+- memory_order_acquire
+- memory_order_release
+- memory_order_seq_cst (default)
+
+Used in high-performance systems.
+
+-----------------------------------------
+
+12. Real-world Usage
+--------------------
+- Counters (request count, hits)
+- Reference counting (shared_ptr internals)
+- Lock-free queues
+- Game engines
+- High-performance servers
+
+-----------------------------------------
+
+13. Interview Key Points
+------------------------
+- Introduced in C++11
+- Provides thread-safe operations without locks
+- Prevents race conditions for simple variables
+- Supports CAS (compare_exchange)
+- Faster than mutex for simple operations
+- Not suitable for complex shared state
+
+=========================================
