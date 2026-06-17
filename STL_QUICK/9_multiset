@@ -1,0 +1,276 @@
+=========================================
+C++ MULTISET STL - INTERVIEW NOTES
+=========================================
+
+1. What is multiset?
+--------------------
+- std::multiset is an associative container in STL.
+- Stores elements in SORTED order.
+- Allows DUPLICATE elements.
+
+Example:
+multiset<int> ms;
+
+Insert:
+10, 20, 10, 30
+
+Stored:
+10 10 20 30
+
+-----------------------------------------
+
+2. Internal Implementation
+--------------------------
+- Implemented using SELF-BALANCING BST
+  (usually Red-Black Tree)
+
+Properties:
+✔ Sorted order maintained
+✔ Allows duplicates
+✔ O(log n) operations
+
+-----------------------------------------
+
+3. multiset vs set
+------------------
+
+set:
+- Unique elements only
+- No duplicates
+
+multiset:
+- Allows duplicates
+- Sorted order maintained
+
+Example:
+
+set      -> 10 20 30
+multiset -> 10 10 20 30
+
+-----------------------------------------
+
+4. Complexity
+-------------
+insert()   -> O(log n)
+erase()    -> O(log n)
+find()     -> O(log n)
+count()    -> O(log n)
+size()     -> O(1)
+empty()    -> O(1)
+
+-----------------------------------------
+
+5. Why multiset is used?
+------------------------
+✔ Store duplicates in sorted order
+✔ Frequency-based problems
+✔ Sliding window problems
+✔ Maintain sorted stream of data
+
+-----------------------------------------
+
+6. Important Functions
+----------------------
+
+insert(x)
+---------
+ms.insert(10);
+
+erase(x)
+--------
+ms.erase(10);
+
+⚠ IMPORTANT:
+- erase(value) removes ALL occurrences
+- erase(iterator) removes only one occurrence
+
+find(x)
+------
+auto it = ms.find(10);
+
+count(x)
+--------
+ms.count(10);   // number of occurrences
+
+lower_bound(x)
+-------------
+first element >= x
+
+upper_bound(x)
+-------------
+first element > x
+
+-----------------------------------------
+
+7. erase important behavior (VERY IMPORTANT)
+-------------------------------------------
+
+multiset<int> ms = {10,10,20,30};
+
+ms.erase(10);
+
+Result:
+20 30   (ALL 10s removed)
+
+To remove ONE occurrence:
+ms.erase(ms.find(10));
+
+-----------------------------------------
+
+8. Why no indexing?
+--------------------
+- Uses BST internally
+- Not contiguous memory
+- So ms[i] is NOT allowed
+
+-----------------------------------------
+
+9. Iterator in multiset
+------------------------
+- Bidirectional iterator
+- Used for traversal
+
+for(auto it : ms)
+
+-----------------------------------------
+
+10. When to use multiset?
+-------------------------
+✔ When duplicates are needed
+✔ When sorted order required
+✔ Frequency tracking with order
+✔ Sliding window median problems
+✔ Top-K problems (sometimes)
+
+-----------------------------------------
+
+11. multiset vs unordered_multiset
+----------------------------------
+
+multiset:
+- Sorted
+- O(log n)
+
+unordered_multiset:
+- Unsorted
+- Average O(1)
+- Worst O(n)
+
+-----------------------------------------
+
+12. Real-world uses
+-------------------
+✔ Frequency counting
+✔ Sliding window problems
+✔ Maintaining sorted logs
+✔ Duplicate tracking in streams
+✔ Competitive programming problems
+
+-----------------------------------------
+
+13. MOST FREQUENTLY USED FUNCTIONS (INTERVIEW)
+---------------------------------------------
+
+insert(x)
+---------
+ms.insert(10);
+
+erase(x)
+--------
+ms.erase(10);          // all occurrences
+
+erase(iterator)
+--------------
+ms.erase(ms.find(10)); // single occurrence
+
+find(x)
+------
+ms.find(10);
+
+count(x)
+--------
+ms.count(10);
+
+size()
+-----
+ms.size();
+
+empty()
+------
+ms.empty();
+
+lower_bound(x)
+-------------
+ms.lower_bound(20);
+
+upper_bound(x)
+-------------
+ms.upper_bound(20);
+
+begin(), end()
+-------------
+for(auto it = ms.begin(); it != ms.end(); it++)
+
+-----------------------------------------
+
+14. Sample Code (Most Used in Interviews)
+-----------------------------------------
+
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main() {
+
+    multiset<int> ms;
+
+    // insert elements
+    ms.insert(10);
+    ms.insert(20);
+    ms.insert(10);
+    ms.insert(30);
+    ms.insert(10);
+
+    cout << "Multiset elements: ";
+    for(auto x : ms)
+        cout << x << " ";
+    cout << endl;
+
+    // count occurrences
+    cout << "Count of 10: " << ms.count(10) << endl;
+
+    // erase ONE occurrence
+    ms.erase(ms.find(10));
+
+    cout << "After deleting one 10: ";
+    for(auto x : ms)
+        cout << x << " ";
+    cout << endl;
+
+    // erase ALL occurrences
+    ms.erase(20);
+
+    cout << "After deleting all 20: ";
+    for(auto x : ms)
+        cout << x << " ";
+    cout << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+
+15. KEY INTERVIEW SUMMARY
+-------------------------
+- multiset = sorted container with duplicates
+- implemented using Red-Black Tree
+- O(log n) operations
+- allows multiple same values
+- erase(value) removes ALL occurrences
+- erase(iterator) removes one occurrence
+
+-----------------------------------------
+
+ONE-LINE INTERVIEW ANSWER
+-------------------------
+std::multiset is a balanced BST-based associative container that stores elements in sorted order and allows duplicates, supporting O(log n) insert, delete, and search operations.
