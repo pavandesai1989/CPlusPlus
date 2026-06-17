@@ -1,0 +1,353 @@
+=========================================================
+DEEP COPY vs SHALLOW COPY (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Copying an object can be done in two ways:
+
+1. Shallow Copy
+2. Deep Copy
+
+This topic is frequently asked with:
+• Copy Constructor
+• Assignment Operator
+• Rule of 3
+• Dynamic Memory Management
+
+=========================================================
+SHALLOW COPY
+=========================================================
+
+Definition:
+Copies member values as-is, including pointer addresses.
+
+Both objects point to the SAME memory.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+};
+
+Test t1(10);
+Test t2 = t1;      // Default copy constructor
+
+Memory:
+
+t1.ptr ----+
+           |
+           ↓
+          [10]
+           ↑
+           |
+t2.ptr ----+
+
+Both objects share the same memory.
+
+=========================================================
+PROBLEMS OF SHALLOW COPY
+=========================================================
+
+1. Shared data
+2. Accidental modification
+3. Double delete
+4. Dangling pointers
+5. Undefined Behavior
+
+=========================================================
+EXAMPLE
+=========================================================
+
+*t2.ptr = 100;
+
+cout << *t1.ptr;
+
+Output:
+
+100
+
+Reason:
+Both pointers refer to the same memory.
+
+=========================================================
+DOUBLE DELETE PROBLEM
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+Test t1(10);
+Test t2 = t1;
+
+At program end:
+
+~t2() → delete ptr
+~t1() → delete ptr again
+
+Result:
+
+Undefined Behavior (Double Free).
+
+=========================================================
+DEEP COPY
+=========================================================
+
+Definition:
+Creates a completely new copy of dynamically allocated resources.
+
+Each object owns its own memory.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    Test(const Test& other)
+    {
+        ptr = new int(*other.ptr);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+Test t1(10);
+Test t2 = t1;
+
+Memory:
+
+t1.ptr ----> [10]
+
+t2.ptr ----> [10]
+
+Different memory locations.
+
+=========================================================
+VERIFY
+=========================================================
+
+*t2.ptr = 100;
+
+cout << *t1.ptr;
+
+Output:
+
+10
+
+Reason:
+Independent copies.
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+SHALLOW COPY
+
+t1.ptr ----+
+           |
+           ↓
+          [10]
+           ↑
+           |
+t2.ptr ----+
+
+---------------------------------------------------------
+
+DEEP COPY
+
+t1.ptr ----> [10]
+
+t2.ptr ----> [10]
+
+Different heap allocations.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Feature               Shallow Copy              Deep Copy
+----------------------------------------------------------------
+Memory Allocation     Shared                    Separate
+Pointer Address       Same                      Different
+Modification Impact   Affects both objects      Independent
+Double Delete Risk    Yes                       No
+Complexity            Simple                    More code
+Safety                Unsafe                    Safe
+
+=========================================================
+WHEN DOES SHALLOW COPY HAPPEN?
+=========================================================
+
+Compiler-generated:
+
+• Copy Constructor
+• Assignment Operator
+
+perform member-wise copying.
+
+Pointers are copied as addresses.
+
+=========================================================
+WHEN DO WE NEED DEEP COPY?
+=========================================================
+
+Whenever a class owns:
+
+• Dynamic memory (new/delete)
+• File handles
+• Sockets
+• Database connections
+• Any resource ownership
+
+=========================================================
+INTERVIEW FAVORITE CODE
+=========================================================
+
+class Test
+{
+    int* ptr;
+
+public:
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    // Deep Copy Constructor
+    Test(const Test& other)
+    {
+        ptr = new int(*other.ptr);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+=========================================================
+RULE OF 3 CONNECTION
+=========================================================
+
+If a class manages resources, implement:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Reason:
+Default shallow copy causes problems.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Shallow Copy?
+
+Answer:
+Copies member values as-is, including pointer addresses.
+
+---------------------------------------------------------
+
+Q2. What is Deep Copy?
+
+Answer:
+Creates separate memory and copies actual data.
+
+---------------------------------------------------------
+
+Q3. Why is Shallow Copy dangerous?
+
+Answer:
+Because multiple objects share the same memory, causing:
+• Double delete
+• Dangling pointers
+• Undefined Behavior
+
+---------------------------------------------------------
+
+Q4. When do we need Deep Copy?
+
+Answer:
+Whenever a class owns dynamically allocated resources.
+
+---------------------------------------------------------
+
+Q5. Does compiler-generated copy constructor perform Deep Copy?
+
+Answer:
+NO.
+
+It performs member-wise (shallow) copy.
+
+---------------------------------------------------------
+
+Q6. Which copy is safer?
+
+Answer:
+Deep Copy.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Shallow Copy copies member values directly, including pointer addresses,
+so multiple objects share the same memory. This can lead to double
+deletion and dangling pointers. Deep Copy allocates separate memory and
+copies the actual data, making objects independent. Whenever a class
+owns dynamic resources, Deep Copy should be implemented, typically using
+the Rule of 3 or Rule of 5.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Shallow Copy
+      ↓
+Copy Address
+      ↓
+Shared Memory
+      ↓
+Double Delete Risk
+
+Deep Copy
+      ↓
+Allocate New Memory
+      ↓
+Copy Data
+      ↓
+Independent Objects
+=========================================================
