@@ -1,0 +1,154 @@
+=========================================
+🔥 Exception Handling in C++ (INTERVIEW NOTES)
+=========================================
+
+1. What is Exception Handling?
+------------------------------
+- Mechanism to handle runtime errors safely.
+- Prevents program from crashing unexpectedly.
+- Uses:
+    try   → block where error may occur
+    throw → signal an error
+    catch → handle the error
+
+-----------------------------------------
+2. Basic Syntax
+-----------------------------------------
+
+try {
+    // risky code
+    throw exception;
+}
+catch (type e) {
+    // handle error
+}
+catch (...) {
+    // catch all handler
+}
+
+-----------------------------------------
+3. Example
+-----------------------------------------
+
+#include <iostream>
+using namespace std;
+
+int main() {
+    try {
+        int a = 10, b = 0;
+
+        if (b == 0)
+            throw "Division by zero error";
+
+        cout << a / b;
+    }
+    catch (const char* msg) {
+        cout << "Error: " << msg << endl;
+    }
+
+    return 0;
+}
+
+-----------------------------------------
+4. throw keyword
+-----------------------------------------
+- Used to explicitly raise an exception.
+- Can throw:
+    * primitive types (int, char, string)
+    * objects
+    * custom exception classes
+
+Example:
+throw 404;
+throw "Error";
+throw MyException();
+
+-----------------------------------------
+5. Stack Unwinding (VERY IMPORTANT)
+-----------------------------------------
+- When exception is thrown:
+    → function calls are reversed
+    → objects in stack are destroyed automatically
+
+Example flow:
+
+main()
+ └── func1()
+      └── func2()  → throw error
+           ↑ stack unwinding starts here
+
+Key Points:
+- Local objects are destroyed automatically
+- Destructors are called in reverse order
+- Heap memory is NOT freed automatically (use smart pointers)
+
+-----------------------------------------
+6. Custom Exceptions
+-----------------------------------------
+
+#include <iostream>
+using namespace std;
+
+class MyException {
+public:
+    string msg;
+    MyException(string m) : msg(m) {}
+};
+
+int main() {
+    try {
+        throw MyException("Custom error occurred");
+    }
+    catch (MyException e) {
+        cout << e.msg << endl;
+    }
+}
+
+-----------------------------------------
+7. catch(...) (Catch-all handler)
+-----------------------------------------
+
+try {
+    throw 10;
+}
+catch (...) {
+    cout << "Unknown error occurred";
+}
+
+-----------------------------------------
+8. noexcept (VERY IMPORTANT)
+-----------------------------------------
+- Guarantees function will NOT throw exceptions.
+
+Syntax:
+void func() noexcept;
+
+Example:
+
+void safeFunc() noexcept {
+    cout << "No exceptions here";
+}
+
+-----------------------------------------
+9. Why noexcept is important?
+-----------------------------------------
+- Enables compiler optimizations
+- Used heavily in STL (vector, move semantics)
+- If noexcept function throws → std::terminate() is called
+
+-----------------------------------------
+10. noexcept + STL relation
+-----------------------------------------
+- STL prefers noexcept move constructors
+- If move constructor is NOT noexcept → copy is used instead of move
+- Improves performance and safety in containers
+
+-----------------------------------------
+🔥 INTERVIEW SUMMARY
+-----------------------------------------
+✔ try / catch / throw are core mechanism
+✔ Stack unwinding ensures safe cleanup
+✔ Prefer RAII / smart pointers for memory safety
+✔ Custom exceptions improve design clarity
+✔ noexcept improves performance & STL optimization
+✔ catch(...) is last safety net
