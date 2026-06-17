@@ -1,0 +1,410 @@
+=========================================================
+COPY CONSTRUCTOR (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Copy Constructor is a special constructor that initializes a new object
+from an existing object of the same class.
+
+Syntax:
+
+ClassName(const ClassName& other);
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    int x;
+
+    Test(int a)
+    {
+        x = a;
+    }
+
+    Test(const Test& other)
+    {
+        x = other.x;
+    }
+};
+
+int main()
+{
+    Test t1(10);
+
+    Test t2 = t1;   // Copy Constructor
+}
+
+=========================================================
+WHY PASS BY CONST REFERENCE?
+=========================================================
+
+Syntax:
+
+Test(const Test& other);
+
+Why?
+
+1. Avoids copying.
+2. Prevents modification.
+3. Avoids infinite recursion.
+
+Wrong:
+
+Test(Test other);
+
+Passing by value itself requires another copy constructor call,
+leading to infinite recursion.
+
+=========================================================
+WHEN IS COPY CONSTRUCTOR CALLED?
+=========================================================
+
+1. Object initialization from another object.
+2. Pass object by value.
+3. Return object by value (may be optimized via RVO/NRVO).
+
+=========================================================
+CASE 1: INITIALIZATION
+=========================================================
+
+Test t1(10);
+
+Test t2 = t1;
+
+OR
+
+Test t2(t1);
+
+Copy Constructor called.
+
+=========================================================
+CASE 2: PASS BY VALUE
+=========================================================
+
+void fun(Test t)
+{
+}
+
+Test t1(10);
+
+fun(t1);
+
+Copy Constructor called.
+
+=========================================================
+CASE 3: RETURN BY VALUE
+=========================================================
+
+Test fun()
+{
+    Test t(10);
+    return t;
+}
+
+Copy Constructor may be called.
+
+Modern compilers often perform:
+
+RVO (Return Value Optimization)
+NRVO (Named Return Value Optimization)
+
+and eliminate copies.
+
+=========================================================
+DEFAULT COPY CONSTRUCTOR
+=========================================================
+
+If you don't write one, compiler generates:
+
+Test(const Test& other)
+{
+    x = other.x;
+}
+
+Performs:
+
+Member-wise copy
+(Shallow Copy)
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    int x;
+};
+
+Test t1;
+Test t2 = t1;
+
+Compiler-generated copy constructor is used.
+
+=========================================================
+PROBLEM WITH SHALLOW COPY
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+};
+
+Test t1(10);
+
+Test t2 = t1;
+
+Memory:
+
+t1.ptr ----+
+           |
+           ↓
+          [10]
+           ↑
+           |
+t2.ptr ----+
+
+Both objects share the same memory.
+
+=========================================================
+DOUBLE DELETE PROBLEM
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+Test t1(10);
+Test t2 = t1;
+
+Program end:
+
+~t2() → delete ptr
+~t1() → delete ptr again
+
+Undefined Behavior.
+
+=========================================================
+DEEP COPY USING COPY CONSTRUCTOR
+=========================================================
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    Test(const Test& other)
+    {
+        ptr = new int(*other.ptr);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+t1.ptr ----> [10]
+
+t2.ptr ----> [10]
+
+Different memory locations.
+
+=========================================================
+VERIFY
+=========================================================
+
+*t2.ptr = 100;
+
+cout << *t1.ptr;
+
+Output:
+
+10
+
+Objects are independent.
+
+=========================================================
+COPY CONSTRUCTOR vs ASSIGNMENT OPERATOR
+=========================================================
+
+Copy Constructor
+----------------
+Creates NEW object.
+
+Assignment Operator
+-------------------
+Copies into EXISTING object.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Test t1(10);
+
+Test t2 = t1;
+
+Copy Constructor called.
+
+---------------------------------------------------------
+
+Test t3(20);
+
+t3 = t1;
+
+Copy Assignment Operator called.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Statement             Constructor Called
+-------------------------------------------------
+Test t2 = t1;         Copy Constructor
+Test t2(t1);          Copy Constructor
+fun(t1);              Copy Constructor
+return t;             May call Copy Constructor
+t2 = t1;              Assignment Operator
+
+=========================================================
+RULE OF 3 CONNECTION
+=========================================================
+
+If class manages resources:
+
+Implement:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Reason:
+Compiler-generated shallow copy may cause resource issues.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Copy Constructor?
+
+Answer:
+A constructor that initializes an object from another object of the same
+class.
+
+---------------------------------------------------------
+
+Q2. Syntax?
+
+Answer:
+
+ClassName(const ClassName& other);
+
+---------------------------------------------------------
+
+Q3. Why pass by const reference?
+
+Answer:
+• Avoid copying
+• Prevent modification
+• Avoid infinite recursion
+
+---------------------------------------------------------
+
+Q4. When is Copy Constructor called?
+
+Answer:
+1. Initialization from another object
+2. Pass by value
+3. Return by value
+
+---------------------------------------------------------
+
+Q5. What does compiler-generated copy constructor do?
+
+Answer:
+Member-wise (Shallow) copy.
+
+---------------------------------------------------------
+
+Q6. Why is shallow copy dangerous?
+
+Answer:
+May cause:
+• Double delete
+• Dangling pointers
+• Memory corruption
+
+---------------------------------------------------------
+
+Q7. Difference between Copy Constructor and Assignment Operator?
+
+Answer:
+
+Copy Constructor
+→ Creates new object.
+
+Assignment Operator
+→ Assigns to existing object.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A Copy Constructor is a special constructor used to initialize a new
+object from an existing object of the same class. Its syntax is:
+
+ClassName(const ClassName& other);
+
+The compiler-generated copy constructor performs member-wise shallow
+copying. For classes owning dynamic resources, a custom copy constructor
+should implement Deep Copy to avoid double deletion and dangling
+pointers. Copy constructors are invoked during object initialization,
+pass-by-value, and sometimes return-by-value operations.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Copy Constructor
+      ↓
+Creates New Object
+      ↓
+Syntax:
+ClassName(const ClassName&)
+      ↓
+Compiler → Shallow Copy
+      ↓
+Dynamic Memory → Deep Copy Needed
+      ↓
+Rule of 3
+=========================================================
