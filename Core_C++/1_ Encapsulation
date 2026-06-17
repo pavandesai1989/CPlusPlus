@@ -1,0 +1,363 @@
+=========================================================
+ENCAPSULATION IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Encapsulation is the process of bundling data (variables) and methods
+(functions) together into a single unit (class) and restricting direct
+access to the data.
+
+In simple words:
+
+Data + Functions + Access Control = Encapsulation
+
+=========================================================
+WHY DO WE NEED ENCAPSULATION?
+=========================================================
+
+Without Encapsulation:
+• Anyone can modify data directly.
+• Data can become invalid.
+• Poor security.
+• High coupling.
+
+Encapsulation provides:
+• Data Hiding
+• Controlled Access
+• Better Security
+• Maintainability
+• Flexibility
+
+=========================================================
+HOW IS ENCAPSULATION ACHIEVED IN C++?
+=========================================================
+
+Using:
+1. Classes
+2. Access Specifiers
+   - private
+   - protected
+   - public
+
+Typically:
+
+Private Data
+      ↓
+Public Methods (Getter/Setter)
+      ↓
+Controlled Access
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Employee
+{
+private:
+    int salary;
+
+public:
+    void setSalary(int s)
+    {
+        salary = s;
+    }
+
+    int getSalary()
+    {
+        return salary;
+    }
+};
+
+int main()
+{
+    Employee e;
+
+    e.setSalary(50000);
+
+    cout << e.getSalary();
+}
+
+Output:
+50000
+
+=========================================================
+WHY PRIVATE?
+=========================================================
+
+Bad Design:
+
+class Employee
+{
+public:
+    int salary;
+};
+
+int main()
+{
+    Employee e;
+
+    e.salary = -5000;
+}
+
+Invalid state is possible.
+
+---------------------------------------------------------
+
+Good Design:
+
+class Employee
+{
+private:
+    int salary;
+
+public:
+    void setSalary(int s)
+    {
+        if (s >= 0)
+            salary = s;
+    }
+
+    int getSalary()
+    {
+        return salary;
+    }
+};
+
+Now invalid values can be prevented.
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+ATM Machine
+
+You can:
+• Deposit money
+• Withdraw money
+• Check balance
+
+You cannot:
+• Directly modify bank database.
+
+Internal implementation is hidden.
+
+This is Encapsulation.
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+class Employee
+{
+private:
+    int salary;
+
+public:
+    void setSalary();
+    int getSalary();
+};
+
+Object Memory:
+
+--------------------
+salary
+--------------------
+
+Functions are not stored inside every object.
+
+Member functions exist only once in program memory.
+
+=========================================================
+ADVANTAGES OF ENCAPSULATION
+=========================================================
+
+1. Data Hiding
+2. Security
+3. Controlled Access
+4. Better Maintainability
+5. Low Coupling
+6. Better Reusability
+7. Easy Validation
+8. Easy Future Changes
+
+=========================================================
+EXAMPLE OF CONTROLLED ACCESS
+=========================================================
+
+class BankAccount
+{
+private:
+    double balance;
+
+public:
+    void deposit(double amount)
+    {
+        if (amount > 0)
+            balance += amount;
+    }
+
+    void withdraw(double amount)
+    {
+        if (amount <= balance)
+            balance -= amount;
+    }
+};
+
+User cannot directly modify:
+
+balance
+
+=========================================================
+ENCAPSULATION vs DATA HIDING
+=========================================================
+
+Encapsulation:
+---------------
+Binding data and methods together and controlling access.
+
+Data Hiding:
+------------
+Restricting access to implementation details.
+
+Data Hiding is a subset of Encapsulation.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Feature              Encapsulation      Data Hiding
+---------------------------------------------------
+Purpose              Bundle + Protect   Restrict Access
+Achieved Using       Class + Access     Access Specifiers
+Includes Methods     Yes                No
+Includes Data        Yes                Yes
+Relationship         Parent Concept     Subset
+
+=========================================================
+ENCAPSULATION vs ABSTRACTION
+=========================================================
+
+Encapsulation:
+--------------
+How data is protected.
+
+Abstraction:
+------------
+What functionality is exposed.
+
+Encapsulation:
+Implementation level.
+
+Abstraction:
+Design level.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Car:
+
+Encapsulation:
+Private members:
+• Engine
+• Fuel System
+• Internal Data
+
+Abstraction:
+Public Interface:
+• Start()
+• Stop()
+• Accelerate()
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Encapsulation?
+
+Answer:
+Encapsulation is the process of bundling data and methods together into
+a single unit and restricting direct access to data.
+
+---------------------------------------------------------
+
+Q2. How is Encapsulation achieved in C++?
+
+Answer:
+Using classes and access specifiers (private, protected, public).
+
+---------------------------------------------------------
+
+Q3. Why do we need Encapsulation?
+
+Answer:
+• Data Hiding
+• Security
+• Controlled Access
+• Validation
+• Maintainability
+
+---------------------------------------------------------
+
+Q4. Is private keyword equal to Encapsulation?
+
+Answer:
+No.
+
+private is only one mechanism used to implement Encapsulation.
+
+Encapsulation is a broader concept.
+
+---------------------------------------------------------
+
+Q5. Is Data Hiding same as Encapsulation?
+
+Answer:
+No.
+
+Data Hiding is a subset of Encapsulation.
+
+---------------------------------------------------------
+
+Q6. Can Encapsulation exist without private members?
+
+Answer:
+Yes.
+
+Encapsulation means bundling data and methods together.
+private simply strengthens it by restricting access.
+
+---------------------------------------------------------
+
+Q7. What are the disadvantages of poor encapsulation?
+
+Answer:
+• Invalid object states
+• High coupling
+• Difficult maintenance
+• Poor security
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Encapsulation is one of the four pillars of OOP. It is the process of
+bundling data and methods into a single unit (class) and controlling
+access to the data using access specifiers. It provides data hiding,
+security, validation, and better maintainability. In C++, it is
+typically achieved by keeping data members private and exposing public
+getter/setter methods.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Data + Methods + Access Control
+               ↓
+          Encapsulation
+               ↓
+        Data Hiding & Security
+=========================================================
