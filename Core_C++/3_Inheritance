@@ -1,0 +1,549 @@
+=========================================================
+INHERITANCE IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Inheritance is an OOP mechanism in which one class (Derived Class)
+acquires the properties and behaviors (data members and member
+functions) of another class (Base Class).
+
+In simple words:
+
+Existing Class
+       ↓
+Reuse in New Class
+       ↓
+Inheritance
+
+=========================================================
+WHY DO WE NEED INHERITANCE?
+=========================================================
+
+Without Inheritance:
+• Code duplication
+• Difficult maintenance
+• Less reusability
+• More bugs
+
+Inheritance provides:
+• Code Reusability
+• Extensibility
+• Better Maintenance
+• Reduced Redundancy
+• Runtime Polymorphism support
+
+=========================================================
+BASIC SYNTAX
+=========================================================
+
+class Base
+{
+};
+
+class Derived : public Base
+{
+};
+
+=========================================================
+EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Animal
+{
+public:
+    void eat()
+    {
+        cout << "Eating\n";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void bark()
+    {
+        cout << "Barking\n";
+    }
+};
+
+int main()
+{
+    Dog d;
+
+    d.eat();
+    d.bark();
+}
+
+Output:
+
+Eating
+Barking
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+class Animal
+{
+public:
+    int age;
+};
+
+class Dog : public Animal
+{
+public:
+    int weight;
+};
+
+Dog Object:
+
+-----------------
+age
+-----------------
+weight
+-----------------
+
+Derived object contains:
+
+Base Part + Derived Part
+
+=========================================================
+IMPORTANT TERMINOLOGY
+=========================================================
+
+Base Class
+-----------
+Parent Class
+Super Class
+
+Derived Class
+-------------
+Child Class
+Sub Class
+
+=========================================================
+IS-A RELATIONSHIP
+=========================================================
+
+Inheritance represents an IS-A relationship.
+
+Example:
+
+Dog IS-A Animal
+Car IS-A Vehicle
+Manager IS-A Employee
+
+=========================================================
+HAS-A RELATIONSHIP
+=========================================================
+
+Represents Composition.
+
+Example:
+
+Car HAS-A Engine
+House HAS-A Room
+Computer HAS-A CPU
+
+=========================================================
+INTERVIEW QUESTION
+=========================================================
+
+Q. Which is preferred?
+
+Answer:
+Composition (HAS-A) is generally preferred over Inheritance (IS-A)
+because it provides loose coupling and better flexibility.
+
+=========================================================
+TYPES OF INHERITANCE
+=========================================================
+
+1. Single Inheritance
+2. Multilevel Inheritance
+3. Multiple Inheritance
+4. Hierarchical Inheritance
+5. Hybrid Inheritance
+
+=========================================================
+1. SINGLE INHERITANCE
+=========================================================
+
+A → B
+
+class A
+{
+};
+
+class B : public A
+{
+};
+
+=========================================================
+2. MULTILEVEL INHERITANCE
+=========================================================
+
+A → B → C
+
+class A
+{
+};
+
+class B : public A
+{
+};
+
+class C : public B
+{
+};
+
+=========================================================
+3. MULTIPLE INHERITANCE
+=========================================================
+
+A      B
+ \    /
+  \  /
+    C
+
+class A
+{
+};
+
+class B
+{
+};
+
+class C : public A, public B
+{
+};
+
+=========================================================
+4. HIERARCHICAL INHERITANCE
+=========================================================
+
+       A
+      / \
+     B   C
+
+=========================================================
+5. HYBRID INHERITANCE
+=========================================================
+
+Combination of multiple inheritance types.
+
+=========================================================
+ACCESS MODES OF INHERITANCE
+=========================================================
+
+1. Public Inheritance
+2. Protected Inheritance
+3. Private Inheritance
+
+=========================================================
+PUBLIC INHERITANCE
+=========================================================
+
+Base          Derived
+------------------------
+public   ->   public
+protected->   protected
+private  ->   Not Accessible
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Base
+{
+public:
+    int x;
+
+protected:
+    int y;
+
+private:
+    int z;
+};
+
+class Derived : public Base
+{
+};
+
+Inside Derived:
+
+x -> Accessible
+y -> Accessible
+z -> Not Accessible
+
+=========================================================
+PROTECTED INHERITANCE
+=========================================================
+
+Base          Derived
+------------------------
+public   ->   protected
+protected->   protected
+private  ->   Not Accessible
+
+=========================================================
+PRIVATE INHERITANCE
+=========================================================
+
+Base          Derived
+------------------------
+public   ->   private
+protected->   private
+private  ->   Not Accessible
+
+=========================================================
+CONSTRUCTOR CALL ORDER
+=========================================================
+
+class Base
+{
+public:
+    Base()
+    {
+        cout << "Base\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    Derived()
+    {
+        cout << "Derived\n";
+    }
+};
+
+int main()
+{
+    Derived d;
+}
+
+Output:
+
+Base
+Derived
+
+Rule:
+Base constructor executes first.
+
+=========================================================
+DESTRUCTOR CALL ORDER
+=========================================================
+
+class Base
+{
+public:
+    ~Base()
+    {
+        cout << "Base\n";
+    }
+};
+
+class Derived : public Base
+{
+public:
+    ~Derived()
+    {
+        cout << "Derived\n";
+    }
+};
+
+int main()
+{
+    Derived d;
+}
+
+Output:
+
+Derived
+Base
+
+Rule:
+Destructor order is reverse.
+
+=========================================================
+FUNCTION OVERRIDING
+=========================================================
+
+class Animal
+{
+public:
+    void sound()
+    {
+        cout << "Animal\n";
+    }
+};
+
+class Dog : public Animal
+{
+public:
+    void sound()
+    {
+        cout << "Dog\n";
+    }
+};
+
+Dog d;
+d.sound();
+
+Output:
+Dog
+
+This is Function Overriding.
+
+Runtime Polymorphism requires:
+virtual function.
+
+=========================================================
+ADVANTAGES OF INHERITANCE
+=========================================================
+
+1. Code Reusability
+2. Reduced Code Duplication
+3. Extensibility
+4. Easy Maintenance
+5. Supports Runtime Polymorphism
+6. Natural Modeling of Relationships
+
+=========================================================
+DISADVANTAGES OF INHERITANCE
+=========================================================
+
+1. Tight Coupling
+2. Fragile Base Class Problem
+3. Difficult Maintenance in Deep Hierarchies
+4. Multiple Inheritance Ambiguity
+5. Increased Complexity
+
+=========================================================
+WHEN TO USE INHERITANCE?
+=========================================================
+
+Use when:
+
+TRUE IS-A relationship exists.
+
+Examples:
+
+Dog IS-A Animal
+SavingsAccount IS-A Account
+Circle IS-A Shape
+
+=========================================================
+WHEN NOT TO USE INHERITANCE?
+=========================================================
+
+Wrong:
+
+Car IS-A Engine ❌
+
+Correct:
+
+Car HAS-A Engine ✔
+
+Use Composition instead.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Inheritance?
+
+Answer:
+Inheritance is a mechanism by which one class acquires the properties
+and behaviors of another class.
+
+---------------------------------------------------------
+
+Q2. Why do we use Inheritance?
+
+Answer:
+• Code Reusability
+• Extensibility
+• Reduced Duplication
+• Runtime Polymorphism
+
+---------------------------------------------------------
+
+Q3. What relationship does Inheritance represent?
+
+Answer:
+IS-A relationship.
+
+---------------------------------------------------------
+
+Q4. Difference between IS-A and HAS-A?
+
+IS-A:
+Inheritance.
+
+HAS-A:
+Composition.
+
+---------------------------------------------------------
+
+Q5. Which is preferred: Composition or Inheritance?
+
+Answer:
+Composition is generally preferred because it provides loose coupling.
+
+---------------------------------------------------------
+
+Q6. Can private members be inherited?
+
+Answer:
+Yes, they are inherited but cannot be accessed directly by the derived
+class.
+
+---------------------------------------------------------
+
+Q7. Constructor and Destructor order?
+
+Constructor:
+Base → Derived
+
+Destructor:
+Derived → Base
+
+---------------------------------------------------------
+
+Q8. Can multiple inheritance cause problems?
+
+Answer:
+Yes.
+
+It can cause the Diamond Problem and ambiguity.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Inheritance is one of the four pillars of OOP and is a mechanism by
+which a derived class acquires the properties and behaviors of a base
+class. It promotes code reuse, extensibility, and supports runtime
+polymorphism. Inheritance represents an IS-A relationship and should be
+used only when a true parent-child relationship exists. Otherwise,
+Composition (HAS-A relationship) is generally preferred.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Base Class
+      ↓
+Derived Class acquires features
+      ↓
+Code Reuse
+      ↓
+IS-A Relationship
+      ↓
+Inheritance
+=========================================================
