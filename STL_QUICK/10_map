@@ -1,0 +1,189 @@
+=========================================
+C++ STL MAP – INTERVIEW NOTES
+=========================================
+
+1. What is map?
+----------------
+map is an associative container that stores data in key-value pairs.
+
+Example:
+map<int, string> m;
+m[1] = "A";
+m[2] = "B";
+
+Output:
+1 -> A
+2 -> B
+
+-----------------------------------------
+2. Key Properties
+-----------------
+- Stores key-value pairs
+- Keys are UNIQUE
+- Automatically sorted by key (ascending)
+- Implemented using Red-Black Tree
+- Time complexity: O(log n)
+
+-----------------------------------------
+3. Internal Implementation
+--------------------------
+map is implemented using Red-Black Tree (Self-balancing BST)
+
+- Maintains sorted order
+- Guarantees O(log n) operations
+- Height = O(log n)
+
+Interview Answer:
+map uses Red-Black Tree which keeps data sorted and balanced.
+
+-----------------------------------------
+4. Complexity
+--------------
+insert    O(log n)
+erase     O(log n)
+find      O(log n)
+access[]  O(log n)
+size      O(1)
+
+-----------------------------------------
+5. Important Functions
+----------------------
+insert()
+erase()
+find()
+count()
+[]
+at()
+begin()
+end()
+size()
+empty()
+clear()
+
+-----------------------------------------
+6. map vs unordered_map
+-----------------------
+map:
+- Ordered
+- O(log n)
+- Red-Black Tree
+
+unordered_map:
+- Unordered
+- O(1) average
+- Hash Table
+
+Use:
+map → sorting required
+unordered_map → fast lookup required
+
+-----------------------------------------
+7. Important Behavior of []
+--------------------------------
+m[key] inserts key if not present
+
+Example:
+cout << m[10]; // inserts 10 with default value
+
+Safe:
+m.at(key); // throws error if not found
+
+-----------------------------------------
+8. Iteration
+-------------
+for(auto it : m)
+    cout << it.first << " " << it.second;
+
+Gives sorted order
+
+-----------------------------------------
+9. Advantages
+--------------
+- Sorted keys
+- No duplicates
+- O(log n) guaranteed
+- Good for range queries
+
+-----------------------------------------
+10. Disadvantages
+-----------------
+- Slower than unordered_map
+- Higher memory usage
+
+-----------------------------------------
+11. When to use map?
+--------------------
+Use when:
+- Sorting required
+- Ordered traversal needed
+- Range queries needed
+
+Avoid when:
+- Only fast lookup needed
+
+-----------------------------------------
+12. MOST USED FUNCTIONS IN CODING
+----------------------------------
+insert()
+erase()
+find()
+count()
+[]
+size()
+empty()
+
+-----------------------------------------
+13. CODE (MOST USED OPERATIONS)
+----------------------------------
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main() {
+
+    map<int, string> m;
+
+    // insert
+    m[1] = "Apple";
+    m[2] = "Banana";
+    m[3] = "Mango";
+
+    m.insert({4, "Grapes"});
+
+    // access
+    cout << m[2] << endl;
+
+    // find
+    if(m.find(3) != m.end())
+        cout << "Found 3" << endl;
+
+    // iteration
+    for(auto it : m)
+        cout << it.first << " -> " << it.second << endl;
+
+    // erase
+    m.erase(2);
+
+    // size
+    cout << m.size() << endl;
+
+    // count
+    cout << m.count(1) << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+14. QUICK REVISION
+-------------------
+- map = key-value store
+- keys are sorted
+- implemented using Red-Black Tree
+- O(log n) operations
+- very common in interviews
+
+-----------------------------------------
+15. ONE-LINE ANSWER
+-------------------
+map is an ordered key-value container implemented using Red-Black Tree that provides O(log n) insert, delete, and search operations while keeping keys sorted.
+=========================================
