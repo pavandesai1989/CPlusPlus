@@ -1,0 +1,577 @@
+=========================================================
+OPERATOR OVERLOADING IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Operator Overloading allows existing operators to work with
+user-defined types (classes/objects).
+
+It is an example of:
+
+Compile-Time Polymorphism
+(Early Binding / Static Binding)
+
+=========================================================
+WHY DO WE NEED OPERATOR OVERLOADING?
+=========================================================
+
+Without Operator Overloading:
+
+Complex c3 = c1.add(c2);
+
+With Operator Overloading:
+
+Complex c3 = c1 + c2;
+
+Makes code:
+• More readable
+• More intuitive
+• Similar to built-in types
+
+=========================================================
+SYNTAX
+=========================================================
+
+return_type operator<op>(parameters)
+{
+}
+
+Example:
+
+Complex operator+(const Complex& rhs)
+{
+}
+
+=========================================================
+GENERAL FORM
+=========================================================
+
+class Test
+{
+public:
+    ReturnType operatorOP(parameters)
+    {
+    }
+};
+
+=========================================================
+MOST ASKED OPERATOR #1 : '+' Operator
+=========================================================
+
+class Complex
+{
+private:
+    int real;
+    int imag;
+
+public:
+    Complex(int r=0, int i=0)
+        : real(r), imag(i)
+    {
+    }
+
+    Complex operator+(const Complex& rhs)
+    {
+        return Complex(
+                real + rhs.real,
+                imag + rhs.imag
+               );
+    }
+
+    void print()
+    {
+        cout << real
+             << "+"
+             << imag
+             << "i\n";
+    }
+};
+
+int main()
+{
+    Complex c1(10,20);
+    Complex c2(30,40);
+
+    Complex c3 = c1 + c2;
+
+    c3.print();
+}
+
+Output:
+
+40+60i
+
+=========================================================
+Compiler Internally Converts:
+=========================================================
+
+c1 + c2;
+
+into
+
+c1.operator+(c2);
+
+=========================================================
+MOST ASKED OPERATOR #2 : '<<' Operator
+(Stream Insertion)
+=========================================================
+
+Needs Friend Function.
+
+class Complex
+{
+    int real;
+    int imag;
+
+public:
+    Complex(int r=0,int i=0)
+        : real(r), imag(i)
+    {
+    }
+
+    friend ostream&
+    operator<<(ostream& out,
+               const Complex& c);
+};
+
+ostream&
+operator<<(ostream& out,
+           const Complex& c)
+{
+    out << c.real
+        << "+"
+        << c.imag
+        << "i";
+
+    return out;
+}
+
+int main()
+{
+    Complex c(10,20);
+
+    cout << c;
+}
+
+Output:
+
+10+20i
+
+=========================================================
+WHY FRIEND?
+=========================================================
+
+Compiler converts:
+
+cout << c;
+
+into
+
+operator<<(cout,c);
+
+Left operand is:
+
+ostream
+
+NOT
+
+Complex
+
+Therefore member function won't work.
+
+Use:
+
+Friend/Non-member Function.
+
+=========================================================
+MOST ASKED OPERATOR #3 : '>>' Operator
+(Stream Extraction)
+=========================================================
+
+class Complex
+{
+    int real;
+    int imag;
+
+public:
+    friend istream&
+    operator>>(istream& in,
+               Complex& c);
+};
+
+istream&
+operator>>(istream& in,
+           Complex& c)
+{
+    in >> c.real >> c.imag;
+
+    return in;
+}
+
+int main()
+{
+    Complex c;
+
+    cin >> c;
+}
+
+=========================================================
+MOST ASKED OPERATOR #4 : '=' Operator
+(Copy Assignment)
+=========================================================
+
+class String
+{
+    char* ptr;
+
+public:
+
+    String& operator=
+            (const String& rhs)
+    {
+        if(this != &rhs)
+        {
+            delete[] ptr;
+
+            ptr = new char[
+                  strlen(rhs.ptr)+1];
+
+            strcpy(ptr,rhs.ptr);
+        }
+
+        return *this;
+    }
+};
+
+=========================================================
+WHY RETURN *this ?
+=========================================================
+
+Supports chaining.
+
+s1 = s2 = s3;
+
+=========================================================
+MOST ASKED OPERATOR #5 : '[]' Operator
+=========================================================
+
+class Array
+{
+    int arr[5];
+
+public:
+
+    int& operator[](int index)
+    {
+        return arr[index];
+    }
+};
+
+int main()
+{
+    Array a;
+
+    a[0] = 100;
+
+    cout << a[0];
+}
+
+Compiler converts:
+
+a[0]
+
+into
+
+a.operator[](0);
+
+=========================================================
+MOST ASKED OPERATOR #6 : '()' Operator
+(Function Call Operator)
+=========================================================
+
+class Add
+{
+public:
+    int operator()(int a,
+                   int b)
+    {
+        return a+b;
+    }
+};
+
+int main()
+{
+    Add obj;
+
+    cout << obj(10,20);
+}
+
+Output:
+
+30
+
+Objects behaving like functions are called:
+
+Function Objects (Functors).
+
+=========================================================
+MOST ASKED OPERATOR #7 : '++'
+(Pre Increment)
+=========================================================
+
+class Test
+{
+    int x;
+
+public:
+    Test(int a=0):x(a)
+    {
+    }
+
+    Test& operator++()
+    {
+        ++x;
+        return *this;
+    }
+
+    void print()
+    {
+        cout << x << endl;
+    }
+};
+
+int main()
+{
+    Test t(10);
+
+    ++t;
+
+    t.print();
+}
+
+Output:
+
+11
+
+=========================================================
+POST INCREMENT
+=========================================================
+
+class Test
+{
+    int x;
+
+public:
+    Test(int a=0):x(a)
+    {
+    }
+
+    Test operator++(int)
+    {
+        Test temp=*this;
+
+        x++;
+
+        return temp;
+    }
+};
+
+Dummy int parameter differentiates:
+
+Post Increment.
+
+=========================================================
+MOST ASKED OPERATOR #8 : '=='
+=========================================================
+
+class Employee
+{
+    int id;
+
+public:
+    Employee(int x)
+        : id(x)
+    {
+    }
+
+    bool operator==
+        (const Employee& rhs)
+    {
+        return id == rhs.id;
+    }
+};
+
+=========================================================
+OPERATORS THAT CANNOT BE OVERLOADED
+=========================================================
+
+1. ::
+2. .
+3. .*
+4. ?:
+5. sizeof
+6. typeid
+
+Very common interview question.
+
+=========================================================
+OPERATORS THAT SHOULD BE NON-MEMBER
+=========================================================
+
+1. <<
+2. >>
+3. == (optional)
+4. Arithmetic operators (sometimes)
+
+=========================================================
+MEMBER vs NON-MEMBER OVERLOADING
+=========================================================
+
+Member:
+
+a+b
+
+↓
+
+a.operator+(b)
+
+---------------------------------------------------------
+
+Non-member:
+
+operator+(a,b)
+
+=========================================================
+RULES OF OPERATOR OVERLOADING
+=========================================================
+
+1. Cannot create new operators.
+2. Cannot change precedence.
+3. Cannot change associativity.
+4. At least one operand must be user-defined type.
+5. Cannot change number of operands.
+
+=========================================================
+EXAMPLE (NOT ALLOWED)
+=========================================================
+
+int operator+(int a,int b);
+
+ERROR
+
+Built-in types only.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Operator Overloading?
+
+Answer:
+Giving additional meaning to existing operators for user-defined types.
+
+---------------------------------------------------------
+
+Q2. Which polymorphism is it?
+
+Answer:
+Compile-Time Polymorphism.
+
+---------------------------------------------------------
+
+Q3. Why are << and >> overloaded using friend functions?
+
+Answer:
+Left operand is ostream/istream and not our class object.
+
+---------------------------------------------------------
+
+Q4. Why return reference in operator= ?
+
+Answer:
+Supports chaining and avoids unnecessary copies.
+
+---------------------------------------------------------
+
+Q5. Difference between ++obj and obj++ ?
+
+Answer:
+
+++obj
+-----
+operator++()
+
+obj++
+-----
+operator++(int)
+
+---------------------------------------------------------
+
+Q6. Which operators cannot be overloaded?
+
+Answer:
+:: . .* ?: sizeof typeid
+
+---------------------------------------------------------
+
+Q7. Can we overload operators for built-in types?
+
+Answer:
+NO.
+
+At least one operand must be a user-defined type.
+
+---------------------------------------------------------
+
+Q8. Why should operator[] return reference?
+
+Answer:
+
+a[0]=100;
+
+Assignment requires lvalue.
+
+Hence:
+
+int& operator[]()
+
+=========================================================
+TOP OPERATOR OVERLOADS ASKED IN INTERVIEWS
+=========================================================
+
+1. +
+2. <<
+3. >>
+4. =
+5. []
+6. ()
+7. ++ (Pre/Post)
+8. ==
+9. < (for STL containers)
+10. new/delete (senior interviews)
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+Operator Overloading is a compile-time polymorphism feature that allows
+existing operators to work with user-defined types. It improves code
+readability by making objects behave like built-in types. Operators are
+implemented using operator functions and can be member or non-member
+functions. Commonly overloaded operators include +, <<, >>, =, [], (),
+++, and ==.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Existing Operator
+        ↓
+Additional Meaning
+        ↓
+User Defined Type
+        ↓
+Compile-Time Polymorphism
+        ↓
+Operator Overloading
+=========================================================
