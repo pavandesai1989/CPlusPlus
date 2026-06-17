@@ -1,0 +1,217 @@
+=========================================
+C++ STL UNORDERED_SET – INTERVIEW NOTES
+=========================================
+
+1. What is unordered_set?
+-------------------------
+unordered_set is an associative container that stores
+ONLY UNIQUE elements using a HASH TABLE.
+
+Example:
+unordered_set<int> s;
+
+s.insert(10);
+s.insert(20);
+s.insert(10);  // duplicate ignored
+
+Output:
+10, 20 (order NOT guaranteed)
+
+-----------------------------------------
+2. Key Properties
+-----------------
+- Stores ONLY unique elements
+- No duplicates allowed
+- NOT sorted
+- Implemented using Hash Table
+- Average O(1) operations
+
+-----------------------------------------
+3. Internal Implementation
+--------------------------
+unordered_set is implemented using a HASH TABLE.
+
+Element → Hash Function → Bucket → Storage
+
+Collisions handled using:
+- Chaining (linked list inside bucket)
+
+Interview Answer:
+unordered_set uses a hash table with chaining to store unique elements.
+
+-----------------------------------------
+4. Complexity
+--------------
+insert    O(1) average, O(n) worst
+erase     O(1) average
+find      O(1) average
+count     O(1) average
+
+Worst case happens when many collisions occur.
+
+-----------------------------------------
+5. Important Functions
+----------------------
+insert()
+erase()
+find()
+count()
+begin()
+end()
+size()
+empty()
+clear()
+
+-----------------------------------------
+6. unordered_set vs set
+-----------------------
+
+unordered_set:
+- Hash Table
+- NOT sorted
+- O(1) average
+
+set:
+- Red-Black Tree
+- Sorted
+- O(log n)
+
+Interview Answer:
+unordered_set is faster, but set maintains order.
+
+-----------------------------------------
+7. Accessing Elements
+---------------------
+⚠ unordered_set does NOT support [] operator
+
+Wrong:
+s[10]; ❌
+
+Correct:
+- insert()
+- find()
+- count()
+
+-----------------------------------------
+8. Why unordered_set is fast?
+------------------------------
+Because:
+- Uses hashing
+- Direct bucket access
+- No tree traversal
+
+-----------------------------------------
+9. Collision Handling
+---------------------
+If multiple elements map to same bucket:
+
+Example:
+hash(10) = bucket 2
+hash(20) = bucket 2
+
+Stored in linked list inside same bucket.
+
+-----------------------------------------
+10. Iteration
+-------------
+No guaranteed order:
+
+for(auto it : s)
+    cout << it << " ";
+
+Output order is random.
+
+-----------------------------------------
+11. Advantages
+--------------
+- Very fast lookup
+- Ideal for uniqueness checks
+- Best for membership testing
+
+-----------------------------------------
+12. Disadvantages
+-----------------
+- No ordering
+- Worst-case O(n)
+- Higher memory usage than set
+- Depends on hash quality
+
+-----------------------------------------
+13. When to use unordered_set?
+-----------------------------
+Use when:
+- Need fast lookup
+- Need uniqueness
+- Order NOT required
+
+Examples:
+- Remove duplicates
+- Check duplicates
+- Subarray problems
+- Two Sum existence check
+- Sliding window uniqueness
+
+-----------------------------------------
+14. MOST USED FUNCTIONS IN CODING
+----------------------------------
+insert()
+erase()
+find()
+count()
+size()
+empty()
+clear()
+
+-----------------------------------------
+15. CODE EXAMPLE (MOST USED)
+----------------------------------
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+int main() {
+
+    unordered_set<int> s;
+
+    // insert
+    s.insert(10);
+    s.insert(20);
+    s.insert(30);
+    s.insert(10); // duplicate ignored
+
+    // find
+    if(s.find(20) != s.end())
+        cout << "20 found" << endl;
+
+    // count
+    cout << s.count(10) << endl;
+
+    // iterate
+    for(auto it : s)
+        cout << it << " ";
+
+    cout << endl;
+
+    // erase
+    s.erase(20);
+
+    cout << "Size: " << s.size() << endl;
+
+    return 0;
+}
+
+-----------------------------------------
+16. QUICK REVISION
+------------------
+- unordered_set = hash table
+- stores unique elements
+- NOT sorted
+- O(1) average operations
+- best for fast lookup + uniqueness
+- duplicates automatically removed
+
+-----------------------------------------
+17. ONE-LINE INTERVIEW ANSWER
+-----------------------------
+unordered_set is a hash table-based container that stores unique elements with average O(1) insertion, deletion, and search, without maintaining any order.
+=========================================
