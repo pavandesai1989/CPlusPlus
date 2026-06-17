@@ -1,0 +1,460 @@
+=========================================================
+INTERFACE CONCEPT IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+C++ does not have an explicit 'interface' keyword like Java or C#.
+
+In C++, an Interface is usually implemented using an Abstract Class
+containing:
+
+1. Only Pure Virtual Functions (=0)
+2. No Data Members (generally)
+3. Virtual Destructor
+
+An Interface specifies WHAT a class should do, not HOW it should do it.
+
+=========================================================
+WHY DO WE NEED INTERFACES?
+=========================================================
+
+Suppose multiple classes need to provide the same functionality but
+implement it differently.
+
+Examples:
+• Payment Systems
+• Logging Systems
+• Database Drivers
+• Shape Drawing Systems
+• Printer Drivers
+
+Interface provides a common contract.
+
+=========================================================
+REAL WORLD EXAMPLE
+=========================================================
+
+Interface:
+Payment Gateway
+
+Implementations:
+• Credit Card Payment
+• UPI Payment
+• PayPal Payment
+
+All implement:
+
+pay()
+
+But implementation differs.
+
+=========================================================
+BASIC SYNTAX
+=========================================================
+
+class IShape
+{
+public:
+    virtual void draw() = 0;
+    virtual ~IShape() = default;
+};
+
+This is an Interface.
+
+=========================================================
+EXAMPLE 1 : BASIC INTERFACE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class IShape
+{
+public:
+    virtual void draw() = 0;
+    virtual ~IShape() = default;
+};
+
+class Circle : public IShape
+{
+public:
+    void draw() override
+    {
+        cout << "Drawing Circle\n";
+    }
+};
+
+class Rectangle : public IShape
+{
+public:
+    void draw() override
+    {
+        cout << "Drawing Rectangle\n";
+    }
+};
+
+int main()
+{
+    IShape* s1 = new Circle();
+    IShape* s2 = new Rectangle();
+
+    s1->draw();
+    s2->draw();
+
+    delete s1;
+    delete s2;
+}
+
+Output:
+
+Drawing Circle
+Drawing Rectangle
+
+=========================================================
+WHY IS THIS AN INTERFACE?
+=========================================================
+
+IShape only specifies:
+
+draw()
+
+It does not specify HOW draw() works.
+
+Each derived class decides its implementation.
+
+=========================================================
+INTERFACE REPRESENTS A CONTRACT
+=========================================================
+
+Interface says:
+
+"If you inherit from me,
+you MUST implement my functions."
+
+Example:
+
+class ILogger
+{
+public:
+    virtual void log() = 0;
+    virtual ~ILogger() = default;
+};
+
+Any derived class MUST implement:
+
+log()
+
+=========================================================
+EXAMPLE 2 : LOGGER INTERFACE
+=========================================================
+
+class ILogger
+{
+public:
+    virtual void log(string msg) = 0;
+    virtual ~ILogger() = default;
+};
+
+class ConsoleLogger : public ILogger
+{
+public:
+    void log(string msg) override
+    {
+        cout << msg;
+    }
+};
+
+class FileLogger : public ILogger
+{
+public:
+    void log(string msg) override
+    {
+        cout << "Writing to file: "
+             << msg;
+    }
+};
+
+=========================================================
+USAGE
+=========================================================
+
+ILogger* logger =
+        new ConsoleLogger();
+
+logger->log("Hello");
+
+Can easily change to:
+
+ILogger* logger =
+        new FileLogger();
+
+No code changes required.
+
+This is called:
+
+Programming to an Interface.
+
+=========================================================
+WHY ARE INTERFACES IMPORTANT?
+=========================================================
+
+1. Loose Coupling
+2. Extensibility
+3. Better Maintainability
+4. Easier Unit Testing
+5. Runtime Polymorphism
+6. Dependency Injection
+
+=========================================================
+EXAMPLE : LOOSE COUPLING
+=========================================================
+
+BAD DESIGN
+
+class Application
+{
+    FileLogger logger;
+};
+
+Application is tightly coupled to FileLogger.
+
+---------------------------------------------------------
+
+GOOD DESIGN
+
+class Application
+{
+    ILogger* logger;
+};
+
+Application depends on abstraction, not implementation.
+
+Any logger can be plugged in.
+
+=========================================================
+MULTIPLE INTERFACE IMPLEMENTATION
+=========================================================
+
+C++ allows implementing multiple interfaces.
+
+Example:
+
+class IPrinter
+{
+public:
+    virtual void print() = 0;
+    virtual ~IPrinter() = default;
+};
+
+class IScanner
+{
+public:
+    virtual void scan() = 0;
+    virtual ~IScanner() = default;
+};
+
+class MultiFunctionPrinter :
+        public IPrinter,
+        public IScanner
+{
+public:
+    void print() override
+    {
+        cout << "Printing\n";
+    }
+
+    void scan() override
+    {
+        cout << "Scanning\n";
+    }
+};
+
+Output:
+
+Printing
+Scanning
+
+=========================================================
+INTERFACE VS ABSTRACT CLASS
+=========================================================
+
+Abstract Class
+--------------
+• May have data members
+• May have implemented methods
+• Partial abstraction
+• Represents IS-A relationship
+• Can maintain state
+
+Example:
+
+class Shape
+{
+protected:
+    int color;
+
+public:
+    virtual void draw() = 0;
+
+    void setColor(int c)
+    {
+        color = c;
+    }
+};
+
+=========================================================
+
+Interface
+----------
+• Usually only pure virtual functions
+• Usually no data members
+• Complete abstraction
+• No state
+• Represents capability/contract
+
+Example:
+
+class IDrawable
+{
+public:
+    virtual void draw() = 0;
+    virtual ~IDrawable() = default;
+};
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Feature               Interface      Abstract Class
+---------------------------------------------------
+Pure Virtual Functions   Yes              Yes
+Normal Functions         Usually No       Yes
+Data Members             Usually No       Yes
+Constructors             No               Yes
+State                    No               Yes
+Object Creation          No               No
+Purpose                  Contract         Partial Abstraction
+
+=========================================================
+WHY VIRTUAL DESTRUCTOR?
+=========================================================
+
+class IShape
+{
+public:
+    virtual ~IShape() = default;
+};
+
+Reason:
+
+IShape* p = new Circle();
+
+delete p;
+
+Derived destructor should execute properly.
+
+Rule:
+
+Any interface intended for polymorphic deletion should have a
+virtual destructor.
+
+=========================================================
+INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Does C++ have an interface keyword?
+
+Answer:
+No.
+
+Interfaces are implemented using abstract classes containing only
+pure virtual functions.
+
+---------------------------------------------------------
+
+Q2. What is an Interface?
+
+Answer:
+An interface is a contract that specifies what operations a class must
+provide without specifying how those operations are implemented.
+
+---------------------------------------------------------
+
+Q3. How do you create an interface in C++?
+
+Answer:
+
+class IShape
+{
+public:
+    virtual void draw() = 0;
+    virtual ~IShape() = default;
+};
+
+---------------------------------------------------------
+
+Q4. Why use interfaces?
+
+Answer:
+• Loose Coupling
+• Runtime Polymorphism
+• Extensibility
+• Dependency Injection
+• Better Unit Testing
+
+---------------------------------------------------------
+
+Q5. Can interfaces have data members?
+
+Technically:
+YES.
+
+Practically:
+Avoid it.
+
+Interfaces should be stateless.
+
+---------------------------------------------------------
+
+Q6. Can interfaces have constructors?
+
+Technically:
+Yes, because interfaces are abstract classes.
+
+Practically:
+Usually avoided.
+
+---------------------------------------------------------
+
+Q7. Can we create objects of an interface?
+
+No.
+
+IShape s; // Error
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+C++ does not have a separate interface keyword. An interface is usually
+implemented as an abstract class containing only pure virtual functions
+and a virtual destructor. It defines a contract that derived classes
+must implement, promoting loose coupling, extensibility, and runtime
+polymorphism.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Interface
+     ↓
+Contract
+     ↓
+Pure Virtual Functions
+     ↓
+No Implementation Details
+     ↓
+Loose Coupling
+     ↓
+Runtime Polymorphism
+=========================================================
