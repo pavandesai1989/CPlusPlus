@@ -1,0 +1,189 @@
+=========================================
+std::thread (C++11) – MULTITHREADING NOTES
+=========================================
+
+1. What is std::thread?
+-----------------------
+- std::thread is a C++11 library feature for creating and managing threads.
+- It allows parallel execution of functions.
+- Defined in <thread> header.
+
+Header:
+#include <thread>
+
+-----------------------------------------
+
+2. Basic Example
+----------------
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void printHello() {
+    cout << "Hello from thread\n";
+}
+
+int main() {
+    thread t(printHello); // create thread
+
+    t.join(); // wait for thread to finish
+
+    cout << "Main thread\n";
+}
+
+-----------------------------------------
+
+3. Why std::thread is needed?
+-----------------------------
+Before C++11:
+- No standard way for multithreading in C++
+- Platform-specific APIs (POSIX threads, Windows threads)
+
+With std::thread:
+- Portable (cross-platform)
+- Easier syntax
+- Integrated with C++ standard library
+
+-----------------------------------------
+
+4. join() vs detach()
+---------------------
+
+join():
+- Main thread waits for child thread to finish
+- Ensures proper synchronization
+
+detach():
+- Thread runs independently in background
+- No control over its completion
+
+Example:
+
+thread t(func);
+t.detach();  // runs independently
+
+⚠️ Warning:
+- Detached threads may cause undefined behavior if main exits early
+
+-----------------------------------------
+
+5. Passing Arguments to Thread
+-----------------------------
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void add(int a, int b) {
+    cout << a + b << endl;
+}
+
+int main() {
+    thread t(add, 10, 20);
+    t.join();
+}
+
+-----------------------------------------
+
+6. Passing by Reference (IMPORTANT)
+-----------------------------------
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void update(int &x) {
+    x += 10;
+}
+
+int main() {
+    int val = 5;
+
+    thread t(update, ref(val)); // use std::ref
+    t.join();
+
+    cout << val;
+}
+
+-----------------------------------------
+
+7. Lambda with std::thread
+--------------------------
+
+thread t([](){
+    cout << "Thread using lambda\n";
+});
+
+t.join();
+
+-----------------------------------------
+
+8. Thread Lifecycle
+-------------------
+1. Created
+2. Running
+3. Finished
+4. Joined / Detached
+
+-----------------------------------------
+
+9. Hardware Concurrency
+-----------------------
+- Returns number of supported threads
+
+#include <thread>
+cout << thread::hardware_concurrency();
+
+-----------------------------------------
+
+10. Common Problems
+-------------------
+(a) Race condition
+- Multiple threads accessing shared data
+
+(b) Deadlock
+- Threads waiting indefinitely for each other
+
+(c) Data inconsistency
+- Without synchronization (mutex required)
+
+-----------------------------------------
+
+11. std::thread with class member function
+------------------------------------------
+
+class A {
+public:
+    void show() {
+        cout << "Member function thread\n";
+    }
+};
+
+int main() {
+    A obj;
+    thread t(&A::show, &obj);
+    t.join();
+}
+
+-----------------------------------------
+
+12. Best Practices
+------------------
+- Always join or detach a thread
+- Prefer RAII wrappers like std::jthread (C++20)
+- Avoid shared data without synchronization
+- Use mutex for protection
+
+-----------------------------------------
+
+13. Interview Key Points
+------------------------
+- Introduced in C++11
+- Defined in <thread>
+- Supports parallel execution
+- join() vs detach() important
+- Use std::ref for reference passing
+- Requires synchronization for shared data
+
+=========================================
