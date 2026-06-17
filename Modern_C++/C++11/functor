@@ -1,0 +1,165 @@
+=========================================
+🔥 FUNCTORS (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is a Functor?
+----------------------
+A functor (function object) is a class or struct that overloads operator(),
+so its objects can be called like functions.
+
+👉 Object behaves like a function
+
+-----------------------------------------
+
+2. Basic Example
+----------------
+
+#include <iostream>
+using namespace std;
+
+class Add {
+public:
+    int operator()(int a, int b) {
+        return a + b;
+    }
+};
+
+int main() {
+    Add add;
+    cout << add(2, 3);   // function-like call
+}
+
+Output:
+5
+
+-----------------------------------------
+
+3. Why use Functors?
+---------------------
+
+Advantages:
+✓ Can store state (data members)
+✓ Can be used in STL algorithms
+✓ More flexible than function pointers
+✓ Can behave differently per object
+
+-----------------------------------------
+
+4. Functor with State
+----------------------
+
+#include <iostream>
+using namespace std;
+
+class Multiply {
+    int factor;
+
+public:
+    Multiply(int f) : factor(f) {}
+
+    int operator()(int x) {
+        return x * factor;
+    }
+};
+
+int main() {
+    Multiply mul3(3);
+    cout << mul3(10);   // 30
+}
+
+-----------------------------------------
+
+5. Functor in STL (Custom Comparator)
+--------------------------------------
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct Compare {
+    bool operator()(int a, int b) {
+        return a > b;   // descending order
+    }
+};
+
+int main() {
+    vector<int> v = {3, 1, 4, 2};
+
+    sort(v.begin(), v.end(), Compare());
+
+    for (int x : v)
+        cout << x << " ";
+}
+
+Output:
+4 3 2 1
+
+-----------------------------------------
+
+6. C++11 Improvement (Lambda replaces functors)
+-----------------------------------------------
+
+sort(v.begin(), v.end(), [](int a, int b) {
+    return a > b;
+});
+
+👉 Lambda = anonymous functor
+
+-----------------------------------------
+
+7. std::function (C++11)
+-------------------------
+
+#include <functional>
+#include <iostream>
+using namespace std;
+
+int main() {
+    function<int(int,int)> f;
+
+    f = [](int a, int b) {
+        return a + b;
+    };
+
+    cout << f(5, 6);
+}
+
+-----------------------------------------
+
+8. Functor vs Function vs Lambda
+---------------------------------
+
+Feature      Function   Functor   Lambda
+-----------------------------------------
+State        ❌         ✔         ✔
+Inline       ❌         ❌         ✔
+Object       ❌         ✔         ✔
+STL use      ✔         ✔         ✔
+
+-----------------------------------------
+
+9. Where Functors are Used?
+----------------------------
+
+✓ sort()
+✓ priority_queue
+✓ set/map comparators
+✓ for_each()
+✓ transform()
+
+-----------------------------------------
+
+10. Interview Answer
+--------------------
+
+Q: What is a functor?
+
+A:
+A functor is a class or struct whose objects behave like functions by overloading operator().
+It can also maintain state, making it more flexible than normal functions.
+
+-----------------------------------------
+
+11. One-line Revision
+---------------------
+
+Functor = Class that overloads operator() and behaves like a function.
