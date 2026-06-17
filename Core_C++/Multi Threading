@@ -1,0 +1,300 @@
+=========================================
+C++ MULTITHREADING – INTERVIEW NOTES
+=========================================
+
+1. WHAT IS MULTITHREADING?
+--------------------------------
+Multithreading is the ability of a program to execute multiple threads
+concurrently within a single process.
+
+- Each thread is a lightweight unit of execution
+- Threads share same memory space (heap, global variables)
+- Each thread has its own stack
+
+-----------------------------------------
+
+2. PROCESS vs THREAD
+--------------------------------
+
+PROCESS:
+- Independent execution unit
+- Separate memory space
+- Heavyweight
+
+THREAD:
+- Lightweight
+- Shares memory with other threads
+- Faster context switching
+
+-----------------------------------------
+
+3. WHY MULTITHREADING?
+--------------------------------
+- Better CPU utilization
+- Improved performance
+- Parallel execution
+- Responsiveness (UI apps)
+- Efficient resource usage
+
+-----------------------------------------
+
+4. C++ THREAD LIBRARY (C++11)
+--------------------------------
+Header:
+#include <thread>
+
+Basic example:
+
+#include <thread>
+#include <iostream>
+using namespace std;
+
+void func() {
+    cout << "Thread running\n";
+}
+
+int main() {
+    thread t(func);
+    t.join(); // wait for thread to finish
+}
+
+-----------------------------------------
+
+5. JOIN vs DETACH
+--------------------------------
+
+JOIN:
+- Main thread waits for child thread
+- Ensures completion
+
+DETACH:
+- Thread runs independently
+- Cannot be joined again
+
+Example:
+t.join();
+t.detach();
+
+INTERVIEW POINT:
+- Detached threads must NOT access destroyed memory
+
+-----------------------------------------
+
+6. RACE CONDITION
+--------------------------------
+When multiple threads access shared data without synchronization.
+
+Example:
+int counter = 0;
+
+void increment() {
+    counter++; // not thread-safe
+}
+
+-----------------------------------------
+
+7. MUTEX (MUTUAL EXCLUSION)
+--------------------------------
+Used to protect shared data.
+
+Header:
+#include <mutex>
+
+Example:
+
+mutex m;
+
+void increment() {
+    m.lock();
+    counter++;
+    m.unlock();
+}
+
+Better way (RAII):
+lock_guard<mutex> lock(m);
+
+-----------------------------------------
+
+8. LOCK GUARDS (BEST PRACTICE)
+--------------------------------
+Automatically locks and unlocks mutex.
+
+void func() {
+    lock_guard<mutex> lock(m);
+    counter++;
+}
+
+- Exception safe
+- No manual unlock needed
+
+-----------------------------------------
+
+9. DEADLOCK
+--------------------------------
+A situation where threads wait forever for each other.
+
+Conditions:
+1. Mutual exclusion
+2. Hold and wait
+3. No preemption
+4. Circular wait
+
+-----------------------------------------
+
+10. HOW TO AVOID DEADLOCK?
+--------------------------------
+- Lock in same order
+- Use lock_guard / scoped_lock
+- Avoid nested locks
+- Use try_lock
+
+-----------------------------------------
+
+11. CONDITION VARIABLE
+--------------------------------
+Used for thread communication (producer-consumer problem)
+
+Header:
+#include <condition_variable>
+
+Example:
+
+condition_variable cv;
+mutex m;
+bool ready = false;
+
+void worker() {
+    unique_lock<mutex> lock(m);
+    cv.wait(lock, []{ return ready; });
+}
+
+void signal() {
+    {
+        lock_guard<mutex> lock(m);
+        ready = true;
+    }
+    cv.notify_one();
+}
+
+-----------------------------------------
+
+12. PRODUCER-CONSUMER PROBLEM
+--------------------------------
+- Producer produces data
+- Consumer consumes data
+- Use queue + mutex + condition variable
+
+-----------------------------------------
+
+13. THREAD SAFETY
+--------------------------------
+A code is thread-safe if it works correctly in multi-threaded environment.
+
+Achieved using:
+- Mutex
+- Atomic operations
+- Lock-free programming
+
+-----------------------------------------
+
+14. std::atomic
+--------------------------------
+Provides lock-free thread-safe operations.
+
+Example:
+
+#include <atomic>
+atomic<int> counter(0);
+
+counter++;
+
+- Faster than mutex for simple operations
+
+-----------------------------------------
+
+15. THREAD LIFETIME ISSUES
+--------------------------------
+- Dangling reference in thread
+- Accessing destroyed objects
+- Not joining threads
+
+-----------------------------------------
+
+16. COPY / MOVE IN THREADS
+--------------------------------
+Threads are NON-COPYABLE but MOVABLE.
+
+thread t1(func);
+thread t2 = move(t1);
+
+-----------------------------------------
+
+17. THREAD POOL (CONCEPT)
+--------------------------------
+- Reuse threads instead of creating new ones
+- Improves performance
+- Used in servers
+
+-----------------------------------------
+
+18. FUTURE AND ASYNC (C++11)
+--------------------------------
+
+#include <future>
+
+int func() {
+    return 10;
+}
+
+future<int> f = async(func);
+cout << f.get();
+
+-----------------------------------------
+
+19. COMMON INTERVIEW QUESTIONS
+--------------------------------
+
+Q1. What is thread?
+Ans: Smallest unit of execution in a process.
+
+Q2. Difference between process and thread?
+Ans: Process has separate memory; thread shares memory.
+
+Q3. What is race condition?
+Ans: Multiple threads modifying shared data simultaneously.
+
+Q4. What is mutex?
+Ans: Synchronization primitive to protect shared data.
+
+Q5. Difference between lock_guard and unique_lock?
+Ans:
+- lock_guard: simple RAII lock
+- unique_lock: flexible (can unlock/relock)
+
+Q6. What is deadlock?
+Ans: Threads waiting forever for each other.
+
+Q7. What is atomic?
+Ans: Lock-free thread-safe variable.
+
+-----------------------------------------
+
+20. ADVANCED INTERVIEW POINTS
+--------------------------------
+- false sharing (cache line issue)
+- context switching overhead
+- lock contention
+- thread scheduling is OS dependent
+- C++ does NOT guarantee parallel execution
+
+-----------------------------------------
+
+21. KEY SUMMARY
+--------------------------------
+- Threads share memory
+- Need synchronization
+- Mutex prevents race conditions
+- Condition variable enables communication
+- Atomic is lightweight alternative
+- Deadlock must be avoided carefully
+=========================================
