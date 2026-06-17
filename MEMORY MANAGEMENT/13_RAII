@@ -1,0 +1,285 @@
+=========================================================
+RAII (Resource Acquisition Is Initialization)
+=========================================================
+
+Definition:
+RAII is a C++ programming idiom in which resource acquisition happens in
+the constructor and resource release happens in the destructor.
+
+Interview Line:
+"Bind resource lifetime to object lifetime."
+
+=========================================================
+WHY DO WE NEED RAII?
+=========================================================
+
+Without RAII:
+• Memory leaks
+• Resource leaks
+• Exception safety issues
+• Manual cleanup becomes difficult
+
+With RAII:
+• Automatic cleanup
+• Exception safety
+• No resource leaks
+• Easier resource management
+
+=========================================================
+BASIC IDEA
+=========================================================
+
+Constructor
+      ↓
+Acquire Resource
+      ↓
+Use Resource
+      ↓
+Destructor
+      ↓
+Release Resource
+
+=========================================================
+CLASSIC EXAMPLE (WITHOUT RAII)
+=========================================================
+
+void fun()
+{
+    int* ptr = new int(10);
+
+    // Exception occurs here
+
+    delete ptr;
+}
+
+Problem:
+If an exception occurs before delete,
+memory leaks.
+
+=========================================================
+RAII SOLUTION
+=========================================================
+
+class Resource
+{
+    int* ptr;
+
+public:
+    Resource()
+    {
+        ptr = new int(10);
+    }
+
+    ~Resource()
+    {
+        delete ptr;
+    }
+};
+
+void fun()
+{
+    Resource r;
+}
+
+Even if an exception occurs,
+destructor runs automatically.
+
+No memory leak.
+
+=========================================================
+EXCEPTION SAFETY
+=========================================================
+
+void fun()
+{
+    Resource r;
+
+    throw runtime_error("Error");
+}
+
+Output:
+
+Destructor still executes.
+
+Resource released.
+
+This is the biggest advantage of RAII.
+
+=========================================================
+REAL-WORLD EXAMPLES OF RAII
+=========================================================
+
+1. Smart Pointers
+2. File Handling
+3. Mutex Locking
+4. Database Connections
+5. Socket Management
+
+=========================================================
+SMART POINTER EXAMPLE
+=========================================================
+
+{
+    unique_ptr<int> ptr =
+        make_unique<int>(10);
+}
+
+Scope ends
+↓
+Destructor called
+↓
+Memory automatically released
+
+=========================================================
+FILE HANDLING EXAMPLE
+=========================================================
+
+{
+    ifstream file("abc.txt");
+
+    // Use file
+}
+
+Scope ends
+↓
+File automatically closed.
+
+=========================================================
+MUTEX EXAMPLE (VERY IMPORTANT)
+=========================================================
+
+std::mutex m;
+
+void fun()
+{
+    std::lock_guard<std::mutex> lock(m);
+
+    // Critical section
+}
+
+Scope ends
+↓
+lock_guard destructor executes
+↓
+Mutex automatically unlocked
+
+Prevents deadlocks.
+
+=========================================================
+RAII IN STL
+=========================================================
+
+Examples:
+
+vector<int>
+string
+fstream
+thread wrappers
+lock_guard
+unique_ptr
+shared_ptr
+
+All follow RAII.
+
+=========================================================
+WHY IS RAII IMPORTANT IN C++?
+=========================================================
+
+C++ has deterministic destruction.
+
+Objects are destroyed automatically when they go out of scope.
+
+Therefore:
+
+Destructor = Automatic cleanup.
+
+RAII heavily relies on this feature.
+
+=========================================================
+RAII vs MANUAL RESOURCE MANAGEMENT
+=========================================================
+
+Feature                 Manual             RAII
+------------------------------------------------------------
+Cleanup                 Explicit           Automatic
+Exception Safety        Poor               Excellent
+Memory Leaks            Possible           Rare
+Code Complexity         High               Low
+Reliability             Lower              Higher
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is RAII?
+
+Answer:
+Resource Acquisition Is Initialization.
+Resources are acquired in constructors and released in destructors.
+
+---------------------------------------------------------
+
+Q2. Why is RAII important?
+
+Answer:
+Provides:
+• Automatic cleanup
+• Exception safety
+• Prevents resource leaks
+
+---------------------------------------------------------
+
+Q3. Which C++ features use RAII?
+
+Answer:
+• unique_ptr
+• shared_ptr
+• vector
+• string
+• fstream
+• lock_guard
+
+---------------------------------------------------------
+
+Q4. Why does RAII work well in C++?
+
+Answer:
+Because C++ has deterministic destruction (destructors run automatically
+when objects go out of scope).
+
+---------------------------------------------------------
+
+Q5. How does RAII help in exceptions?
+
+Answer:
+Stack unwinding calls destructors automatically, ensuring resource
+cleanup.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+RAII stands for Resource Acquisition Is Initialization. The idea is to
+acquire resources such as memory, files, mutexes, or sockets in a
+constructor and release them in the destructor. Since C++ guarantees
+automatic destructor calls during scope exit and exception handling,
+RAII provides automatic resource management, exception safety, and helps
+prevent memory and resource leaks. Smart pointers and lock_guard are
+classic examples of RAII.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Constructor
+      ↓
+Acquire Resource
+      ↓
+Object Lifetime
+      ↓
+Destructor
+      ↓
+Release Resource
+      ↓
+No Leaks + Exception Safe
+=========================================================
