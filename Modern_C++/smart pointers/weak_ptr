@@ -1,0 +1,247 @@
+=========================================================
+std::weak_ptr (C++11) – INTERVIEW NOTES
+=========================================================
+
+1. What is std::weak_ptr?
+-------------------------
+- A smart pointer introduced in C++11.
+- It is a NON-OWNING smart pointer.
+- It works with std::shared_ptr.
+- It does NOT increase reference count.
+- Used to break circular dependency.
+
+Header:
+#include <memory>
+
+Interview Line:
+"weak_ptr observes an object managed by shared_ptr without owning it."
+
+=========================================================
+2. Why weak_ptr is needed?
+--------------------------
+Problem: Circular dependency with shared_ptr
+
+Example:
+
+A -> B (shared_ptr)
+B -> A (shared_ptr)
+
+Reference count never becomes 0 → MEMORY LEAK
+
+Solution:
+✔ Use weak_ptr to break the cycle
+
+=========================================================
+3. Circular Dependency Problem (CODE)
+=========================================================
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+class B;
+
+class A
+{
+public:
+    shared_ptr<B> bptr;
+};
+
+class B
+{
+public:
+    shared_ptr<A> aptr;
+};
+
+int main()
+{
+    shared_ptr<A> a = make_shared<A>();
+    shared_ptr<B> b = make_shared<B>();
+
+    a->bptr = b;
+    b->aptr = a;
+
+    // Memory leak occurs here ❌
+}
+
+=========================================================
+4. Fix using weak_ptr
+=========================================================
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+class B;
+
+class A
+{
+public:
+    shared_ptr<B> bptr;
+};
+
+class B
+{
+public:
+    weak_ptr<A> aptr;   // FIX: weak_ptr
+};
+
+int main()
+{
+    shared_ptr<A> a = make_shared<A>();
+    shared_ptr<B> b = make_shared<B>();
+
+    a->bptr = b;
+    b->aptr = a;   // does NOT increase reference count
+
+    cout << "No memory leak now\n";
+}
+
+=========================================================
+5. How weak_ptr Works Internally
+=========================================================
+
+weak_ptr:
+• Points to shared object
+• Does NOT increase reference count
+• Uses control block of shared_ptr
+
+It has:
+- weak reference to control block
+- does NOT own memory
+
+=========================================================
+6. Key Methods of weak_ptr
+=========================================================
+
+1. use_count()
+----------------
+Returns shared_ptr reference count
+
+2. expired()
+------------
+Returns true if object is already deleted
+
+3. lock()
+---------
+Converts weak_ptr → shared_ptr (if object exists)
+
+=========================================================
+7. Example: lock()
+=========================================================
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+int main()
+{
+    shared_ptr<int> sp = make_shared<int>(10);
+    weak_ptr<int> wp = sp;
+
+    cout << "use_count: " << wp.use_count() << endl;
+
+    if(auto temp = wp.lock())   // convert to shared_ptr
+    {
+        cout << "Value: " << *temp << endl;
+    }
+    else
+    {
+        cout << "Object already deleted\n";
+    }
+}
+
+=========================================================
+8. Example: expired()
+=========================================================
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+int main()
+{
+    weak_ptr<int> wp;
+
+    {
+        shared_ptr<int> sp = make_shared<int>(20);
+        wp = sp;
+
+        cout << wp.expired() << endl; // 0 (false)
+    }
+
+    cout << wp.expired() << endl;     // 1 (true)
+}
+
+=========================================================
+9. weak_ptr vs shared_ptr
+=========================================================
+
+Feature              shared_ptr              weak_ptr
+---------------------------------------------------------------
+Ownership            YES                     NO
+Reference Count      INCREASES               DOES NOT increase
+Can delete object    YES (last owner)        NO
+Access object        Direct                  Only via lock()
+Use case             Shared ownership        Observer / break cycles
+
+=========================================================
+10. When to use weak_ptr?
+-------------------------
+✔ Break circular references
+✔ Cache systems
+✔ Observer patterns
+✔ Temporary access to shared resource
+✔ Avoid ownership
+
+=========================================================
+11. Important Safety Rule
+-------------------------
+Never dereference weak_ptr directly.
+
+Wrong:
+    *wp   ❌
+
+Correct:
+    auto sp = wp.lock();
+
+=========================================================
+12. REAL WORLD EXAMPLE
+=========================================================
+
+Cache system:
+
+class Cache
+{
+    weak_ptr<Data> data;
+};
+
+If data still exists → reuse it
+Else → reload
+
+=========================================================
+13. ONE-LINE INTERVIEW ANSWER
+=========================================================
+
+std::weak_ptr is a smart pointer that observes an object managed by
+std::shared_ptr without owning it. It does not increase reference count
+and is mainly used to break circular dependencies and avoid memory leaks.
+
+=========================================================
+14. QUICK MEMORY TRICK
+=========================================================
+
+shared_ptr
+   ↓
+Owns Object
+   ↓
+Reference Count++
+
+weak_ptr
+   ↓
+Observes Object
+   ↓
+Reference Count NOT increased
+   ↓
+Used for breaking cycles
+=========================================================
