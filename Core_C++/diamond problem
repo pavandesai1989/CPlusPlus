@@ -1,0 +1,339 @@
+=========================================================
+DIAMOND PROBLEM IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Diamond Problem occurs in Multiple Inheritance when a class inherits
+from two classes that both inherit from the same base class.
+
+As a result, the derived class gets TWO copies of the base class,
+causing ambiguity.
+
+=========================================================
+DIAGRAM
+=========================================================
+
+           A
+          / \
+         /   \
+        B     C
+         \   /
+          \ /
+           D
+
+D inherits from B and C.
+B and C both inherit from A.
+
+Therefore:
+D contains TWO copies of A.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class A
+{
+public:
+    int x = 10;
+};
+
+class B : public A
+{
+};
+
+class C : public A
+{
+};
+
+class D : public B, public C
+{
+};
+
+int main()
+{
+    D d;
+
+    // cout << d.x;   // ERROR
+}
+
+=========================================================
+COMPILATION ERROR
+=========================================================
+
+Error:
+request for member 'x' is ambiguous
+
+Reason:
+Compiler does not know whether:
+
+d.B::x
+
+or
+
+d.C::x
+
+should be used.
+
+=========================================================
+MEMORY LAYOUT
+=========================================================
+
+Without Virtual Inheritance:
+
+        D Object
+     ----------------
+     B Subobject
+         A::x
+     ----------------
+     C Subobject
+         A::x
+     ----------------
+
+Two copies of A exist.
+
+=========================================================
+ACCESSING EXPLICITLY
+=========================================================
+
+int main()
+{
+    D d;
+
+    cout << d.B::x << endl;
+    cout << d.C::x << endl;
+}
+
+Output:
+
+10
+10
+
+But:
+
+Two copies of A exist.
+Extra memory is wasted.
+
+=========================================================
+WHY IS THIS A PROBLEM?
+=========================================================
+
+1. Ambiguity
+2. Duplicate Base Objects
+3. Increased Memory Usage
+4. Data Inconsistency
+
+Example:
+
+d.B::x = 20;
+d.C::x = 30;
+
+Now:
+
+cout << d.B::x;   // 20
+cout << d.C::x;   // 30
+
+Two different copies exist.
+
+=========================================================
+SOLUTION : VIRTUAL INHERITANCE
+=========================================================
+
+Use virtual keyword while inheriting.
+
+=========================================================
+CODE
+=========================================================
+
+class A
+{
+public:
+    int x = 10;
+};
+
+class B : virtual public A
+{
+};
+
+class C : virtual public A
+{
+};
+
+class D : public B, public C
+{
+};
+
+int main()
+{
+    D d;
+
+    cout << d.x;
+}
+
+Output:
+
+10
+
+No ambiguity.
+
+=========================================================
+MEMORY LAYOUT WITH VIRTUAL INHERITANCE
+=========================================================
+
+          A
+         / \
+        /   \
+   virtual   virtual
+      B         C
+        \      /
+         \    /
+           D
+
+Only ONE shared copy of A exists.
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+        D Object
+    -----------------
+      B Subobject
+    -----------------
+      C Subobject
+    -----------------
+      Shared A
+          x
+    -----------------
+
+Only one copy of x exists.
+
+=========================================================
+PROOF
+=========================================================
+
+D d;
+
+d.x = 50;
+
+cout << d.B::x;   // 50
+cout << d.C::x;   // 50
+
+Both refer to SAME object.
+
+=========================================================
+HOW DOES VIRTUAL INHERITANCE WORK INTERNALLY?
+=========================================================
+
+Compiler creates an additional hidden pointer
+(vbptr - virtual base pointer).
+
+vbptr points to:
+
+Virtual Base Table (vbtable)
+
+Using vbtable, compiler locates the shared base object.
+
+Therefore:
+
+Normal Inheritance:
+Object -> Base
+
+Virtual Inheritance:
+Object -> vbptr -> vbtable -> Shared Base
+
+=========================================================
+OVERHEAD OF VIRTUAL INHERITANCE
+=========================================================
+
+1. Extra hidden pointer (vbptr)
+2. Extra indirection
+3. Slight runtime overhead
+4. Larger object size
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is Diamond Problem?
+
+Answer:
+Diamond Problem occurs when multiple inheritance causes a class to
+inherit multiple copies of the same base class, leading to ambiguity.
+
+---------------------------------------------------------
+
+Q2. Why does ambiguity occur?
+
+Answer:
+Because the derived class contains two copies of the common base class.
+
+---------------------------------------------------------
+
+Q3. How do you solve Diamond Problem?
+
+Answer:
+Using Virtual Inheritance.
+
+class B : virtual public A
+{
+};
+
+class C : virtual public A
+{
+};
+
+---------------------------------------------------------
+
+Q4. Why use virtual inheritance?
+
+Answer:
+To ensure only one shared copy of the common base class exists.
+
+---------------------------------------------------------
+
+Q5. Does virtual inheritance have overhead?
+
+Answer:
+Yes.
+
+• Extra vbptr
+• Extra indirection
+• Slight increase in object size
+
+---------------------------------------------------------
+
+Q6. What is the difference between virtual functions and virtual
+inheritance?
+
+Virtual Function:
+Used for Runtime Polymorphism.
+
+Virtual Inheritance:
+Used to avoid duplicate base objects in Multiple Inheritance.
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+The Diamond Problem occurs in Multiple Inheritance when two classes
+inherit from the same base class and another class inherits from both
+of them. The most derived class ends up with two copies of the base
+class, causing ambiguity and duplicate data. It is solved using
+Virtual Inheritance, where the intermediate classes inherit the base
+class using the virtual keyword, ensuring that only one shared copy of
+the base class exists.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Multiple Inheritance
+        +
+Common Base Class
+        +
+Duplicate Base Objects
+        =
+Diamond Problem
+
+Solution:
+virtual inheritance
+=========================================================
