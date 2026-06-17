@@ -1,4 +1,71 @@
 =========================================================
+FOUR PILLARS OF OOP (INTERVIEW NOTES)
+=========================================================
+
+1. Encapsulation
+   -> Bundling data and methods together and controlling access to data.
+
+2. Abstraction
+   -> Showing only essential information and hiding implementation details.
+
+3. Inheritance
+   -> Acquiring properties and behaviour of another class to achieve
+      code reuse and establish an IS-A relationship.
+
+4. Polymorphism
+   -> One interface, multiple forms.
+      - Compile-Time: Function/Operator Overloading
+      - Runtime: Virtual Functions and Overriding
+
+=========================================================
+INTERVIEW ONE-LINER
+=========================================================
+
+The four pillars of OOP are:
+
+1. Encapsulation
+2. Abstraction
+3. Inheritance
+4. Polymorphism
+
+Together, they help in building modular, reusable, maintainable, and
+extensible software systems.
+
+=========================================================
+COMMON INTERVIEW QUESTION
+=========================================================
+
+Q: What are the four pillars of OOP?
+
+Answer:
+
+Encapsulation:
+Protects data by bundling it with methods and controlling access.
+
+Abstraction:
+Hides implementation details and exposes only necessary behaviour.
+
+Inheritance:
+Enables code reuse by deriving new classes from existing classes.
+
+Polymorphism:
+Allows one interface to have multiple implementations.
+
+=========================================================
+INTERVIEW MEMORY TRICK
+=========================================================
+
+E-A-I-P
+
+E -> Encapsulation
+A -> Abstraction
+I -> Inheritance
+P -> Polymorphism
+=========================================================
+
+
+
+=========================================================
 OOP INTERVIEW NOTES (INTERVIEW PERSPECTIVE)
 Encapsulation | Abstraction | Inheritance | Polymorphism
 =========================================================
