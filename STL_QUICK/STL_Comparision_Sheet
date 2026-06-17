@@ -1,0 +1,324 @@
+=========================================
+C++ STL COMPARISON SHEET (ONE-DAY REVISION)
+=========================================
+
+This sheet helps quickly revise differences between major STL containers.
+
+=========================================
+1. MAP vs UNORDERED_MAP
+=========================================
+
+MAP
+----
+- Implemented as Red-Black Tree (Self balancing BST)
+- Stores key in sorted order
+- Time Complexity:
+  insert    O(log n)
+  erase     O(log n)
+  find      O(log n)
+
+- Ordered output: YES
+
+Example:
+map<int,int> m;
+
+Use when:
+✓ Need sorted keys
+✓ Range queries (lower_bound, upper_bound)
+
+-----------------------------------------
+
+UNORDERED_MAP
+--------------
+- Implemented using Hash Table
+- No ordering of keys
+- Time Complexity:
+  insert    O(1) average
+  erase     O(1) average
+  find      O(1) average
+
+Worst case: O(n)
+
+Example:
+unordered_map<int,int> um;
+
+Use when:
+✓ Fast lookup needed
+✓ No ordering required
+
+-----------------------------------------
+
+INTERVIEW ONE-LINER:
+map = sorted (tree)
+unordered_map = fastest lookup (hash)
+
+=========================================
+2. SET vs UNORDERED_SET
+=========================================
+
+SET
+---
+- Red-Black Tree
+- Stores unique sorted elements
+- O(log n) operations
+
+Use when:
+✓ Sorted unique values needed
+✓ Lower/upper bound required
+
+-----------------------------------------
+
+UNORDERED_SET
+-------------
+- Hash Table
+- Unique elements only
+- O(1) average operations
+
+Use when:
+✓ Fast membership check
+✓ Order not required
+
+-----------------------------------------
+
+INTERVIEW ONE-LINER:
+set = ordered unique
+unordered_set = fast unique lookup
+
+=========================================
+3. LIST vs VECTOR vs DEQUE
+=========================================
+
+VECTOR
+------
+- Contiguous memory
+- Dynamic array
+- Fast random access O(1)
+- push_back O(1) amortized
+- insert front O(n)
+
+Use when:
+✓ Mostly sequential data
+✓ Cache performance important
+
+-----------------------------------------
+
+LIST
+----
+- Doubly linked list
+- Non-contiguous memory
+- No random access
+- insert/erase O(1) (if iterator known)
+
+Use when:
+✓ Frequent middle insert/delete
+✓ Iterator stability required
+
+-----------------------------------------
+
+DEQUE
+-----
+- Multiple memory blocks
+- Double ended queue
+- push_front O(1)
+- push_back O(1)
+- random access O(1)
+
+Use when:
+✓ Need operations at both ends
+
+-----------------------------------------
+
+INTERVIEW ONE-LINER:
+vector = fastest traversal
+list = fastest middle insertion
+deque = best for both ends
+
+=========================================
+4. STACK vs QUEUE vs PRIORITY_QUEUE
+=========================================
+
+STACK
+-----
+- LIFO
+- top() access only
+- Uses deque internally
+- push/pop O(1)
+
+Use:
+DFS, recursion, backtracking
+
+-----------------------------------------
+
+QUEUE
+-----
+- FIFO
+- front/back access
+- Uses deque internally
+- push/pop O(1)
+
+Use:
+BFS, scheduling
+
+-----------------------------------------
+
+PRIORITY_QUEUE
+--------------
+- Heap based structure (Max Heap by default)
+- Largest element always on top
+
+Operations:
+push    O(log n)
+pop     O(log n)
+top     O(1)
+
+Use:
+✓ Top K problems
+✓ Dijkstra algorithm
+✓ Greedy problems
+
+Min Heap:
+priority_queue<int, vector<int>, greater<int>> pq;
+
+-----------------------------------------
+
+INTERVIEW ONE-LINER:
+stack = LIFO
+queue = FIFO
+priority_queue = heap (max element first)
+
+=========================================
+5. SET vs MAP (VERY IMPORTANT)
+=========================================
+
+SET
+---
+- Stores only keys
+- Unique values
+
+MAP
+---
+- Stores key-value pairs
+- Unique keys
+
+Example:
+set<int> s;
+map<int,int> m;
+
+-----------------------------------------
+
+INTERVIEW:
+set = just keys
+map = key + value
+
+=========================================
+6. ORDERED vs UNORDERED SUMMARY
+=========================================
+
+ORDERED (Tree)
+--------------
+map
+set
+multimap
+multiset
+
+Complexity: O(log n)
+Always sorted
+
+-----------------------------------------
+
+UNORDERED (Hash)
+----------------
+unordered_map
+unordered_set
+
+Complexity: O(1) average
+No ordering
+
+=========================================
+7. MULTI CONTAINER QUICK VIEW
+=========================================
+
+multiset
+---------
+- duplicates allowed
+- sorted order
+
+multimap
+---------
+- duplicate keys allowed
+- sorted by key
+
+=========================================
+
+8. WHEN TO USE WHAT (INTERVIEW GOLD)
+=========================================
+
+Use vector:
+✓ Most problems
+✓ Need fast traversal
+
+Use list:
+✓ Frequent insert/delete in middle
+
+Use deque:
+✓ Sliding window / both ends
+
+Use set:
+✓ Unique sorted elements
+
+Use unordered_set:
+✓ Fast lookup
+
+Use map:
+✓ Key-value with order
+
+Use unordered_map:
+✓ Fast key-value lookup
+
+Use priority_queue:
+✓ Max/Min tracking problems
+
+=========================================
+9. MOST ASKED INTERVIEW QUESTIONS
+=========================================
+
+1. Difference between map and unordered_map?
+2. Difference between set and unordered_set?
+3. Why is unordered_map faster?
+4. Why is map ordered?
+5. When to use vector vs list?
+6. Why is deque used in stack/queue?
+7. Complexity of priority_queue operations?
+8. Why is heap used in priority_queue?
+9. Difference between set and map?
+10. Why is list rarely used in real projects?
+
+=========================================
+10. 1-MINUTE REVISION
+=========================================
+
+- map = sorted key-value (O(log n))
+- unordered_map = hash fast lookup (O(1))
+- set = sorted unique
+- unordered_set = fast unique
+- vector = fastest traversal
+- list = fast insertion in middle
+- deque = best both ends
+- stack = LIFO
+- queue = FIFO
+- priority_queue = heap (max element first)
+
+=========================================
+ONE-LINE FINAL SUMMARY
+=========================================
+
+STL containers are chosen based on tradeoff between ordering, speed, and memory:
+- Tree (ordered, O(log n))
+- Hash (fast, O(1))
+- Array (vector/deque for cache efficiency)
+- Linked list (pointer-based flexibility)
+- Heap (priority_queue for top element access)
+
+=========================================
+END OF SHEET
+=========================================
