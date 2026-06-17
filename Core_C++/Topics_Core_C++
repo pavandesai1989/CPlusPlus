@@ -1,0 +1,485 @@
+
+=========================================================
+FINAL C++ INTERVIEW ROADMAP (10+ YEARS EXPERIENCE)
+Works for 90% of C++ Developer JDs
+=========================================================
+
+PHASE 1 : CORE C++ (MUST MASTER)
+=========================================================
+
+1. Compilation Process
+   - Preprocessor
+   - Compiler
+   - Assembler
+   - Linker
+
+2. Namespaces
+3. Classes and Objects
+4. Constructors and Destructors
+5. OOP Concepts
+   - Encapsulation
+   - Abstraction
+   - Inheritance
+   - Polymorphism
+   - Virtual Functions
+   - Pure Virtual Functions
+   - Abstract Classes
+   - Interface Concept
+   - Multiple Inheritance
+   - Diamond Problem
+   - Virtual Inheritance
+   - Object Slicing
+   - Friend Functions
+   - Static Members
+
+6. Function Overloading
+7. Operator Overloading
+8. References
+9. Const Correctness
+10. RTTI
+    - dynamic_cast
+    - typeid
+
+=========================================================
+PHASE 2 : MEMORY MANAGEMENT (VERY IMPORTANT)
+=========================================================
+
+1. Stack vs Heap
+2. Memory Layout of C++ Program
+3. new/delete
+4. malloc/free
+5. Pointer Basics
+6. Pointer Arithmetic
+7. Pointer vs Reference
+8. Double Pointer
+9. Const Pointer
+10. Pointer to Const
+11. nullptr vs NULL
+12. Dangling Pointer
+13. Wild Pointer
+14. Deep Copy vs Shallow Copy
+15. Copy Constructor
+16. Copy Assignment Operator
+17. Destructor
+18. Rule of 3
+19. Rule of 5
+20. Rule of 0
+21. RAII
+22. Placement New
+23. Alignment and Padding
+
+=========================================================
+PHASE 3 : MODERN C++ (MUST PREPARE)
+=========================================================
+
+C++11
+------
+- auto
+- nullptr
+- Lambda Expressions
+- Move Semantics
+- Smart Pointers
+- enum class
+- override
+- final
+- constexpr
+- Initializer Lists
+- Deleted Functions
+- Defaulted Functions
+- std::thread
+- std::atomic
+
+C++14
+------
+- Generic Lambdas
+- make_unique
+- Return Type Deduction
+
+C++17
+------
+- Structured Bindings
+- if constexpr
+- inline variables
+- std::optional
+- std::variant
+- std::any
+- std::string_view
+- filesystem
+
+C++20
+------
+- Concepts
+- Ranges
+- Coroutines
+- std::span
+- Three-way Comparison Operator
+
+=========================================================
+PHASE 4 : STL DEEP DIVE (EXTREMELY IMPORTANT)
+=========================================================
+
+Containers
+-----------
+1. vector
+2. deque
+3. list
+4. forward_list
+5. stack
+6. queue
+7. priority_queue
+8. set
+9. multiset
+10. map
+11. multimap
+12. unordered_map
+13. unordered_set
+14. pair
+
+Algorithms
+-----------
+- sort
+- stable_sort
+- lower_bound
+- upper_bound
+- binary_search
+- remove
+- unique
+- find
+- transform
+- accumulate
+- for_each
+
+Must Know Internals
+-------------------
+- vector growth/reallocation
+- iterator invalidation
+- map (Red Black Tree)
+- unordered_map (Hash Table)
+- priority_queue (Heap)
+- Complexity of all containers
+
+=========================================================
+PHASE 5 : SMART POINTERS & MOVE SEMANTICS
+=========================================================
+
+1. unique_ptr
+2. shared_ptr
+3. weak_ptr
+4. Control Block
+5. Circular Dependency
+6. Ownership Semantics
+7. lvalue vs rvalue
+8. rvalue references
+9. std::move
+10. Move Constructor
+11. Move Assignment
+12. Perfect Forwarding (basic)
+
+=========================================================
+PHASE 6 : TEMPLATES & EXCEPTIONS
+=========================================================
+
+Templates
+----------
+- Function Templates
+- Class Templates
+- Template Specialization
+- Variadic Templates
+- SFINAE (basic)
+- Concepts (basic)
+
+Exception Handling
+------------------
+- try/catch/throw
+- Stack Unwinding
+- noexcept
+- Exception Safety Guarantees
+
+=========================================================
+PHASE 7 : MULTITHREADING & CONCURRENCY
+(VERY HIGH PRIORITY FOR SENIOR ROLES)
+=========================================================
+
+1. std::thread
+2. join
+3. detach
+4. mutex
+5. recursive_mutex
+6. timed_mutex
+7. shared_mutex
+8. lock_guard
+9. unique_lock
+10. scoped_lock
+11. condition_variable
+12. atomic
+13. memory_order (basic)
+14. future
+15. promise
+16. packaged_task
+17. async
+18. Race Condition
+19. Deadlock
+20. Producer Consumer
+21. Thread-safe Singleton
+
+=========================================================
+PHASE 8 : PERFORMANCE & DEBUGGING
+=========================================================
+
+1. Time Complexity
+2. Space Complexity
+3. Cache Locality
+4. Memory Fragmentation
+5. Copy Elimination
+6. Move Optimization
+7. GDB
+8. Valgrind
+9. Address Sanitizer
+10. Thread Sanitizer
+11. Core Dump Analysis
+
+=========================================================
+PHASE 9 : DSA PATTERNS
+=========================================================
+
+1. Arrays
+2. Sliding Window
+3. Linked List
+4. Stack
+5. Queue
+6. Binary Search
+7. Trees
+8. Heap
+9. Graph Basics
+10. Dynamic Programming Basics
+
+=========================================================
+PHASE 10 : LLD / DESIGN PATTERNS
+=========================================================
+
+1. SOLID Principles
+2. Singleton
+3. Factory
+4. Observer
+5. Strategy
+6. Decorator
+7. LRU Cache
+8. Thread Pool
+9. Logger
+10. Connection Pool
+11. Parking Lot Design
+
+=========================================================
+FINAL PREPARATION ORDER
+=========================================================
+
+Core C++
+→ Memory Management
+→ Modern C++
+→ STL Deep Dive
+→ Smart Pointers & Move Semantics
+→ Templates & Exceptions
+→ Multithreading
+→ Performance & Debugging
+→ DSA Patterns
+→ LLD / Design Patterns
+
+This roadmap is sufficient for about 90% of senior C++ interview JDs.
+=========================================================
+
+
+========================================================
+FINAL PRIORITY SUMMARY
+========================================================
+
+MUST MASTER FIRST:
+- OOP
+- Memory Management
+- Pointers
+- STL
+
+VERY IMPORTANT:
+- Smart pointers
+- Move semantics
+- Lambda
+- Const correctness
+- Exception handling
+
+GOOD TO KNOW:
+- Templates
+- Multithreading basics
+- Design patterns
+- File handling
+
+
+MOVE SEMANTICS (C++ INTERVIEW NOTES)
+
+========================================
+1. LVALUE vs RVALUE
+========================================
+
+LVALUE:
+- Has a name / memory address
+- Persists beyond expression
+- Can be assigned
+
+Example:
+int a = 10;   // a is lvalue
+a = 20;       // valid
+
+----------------------------------------
+
+RVALUE:
+- Temporary object
+- No stable memory address
+- Cannot be assigned to directly
+
+Example:
+int b = a + 10;   // (a + 10) is rvalue
+
+----------------------------------------
+
+KEY IDEA:
+LVALUE → has identity
+RVALUE → temporary value
+
+========================================
+2. RVALUE REFERENCE (&&)
+========================================
+
+Syntax:
+T&&
+
+Purpose:
+- Bind to temporary objects (rvalues)
+- Enable move semantics
+
+Example:
+void func(int&& x)
+{
+    // x binds to temporary value
+}
+
+IMPORTANT:
+- Cannot bind rvalue ref to lvalue directly
+
+========================================
+3. MOVE SEMANTICS (IDEA)
+========================================
+
+PROBLEM (COPYING):
+Copying objects = expensive (deep copy)
+
+SOLUTION:
+Instead of copying data,
+TRANSFER ownership of resources.
+
+========================================
+4. MOVE CONSTRUCTOR
+========================================
+
+Purpose:
+- "Steal" resources from temporary object
+
+Syntax:
+ClassName(ClassName&& obj)
+
+Example:
+class A {
+public:
+    int* data;
+
+    A(A&& obj) {
+        data = obj.data;     // steal resource
+        obj.data = nullptr;   // leave safe state
+    }
+};
+
+KEY IDEA:
+- No deep copy
+- Just transfer pointer
+
+========================================
+5. MOVE ASSIGNMENT OPERATOR
+========================================
+
+Syntax:
+A& operator=(A&& obj)
+
+Example:
+A& operator=(A&& obj)
+{
+    if(this != &obj)
+    {
+        delete data;
+
+        data = obj.data;
+        obj.data = nullptr;
+    }
+    return *this;
+}
+
+KEY IDEA:
+- Used when assigning temporary object
+
+========================================
+6. std::move
+========================================
+
+IMPORTANT:
+- DOES NOT move anything
+- It CASTS lvalue → rvalue
+
+Example:
+A a;
+A b = std::move(a);
+
+WHAT HAPPENS:
+- forces move constructor instead of copy
+
+WARNING:
+After move, object is valid but unspecified state
+
+========================================
+7. COPY vs MOVE DIFFERENCE
+========================================
+
+COPY:
+- Creates new memory
+- Deep copy of data
+- Expensive (O(n))
+
+Example:
+A b = a;
+
+MOVE:
+- Transfers ownership
+- No new memory allocation
+- Fast (O(1))
+
+Example:
+A b = std::move(a);
+
+========================================
+8. INTERVIEW SUMMARY
+========================================
+
+COPY:
+- duplicate data
+- slow
+
+MOVE:
+- transfer resource
+- fast
+
+RULE:
+Use move when object is temporary
+
+========================================
+9. ONE-LINE MEMORY TRICK
+========================================
+
+COPY = duplication
+MOVE = theft (transfer ownership)
+
+
