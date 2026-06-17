@@ -1,0 +1,488 @@
+=========================================================
+ABSTRACT CLASSES IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+An Abstract Class is a class that contains at least one Pure Virtual
+Function (=0). An object of an abstract class cannot be created.
+
+Syntax:
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+=========================================================
+WHY DO WE NEED ABSTRACT CLASSES?
+=========================================================
+
+1. To achieve Abstraction.
+2. To define a common interface.
+3. To force derived classes to implement certain functions.
+4. To enable Runtime Polymorphism.
+5. To provide common functionality to derived classes.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+Shape s;   // ERROR
+
+Reason:
+Shape is an Abstract Class.
+
+=========================================================
+DERIVED CLASS IMPLEMENTATION
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Drawing Circle\n";
+    }
+};
+
+int main()
+{
+    Shape* ptr = new Circle();
+
+    ptr->draw();
+}
+
+Output:
+Drawing Circle
+
+=========================================================
+HOW DOES AN ABSTRACT CLASS WORK?
+=========================================================
+
+Abstract Class:
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+Derived Class:
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle";
+    }
+};
+
+The compiler forces Circle to implement draw().
+
+Otherwise:
+
+class Circle : public Shape
+{
+};
+
+Compilation Error:
+
+Cannot instantiate abstract class 'Circle'.
+
+=========================================================
+ABSTRACT CLASS MEMORY
+=========================================================
+
+Abstract classes can have:
+
+• Data Members
+• Constructors
+• Destructors
+• Normal Functions
+• Static Members
+
+Only object creation is prohibited.
+
+=========================================================
+PROPERTIES OF ABSTRACT CLASSES
+=========================================================
+
+1. Contains at least one Pure Virtual Function.
+2. Cannot instantiate objects.
+3. Can contain implemented functions.
+4. Can contain constructors.
+5. Can contain destructors.
+6. Can contain data members.
+7. Can contain static members.
+8. Supports Runtime Polymorphism.
+
+=========================================================
+CAN ABSTRACT CLASS HAVE DATA MEMBERS?
+=========================================================
+
+YES.
+
+class Shape
+{
+protected:
+    int color;
+
+public:
+    virtual void draw() = 0;
+};
+
+=========================================================
+CAN ABSTRACT CLASS HAVE NORMAL FUNCTIONS?
+=========================================================
+
+YES.
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+
+    void display()
+    {
+        cout << "Display\n";
+    }
+};
+
+=========================================================
+CAN ABSTRACT CLASS HAVE CONSTRUCTOR?
+=========================================================
+
+YES.
+
+class Shape
+{
+public:
+    Shape()
+    {
+        cout << "Shape Constructor\n";
+    }
+
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle\n";
+    }
+};
+
+int main()
+{
+    Circle c;
+}
+
+Output:
+
+Shape Constructor
+
+Reason:
+Base class constructor executes first.
+
+=========================================================
+CAN ABSTRACT CLASS HAVE DESTRUCTOR?
+=========================================================
+
+YES.
+
+Usually make it virtual.
+
+class Shape
+{
+public:
+    virtual ~Shape()
+    {
+        cout << "Shape Destructor\n";
+    }
+
+    virtual void draw() = 0;
+};
+
+=========================================================
+CAN ABSTRACT CLASS HAVE PURE VIRTUAL DESTRUCTOR?
+=========================================================
+
+YES.
+
+class Shape
+{
+public:
+    virtual ~Shape() = 0;
+};
+
+Definition is mandatory:
+
+Shape::~Shape()
+{
+}
+
+Reason:
+Destructor must always exist.
+
+=========================================================
+CAN ABSTRACT CLASS HAVE STATIC MEMBERS?
+=========================================================
+
+YES.
+
+class Shape
+{
+public:
+    static int count;
+
+    virtual void draw() = 0;
+};
+
+=========================================================
+CAN WE CREATE POINTERS OF ABSTRACT CLASS?
+=========================================================
+
+YES.
+
+Shape* ptr;
+
+=========================================================
+CAN WE CREATE REFERENCES OF ABSTRACT CLASS?
+=========================================================
+
+YES.
+
+Shape& ref = obj;
+
+=========================================================
+CAN WE CREATE OBJECT OF ABSTRACT CLASS?
+=========================================================
+
+NO.
+
+Shape s;     // ERROR
+
+=========================================================
+RUNTIME POLYMORPHISM USING ABSTRACT CLASS
+=========================================================
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Circle\n";
+    }
+};
+
+class Rectangle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Rectangle\n";
+    }
+};
+
+int main()
+{
+    Shape* s1 = new Circle();
+    Shape* s2 = new Rectangle();
+
+    s1->draw();
+    s2->draw();
+}
+
+Output:
+
+Circle
+Rectangle
+
+=========================================================
+PARTIAL IMPLEMENTATION EXAMPLE
+=========================================================
+
+class Shape
+{
+protected:
+    int color;
+
+public:
+    void setColor(int c)
+    {
+        color = c;
+    }
+
+    virtual void draw() = 0;
+};
+
+Derived classes inherit:
+
+• color
+• setColor()
+
+But must implement:
+
+draw()
+
+This is Partial Abstraction.
+
+=========================================================
+ABSTRACT CLASS VS INTERFACE
+=========================================================
+
+Abstract Class
+--------------
+• Can have data members
+• Can have constructors
+• Can have implemented methods
+• Can maintain state
+• Partial abstraction possible
+
+Interface
+----------
+• Usually only pure virtual functions
+• Usually no data members
+• Usually no state
+• Represents a contract/capability
+
+=========================================================
+WHEN TO USE ABSTRACT CLASS?
+=========================================================
+
+Use Abstract Class when:
+
+1. Derived classes share common state.
+2. Derived classes share common implementation.
+3. You want partial abstraction.
+4. You want to force implementation of some functions.
+
+Examples:
+
+Shape
+Vehicle
+Employee
+DatabaseConnection
+
+=========================================================
+WHEN NOT TO USE ABSTRACT CLASS?
+=========================================================
+
+If only behavior contract is required and no shared state or
+implementation exists, prefer an Interface.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is an Abstract Class?
+
+Answer:
+A class containing at least one pure virtual function and which cannot
+be instantiated.
+
+---------------------------------------------------------
+
+Q2. Why do we use Abstract Classes?
+
+Answer:
+To achieve abstraction, define common behavior, and force derived
+classes to implement certain functions.
+
+---------------------------------------------------------
+
+Q3. Can an Abstract Class have constructors?
+
+YES.
+
+---------------------------------------------------------
+
+Q4. Can an Abstract Class have data members?
+
+YES.
+
+---------------------------------------------------------
+
+Q5. Can an Abstract Class have normal functions?
+
+YES.
+
+---------------------------------------------------------
+
+Q6. Can an Abstract Class have static members?
+
+YES.
+
+---------------------------------------------------------
+
+Q7. Can we create objects of an Abstract Class?
+
+NO.
+
+---------------------------------------------------------
+
+Q8. Can we create pointers/references of an Abstract Class?
+
+YES.
+
+---------------------------------------------------------
+
+Q9. Can an Abstract Class have a destructor?
+
+YES.
+
+Usually make it virtual.
+
+---------------------------------------------------------
+
+Q10. Can an Abstract Class have a Pure Virtual Destructor?
+
+YES.
+
+But its definition is mandatory.
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+An Abstract Class is a class that contains at least one pure virtual
+function and cannot be instantiated. It is used to achieve abstraction,
+provide common functionality and state to derived classes, and enforce
+certain behaviors while enabling runtime polymorphism.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Pure Virtual Function (=0)
+            ↓
+       Abstract Class
+            ↓
+    Cannot Create Objects
+            ↓
+Can Have State + Implementation
+            ↓
+     Supports Polymorphism
+=========================================================
