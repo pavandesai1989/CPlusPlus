@@ -1,0 +1,144 @@
+=========================================
+constexpr (C++11 onwards) – INTERVIEW NOTES
+=========================================
+
+1. What is constexpr?
+---------------------
+- constexpr is a keyword introduced in C++11.
+- It tells the compiler that the value or function can be evaluated at compile time.
+- Improves performance by shifting computation from runtime → compile time.
+
+-----------------------------------------
+
+2. constexpr with Variables
+--------------------------
+- Used to define constant expressions.
+
+Example:
+
+constexpr int x = 10;
+constexpr int y = x * 2;
+
+int arr[x];   // valid (compile-time constant)
+
+-----------------------------------------
+
+3. constexpr vs const
+---------------------
+
+const:
+- Value cannot be changed after initialization
+- May be runtime or compile-time
+
+constexpr:
+- Must be computed at compile time (if possible)
+- Always a constant expression
+
+Example:
+
+const int a = 5;        // runtime or compile-time
+constexpr int b = 10;    // compile-time guaranteed
+
+-----------------------------------------
+
+4. constexpr Function
+---------------------
+- Function whose result can be computed at compile time if inputs are constant.
+
+Example:
+
+constexpr int square(int x) {
+    return x * x;
+}
+
+int main() {
+    constexpr int val = square(5);  // computed at compile time
+}
+
+-----------------------------------------
+
+5. Runtime vs Compile-time behavior
+-----------------------------------
+
+constexpr function:
+
+constexpr int add(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int x = 5, y = 10;
+
+    int result1 = add(x, y);        // runtime evaluation
+    constexpr int result2 = add(2, 3); // compile-time evaluation
+}
+
+-----------------------------------------
+
+6. Rules of constexpr Functions
+------------------------------
+- Must have a single return statement (C++11 limitation)
+- Cannot use:
+  - dynamic memory (new/delete)
+  - non-constexpr functions
+  - side effects like I/O
+
+(C++14 relaxed these rules)
+
+-----------------------------------------
+
+7. constexpr Constructor
+------------------------
+- Allows objects to be created at compile time.
+
+Example:
+
+class Point {
+public:
+    int x, y;
+
+    constexpr Point(int a, int b) : x(a), y(b) {}
+};
+
+constexpr Point p(2, 3);
+
+-----------------------------------------
+
+8. Why constexpr is needed?
+--------------------------
+- Improves performance (compile-time evaluation)
+- Enables compile-time optimizations
+- Useful in templates, arrays, metaprogramming
+- Reduces runtime overhead
+
+-----------------------------------------
+
+9. constexpr vs inline
+----------------------
+constexpr:
+- Compile-time evaluation possible
+
+inline:
+- Suggests function expansion, no compile-time guarantee
+
+-----------------------------------------
+
+10. Real-world Usage
+--------------------
+- Array sizes
+- Mathematical computations
+- Template parameters
+- Embedded systems (zero runtime cost)
+- Performance-critical code
+
+-----------------------------------------
+
+11. Interview Key Points
+------------------------
+- Introduced in C++11
+- Forces compile-time evaluation when possible
+- Used for functions, variables, constructors
+- Improves performance and optimization
+- More powerful than const for compile-time logic
+
+=========================================
