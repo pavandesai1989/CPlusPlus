@@ -1,0 +1,138 @@
+=========================================================
+SHALLOW COPY vs DEEP COPY (INTERVIEW NOTES)
+=========================================================
+
+SHALLOW COPY
+=========================================================
+
+Definition:
+Copies the pointer value (address) only.
+Both objects share the same memory.
+
+Example:
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+};
+
+int main()
+{
+    Test t1(10);
+
+    Test t2 = t1;    // Compiler-generated copy constructor
+}
+
+Memory:
+
+t1.ptr -----> [10]
+t2.ptr -----^
+
+Both point to SAME memory.
+
+Problem:
+• Double delete
+• Dangling pointer
+• Undefined Behavior
+
+=========================================================
+DEEP COPY
+=========================================================
+
+Definition:
+Allocate new memory and copy the contents.
+
+Each object owns its own resource.
+
+Example:
+
+class Test
+{
+public:
+    int* ptr;
+
+    Test(int x)
+    {
+        ptr = new int(x);
+    }
+
+    // Deep Copy Constructor
+    Test(const Test& other)
+    {
+        ptr = new int(*other.ptr);
+    }
+
+    ~Test()
+    {
+        delete ptr;
+    }
+};
+
+int main()
+{
+    Test t1(10);
+    Test t2 = t1;
+}
+
+Memory:
+
+t1.ptr -----> [10]
+
+t2.ptr -----> [10]
+
+Different addresses.
+
+Safe.
+
+=========================================================
+PROOF OF DEEP COPY
+=========================================================
+
+*t1.ptr = 100;
+
+cout << *t1.ptr;   // 100
+cout << *t2.ptr;   // 10
+
+Changing one object does not affect the other.
+
+=========================================================
+PROOF OF SHALLOW COPY
+=========================================================
+
+*t1.ptr = 100;
+
+cout << *t1.ptr;   // 100
+cout << *t2.ptr;   // 100
+
+Changing one object affects the other.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Feature              Shallow Copy       Deep Copy
+--------------------------------------------------------
+Memory               Shared             Separate
+Pointer Value        Copied             New Memory Allocated
+Resource Ownership   Shared             Independent
+Double Delete        Possible           No
+Dangling Pointer     Possible           No
+Safe for Resources   No                 Yes
+
+=========================================================
+INTERVIEW READY ANSWER
+=========================================================
+
+Shallow copy copies only the pointer address, causing multiple objects
+to share the same resource and leading to issues like double deletion
+and dangling pointers. Deep copy allocates new memory and copies the
+actual data so that each object has independent ownership of the
+resource. Rule of 3 exists primarily to implement deep copy semantics
+for resource-owning classes.
+=========================================================
