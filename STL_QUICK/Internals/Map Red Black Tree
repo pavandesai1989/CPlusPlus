@@ -1,0 +1,181 @@
+=========================================
+C++ MAP (RED-BLACK TREE) - STL NOTES
+=========================================
+
+1. What is std::map?
+---------------------
+std::map is an associative container that stores elements as:
+(key, value) pairs in sorted order of keys.
+
+Example:
+map<int, string> m;
+
+m[1] = "one";
+m[2] = "two";
+
+Result:
+1 -> "one"
+2 -> "two"
+
+-----------------------------------------
+2. Internal Implementation
+-----------------------------------------
+std::map is implemented using:
+
+👉 RED-BLACK TREE (Self-balancing BST)
+
+Properties:
+- Balanced Binary Search Tree
+- Height = O(log n)
+- Keeps keys sorted automatically
+
+Node structure (conceptually):
++-------+--------+--------+--------+
+| key   | value  | left   | right  |
++-------+--------+--------+--------+
+
+-----------------------------------------
+3. Why Red-Black Tree?
+-----------------------------------------
+Because it guarantees:
+
+✔ O(log n) insert
+✔ O(log n) delete
+✔ O(log n) search
+
+Even in worst case, tree remains balanced.
+
+-----------------------------------------
+4. Key Properties of std::map
+-----------------------------------------
+- Stores unique keys only
+- Keys are always sorted (ascending by default)
+- No duplicate keys allowed
+- Custom comparator allowed
+
+-----------------------------------------
+5. Time Complexities
+-----------------------------------------
+Operation        Complexity
+--------------------------------
+insert           O(log n)
+erase            O(log n)
+find             O(log n)
+access []        O(log n)
+lower_bound      O(log n)
+upper_bound      O(log n)
+
+-----------------------------------------
+6. Ordered Nature
+-----------------------------------------
+map keeps keys sorted automatically.
+
+Example:
+m[3] = "C";
+m[1] = "A";
+m[2] = "B";
+
+Output order:
+1 -> A
+2 -> B
+3 -> C
+
+-----------------------------------------
+7. Important Functions
+-----------------------------------------
+insert()
+erase()
+find()
+count()
+clear()
+
+operator[]
+at()
+begin(), end()
+lower_bound()
+upper_bound()
+
+-----------------------------------------
+8. insert() vs operator[]
+-----------------------------------------
+
+insert():
+- Does NOT overwrite existing key
+- Returns pair<iterator, bool>
+
+m.insert({1, "A"});
+
+operator[]:
+- Inserts if key not present
+- Overwrites if key exists
+
+m[1] = "A";
+
+-----------------------------------------
+9. find() Function
+-----------------------------------------
+Returns iterator to key if found
+Else returns end()
+
+if(m.find(10) != m.end())
+    cout << "Found";
+
+-----------------------------------------
+10. lower_bound / upper_bound
+-----------------------------------------
+
+lower_bound(x):
+- First element >= x
+
+upper_bound(x):
+- First element > x
+
+Example:
+keys = 1, 3, 5, 7
+
+lower_bound(4) -> 5
+upper_bound(5) -> 7
+
+-----------------------------------------
+11. Iterator Invalidation
+-----------------------------------------
+VERY IMPORTANT:
+
+✔ insert() → does NOT invalidate iterators
+✔ erase() → invalidates only erased element
+✔ other iterators remain valid
+
+Reason:
+Red-black tree does not shift elements.
+
+-----------------------------------------
+12. Why map is slower than unordered_map?
+-----------------------------------------
+Because:
+- map = O(log n) (tree traversal)
+- unordered_map = O(1) average (hash table)
+
+-----------------------------------------
+13. When to use map?
+-----------------------------------------
+Use map when:
+✔ Need sorted keys
+✔ Need range queries (lower_bound, upper_bound)
+✔ Need ordered traversal
+
+Avoid when:
+✗ Only need fast access (use unordered_map)
+
+-----------------------------------------
+14. Real-world Use Cases
+-----------------------------------------
+- Dictionary / word frequency (sorted)
+- Range queries
+- Scheduling with priority keys
+- Ordered indexing systems
+- Competitive programming problems
+
+-----------------------------------------
+15. ONE-LINE INTERVIEW ANSWER
+-----------------------------------------
+std::map is an ordered associative container implemented as a Red-Black Tree that stores key-value pairs in sorted order and supports O(log n) insert, delete, and search operations while maintaining balanced tree structure.
