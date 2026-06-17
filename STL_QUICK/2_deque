@@ -1,0 +1,284 @@
+=========================================
+DEQUE (DOUBLE ENDED QUEUE) – INTERVIEW NOTES
+=========================================
+
+1. What is deque?
+-----------------
+- deque = Double Ended Queue (STL container)
+- Supports insertion/deletion at BOTH ends
+- Provides O(1) random access
+- More flexible than vector for front operations
+
+-----------------------------------------
+
+2. Internal Working (VERY IMPORTANT)
+
+Deque is NOT contiguous memory.
+
+It uses:
+- A MAP (array of pointers)
+- Multiple FIXED-SIZE MEMORY BLOCKS
+
+Structure:
+
+Map
++-----+-----+-----+
+| B1  | B2  | B3  |
++-----+-----+-----+
+
+Each block stores elements contiguously.
+
+👉 Blocks are NOT contiguous with each other
+
+-----------------------------------------
+
+3. How element access works
+
+For index i:
+
+block_index  = i / block_size
+offset       = i % block_size
+
+Access:
+map[block_index][offset]
+
+👉 Gives O(1) random access
+
+-----------------------------------------
+
+4. Vector vs Deque (VERY IMPORTANT)
+
+VECTOR:
+- Single contiguous memory
+- Fast cache performance
+- O(n) push_front (shifting required)
+
+DEQUE:
+- Multiple memory blocks
+- Slightly slower cache performance
+- O(1) push_front and push_back
+
+-----------------------------------------
+
+5. Time Complexity
+
+Access [] / at()     : O(1)
+push_back()          : O(1)
+push_front()         : O(1)
+pop_back()           : O(1)
+pop_front()          : O(1)
+insert/erase middle  : O(n)
+size()               : O(1)
+
+-----------------------------------------
+
+6. Why deque is faster at front?
+
+Vector:
+[10][20][30]
+Insert front → shift all → O(n)
+
+Deque:
+Adds new block or uses front space
+No shifting → O(1)
+
+-----------------------------------------
+
+7. Why deque is NOT contiguous?
+
+Because:
+- elements are stored in multiple blocks
+- blocks can be anywhere in memory
+
+So:
+vector → contiguous
+deque  → non-contiguous
+
+-----------------------------------------
+
+8. Iterator Invalidation
+
+Invalidation may happen on:
+- insert / erase
+- reallocation of map
+- structural changes
+
+👉 Iterators are NOT fully stable like list
+
+-----------------------------------------
+
+9. Key Features
+
+✔ O(1) push_front
+✔ O(1) push_back
+✔ O(1) random access
+✔ flexible memory allocation
+❌ not contiguous memory
+❌ slightly worse cache locality
+
+-----------------------------------------
+
+10. When to use deque?
+
+Use deque when:
+- frequent push_front()
+- frequent pop_front()
+- need both-end operations
+
+Example:
+- sliding window
+- BFS queues
+- task scheduling
+
+Use vector when:
+- mostly push_back()
+- cache performance important
+- need contiguous memory
+
+-----------------------------------------
+
+11. Common Functions
+
+push_back()
+push_front()
+pop_back()
+pop_front()
+front()
+back()
+size()
+empty()
+insert()
+erase()
+begin()
+end()
+operator[]
+at()
+
+-----------------------------------------
+
+12. One-line Interview Answer
+
+A deque is a sequence container implemented using multiple fixed-size memory blocks with a map of pointers, 
+allowing O(1) insertion/removal at both ends and O(1) random access, but it is not stored in contiguous memory.
+
+-----------------------------------------
+
+13. VERY IMPORTANT DIFFERENCE
+
+vector:
+- single block memory
+- fast cache access
+
+deque:
+- multiple blocks
+- fast front + back operations
+
+=========================================
+
+#include <iostream>
+#include <deque>
+#include <algorithm>
+using namespace std;
+
+int main() {
+
+    // ================================
+    // 1. INITIALIZATION
+    // ================================
+    deque<int> dq = {10, 20, 30};
+
+    // ================================
+    // 2. PUSH OPERATIONS (MOST IMPORTANT)
+    // ================================
+    dq.push_back(40);     // back insert
+    dq.push_front(5);     // front insert
+
+    // dq = 5 10 20 30 40
+
+    // ================================
+    // 3. POP OPERATIONS
+    // ================================
+    dq.pop_back();        // remove last
+    dq.pop_front();       // remove first
+
+    // dq = 10 20 30
+
+    // ================================
+    // 4. ACCESS ELEMENTS
+    // ================================
+    cout << "Front: " << dq.front() << endl;  // 10
+    cout << "Back: " << dq.back() << endl;    // 30
+
+    cout << "Index 1: " << dq[1] << endl;     // 20
+    cout << "At(2): " << dq.at(2) << endl;    // 30
+
+    // ================================
+    // 5. SIZE / EMPTY
+    // ================================
+    cout << "Size: " << dq.size() << endl;
+    cout << "Empty: " << dq.empty() << endl;
+
+    // ================================
+    // 6. INSERT / ERASE (IMPORTANT)
+    // ================================
+    dq.insert(dq.begin() + 1, 99);   // insert at middle
+    // dq = 10 99 20 30
+
+    dq.erase(dq.begin() + 2);        // erase index 2
+    // dq = 10 99 30
+
+    // ================================
+    // 7. CLEAR
+    // ================================
+    deque<int> temp = dq;
+    temp.clear();
+
+    cout << "After clear size: " << temp.size() << endl;
+
+    // ================================
+    // 8. LOOPING (VERY COMMON)
+    // ================================
+    cout << "Deque elements: ";
+    for (auto x : dq) {
+        cout << x << " ";
+    }
+    cout << endl;
+
+    // ================================
+    // 9. ITERATORS
+    // ================================
+    cout << "Forward: ";
+    for (auto it = dq.begin(); it != dq.end(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    cout << "Reverse: ";
+    for (auto it = dq.rbegin(); it != dq.rend(); it++) {
+        cout << *it << " ";
+    }
+    cout << endl;
+
+    // ================================
+    // 10. SWAP (O(1))
+    // ================================
+    deque<int> d1 = {1, 2, 3};
+    deque<int> d2 = {9, 8, 7};
+
+    d1.swap(d2);
+
+    cout << "After swap d1: ";
+    for (auto x : d1) cout << x << " ";
+    cout << endl;
+
+    // ================================
+    // 11. SORT (via algorithm)
+    // ================================
+    sort(dq.begin(), dq.end());
+
+    cout << "Sorted dq: ";
+    for (auto x : dq) cout << x << " ";
+    cout << endl;
+
+    return 0;
+}
