@@ -1,0 +1,589 @@
+=========================================================
+TYPE CASTING IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Type Casting is the process of converting one data type into another.
+
+Types of Casting:
+
+1. Implicit Casting (Automatic)
+2. Explicit Casting (Manual)
+3. C++ Cast Operators
+   • static_cast
+   • dynamic_cast
+   • const_cast
+   • reinterpret_cast
+
+=========================================================
+1. IMPLICIT CASTING (AUTOMATIC CONVERSION)
+=========================================================
+
+Performed automatically by the compiler.
+
+Example:
+
+int x = 10;
+double d = x;
+
+cout << d;
+
+Output:
+
+10.0
+
+Conversion:
+
+int → double
+
+=========================================================
+EXAMPLE
+=========================================================
+
+char c = 'A';
+
+int x = c;
+
+cout << x;
+
+Output:
+
+65
+
+=========================================================
+ADVANTAGE
+=========================================================
+
+Easy and automatic.
+
+DISADVANTAGE
+
+May cause data loss.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+double d = 10.9;
+
+int x = d;
+
+cout << x;
+
+Output:
+
+10
+
+0.9 is lost.
+
+=========================================================
+2. C-STYLE CAST
+=========================================================
+
+Syntax:
+
+(type)expression
+
+Example:
+
+double d = 10.5;
+
+int x = (int)d;
+
+cout << x;
+
+Output:
+
+10
+
+=========================================================
+FUNCTION-STYLE CAST
+=========================================================
+
+Syntax:
+
+type(expression)
+
+Example:
+
+int x = int(10.5);
+
+=========================================================
+PROBLEM WITH C-STYLE CASTS
+=========================================================
+
+• Not type safe
+• Difficult to identify
+• Can perform dangerous conversions
+• Does not express programmer's intent
+
+Therefore Modern C++ prefers:
+
+static_cast
+dynamic_cast
+const_cast
+reinterpret_cast
+
+=========================================================
+3. STATIC_CAST
+=========================================================
+
+Definition:
+Performs compile-time checked conversions.
+
+Used For:
+• Numeric conversions
+• Upcasting
+• Downcasting (unsafe)
+• void* conversion
+
+=========================================================
+EXAMPLE 1: Numeric Conversion
+=========================================================
+
+double d = 10.5;
+
+int x = static_cast<int>(d);
+
+cout << x;
+
+Output:
+
+10
+
+=========================================================
+EXAMPLE 2: Upcasting
+=========================================================
+
+class Base
+{
+};
+
+class Derived : public Base
+{
+};
+
+Derived d;
+
+Base* ptr = static_cast<Base*>(&d);
+
+Safe.
+
+=========================================================
+EXAMPLE 3: Downcasting
+=========================================================
+
+Base b;
+
+Base* ptr = &b;
+
+Derived* d =
+    static_cast<Derived*>(ptr);
+
+Compiles.
+
+But:
+
+Undefined Behavior.
+
+Reason:
+No runtime checking.
+
+=========================================================
+WHEN TO USE static_cast ?
+=========================================================
+
+• Numeric conversions
+• Safe upcasting
+• Well-understood conversions
+
+=========================================================
+4. DYNAMIC_CAST
+=========================================================
+
+Definition:
+Performs runtime checked casting.
+
+Used only with:
+
+Polymorphic classes
+(at least one virtual function)
+
+Main use:
+
+Safe Downcasting.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Base
+{
+public:
+    virtual ~Base() {}
+};
+
+class Derived : public Base
+{
+public:
+    void show()
+    {
+        cout << "Derived";
+    }
+};
+
+Base* ptr = new Derived();
+
+Derived* d =
+    dynamic_cast<Derived*>(ptr);
+
+if(d)
+{
+    d->show();
+}
+
+Output:
+
+Derived
+
+=========================================================
+FAILED CAST
+=========================================================
+
+Base* ptr = new Base();
+
+Derived* d =
+    dynamic_cast<Derived*>(ptr);
+
+if(d == nullptr)
+{
+    cout << "Cast Failed";
+}
+
+Output:
+
+Cast Failed
+
+=========================================================
+WHY DYNAMIC_CAST NEEDS VIRTUAL FUNCTION?
+=========================================================
+
+Because RTTI information is generated only for polymorphic classes.
+
+No virtual function
+→ No RTTI
+→ dynamic_cast not possible.
+
+=========================================================
+DYNAMIC_CAST WITH REFERENCES
+=========================================================
+
+try
+{
+    Derived& d =
+      dynamic_cast<Derived&>(*ptr);
+}
+catch(bad_cast&)
+{
+    cout << "Failed";
+}
+
+Pointer:
+Failure → nullptr
+
+Reference:
+Failure → bad_cast exception
+
+=========================================================
+5. CONST_CAST
+=========================================================
+
+Definition:
+Adds or removes const/volatile qualifiers.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+void fun(int* ptr)
+{
+}
+
+const int x = 10;
+
+fun(const_cast<int*>(&x));
+
+=========================================================
+EXAMPLE
+=========================================================
+
+const int x = 10;
+
+int* ptr =
+    const_cast<int*>(&x);
+
+=========================================================
+IMPORTANT
+=========================================================
+
+If original object is actually const:
+
+const int x = 10;
+
+int* ptr =
+    const_cast<int*>(&x);
+
+*ptr = 20;
+
+Undefined Behavior.
+
+=========================================================
+SAFE CASE
+=========================================================
+
+int x = 10;
+
+const int* ptr = &x;
+
+int* p =
+    const_cast<int*>(ptr);
+
+*p = 20;
+
+Safe.
+
+=========================================================
+WHEN TO USE const_cast ?
+=========================================================
+
+Legacy APIs.
+
+Rarely used.
+
+=========================================================
+6. REINTERPRET_CAST
+=========================================================
+
+Definition:
+Performs low-level bit reinterpretation.
+
+Most dangerous cast in C++.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+int x = 65;
+
+int* ptr = &x;
+
+char* c =
+    reinterpret_cast<char*>(ptr);
+
+=========================================================
+EXAMPLE
+=========================================================
+
+uintptr_t addr =
+   reinterpret_cast<uintptr_t>(ptr);
+
+=========================================================
+USES
+=========================================================
+
+• System programming
+• Device drivers
+• Networking
+• Memory manipulation
+• Serialization
+
+=========================================================
+WHY DANGEROUS?
+=========================================================
+
+No type checking.
+
+Compiler simply treats memory as another type.
+
+May lead to:
+
+• Undefined Behavior
+• Alignment issues
+• Portability issues
+
+=========================================================
+CASTING HIERARCHY (INTERVIEW)
+=========================================================
+
+Safe
+↓
+
+static_cast
+
+↓
+
+dynamic_cast
+
+↓
+
+const_cast
+
+↓
+
+reinterpret_cast
+
+Dangerous
+
+=========================================================
+UPCASTING
+=========================================================
+
+Derived → Base
+
+Always safe.
+
+Example:
+
+Derived d;
+
+Base* ptr = &d;
+
+or
+
+Base* ptr =
+    static_cast<Base*>(&d);
+
+=========================================================
+DOWNCASTING
+=========================================================
+
+Base → Derived
+
+Unsafe.
+
+Preferred:
+
+dynamic_cast
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Base* ptr = new Derived();
+
+Derived* d =
+    dynamic_cast<Derived*>(ptr);
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. How many C++ casts are there?
+
+Answer:
+
+1. static_cast
+2. dynamic_cast
+3. const_cast
+4. reinterpret_cast
+
+---------------------------------------------------------
+
+Q2. Difference between static_cast and dynamic_cast?
+
+Answer:
+
+static_cast
+------------
+Compile-time
+No runtime checking
+
+dynamic_cast
+------------
+Runtime checked
+Safe downcasting
+
+---------------------------------------------------------
+
+Q3. Why does dynamic_cast need virtual functions?
+
+Answer:
+RTTI exists only for polymorphic classes.
+
+---------------------------------------------------------
+
+Q4. What happens when dynamic_cast fails?
+
+Pointer:
+nullptr
+
+Reference:
+bad_cast exception
+
+---------------------------------------------------------
+
+Q5. What does const_cast do?
+
+Answer:
+Adds/removes const qualifiers.
+
+---------------------------------------------------------
+
+Q6. What is reinterpret_cast?
+
+Answer:
+Low-level bit reinterpretation of memory.
+
+---------------------------------------------------------
+
+Q7. Which cast is most dangerous?
+
+Answer:
+reinterpret_cast
+
+---------------------------------------------------------
+
+Q8. Which cast should replace C-style casts?
+
+Answer:
+Prefer:
+
+static_cast
+dynamic_cast
+const_cast
+reinterpret_cast
+
+depending on intent.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+C++ provides four named casts. static_cast is used for compile-time
+conversions and safe upcasting. dynamic_cast performs runtime-checked
+downcasting and requires polymorphic classes. const_cast adds or removes
+const qualifiers, mainly for legacy APIs. reinterpret_cast performs
+low-level memory reinterpretation and is the most dangerous cast. Modern
+C++ prefers named casts over C-style casts because they clearly express
+programmer intent and provide better type safety.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+static_cast
+      ↓
+Normal Conversions
+
+dynamic_cast
+      ↓
+Safe Downcasting
+
+const_cast
+      ↓
+Remove/Add const
+
+reinterpret_cast
+      ↓
+Treat Memory as Another Type
+=========================================================
