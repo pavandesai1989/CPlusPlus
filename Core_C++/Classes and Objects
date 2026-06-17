@@ -1,0 +1,435 @@
+=========================================================
+CLASSES AND OBJECTS IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+Class:
+A user-defined data type (blueprint/template) that defines properties
+(data members) and behaviors (member functions).
+
+Object:
+An instance of a class. Memory is allocated only when an object is
+created.
+
+=========================================================
+REAL-WORLD EXAMPLE
+=========================================================
+
+Class      : Car Blueprint
+Object     : Actual Car
+
+Class defines:
+• Color
+• Speed
+• Brand
+
+Objects:
+
+Car c1;
+Car c2;
+Car c3;
+
+Each object has its own copy of data members.
+
+=========================================================
+CLASS SYNTAX
+=========================================================
+
+class Employee
+{
+private:
+    int id;
+    string name;
+
+public:
+    void display()
+    {
+        cout << id;
+    }
+};
+
+=========================================================
+OBJECT CREATION
+=========================================================
+
+Employee e1;      // Object
+Employee e2;      // Object
+
+Memory is allocated for:
+
+id
+name
+
+Functions are NOT stored inside every object.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+class Employee
+{
+public:
+    int id;
+
+    void display()
+    {
+        cout << id << endl;
+    }
+};
+
+int main()
+{
+    Employee e1;
+
+    e1.id = 100;
+
+    e1.display();
+}
+
+Output:
+100
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+class Test
+{
+public:
+    int x;
+    int y;
+
+    void show()
+    {
+    }
+};
+
+Object:
+
+------------------
+x
+------------------
+y
+------------------
+
+Member functions are stored only once in Code/Text Segment.
+
+Every object contains only data members.
+
+=========================================================
+CLASS vs OBJECT
+=========================================================
+
+Feature            Class                 Object
+--------------------------------------------------------
+Meaning            Blueprint             Instance
+Memory             No                    Yes
+Creation           Compile Time          Runtime
+Existence          Logical Entity        Physical Entity
+Contains           Data + Functions      Actual Data
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Car
+{
+public:
+    int speed;
+};
+
+Car c1;
+Car c2;
+
+Memory:
+
+c1.speed
+c2.speed
+
+Each object gets its own copy of non-static data members.
+
+=========================================================
+HOW ARE MEMBER FUNCTIONS CALLED?
+=========================================================
+
+Compiler internally converts:
+
+obj.show();
+
+into:
+
+show(&obj);
+
+A hidden pointer called:
+
+this
+
+is passed.
+
+=========================================================
+THIS POINTER
+=========================================================
+
+class Test
+{
+    int x;
+
+public:
+    void setX(int x)
+    {
+        this->x = x;
+    }
+};
+
+Compiler internally:
+
+void setX(Test* this, int x)
+{
+    this->x = x;
+}
+
+=========================================================
+ACCESSING MEMBERS
+=========================================================
+
+Object Operator:
+
+obj.member
+
+Pointer Operator:
+
+ptr->member
+
+=========================================================
+EXAMPLE
+=========================================================
+
+Employee e;
+e.display();
+
+Employee* p = &e;
+p->display();
+
+=========================================================
+SIZE OF EMPTY CLASS
+=========================================================
+
+class Test
+{
+};
+
+cout << sizeof(Test);
+
+Output:
+
+1
+
+=========================================================
+WHY SIZE IS 1?
+=========================================================
+
+Every object must have a unique address.
+
+Compiler allocates 1 byte to ensure unique addresses.
+
+=========================================================
+SIZE OF CLASS
+=========================================================
+
+class Test
+{
+    int x;
+    char c;
+};
+
+Size depends on:
+• Data members
+• Padding
+• Alignment
+• vptr (if virtual functions exist)
+
+Functions do NOT contribute to object size.
+
+=========================================================
+CLASS WITH VIRTUAL FUNCTION
+=========================================================
+
+class Base
+{
+public:
+    virtual void fun()
+    {
+    }
+};
+
+Contains:
+
+vptr
+
+Object size increases by pointer size.
+
+64-bit system:
+
+sizeof(Base) >= 8 bytes.
+
+=========================================================
+STATIC DATA MEMBERS
+=========================================================
+
+class Test
+{
+public:
+    static int count;
+};
+
+Static members are NOT part of object size.
+
+Reason:
+Only one shared copy exists.
+
+=========================================================
+CONSTRUCTOR INVOCATION
+=========================================================
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor";
+    }
+};
+
+Test t;
+
+Output:
+
+Constructor
+
+Constructor is called automatically when object is created.
+
+=========================================================
+DESTRUCTOR INVOCATION
+=========================================================
+
+class Test
+{
+public:
+    ~Test()
+    {
+        cout << "Destructor";
+    }
+};
+
+Destructor is called automatically when object goes out of scope.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Class?
+
+Answer:
+A user-defined data type that acts as a blueprint for creating objects.
+
+---------------------------------------------------------
+
+Q2. What is an Object?
+
+Answer:
+An instance of a class with its own memory for non-static data members.
+
+---------------------------------------------------------
+
+Q3. When is memory allocated?
+
+Answer:
+When an object is created, not when the class is defined.
+
+---------------------------------------------------------
+
+Q4. Are member functions stored in every object?
+
+Answer:
+No.
+
+Functions are stored once in the code segment and shared by all objects.
+
+---------------------------------------------------------
+
+Q5. What is stored inside an object?
+
+Answer:
+• Non-static data members
+• vptr (if virtual functions exist)
+
+---------------------------------------------------------
+
+Q6. Why is sizeof(empty class) = 1?
+
+Answer:
+To ensure every object has a unique address.
+
+---------------------------------------------------------
+
+Q7. Do static data members contribute to object size?
+
+Answer:
+No.
+
+Only one shared copy exists outside the object.
+
+---------------------------------------------------------
+
+Q8. Do member functions contribute to object size?
+
+Answer:
+No.
+
+Functions are stored separately in memory.
+
+---------------------------------------------------------
+
+Q9. What contributes to class size?
+
+Answer:
+• Data members
+• Padding and alignment
+• vptr (if virtual functions exist)
+
+---------------------------------------------------------
+
+Q10. What is the hidden parameter passed to member functions?
+
+Answer:
+this pointer.
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+A class is a user-defined blueprint that encapsulates data members and
+member functions, while an object is an instance of that class. Memory
+is allocated only when objects are created. Objects contain non-static
+data members and possibly a vptr, while member functions are stored only
+once and shared among all objects.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+Class
+  ↓
+Blueprint/Template
+  ↓
+Object
+  ↓
+Instance of Class
+  ↓
+Memory Allocated
+  ↓
+Data Members + (vptr if virtual)
+=========================================================
