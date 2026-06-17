@@ -1,0 +1,137 @@
+=========================================
+INITIALIZER LISTS (C++11) – INTERVIEW NOTES
+=========================================
+
+1. What is an Initializer List?
+------------------------------
+- Initializer list is a C++11 feature used to initialize objects using {} braces.
+- It provides a uniform way to initialize variables, arrays, and objects.
+- Implemented using std::initializer_list.
+
+Example:
+int x{10};
+int arr[]{1, 2, 3, 4};
+
+-----------------------------------------
+
+2. Why Initializer Lists are needed?
+-----------------------------------
+Before C++11, initialization had inconsistencies:
+
+int a = 10;
+int b(10);
+int c{10};  // C++11 unified form
+
+Problems solved:
+- Prevents narrowing conversions
+- Provides uniform initialization syntax
+- Works consistently for all types
+
+-----------------------------------------
+
+3. Narrowing Conversion Prevention (IMPORTANT)
+---------------------------------------------
+int x = 3.14;   // allowed (loses data)
+int y{3.14};    // ❌ ERROR (safe)
+
+Initializer list prevents accidental data loss.
+
+-----------------------------------------
+
+4. std::initializer_list
+------------------------
+- A lightweight class template in <initializer_list>
+- Used to pass list of values to constructors/functions
+
+Example:
+
+#include <initializer_list>
+#include <iostream>
+using namespace std;
+
+class MyArray {
+public:
+    MyArray(initializer_list<int> list) {
+        for (auto x : list) {
+            cout << x << " ";
+        }
+    }
+};
+
+int main() {
+    MyArray obj = {1, 2, 3, 4, 5};
+}
+
+-----------------------------------------
+
+5. Constructor with Initializer List
+------------------------------------
+
+class Vector {
+    vector<int> v;
+
+public:
+    Vector(initializer_list<int> list) {
+        for (auto x : list) {
+            v.push_back(x);
+        }
+    }
+};
+
+Vector v = {10, 20, 30};
+
+-----------------------------------------
+
+6. Difference: {} vs () Initialization
+--------------------------------------
+
+() Initialization:
+- May allow narrowing
+- Traditional constructor call
+
+{} Initialization:
+- Prevents narrowing
+- Uniform initialization
+- Preferred in modern C++
+
+Example:
+int a(5.5);   // allowed (becomes 5)
+int b{5.5};   // ❌ error
+
+-----------------------------------------
+
+7. Initializer List in STL
+--------------------------
+Most STL containers use initializer_list:
+
+vector<int> v = {1, 2, 3, 4};
+map<int, int> m = {{1,2}, {3,4}};
+set<int> s = {5, 6, 7};
+
+-----------------------------------------
+
+8. auto with Initializer List (IMPORTANT PITFALL)
+--------------------------------------------------
+auto x = {1, 2, 3};  // type is initializer_list<int>
+
+-----------------------------------------
+
+9. When to use Initializer Lists?
+---------------------------------
+- Container initialization
+- Class constructors with multiple values
+- Prevent narrowing conversions
+- Clean and readable code
+
+-----------------------------------------
+
+10. Interview Key Points
+-----------------------
+- Introduced in C++11
+- Uses {} uniform initialization
+- Prevents narrowing conversions
+- Uses std::initializer_list internally
+- Widely used in STL containers
+- Preferred modern C++ initialization style
+
+=========================================
