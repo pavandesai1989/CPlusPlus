@@ -1,0 +1,293 @@
+=========================================================
+CONST POINTER IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+A Const Pointer is a pointer whose ADDRESS cannot be changed after
+initialization.
+
+The pointer is constant, but the data it points to can be modified.
+
+Syntax:
+
+int* const ptr = &x;
+
+Read Right to Left:
+
+ptr is a const pointer to int.
+
+=========================================================
+MEMORY REPRESENTATION
+=========================================================
+
+int x = 10;
+int y = 20;
+
+int* const ptr = &x;
+
+        +------+
+x ----> |  10  |
+        +------+
+
+ptr ----> x
+
+Pointer is FIXED.
+
+=========================================================
+BASIC EXAMPLE
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int x = 10;
+    int y = 20;
+
+    int* const ptr = &x;
+
+    *ptr = 100;      // OK
+
+    // ptr = &y;     // ERROR
+}
+
+Output:
+
+100
+
+=========================================================
+WHAT IS ALLOWED?
+=========================================================
+
+int x = 10;
+
+int* const ptr = &x;
+
+*ptr = 50;      // OK
+
+Reason:
+Data is not const.
+
+=========================================================
+WHAT IS NOT ALLOWED?
+=========================================================
+
+int x = 10;
+int y = 20;
+
+int* const ptr = &x;
+
+ptr = &y;       // ERROR
+
+Reason:
+Pointer itself is const.
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+int x = 10;
+int y = 20;
+
+int* const ptr = &x;
+
+Before:
+
+ptr ----> x
+
+Attempt:
+
+ptr = &y;
+
+Compilation Error.
+
+Pointer cannot point elsewhere.
+
+=========================================================
+CONST POINTER vs POINTER TO CONST
+=========================================================
+
+1. Const Pointer
+
+int* const ptr;
+
+Meaning:
+Pointer constant.
+Data modifiable.
+
+---------------------------------------------------------
+
+2. Pointer to Const
+
+const int* ptr;
+
+Meaning:
+Pointer modifiable.
+Data constant.
+
+=========================================================
+INTERVIEW TABLE
+=========================================================
+
+Declaration              Data     Pointer
+------------------------------------------------
+int* const ptr           Yes      No
+const int* ptr           No       Yes
+const int* const ptr     No       No
+
+=========================================================
+EXAMPLE 1
+=========================================================
+
+int x = 10;
+int y = 20;
+
+int* const ptr = &x;
+
+*ptr = 100;     // OK
+
+ptr = &y;       // ERROR
+
+=========================================================
+EXAMPLE 2
+=========================================================
+
+int x = 10;
+int y = 20;
+
+const int* ptr = &x;
+
+*ptr = 100;     // ERROR
+
+ptr = &y;       // OK
+
+=========================================================
+EXAMPLE 3
+=========================================================
+
+int x = 10;
+
+const int* const ptr = &x;
+
+*ptr = 100;      // ERROR
+ptr = nullptr;   // ERROR
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+Read Right to Left:
+
+int* const ptr
+
+ptr
+↓
+const pointer
+↓
+to int
+
+---------------------------------------------------------
+
+const int* ptr
+
+ptr
+↓
+pointer
+↓
+to const int
+
+---------------------------------------------------------
+
+const int* const ptr
+
+ptr
+↓
+const pointer
+↓
+to const int
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is a Const Pointer?
+
+Answer:
+A pointer whose address cannot be changed after initialization.
+
+---------------------------------------------------------
+
+Q2. Can a Const Pointer modify data?
+
+Answer:
+YES.
+
+Example:
+
+int* const ptr;
+
+*ptr = 100;   // Allowed
+
+---------------------------------------------------------
+
+Q3. Can a Const Pointer point to another variable?
+
+Answer:
+NO.
+
+ptr = &y;
+
+Compilation Error.
+
+---------------------------------------------------------
+
+Q4. Difference between:
+
+int* const ptr
+and
+const int* ptr ?
+
+Answer:
+
+int* const ptr
+→ Pointer constant.
+
+const int* ptr
+→ Data constant.
+
+---------------------------------------------------------
+
+Q5. What is:
+
+const int* const ptr ?
+
+Answer:
+Both data and pointer are constant.
+
+=========================================================
+INTERVIEW READY ANSWER (20 Seconds)
+=========================================================
+
+A Const Pointer is declared as:
+
+int* const ptr;
+
+It means the pointer itself cannot be changed after initialization,
+but the value being pointed to can still be modified. This is different
+from a Pointer to Const, where the pointer can change but the data
+cannot. A common interview trick is to read declarations from right to
+left.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+int* const ptr
+      ↓
+Pointer is Constant
+      ↓
+Cannot Change Address
+      ↓
+Can Modify Data
+=========================================================
