@@ -1,0 +1,439 @@
+=========================================================
+MALLOC/FREE IN C++ (INTERVIEW NOTES)
+=========================================================
+
+Definition:
+malloc():
+Allocates raw memory dynamically on the Heap.
+
+free():
+Releases memory allocated by malloc().
+
+Header File:
+
+#include <cstdlib>
+
+=========================================================
+SYNTAX
+=========================================================
+
+void* malloc(size_t size);
+
+void free(void* ptr);
+
+=========================================================
+EXAMPLE
+=========================================================
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+*ptr = 10;
+
+cout << *ptr;
+
+free(ptr);
+
+=========================================================
+MEMORY DIAGRAM
+=========================================================
+
+int* ptr = (int*)malloc(sizeof(int));
+
+Stack                    Heap
+------                   ------
+ptr ----------------->   [10]
+
+ptr is on Stack.
+Memory allocated by malloc() is on Heap.
+
+=========================================================
+ALLOCATING ARRAY
+=========================================================
+
+int n = 5;
+
+int* arr =
+    (int*)malloc(n * sizeof(int));
+
+free(arr);
+
+=========================================================
+IMPORTANT
+=========================================================
+
+malloc()
+• Only allocates raw memory.
+• Does NOT initialize memory.
+• Does NOT call constructors.
+
+free()
+• Releases memory.
+• Does NOT call destructors.
+
+=========================================================
+UNINITIALIZED MEMORY
+=========================================================
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+cout << *ptr;
+
+Output:
+
+Garbage Value
+
+=========================================================
+WHAT DOES malloc() DO INTERNALLY?
+=========================================================
+
+1. Allocates requested bytes.
+2. Returns starting address.
+3. Returns:
+
+void*
+
+No object construction.
+
+=========================================================
+WHAT DOES free() DO INTERNALLY?
+=========================================================
+
+1. Releases allocated memory.
+2. Returns memory to Heap manager.
+
+No destructor call.
+
+=========================================================
+WHY TYPE CAST IS REQUIRED IN C++?
+=========================================================
+
+malloc() returns:
+
+void*
+
+C:
+
+int* ptr = malloc(sizeof(int));
+
+Allowed.
+
+C++:
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+Explicit cast required.
+
+=========================================================
+VERY IMPORTANT INTERVIEW EXAMPLE
+=========================================================
+
+class Test
+{
+public:
+    Test()
+    {
+        cout << "Constructor\n";
+    }
+
+    ~Test()
+    {
+        cout << "Destructor\n";
+    }
+};
+
+int main()
+{
+    Test* ptr =
+       (Test*)malloc(sizeof(Test));
+
+    free(ptr);
+}
+
+Output:
+
+No output.
+
+Constructor and Destructor are NOT called.
+
+=========================================================
+NEW VERSION
+=========================================================
+
+Test* ptr = new Test();
+
+delete ptr;
+
+Output:
+
+Constructor
+Destructor
+
+=========================================================
+MEMORY LEAK
+=========================================================
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+ptr = nullptr;
+
+Memory lost.
+
+Leak occurred.
+
+=========================================================
+CORRECT WAY
+=========================================================
+
+free(ptr);
+ptr = nullptr;
+
+=========================================================
+DANGLING POINTER
+=========================================================
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+free(ptr);
+
+cout << *ptr;     // Undefined Behavior
+
+Solution:
+
+free(ptr);
+ptr = nullptr;
+
+=========================================================
+MALLOC vs CALLOC
+=========================================================
+
+malloc()
+---------
+Allocates memory only.
+Memory contains garbage values.
+
+calloc()
+---------
+Allocates and initializes memory to zero.
+
+Example:
+
+int* arr =
+(int*)calloc(5,sizeof(int));
+
+Output:
+
+0 0 0 0 0
+
+=========================================================
+MALLOC vs NEW
+=========================================================
+
+Feature              malloc()                new
+------------------------------------------------------------------
+Language             C                       C++
+Return Type          void*                   Typed Pointer
+Constructor Call     No                      Yes
+Initialization       No                      Yes
+Failure              Returns NULL            Throws bad_alloc
+Operator/Function    Library Function        Operator
+Deallocation         free()                  delete
+Object Support       No                      Yes
+Overloading          No                      Yes
+Type Safety          Less                    More
+
+=========================================================
+MOST ASKED INTERVIEW QUESTION
+=========================================================
+
+Q:
+Why should we avoid malloc() for C++ objects?
+
+Answer:
+Because malloc():
+
+• Does not call constructors
+• Returns raw memory only
+• Does not initialize objects
+• free() does not call destructors
+
+Can lead to incomplete object initialization.
+
+=========================================================
+EXAMPLE
+=========================================================
+
+class Employee
+{
+    string name;
+};
+
+Employee* e =
+   (Employee*)malloc(sizeof(Employee));
+
+Undefined Behavior.
+
+Reason:
+string constructor not called.
+
+Correct:
+
+Employee* e = new Employee();
+
+=========================================================
+CAN WE MIX new/delete AND malloc/free?
+=========================================================
+
+NO.
+
+Wrong:
+
+int* ptr =
+    (int*)malloc(sizeof(int));
+
+delete ptr;
+
+---------------------------------------------------------
+
+int* ptr =
+    new int;
+
+free(ptr);
+
+Both are:
+
+Undefined Behavior.
+
+=========================================================
+CORRECT PAIRS
+=========================================================
+
+malloc()  ↔ free()
+
+new        ↔ delete
+
+new[]      ↔ delete[]
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q1. Where does malloc allocate memory?
+
+Answer:
+Heap.
+
+---------------------------------------------------------
+
+Q2. What does malloc return?
+
+Answer:
+void*
+
+---------------------------------------------------------
+
+Q3. Why type cast required in C++?
+
+Answer:
+Because malloc returns void*.
+
+---------------------------------------------------------
+
+Q4. Does malloc initialize memory?
+
+Answer:
+NO.
+
+Memory contains garbage.
+
+---------------------------------------------------------
+
+Q5. Does malloc call constructors?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q6. Does free call destructors?
+
+Answer:
+NO.
+
+---------------------------------------------------------
+
+Q7. Difference between malloc and calloc?
+
+Answer:
+
+malloc()
+→ Uninitialized memory.
+
+calloc()
+→ Zero initialized memory.
+
+---------------------------------------------------------
+
+Q8. Can we use malloc for C++ objects?
+
+Answer:
+Avoid it.
+
+Use new.
+
+---------------------------------------------------------
+
+Q9. Can we mix malloc/free with new/delete?
+
+Answer:
+NO.
+
+Results in Undefined Behavior.
+
+---------------------------------------------------------
+
+Q10. Why is new preferred in C++?
+
+Answer:
+• Type safe
+• Calls constructors
+• Supports initialization
+• Throws exceptions
+• Works properly with objects
+
+=========================================================
+INTERVIEW READY ANSWER (30 Seconds)
+=========================================================
+
+malloc and free are C library functions used for dynamic memory
+allocation and deallocation on the Heap. malloc returns raw,
+uninitialized memory as a void pointer and does not call constructors,
+while free simply releases memory and does not call destructors.
+Therefore, in C++, new and delete are preferred because they support
+object construction, destruction, and type safety.
+
+=========================================================
+1-LINE MEMORY TRICK
+=========================================================
+
+malloc
+   ↓
+Raw Memory Only
+   ↓
+No Constructor
+   ↓
+Returns void*
+
+free
+   ↓
+Releases Memory
+   ↓
+No Destructor
+
+Prefer:
+new/delete in C++
+=========================================================
