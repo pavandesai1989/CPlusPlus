@@ -1,0 +1,231 @@
+=========================================
+C++ STL MULTIMAP – INTERVIEW NOTES
+=========================================
+
+1. What is multimap?
+--------------------
+multimap is an associative container that stores key-value pairs
+where DUPLICATE KEYS are allowed.
+
+Example:
+multimap<int, string> m;
+
+m.insert({1, "A"});
+m.insert({1, "B"});
+m.insert({2, "C"});
+
+Output:
+1 -> A
+1 -> B
+2 -> C
+
+-----------------------------------------
+2. Key Properties
+-----------------
+- Stores key-value pairs
+- DUPLICATE keys allowed
+- Automatically sorted by key
+- Implemented using Red-Black Tree
+- Time complexity: O(log n)
+
+-----------------------------------------
+3. Internal Implementation
+--------------------------
+multimap is implemented using a Red-Black Tree (self-balancing BST)
+
+- Keeps keys sorted
+- Allows duplicates
+- O(log n) insert, delete, search
+
+Interview Answer:
+multimap uses Red-Black Tree and allows duplicate keys while maintaining sorted order.
+
+-----------------------------------------
+4. Complexity
+--------------
+insert    O(log n)
+erase     O(log n)
+find      O(log n)
+size      O(1)
+
+-----------------------------------------
+5. Important Functions
+----------------------
+insert()
+erase()
+find()
+count()
+equal_range()
+begin()
+end()
+size()
+empty()
+
+-----------------------------------------
+6. multimap vs map
+-------------------
+
+map:
+- Unique keys only
+- One value per key
+
+multimap:
+- Duplicate keys allowed
+- Multiple values per key
+
+Example:
+
+map:
+1 -> A
+
+multimap:
+1 -> A
+1 -> B
+
+-----------------------------------------
+7. Accessing Elements
+---------------------
+⚠ multimap does NOT support [] operator
+
+Wrong:
+m[1]; ❌
+
+Reason:
+Multiple values can exist for same key.
+
+Correct way:
+- iterator
+- find()
+- equal_range()
+
+-----------------------------------------
+8. equal_range() (VERY IMPORTANT)
+----------------------------------
+Returns range of all values for a key.
+
+Example:
+auto range = m.equal_range(1);
+
+for(auto it = range.first; it != range.second; it++)
+    cout << it->first << " " << it->second << endl;
+
+-----------------------------------------
+9. find()
+---------
+Returns iterator to first occurrence of key.
+
+-----------------------------------------
+10. count()
+----------
+Returns number of occurrences of a key.
+
+Example:
+m.count(1); // returns how many times key 1 exists
+
+-----------------------------------------
+11. erase()
+-----------
+- erase(key) → removes all occurrences
+- erase(iterator) → removes single element
+
+-----------------------------------------
+12. Iteration
+-------------
+for(auto it : m)
+    cout << it.first << " " << it.second;
+
+Gives sorted order (key-wise)
+
+-----------------------------------------
+13. Advantages
+--------------
+- Allows duplicate keys
+- Sorted order maintained
+- Good for grouping values by key
+
+-----------------------------------------
+14. Disadvantages
+-----------------
+- Slower than unordered_map
+- No direct indexing
+- Cannot use []
+
+-----------------------------------------
+15. When to use multimap?
+-------------------------
+Use when:
+- Duplicate keys required
+- One key → multiple values mapping
+- Grouping data
+
+Examples:
+- Student marks per subject
+- Time-based logs
+- Event scheduling
+
+-----------------------------------------
+16. MOST USED FUNCTIONS IN CODING
+----------------------------------
+insert()
+erase()
+find()
+count()
+equal_range()
+begin()
+end()
+size()
+
+-----------------------------------------
+17. CODE EXAMPLE (MOST USED)
+----------------------------------
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main() {
+
+    multimap<int, string> m;
+
+    m.insert({1, "A"});
+    m.insert({1, "B"});
+    m.insert({2, "C"});
+    m.insert({2, "D"});
+
+    // iterate all
+    for(auto it : m)
+        cout << it.first << " -> " << it.second << endl;
+
+    cout << "Count of 1: " << m.count(1) << endl;
+
+    // find
+    auto it = m.find(2);
+    cout << "Find 2: " << it->first << " " << it->second << endl;
+
+    // equal_range
+    auto range = m.equal_range(1);
+    cout << "All values for key 1:" << endl;
+    for(auto i = range.first; i != range.second; i++)
+        cout << i->first << " " << i->second << endl;
+
+    // erase one element
+    m.erase(m.begin());
+
+    return 0;
+}
+
+-----------------------------------------
+18. QUICK REVISION
+-------------------
+- multimap = key-value store
+- duplicate keys allowed
+- sorted order maintained
+- Red-Black Tree
+- O(log n) operations
+- no [] operator
+- use equal_range for grouping
+
+-----------------------------------------
+19. ONE-LINE INTERVIEW ANSWER
+----------------------------
+multimap is an ordered associative container implemented using Red-Black Tree that allows duplicate keys and stores multiple values for the same key while maintaining sorted order.
+=========================================
