@@ -1,0 +1,42 @@
+=========================================
+🔥 MUST-DO C++ IMPLEMENTATION (NON-FAANG)
+=========================================
+
+⭐ CORE (MOST IMPORTANT)
+- Vector class (dynamic array + resize)
+- String class (basic C-style string)
+- Unique_ptr (move semantics + ownership)
+- Shared_ptr (reference count basic)
+
+=========================================
+⭐ LINKED LIST (VERY COMMON)
+=========================================
+- Singly Linked List (basic ops: insert/delete/traverse)
+- Reverse Linked List
+- Find middle of linked list
+- Detect cycle
+
+=========================================
+⭐ STACK / QUEUE (VERY FREQUENT)
+=========================================
+- Stack using array
+- Queue using array
+- Circular Queue (VERY IMPORTANT)
+- Min Stack (very common interview question)
+
+=========================================
+⭐ DESIGN (BASIC LEVEL ONLY)
+=========================================
+- LRU Cache (ONLY if time allows)
+- Browser History (simple back/forward stack)
+
+=========================================
+🔥 FINAL PRIORITY ORDER
+=========================================
+1. Vector class
+2. String class
+3. Linked List (basic + reverse + cycle)
+4. Stack + Queue + Circular Queue
+5. Unique_ptr
+6. Shared_ptr
+7. Min Stack
