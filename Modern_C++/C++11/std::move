@@ -1,0 +1,172 @@
+=========================================
+std::move (C++11) - INTERVIEW NOTES
+=========================================
+
+1. What is std::move?
+----------------------
+std::move is NOT a move operation.
+
+👉 It is a type cast that converts an object into an rvalue reference.
+
+It allows resources of an object to be "moved" instead of copied.
+
+Header:
+#include <utility>
+
+-----------------------------------------
+2. Important Concept (MOST ASKED)
+-----------------------------------------
+std::move does NOT move anything.
+
+It only enables move semantics.
+
+Actual move happens via:
+👉 move constructor / move assignment operator
+
+-----------------------------------------
+3. Why std::move is needed?
+-----------------------------------------
+Copying:
+- expensive (deep copy)
+
+Moving:
+- transfers ownership of resources
+- avoids copying
+
+Example:
+string a = "Hello";
+string b = std::move(a);
+
+Now:
+b = "Hello"
+a = (valid but empty/undefined state)
+
+-----------------------------------------
+4. What happens internally?
+-----------------------------------------
+Before move:
+a ---> "Hello"
+
+After std::move:
+b ---> "Hello"
+a ---> empty state
+
+No memory copying happens.
+
+-----------------------------------------
+5. Syntax
+-----------------------------------------
+T&& = rvalue reference
+
+std::move(x)
+
+Equivalent to:
+static_cast<T&&>(x)
+
+-----------------------------------------
+6. Example
+-----------------------------------------
+#include <iostream>
+#include <vector>
+#include <utility>
+
+int main()
+{
+    std::vector<int> v1 = {1,2,3,4};
+
+    std::vector<int> v2 = std::move(v1);
+
+    std::cout << "v2 size: " << v2.size() << std::endl;
+    std::cout << "v1 size: " << v1.size() << std::endl; // valid but empty
+
+    return 0;
+}
+
+-----------------------------------------
+7. After std::move
+-----------------------------------------
+Object becomes:
+✔ valid
+❌ but unspecified state
+
+Important:
+You can safely:
+- destroy it
+- assign new value
+- reuse it
+
+But:
+❌ do NOT assume its contents
+
+-----------------------------------------
+8. When is std::move used?
+-----------------------------------------
+✔ Returning large objects
+✔ Avoid copying vectors/strings
+✔ Transfer ownership (unique_ptr)
+✔ STL optimizations
+
+-----------------------------------------
+9. std::move vs copy
+-----------------------------------------
+
+Copy:
+- duplicates data
+- O(n)
+
+Move:
+- transfers pointer/resources
+- O(1)
+
+-----------------------------------------
+10. Move Constructor Example
+-----------------------------------------
+class A {
+public:
+    A(A&& obj) {
+        // steal resources
+    }
+};
+
+std::move triggers move constructor.
+
+-----------------------------------------
+11. Common Mistake (VERY IMPORTANT)
+-----------------------------------------
+❌ std::move makes object faster
+
+✔ WRONG
+
+Correct:
+std::move only allows move, it does not guarantee it.
+
+-----------------------------------------
+12. When NOT to use std::move
+-----------------------------------------
+❌ Do NOT use on:
+- local variables you still need
+- return value optimization cases
+- small objects (may be slower)
+
+-----------------------------------------
+13. std::move does NOT move:
+-----------------------------------------
+❌ memory itself
+❌ data physically
+❌ objects automatically
+
+It only casts to rvalue reference.
+
+-----------------------------------------
+14. Real-world analogy
+-----------------------------------------
+Copy:
+Photocopy document
+
+Move:
+Give original document and empty your file
+
+-----------------------------------------
+15. ONE-LINE INTERVIEW ANSWER
+-----------------------------------------
+std::move is a utility that casts an object to an rvalue reference, enabling move semantics so that resources can be transferred instead of copied, improving performance for large objects.
