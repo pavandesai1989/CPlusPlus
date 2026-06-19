@@ -4,6 +4,7 @@ LAMBDA EXPRESSIONS (C++11 onwards) – INTERVIEW NOTES
 
 1. What is a Lambda Expression?
 ------------------------------
+  
 - A lambda is an anonymous (unnamed) function.
 - Introduced in C++11.
 - Used to write inline, short functions without defining a separate function.
