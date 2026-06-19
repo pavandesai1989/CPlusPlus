@@ -224,7 +224,8 @@ forward_list:
 
 16. One-line Interview Answer
 ----------------------------
-std::list is a doubly linked list that provides O(1) insertion and deletion at known positions with stable iterators, but it does not support random access and has poor cache locality.
+std::list is a doubly linked list that provides O(1) insertion and deletion at known positions with stable iterators, 
+but it does not support random access and has poor cache locality.
 
 -----------------------------------------
 
