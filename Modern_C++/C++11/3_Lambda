@@ -38,11 +38,21 @@ int main() {
     greet();
 }
 
+std::function<void()> greet = []() {
+    cout << "Hello Lambda!" << endl;
+};
+
 -----------------------------------------
 
 3. Lambda with Parameters
 -------------------------
 auto sum = [](int a, int b) {
+    return a + b;
+};
+
+std::function<int(int, int)> sum =
+[](int a, int b)
+{
     return a + b;
 };
 
