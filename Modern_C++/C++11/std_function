@@ -1,0 +1,379 @@
+=====================================================
+std::function (C++11) – INTERVIEW NOTES
+=====================================================
+
+Header:
+#include <functional>
+
+-----------------------------------------------------
+1. What is std::function?
+-----------------------------------------------------
+
+std::function is a polymorphic function wrapper introduced in C++11.
+
+It can store and invoke ANY callable object:
+
+1. Normal functions
+2. Lambdas
+3. Functors (objects with operator())
+4. Member functions
+5. Bind expressions
+
+Syntax:
+
+std::function<ReturnType(ParameterTypes)> name;
+
+Example:
+
+std::function<int(int,int)> f;
+
+means:
+
+Return type : int
+Parameters  : (int,int)
+
+-----------------------------------------------------
+2. Why do we need std::function?
+-----------------------------------------------------
+
+Lambdas have anonymous compiler-generated types.
+
+Example:
+
+auto add = [](int a, int b)
+{
+    return a + b;
+};
+
+Type of add:
+
+main::{lambda(int,int)#1}
+
+This type cannot be written explicitly.
+
+Sometimes we need:
+
+1. Store different callables in same variable
+2. Pass lambdas as function arguments
+3. Return lambdas from functions
+4. Store callbacks
+
+std::function solves this problem.
+
+-----------------------------------------------------
+3. Syntax
+-----------------------------------------------------
+
+std::function<return_type(parameter_types)> name;
+
+Example:
+
+std::function<int(int,int)> func;
+
+-----------------------------------------------------
+4. Store a Lambda
+-----------------------------------------------------
+
+std::function<int(int,int)> add =
+[](int a, int b)
+{
+    return a + b;
+};
+
+cout << add(10,20);
+
+Output:
+
+30
+
+-----------------------------------------------------
+5. Store a Normal Function
+-----------------------------------------------------
+
+int sum(int a, int b)
+{
+    return a+b;
+}
+
+std::function<int(int,int)> f = sum;
+
+cout << f(10,20);
+
+Output:
+
+30
+
+-----------------------------------------------------
+6. Store a Functor
+-----------------------------------------------------
+
+class Add
+{
+public:
+    int operator()(int a, int b)
+    {
+        return a+b;
+    }
+};
+
+std::function<int(int,int)> f = Add();
+
+cout << f(10,20);
+
+Output:
+
+30
+
+-----------------------------------------------------
+7. Store Capturing Lambda
+-----------------------------------------------------
+
+int x = 10;
+
+std::function<int(int)> f =
+[x](int a)
+{
+    return a + x;
+};
+
+cout << f(5);
+
+Output:
+
+15
+
+-----------------------------------------------------
+8. Passing Lambda to Function
+-----------------------------------------------------
+
+void execute(std::function<void()> func)
+{
+    func();
+}
+
+int main()
+{
+    execute([]()
+    {
+        cout<<"Hello";
+    });
+}
+
+Output:
+
+Hello
+
+-----------------------------------------------------
+9. Returning Lambda from Function
+-----------------------------------------------------
+
+std::function<int(int)> getAdder()
+{
+    return [](int x)
+    {
+        return x + 10;
+    };
+}
+
+int main()
+{
+    auto f = getAdder();
+
+    cout << f(5);
+}
+
+Output:
+
+15
+
+-----------------------------------------------------
+10. Callback Example (VERY IMPORTANT)
+-----------------------------------------------------
+
+void process(std::function<void(int)> callback)
+{
+    callback(100);
+}
+
+int main()
+{
+    process([](int x)
+    {
+        cout << x;
+    });
+}
+
+Output:
+
+100
+
+Callbacks in GUI/Event systems often use std::function.
+
+-----------------------------------------------------
+11. Why not use auto?
+-----------------------------------------------------
+
+auto add =
+[](int a,int b)
+{
+    return a+b;
+};
+
+Pros:
+✓ Zero overhead
+✓ Fastest
+✓ Compiler knows exact type
+
+Cons:
+✗ Cannot write type explicitly
+✗ Hard to return/store generically
+
+-----------------------------------------------------
+12. Why not use Function Pointer?
+-----------------------------------------------------
+
+Function pointer:
+
+int (*fp)(int,int);
+
+Can store:
+
+✓ Normal functions
+✓ Non-capturing lambdas
+
+Cannot store:
+
+✗ Capturing lambdas
+✗ Functors
+
+Example:
+
+int x = 10;
+
+auto l =
+[x](int a)
+{
+    return a+x;
+};
+
+int (*fp)(int) = l;
+
+Compilation Error.
+
+-----------------------------------------------------
+13. std::function can store Capturing Lambdas
+-----------------------------------------------------
+
+int x = 10;
+
+std::function<int(int)> f =
+[x](int a)
+{
+    return a+x;
+};
+
+Works perfectly.
+
+-----------------------------------------------------
+14. Performance Cost
+-----------------------------------------------------
+
+auto lambda
+-------------
+No type erasure
+Usually inline
+Fastest
+
+Function Pointer
+----------------
+Small overhead
+
+std::function
+-------------
+Type erasure
+Possible heap allocation
+Indirect call
+Slower than auto
+
+Hence:
+
+Prefer:
+
+auto
+
+Use std::function only when polymorphic callable storage is needed.
+
+-----------------------------------------------------
+15. Type Erasure (Interview Favorite)
+-----------------------------------------------------
+
+std::function hides the actual callable type.
+
+These all become:
+
+std::function<int(int,int)>
+
+int sum(int,int);
+lambda;
+functor;
+
+Actual types are erased.
+
+Only signature remains:
+
+int(int,int)
+
+This is called Type Erasure.
+
+-----------------------------------------------------
+16. Most Asked Interview Questions
+-----------------------------------------------------
+
+Q1. What is std::function?
+A:
+A polymorphic wrapper capable of storing any callable object.
+
+Q2. Why is std::function needed?
+A:
+Because lambdas have anonymous types and sometimes we need generic callable storage.
+
+Q3. Can std::function store capturing lambdas?
+A:
+Yes.
+
+Q4. Can function pointers store capturing lambdas?
+A:
+No.
+
+Q5. Does std::function use type erasure?
+A:
+Yes.
+
+Q6. Is std::function slower than auto lambda?
+A:
+Yes, due to type erasure and indirect invocation.
+
+Q7. When should I use std::function?
+A:
+Callbacks, event handlers, APIs, returning lambdas, generic callable storage.
+
+-----------------------------------------------------
+17. Interview One-Liner
+-----------------------------------------------------
+
+auto
+----
+Exact lambda type
+Fastest
+No overhead
+
+Function Pointer
+----------------
+Only functions and non-capturing lambdas
+
+std::function
+-------------
+Can store ANY callable object
+Uses type erasure
+Some runtime overhead
+Best for callbacks and generic callable interfaces.
