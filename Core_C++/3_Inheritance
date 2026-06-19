@@ -257,21 +257,40 @@ private  ->   Not Accessible
 EXAMPLE
 =========================================================
 
-class Base
+#include <iostream>
+using namespace std;
+
+class A
 {
 public:
-    int x;
+int a;
 
 protected:
-    int y;
+int b;
 
 private:
-    int z;
+int c;
 };
 
-class Derived : public Base
+class B:public A 
 {
+  public:
+  void display()
+  {
+      cout<<"a is "<<a<<endl; //OK
+      cout<<"b is "<<b<<endl; //OK
+      //cout<<"c is "<<c<<endl;//compile error as its private
+  }
 };
+int main() 
+{
+    B ob;
+    ob.display();
+
+    cout<<"in MAIN: a is "<<ob.a<<endl;
+    //cout<<"int MAIN : b is "<<ob.b<<endl;//ERROR 
+}
+
 
 Inside Derived:
 
@@ -282,6 +301,41 @@ z -> Not Accessible
 =========================================================
 PROTECTED INHERITANCE
 =========================================================
+#include <iostream>
+using namespace std;
+
+class A
+{
+public:
+int a;
+
+protected:
+int b;
+
+private:
+int c;
+};
+
+class B:protected A 
+{
+  public:
+  void display()
+  {
+      cout<<"a is "<<a<<endl; //OK
+      cout<<"b is "<<b<<endl; //OK
+      //cout<<"c is "<<c<<endl;//compile error as its private
+  }
+};
+int main() 
+{
+    B ob;
+    ob.display();
+
+    //cout<<"in MAIN: a is "<<ob.a<<endl; //ERROR as its protected 
+    //cout<<"int MAIN : b is "<<ob.b<<endl;//ERROR 
+}
+
+
 
 Base          Derived
 ------------------------
@@ -292,6 +346,40 @@ private  ->   Not Accessible
 =========================================================
 PRIVATE INHERITANCE
 =========================================================
+#include <iostream>
+using namespace std;
+
+class A
+{
+public:
+int a;
+
+protected:
+int b;
+
+private:
+int c;
+};
+
+class B:private A 
+{
+  public:
+  void display()
+  {
+      cout<<"a is "<<a<<endl; //OK
+      cout<<"b is "<<b<<endl; //OK
+      //cout<<"c is "<<c<<endl;//compile error as its private
+  }
+};
+int main() 
+{
+    B ob;
+    ob.display();
+
+    //cout<<"in MAIN: a is "<<ob.a<<endl; //ERROR as its privare 
+    //cout<<"int MAIN : b is "<<ob.b<<endl;//ERROR 
+}
+
 
 Base          Derived
 ------------------------
@@ -333,6 +421,12 @@ Derived
 
 Rule:
 Base constructor executes first.
+
+Why is the base constructor called before the derived constructor?
+
+Because a Derived object contains a Base subobject. The Base part must be fully constructed 
+and initialized before the Derived part can use it. Therefore, C++ always constructs 
+objects from Base to Derived and destroys them in reverse order (Derived to Base).
 
 =========================================================
 DESTRUCTOR CALL ORDER
@@ -494,6 +588,61 @@ Q5. Which is preferred: Composition or Inheritance?
 
 Answer:
 Composition is generally preferred because it provides loose coupling.
+
+Why is Composition Usually Preferred?
+1. Loose Coupling
+
+Inheritance creates tight coupling.
+
+class Base
+{
+};
+
+class Derived : public Base
+{
+};
+
+Changes in Base can affect all derived classes.
+
+Composition isolates classes better.
+
+class Car
+{
+    Engine engine;
+};
+
+Engine can change with minimal impact on Car.
+
+2. Better Encapsulation
+
+Composition hides implementation details.
+
+class Car
+{
+private:
+    Engine engine;
+};
+
+Users of Car don't need to know how Engine works.
+
+When to Use Inheritance?***************
+Use inheritance only when:
+There is a genuine IS-A relationship.
+Polymorphism is required.
+Derived classes satisfy the Liskov Substitution Principle (LSP).
+
+Composition is generally preferred over inheritance because it provides:************
+1. Loose coupling
+2. Better encapsulation
+3. More flexibility
+4. Easier maintenance
+5. Avoidance of fragile base class problems
+
+Use inheritance only when there is a true IS-A relationship and polymorphism is required.
+
+Rule:
+HAS-A  → Composition (Preferred)
+IS-A   → Inheritance
 
 ---------------------------------------------------------
 
