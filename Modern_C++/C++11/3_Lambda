@@ -19,6 +19,10 @@ auto add = [](int a, int b) -> int {
     return a + b;
 };
 
+auto func = [](...) { ... };          // closure object (preferred)
+std::function<...> func = ...;        // wrapper, some overhead
+int (*func)(...) = ...;               // function pointer
+
 -----------------------------------------
 
 2. Basic Example (Most Common)
