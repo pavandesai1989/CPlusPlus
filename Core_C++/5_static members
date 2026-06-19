@@ -115,7 +115,7 @@ CHARACTERISTICS OF STATIC DATA MEMBERS
 
 1. Shared by all objects.
 2. Memory allocated only once.
-3. Exists even if no object is created.
+3. Exists even if no object is created.****************
 4. Belongs to class, not object.
 5. Stored in Static/Data Segment.
 6. Can be accessed using class name.
@@ -149,6 +149,9 @@ Only declaration.
 Memory is allocated by:
 
 int Test::count = 0;
+IMP********
+static data members are declared inside the class but defined outside the class because only the definition allocates memory. 
+Accessing a static member without its definition results in a linker error (undefined reference).
 
 =========================================================
 ACCESSING STATIC MEMBERS
@@ -321,7 +324,7 @@ Preferred:
 ClassName::FunctionName()
 
 =========================================================
-STATIC MEMBER FUNCTION USE CASES
+STATIC MEMBER FUNCTION USE CASES*************
 =========================================================
 
 1. Utility Functions
@@ -538,7 +541,7 @@ private:
 
 =========================================================
 
-Q12. Can static member functions be overloaded?
+Q12. Can static member functions be overloaded?**********
 
 Answer:
 YES.
