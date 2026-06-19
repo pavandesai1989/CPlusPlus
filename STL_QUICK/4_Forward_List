@@ -38,7 +38,7 @@ Unlike std::list:
 
 -----------------------------------------
 
-4. Difference: list vs forward_list
+4. Difference: list vs forward_list ****************
 ------------------------------------
 
 list (doubly linked list):
@@ -187,7 +187,8 @@ vs list:
 
 14. One-line Interview Answer
 -----------------------------
-std::forward_list is a singly linked list that supports O(1) insertion and deletion after a known position, uses less memory than std::list, but allows only forward traversal and no random access.
+std::forward_list is a singly linked list that supports O(1) insertion and deletion after a known position, 
+uses less memory than std::list, but allows only forward traversal and no random access.
 
 -----------------------------------------
 
