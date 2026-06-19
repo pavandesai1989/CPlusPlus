@@ -73,7 +73,7 @@ stack<int, deque<int>> st;
 
 -----------------------------------------
 
-5. Default Container
+5. Default Container******VVVVVVVVVVVIMP
 --------------------
 - deque is default
 
@@ -82,6 +82,18 @@ Why deque?
 ✔ O(1) pop_back()
 ✔ No reallocation issues like vector***********
 
+deque:
+✔ O(1) push/pop
+✔ No expensive full reallocation
+✔ Better cache locality than list
+✔ Lower memory overhead than list
+
+vector:
+✘ Occasional O(n) reallocation
+
+list:
+✘ Terrible cache locality
+✘ High memory overhead
 -----------------------------------------
 
 6. Complexity
