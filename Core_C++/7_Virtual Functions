@@ -198,7 +198,7 @@ actual function is decided at runtime.
 
 =========================================================
 
-Q9. Why destructor should be virtual?
+Q9. Why destructor should be virtual?******************************IIIIMP
 
 =========================================================
 
@@ -308,7 +308,7 @@ Purpose
 Interview Questions
 =========================================================
 
-Q1. Why use Pure Virtual Functions?
+Q1. Why use Pure Virtual Functions?**********IIIIMP
 
 Answer:
 To enforce derived classes to provide implementation.
@@ -339,7 +339,7 @@ Base remains abstract.
 
 ---------------------------------------------------------
 
-Q3. Can pure virtual destructor exist?
+Q3. Can pure virtual destructor exist?*******IIIIIIIMP
 
 YES.
 
@@ -357,7 +357,11 @@ Base::~Base()
 
 =========================================================
 
-Pure virtual destructor MUST have definition.
+Pure virtual destructor MUST have definition.******************
+A pure virtual destructor makes the class abstract, but destructors are always executed during object destruction. 
+When a derived object is destroyed, the base class destructor is automatically called. Therefore, even if the 
+destructor is declared pure virtual (=0), it must still have a definition;
+otherwise, a linker error occurs (undefined reference to Base::~Base()).
 
 =========================================================
 INTERVIEW ONE-LINER
@@ -530,7 +534,7 @@ Why Interfaces?
 Interview Questions
 =========================================================
 
-Q1. Difference between Interface and Abstract Class?
+Q1. Difference between Interface and Abstract Class?*******IIIMP
 
 Abstract Class:
 ---------------
