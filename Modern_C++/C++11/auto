@@ -116,7 +116,7 @@ auto p = &x;   // int*
 11. IMPORTANT LIMITATION (C++11)
 =========================================================
 
-❌ Cannot declare uninitialized auto:
+❌ Cannot declare uninitialized auto: *********IIIIIMP
 
 auto x;   // ERROR
 
@@ -161,7 +161,7 @@ Compile-time type deduction.
 
 ---------------------------------------------------------
 
-Q3. Can auto be used without initialization?
+Q3. Can auto be used without initialization? *******
 
 Answer:
 No.
