@@ -17,16 +17,61 @@ int* ptr = nullptr;
 -----------------------------------------
 
 2. Why nullptr was introduced?
------------------------------
 Before C++11, NULL was used:
-- NULL is typically defined as 0 or (void*)0
-- This caused ambiguity in function overloading
+- NULL is typically defined as 0 or (void*)0.
+- Since 0 is an integer literal, it can cause ambiguity in function overloading.
+- Compiler may select the wrong overload.
 
 Problem with NULL:
-void func(int);
-void func(char*);
+*/
 
-func(NULL);   // may call func(int) -> ambiguity / unexpected behavior
+#include <iostream>
+using namespace std;
+
+void func(int)
+{
+    cout << "func(int)\n";
+}
+
+void func(char*)
+{
+    cout << "func(char*)\n";
+}
+
+int main()
+{
+    func(NULL);      // Calls func(int) because NULL is usually defined as 0
+                     // Not treated as a pointer.
+
+    // func(nullptr); // Compilation Error:
+                      // nullptr has type std::nullptr_t and cannot convert to int.
+                      // It matches only pointer overloads.
+
+    return 0;
+}
+
+
+with nullptr *****
+#include <iostream>
+using namespace std;
+
+void func(int)
+{
+    cout << "func(int)\n";
+}
+
+void func(char*)
+{
+    cout << "func(char*)\n";
+}
+
+int main()
+{
+    func(nullptr);   // Calls func(char*)
+
+    return 0;
+}
+
 
 -----------------------------------------
 
