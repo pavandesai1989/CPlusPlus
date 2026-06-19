@@ -44,6 +44,44 @@ Internally:
 Can also use:
     list<T>
 
+Why only deque and list are typically used?
+Because queue needs these operations:
+push()  -> push_back()
+pop()   -> pop_front()
+front()
+back()
+empty()
+size()
+
+The underlying container must support both:
+push_back()
+pop_front()
+
+std::queue requires the underlying container to support:
+
+push_back()
+pop_front()
+front()
+back()
+empty()
+size()
+
+deque and list provide all these operations.
+
+vector cannot be used because it has no pop_front() and removing the first element would be O(n).
+
+forward_list cannot be used because it lacks push_back() and back().
+
+Therefore, deque (default) and list are the suitable underlying containers for std::queue.
+
+| Container      | push_back | pop_front | back | Can be used for queue? |
+| -------------- | --------- | --------- | ---- | ---------------------- |
+| `deque`        | ✔         | ✔         | ✔    | ✅                      |
+| `list`         | ✔         | ✔         | ✔    | ✅                      |
+| `vector`       | ✔         | ✘         | ✔    | ❌                      |
+| `forward_list` | ✘         | ✔         | ✘    | ❌                      |
+
+
 -----------------------------------------
 
 4. Why deque is default?
