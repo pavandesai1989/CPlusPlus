@@ -23,6 +23,8 @@ auto func = [](...) { ... };          // closure object (preferred)
 std::function<...> func = ...;        // wrapper, some overhead
 int (*func)(...) = ...;               // function pointer
 
+std::function is only a polymorphic wrapper used to store callable objects, including lambdas.  ***********
+
 -----------------------------------------
 
 2. Basic Example (Most Common)
