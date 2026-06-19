@@ -69,6 +69,142 @@ emplace_back:
 - constructs object directly in memory
 - avoids extra copy/move (more efficient)
 
+push_back() vs emplace_back() (VERY IMPORTANT)
+
+vector<pair<int,int>> v;
+
+v.push_back(make_pair(10,20)); // Temporary pair created
+v.emplace_back(10,20);         // Direct in-place construction
+=========================================================
+
+1. push_back()
+--------------
+- Inserts an element at the end of the vector.
+- Requires an already constructed object.
+- Copies or moves the object into the vector.
+
+Syntax:
+v.push_back(obj);
+
+Time Complexity:
+Amortized O(1)
+
+Example:
+---------
+vector<string> v;
+
+string s = "Hello";
+v.push_back(s);               // Copy
+
+v.push_back(string("World")); // Move
+
+
+=========================================================
+2. emplace_back()
+-----------------
+- Introduced in C++11.
+- Constructs the object directly inside the vector's memory.
+- Avoids an extra temporary object and can avoid copy/move operations.
+- Uses perfect forwarding.
+
+    vector<pair<int, int>> vp;
+
+    vp.push_back({1, 2});        // copy/move
+    vp.emplace_back(3, 4);       // constructs in place (faster)
+
+Syntax:
+v.emplace_back(arguments);
+
+Time Complexity:
+Amortized O(1)
+
+Example:
+---------
+vector<string> v;
+
+v.emplace_back("Hello");
+v.emplace_back(5, 'A'); // Creates "AAAAA"
+
+=========================================================
+Example with User-defined Class*******IIIMP
+=========================================================
+
+class Employee
+{
+public:
+    string name;
+    int age;
+
+    Employee(string n, int a)
+        : name(n), age(a)
+    {
+        cout << "Constructor\n";
+    }
+
+    Employee(const Employee&)
+    {
+        cout << "Copy Constructor\n";
+    }
+
+    Employee(Employee&&)
+    {
+        cout << "Move Constructor\n";
+    }
+};
+
+vector<Employee> v;
+
+---------------------------------------------------------
+Using push_back()
+---------------------------------------------------------
+
+v.push_back(Employee("Pavan", 30));
+
+Possible Output:
+Constructor
+Move Constructor
+
+Explanation:
+1. Temporary Employee object is created.
+2. Temporary object is moved into vector.
+
+---------------------------------------------------------
+Using emplace_back()
+---------------------------------------------------------
+
+v.emplace_back("Pavan", 30);
+
+Possible Output:
+Constructor
+
+Explanation:
+1. Object is directly constructed inside vector memory.
+2. No temporary object.
+3. No copy/move required.
+
+push_back()
+-----------
+1. Takes an existing object.
+2. Copies or moves the object.
+3. Temporary object may be created.
+4. Cannot forward constructor arguments.
+
+emplace_back()
+--------------
+1. Takes constructor arguments.
+2. Constructs object in-place.
+3. Avoids temporary object creation.
+4. Uses perfect forwarding.
+
+=========================================================
+Interview One-Liner
+=========================================================
+
+push_back() inserts an already constructed object by
+copying/moving it into the vector, whereas emplace_back()
+constructs the object directly inside the vector using
+constructor arguments and can avoid an extra copy/move.
+
 -----------------------------------------
 
 7. Iterator invalidation (CRITICAL)
@@ -78,6 +214,26 @@ Invalid when:
 - insert/erase shifts elements
 
 👉 After reallocation: ALL iterators, pointers, references become invalid
+#include <vector>
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    vector<int> v;
+
+    v.reserve(2);
+
+    v.push_back(10);
+    v.push_back(20);
+
+    auto it = v.begin();
+
+    v.push_back(30);  // Reallocation occurs
+
+    // Undefined Behavior (iterator invalid)
+    // cout << *it << endl; //-1100846464
+}
 
 -----------------------------------------
 
