@@ -13,6 +13,11 @@ Definition:
 Syntax:
 decltype(expression) variable;
 
+Why decltype Doesn't Evaluate Expressions?
+decltype only inspects the type of an expression at compile-time.
+It doesn’t generate any machine code for the expression.
+This makes it safe for use in cases where evaluating an expression would be expensive or unsafe.
+
 Example 1:
 int x = 10;
 decltype(x) y = 20;        // int
