@@ -1,0 +1,138 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class MyString
+{
+private:
+    char* data;
+    size_t len;
+
+public:
+    // Constructor from C-string
+    MyString(const char* str = "")
+    {
+        len = strlen(str);
+        data = new char[len + 1];
+
+        for (size_t i = 0; i < len; i++)
+        {
+            data[i] = str[i];
+        }
+        data[len] = '\0';
+    }
+
+    // Destructor
+    ~MyString()
+    {
+        delete[] data;
+    }
+
+    // Copy Constructor (Deep Copy)
+    MyString(const MyString& other)
+    {
+        len = other.len;
+        data = new char[len + 1];
+
+        for (size_t i = 0; i < len; i++)
+        {
+            data[i] = other.data[i];
+        }
+        data[len] = '\0';
+    }
+
+    // Copy Assignment Operator
+    MyString& operator=(const MyString& other)
+    {
+        if (this == &other) return *this;
+
+        delete[] data;
+
+        len = other.len;
+        data = new char[len + 1];
+
+        for (size_t i = 0; i < len; i++)
+        {
+            data[i] = other.data[i];
+        }
+        data[len] = '\0';
+
+        return *this;
+    }
+
+    // Move Constructor
+    MyString(MyString&& other) noexcept
+    {
+        data = other.data;
+        len = other.len;
+
+        other.data = nullptr;
+        other.len = 0;
+    }
+
+    // Move Assignment Operator
+    MyString& operator=(MyString&& other) noexcept
+    {
+        if (this == &other) return *this;
+
+        delete[] data;
+
+        data = other.data;
+        len = other.len;
+
+        other.data = nullptr;
+        other.len = 0;
+
+        return *this;
+    }
+
+    // Length
+    size_t size() const
+    {
+        return len;
+    }
+
+    // C-string access
+    const char* c_str() const
+    {
+        return data;
+    }
+
+    // Operator []
+    char& operator[](size_t index)
+    {
+        return data[index];
+    }
+
+    const char& operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+    // Concatenation
+    MyString operator+(const MyString& other)
+    {
+        size_t newLen = len + other.len;
+
+        char* newData = new char[newLen + 1];
+
+        for (size_t i = 0; i < len; i++)
+            newData[i] = data[i];
+
+        for (size_t i = 0; i < other.len; i++)
+            newData[len + i] = other.data[i];
+
+        newData[newLen] = '\0';
+
+        MyString result(newData);
+        delete[] newData;
+
+        return result;
+    }
+
+    // Print helper
+    void print() const
+    {
+        cout << data << endl;
+    }
+};
