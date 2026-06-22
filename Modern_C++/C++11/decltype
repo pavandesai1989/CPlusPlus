@@ -1,0 +1,169 @@
+=========================================
+decltype (C++11) – Interview Notes
+=========================================
+
+Definition:
+- decltype is used to deduce the EXACT type of an expression at compile time.
+- The expression is NOT evaluated.
+- Preserves:
+  - const
+  - volatile
+  - references (&, &&)
+
+Syntax:
+decltype(expression) variable;
+
+Example 1:
+int x = 10;
+decltype(x) y = 20;        // int
+
+Example 2:
+const int a = 5;
+decltype(a) b = 10;        // const int
+
+Example 3:
+int n = 10;
+int& r = n;
+decltype(r) x = n;         // int&
+
+Example 4:
+int func();
+decltype(func()) x;        // int
+
+-----------------------------------------
+auto vs decltype
+-----------------------------------------
+
+auto
+- Deduces from initializer.
+- Usually removes const and references.
+- Gives a simplified type.
+
+decltype
+- Deduces from an expression.
+- Preserves const and references.
+- Gives the exact type.
+
+-----------------------------------------
+Most Asked Interview Questions
+-----------------------------------------
+
+Q. Does decltype evaluate the expression?
+A. No. It only determines the type.
+
+Q. Why use decltype?
+A. To obtain the exact type of an expression, including const and reference qualifiers.
+
+Q. Difference between auto and decltype?
+A.
+auto      -> May remove const and references.
+decltype  -> Preserves the exact type.
+
+-----------------------------------------
+Interview One-Liner
+-----------------------------------------
+
+"decltype deduces the exact type of an expression at compile time without evaluating it and preserves const and reference qualifiers."
+
+  =========================================
+decltype with Templates – Interview Notes
+=========================================
+
+Problem:
+In a function template, the return type may depend on the types of the arguments.
+
+Example:
+template <typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
+}
+
+Meaning:
+- decltype(a + b) means:
+  "Deduce the return type from the expression a+b."
+
+Examples:
+add(10, 20);      // return type = int
+add(10, 3.5);     // return type = double
+add(2.5f, 10LL);  // return type = float
+
+=========================================
+Without decltype
+=========================================
+
+template <typename T1, typename T2>
+int add(T1 a, T2 b)
+{
+    return a + b;
+}
+
+Problem:
+add(10, 3.5);
+
+a+b = double (13.5)
+Return type = int
+
+Result:
+13.5 → 13 (data loss)
+
+-----------------------------------------
+
+template <typename T1, typename T2>
+double add(T1 a, T2 b)
+{
+    return a + b;
+}
+
+Problem:
+add(10, 20);
+
+a+b = int
+Return type = double
+
+Result:
+20 → 20.0 (unnecessary conversion)
+
+=========================================
+With decltype
+=========================================
+
+template <typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a + b)
+{
+    return a + b;
+}
+
+Benefits:
+✓ No data loss
+✓ No unnecessary conversions
+✓ Return type automatically matches a+b expression
+✓ Works for built-in and user-defined types
+
+=========================================
+Why -> decltype(a+b) ?
+=========================================
+
+Wrong:
+
+template <typename T1, typename T2>
+decltype(a+b) add(T1 a, T2 b);   // ERROR
+
+Reason:
+a and b are not declared yet.
+
+Correct:
+
+template <typename T1, typename T2>
+auto add(T1 a, T2 b) -> decltype(a+b);
+
+Reason:
+After the parameter list, a and b are in scope, so
+decltype(a+b) can be evaluated.
+
+=========================================
+Interview One-Liner
+=========================================
+
+Use decltype(a+b) in templates when the return type depends on the expression formed by the template arguments. 
+  It deduces the exact return type and avoids data loss or unnecessary conversions.
