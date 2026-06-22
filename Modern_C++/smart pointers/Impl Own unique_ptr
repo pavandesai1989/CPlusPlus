@@ -1,7 +1,7 @@
 #include <iostream>
 #include <utility>   // std::move, std::swap
 
-template<typename T>
+template<typename T> 
 class MyUniquePtr
 {
 private:
