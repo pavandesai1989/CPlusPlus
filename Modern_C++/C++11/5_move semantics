@@ -1,3 +1,306 @@
+***CODE showing advantage of move****
+=========================================================
+Interview Example : Custom Class Without Move vs With Move
+(Using Dynamic Array Class)
+=========================================================
+
+class Buffer
+{
+    int* data;
+    int size;
+
+public:
+    Buffer(int n)
+    {
+        size = n;
+        data = new int[size];
+
+        cout << "Constructor\n";
+    }
+
+    ~Buffer()
+    {
+        delete[] data;
+    }
+};
+
+---------------------------------------------------------
+WITHOUT MOVE SEMANTICS
+---------------------------------------------------------
+
+class Buffer
+{
+    int* data;
+    int size;
+
+public:
+    Buffer(int n)
+    {
+        size = n;
+        data = new int[size];
+    }
+
+    // Deep Copy Constructor
+    Buffer(const Buffer& other)
+    {
+        size = other.size;
+        data = new int[size];
+
+        for (int i = 0; i < size; i++)
+            data[i] = other.data[i];
+
+        cout << "Copy Constructor\n";
+    }
+
+    ~Buffer()
+    {
+        delete[] data;
+    }
+};
+
+Usage:
+
+Buffer b1(1000000);
+Buffer b2 = b1;
+
+What happens?
+
+b1 ----> [1M integers]
+b2 ----> [1M integers]
+
+1. Allocate another array of 1M integers.
+2. Copy all 1M elements.
+3. Extra CPU work.
+4. Extra memory usage.
+
+Complexity:
+O(n)
+
+---------------------------------------------------------
+Issue
+---------------------------------------------------------
+
+Buffer createBuffer()
+{
+    Buffer b(1000000);
+    return b;
+}
+
+Buffer b2 = createBuffer();
+
+Without move:
+- Allocate new memory.
+- Copy all 1M integers.
+- Expensive operation.
+
+---------------------------------------------------------
+WITH MOVE SEMANTICS
+---------------------------------------------------------
+
+class Buffer
+{
+    int* data;
+    int size;
+
+public:
+    Buffer(int n)
+    {
+        size = n;
+        data = new int[size];
+    }
+
+    // Copy Constructor
+    Buffer(const Buffer& other)
+    {
+        size = other.size;
+        data = new int[size];
+
+        for (int i = 0; i < size; i++)
+            data[i] = other.data[i];
+
+        cout << "Copy Constructor\n";
+    }
+
+    // Move Constructor
+    Buffer(Buffer&& other)
+    {
+        data = other.data;
+        size = other.size;
+
+        other.data = nullptr;
+        other.size = 0;
+
+        cout << "Move Constructor\n";
+    }
+
+    ~Buffer()
+    {
+        delete[] data;
+    }
+};
+
+Usage:
+
+Buffer b1(1000000);
+Buffer b2 = std::move(b1);
+
+Before Move:
+
+b1 ----> [1M integers]
+b2 ----> nullptr
+
+After Move:
+
+b1 ----> nullptr
+b2 ----> [1M integers]
+
+No new allocation.
+No element copying.
+
+Only pointer transfer.
+
+Complexity:
+O(1)
+
+---------------------------------------------------------
+What Improved After Move?
+---------------------------------------------------------
+
+Without Move:
+✓ Allocate new memory
+✓ Copy all elements
+✓ More CPU usage
+✓ More memory usage
+✓ O(n)
+
+With Move:
+✓ No new allocation
+✓ No element copying
+✓ Transfer ownership only
+✓ Less CPU usage
+✓ Less memory usage
+✓ O(1)
+
+---------------------------------------------------------
+Interview One-Liner
+---------------------------------------------------------
+
+Move semantics improve performance by transferring ownership
+of resources (heap memory, buffers, file handles, etc.)
+instead of performing expensive deep copies.
+
+********WHAT TO EXPLAIN IN ABOVE CODE***
+=========================================================
+What to Explain in Interview (Buffer Class + Move Semantics)
+=========================================================
+
+1. Buffer is a resource-owning class.
+   - It owns dynamically allocated heap memory (int* data).
+   - The actual array is stored on the heap.
+
+   Buffer b1(1000000);
+
+   b1
+   +-------+      +-----------------------+
+   | data  | ---> | 1M integers on heap   |
+   +-------+      +-----------------------+
+
+---------------------------------------------------------
+
+2. Without Move Semantics (Deep Copy)
+
+   Buffer b2 = b1;
+
+   What happens?
+   - Allocate another array of 1M integers.
+   - Copy all 1M elements.
+   - Two separate arrays exist.
+
+   Memory:
+
+   b1 ---> [1M integers]
+   b2 ---> [1M integers]
+
+   Cost:
+   - Extra memory allocation
+   - Copy of all elements
+   - High CPU usage
+   - O(n) complexity
+
+---------------------------------------------------------
+
+3. What is the Problem?
+
+   If b1 is no longer needed, creating another 1M-element array
+   is wasteful.
+
+   We do not need two copies of the same data.
+
+   This is called unnecessary duplication.
+
+---------------------------------------------------------
+
+4. With Move Semantics
+
+   Buffer b2 = std::move(b1);
+
+   Move Constructor:
+
+   data = other.data;
+   size = other.size;
+
+   other.data = nullptr;
+   other.size = 0;
+
+   What happens?
+   - No new memory allocation.
+   - No copying of 1M integers.
+   - Ownership of the pointer is transferred.
+
+   Before Move:
+
+   b1 ---> [1M integers]
+   b2 ---> nullptr
+
+   After Move:
+
+   b1 ---> nullptr
+   b2 ---> [1M integers]
+
+---------------------------------------------------------
+
+5. Improvements After Move
+
+   Without Move:
+   ✓ Allocate new memory
+   ✓ Copy all elements
+   ✓ Higher CPU usage
+   ✓ Higher memory usage
+   ✓ O(n)
+
+   With Move:
+   ✓ No new allocation
+   ✓ No element copying
+   ✓ Transfer ownership only
+   ✓ Lower CPU usage
+   ✓ Lower memory usage
+   ✓ O(1)
+
+---------------------------------------------------------
+
+Interview One-Liner:
+
+"This class demonstrates why move semantics were introduced in
+C++11. Deep copying large resources is expensive (O(n)).
+Move semantics transfer ownership of the resource by stealing
+the pointer, avoiding allocation and copying, making the
+operation typically O(1)."
+
+
+
+
+
+
 =========================================
 MOVE SEMANTICS (C++11) – DETAILED INTERVIEW NOTES
 =========================================
