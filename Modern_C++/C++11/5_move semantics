@@ -32,6 +32,94 @@ Issues:
 - Extra memory usage
 - Unnecessary duplication
 
+*******VVVVVIMP****
+=========================================
+Why std::move ? (Without Move vs With Move)
+=========================================
+
+WITHOUT std::move (Copy)
+
+std::vector<int> v1(10,00,000, 1);
+std::vector<int> v2 = v1;    // Deep Copy
+
+Memory:
+
+v1 ---> [1][1][1]...[1M]
+v2 ---> [1][1][1]...[1M]
+
+What happens?
+1. Allocate new memory for v2.
+2. Copy all 1,000,000 elements from v1 to v2.
+3. CPU spends time copying every element.
+4. Memory usage doubles.
+
+Suppose:
+1 int = 4 bytes
+1,000,000 ints ≈ 4 MB
+
+After copy:
+v1 = 4 MB
+v2 = 4 MB
+Total = 8 MB
+
+Problem:
+If v1 is never used again, creating another 4 MB copy is unnecessary.
+This is called unnecessary duplication.
+
+Complexity:
+Copy = O(n)
+
+-------------------------------------------------
+
+WITH std::move (Move)
+
+std::vector<int> v1(1000000, 1);
+std::vector<int> v2 = std::move(v1);
+
+Before Move:
+
+v1 ---> [1][1][1]...[1M]
+v2 ---> empty
+
+After Move:
+
+v1 ---> empty (valid but unspecified)
+v2 ---> [1][1][1]...[1M]
+
+What happens?
+1. No new element buffer is allocated.
+2. No copying of 1,000,000 elements.
+3. Internal pointer/resource ownership is transferred from v1 to v2.
+4. Only one copy of the data exists.
+
+Memory:
+Total ≈ 4 MB (same buffer transferred)
+
+Complexity:
+Move = O(1) (typically)
+
+-------------------------------------------------
+
+Real-Life Analogy **********
+
+Copy:
+You have a 1000-page book.
+You make a photocopy of all 1000 pages and give it to someone.
+
+Move:
+You simply hand over your original book because you no longer need it.
+
+-------------------------------------------------
+
+Interview One-Liner
+
+Copy:
+Creates a completely new buffer and copies all elements (O(n)).
+
+Move:
+Transfers ownership of the existing buffer without copying elements (typically O(1)), avoiding extra memory allocation and unnecessary duplication.
+*****
+
 -----------------------------------------
 
 3. What Move Semantics Solves?
@@ -54,7 +142,7 @@ We do:
 
 -----------------------------------------
 
-5. Copy vs Move
+5. Copy vs Move  ***********
 ---------------
 COPY:
 - Duplicates resource
@@ -98,7 +186,7 @@ int main() {
 
 -----------------------------------------
 
-8. std::move (Important)
+8. std::move (Important)************
 ------------------------
 - std::move does NOT move anything.
 - It converts lvalue → rvalue reference.
