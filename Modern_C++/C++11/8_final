@@ -25,6 +25,30 @@ public:
 class Derived : public Base {
 };
 
+***Using final with override
+🔹 Scenario: You want to override a function but also prevent further overriding.
+class Base {
+public:
+    virtual void show() { cout << "Base class" << endl; }
+};
+
+class Derived : public Base {
+public:
+    void show() override final {  // ✅ Overrides but prevents further overriding
+        cout << "Derived class" << endl;
+    }
+};
+
+class MoreDerived : public Derived {
+public:
+    // ❌ Compilation error: Cannot override final function
+    void show() override { 
+        cout << "MoreDerived class" << endl;
+    }
+};
+
+
+
 -----------------------------------------
 
 3. final with Virtual Function (Prevent Overriding)
