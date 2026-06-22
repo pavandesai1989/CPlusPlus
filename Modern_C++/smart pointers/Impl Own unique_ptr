@@ -1,1 +1,129 @@
+#include <iostream>
+#include <utility>   // std::move, std::swap
 
+template<typename T>
+class MyUniquePtr
+{
+private:
+    T* ptr;
+
+public:
+    // Constructor
+    explicit MyUniquePtr(T* p = nullptr) noexcept
+        : ptr(p)
+    {
+    }
+
+    // Destructor
+    ~MyUniquePtr() noexcept
+    {
+        delete ptr;
+    }
+
+    // Disable Copy
+    MyUniquePtr(const MyUniquePtr&) = delete;
+    MyUniquePtr& operator=(const MyUniquePtr&) = delete;
+
+    // Move Constructor
+    MyUniquePtr(MyUniquePtr&& other) noexcept
+        : ptr(other.ptr)
+    {
+        other.ptr = nullptr;
+    }
+
+    // Move Assignment
+    MyUniquePtr& operator=(MyUniquePtr&& other) noexcept
+    {
+        if (this != &other)
+        {
+            delete ptr;
+
+            ptr = other.ptr;
+            other.ptr = nullptr;
+        }
+        return *this;
+    }
+
+    // Dereference
+    T& operator*() const
+    {
+        return *ptr;
+    }
+
+    // Member Access
+    T* operator->() const noexcept
+    {
+        return ptr;
+    }
+
+    // Get Raw Pointer
+    T* get() const noexcept
+    {
+        return ptr;
+    }
+
+    // Release Ownership
+    T* release() noexcept
+    {
+        T* temp = ptr;
+        ptr = nullptr;
+        return temp;
+    }
+
+    // Replace Managed Object
+    void reset(T* p = nullptr) noexcept
+    {
+        if (ptr != p)
+        {
+            delete ptr;
+            ptr = p;
+        }
+    }
+
+    // Swap
+    void swap(MyUniquePtr& other) noexcept
+    {
+        std::swap(ptr, other.ptr);
+    }
+
+    // Check if Pointer is Valid
+    explicit operator bool() const noexcept
+    {
+        return ptr != nullptr;
+    }
+};
+
+int main()
+{
+    MyUniquePtr<int> p1(new int(10));
+
+    std::cout << *p1 << std::endl;
+
+    MyUniquePtr<int> p2 = std::move(p1);
+
+    if (!p1)
+        std::cout << "p1 is empty\n";
+
+    std::cout << *p2 << std::endl;
+
+    return 0;
+}
+
+10
+p1 is empty
+10
+
+C++:
+1. RAII (resource released in destructor)
+2. Exclusive ownership (only one owner)
+3. Copy constructor and copy assignment deleted
+4. Supports move semantics
+5. get() -> returns raw pointer
+6. release() -> releases ownership without deleting object
+7. reset() -> replaces managed object
+8. swap() -> exchanges ownership
+9. operator bool() -> checks for nullptr
+10. Destructor uses delete, so this version supports T but not T[] arrays.
+
+A unique_ptr is a lightweight RAII smart pointer that provides exclusive ownership of a 
+dynamically allocated resource and transfers ownership through move semantics while preventing copying.
