@@ -102,7 +102,7 @@ auto f2 = [&]() { x++; };            // modifies original x
 
 -----------------------------------------
 
-6. Mutable Lambda
+6. Mutable Lambda ****************************************************IIIIMP
 -----------------
 - By default, captured-by-value variables are read-only inside lambda.
 - mutable allows modification of copied values.
@@ -134,7 +134,7 @@ for_each(v.begin(), v.end(), [](int &x) {
 
 -----------------------------------------
 
-8. Lambda in Sorting
+8. Lambda in Sorting **********IMP
 --------------------
 vector<int> v = {5, 2, 8, 1};
 
