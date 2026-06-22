@@ -1,0 +1,149 @@
+=========================================================
+Rule of 5 - Interview Ready Example
+=========================================================
+
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+class Buffer
+{
+private:
+    int* data;
+    int size;
+
+public:
+
+    // 1. Constructor
+    Buffer(int n)
+        : size(n)
+    {
+        data = new int[size];
+        cout << "Constructor\n";
+    }
+
+    // 2. Destructor
+    ~Buffer()
+    {
+        delete[] data;
+        cout << "Destructor\n";
+    }
+
+    // 3. Copy Constructor
+    Buffer(const Buffer& other)
+        : size(other.size)
+    {
+        data = new int[size];
+
+        for (int i = 0; i < size; i++)
+            data[i] = other.data[i];
+
+        cout << "Copy Constructor\n";
+    }
+
+    // 4. Copy Assignment Operator
+    Buffer& operator=(const Buffer& other)
+    {
+        cout << "Copy Assignment\n";
+
+        if (this == &other)
+            return *this;
+
+        int* temp = new int[other.size];***** use temp not ptr here directly 
+
+        for (int i = 0; i < other.size; i++)
+            temp[i] = other.data[i];
+
+        delete[] data;
+
+        data = temp;
+        size = other.size;
+
+        return *this;
+    }
+
+    // 5. Move Constructor
+    Buffer(Buffer&& other) noexcept
+        : data(other.data),
+          size(other.size)
+    {
+        other.data = nullptr;
+        other.size = 0;
+
+        cout << "Move Constructor\n";
+    }
+
+    // 6. Move Assignment Operator
+    Buffer& operator=(Buffer&& other) noexcept
+    {
+        cout << "Move Assignment\n";
+
+        if (this == &other)
+            return *this;
+
+        delete[] data;
+
+        data = other.data;
+        size = other.size;
+
+        other.data = nullptr;
+        other.size = 0;
+
+        return *this;
+    }
+};
+
+=========================================================
+Rule of 5
+=========================================================
+
+If a class manages a resource (heap memory, file handle,
+socket, mutex, etc.) and defines any one of these:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+4. Move Constructor
+5. Move Assignment Operator
+
+then it usually needs to define all five.
+
+=========================================================
+Why Rule of 5 for Buffer?
+=========================================================
+
+Buffer owns:
+
+    int* data
+
+Compiler-generated copy operations perform SHALLOW COPY:
+
+b1.data ----+
+            |
+b2.data ----+
+
+Both objects point to the same memory.
+
+When destructors run:
+
+delete[] data;
+delete[] data;
+
+=> Double delete (Undefined Behavior)
+
+Therefore, we must implement:
+
+✓ Deep copy operations
+✓ Move operations
+✓ Destructor
+
+=========================================================
+Interview One-Liner
+=========================================================
+
+Rule of 5 states that if a class manages a resource and
+defines any one of destructor, copy constructor, copy
+assignment, move constructor, or move assignment, it
+should usually define all five to correctly manage
+ownership and avoid resource leaks, double deletion,
+and expensive copies.
