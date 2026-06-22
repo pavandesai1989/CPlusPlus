@@ -297,6 +297,12 @@ the pointer, avoiding allocation and copying, making the
 operation typically O(1)."
 
 
+If the source object is still needed later,
+    → use Copy.
+
+If the source object will not be used again,
+    → use Move.
+
 
 
 
