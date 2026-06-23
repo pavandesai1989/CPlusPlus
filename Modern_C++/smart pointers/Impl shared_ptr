@@ -36,7 +36,8 @@ public:
         ptr = other.ptr;
         refCount = other.refCount;
 
-        if (refCount)
+        if (refCount) //shared_ptr copies the refCount pointer so that all owners share the same counter, and then increments the count because a new owner has been created. 
+                      //  Both steps are necessary for correct shared ownership semantics.
             ++(*refCount);
     }
 
@@ -72,7 +73,9 @@ public:
     {
         if (this != &other)
         {
-            release();
+            release();     //release() is called in copy assignment and move assignment because the left-hand side object may already 
+                           //own a resource. We must first decrement its reference count (and possibly delete the resource) 
+                           //before taking ownership of another resource. Otherwise we leak memory and corrupt reference counting.
 
             ptr = other.ptr;
             refCount = other.refCount;
@@ -111,7 +114,7 @@ public:
     // Reset
     void reset(T* p = nullptr)
     {
-        release();
+        release(); //if not called memory leak ********
 
         if (p)
         {
@@ -218,6 +221,47 @@ Copy Assignment       : O(1)
 Move Constructor      : O(1)
 Move Assignment       : O(1)
 use_count()           : O(1)
+
+
+****no new memory alloca in copy con **
+Because shared_ptr provides SHARED ownership, not deep copy.
+
+The purpose of shared_ptr is:
+
+Multiple shared_ptr objects
+            ↓
+Share the SAME resource
+            ↓
+Reference count keeps track of owners.
+
+Example:
+
+MySharedPtr<int> p1(new int(10));
+
+Memory:
+
+p1.ptr ---------> [10]
+p1.refCount ----> [1]
+
+
+MySharedPtr<int> p2 = p1;
+
+After copy:
+
+p1.ptr ---------> [10] <--------- p2.ptr
+p1.refCount ----> [2] <---------- p2.refCount
+
+No new int memory is allocated.
+No new refCount memory is allocated.
+
+Only:
+ptr = other.ptr;
+refCount = other.refCount;
+++(*refCount);
+
+Complexity:
+O(1)
+***
 
 What this implementation does NOT cover (Senior Discussion)
 Real std::shared_ptr additionally has:
