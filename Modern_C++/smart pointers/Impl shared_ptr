@@ -1,0 +1,234 @@
+//=========================================================
+// Interview Ready Implementation of shared_ptr (Simplified)
+//=========================================================
+
+#include <iostream>
+using namespace std;
+
+template<typename T>
+class MySharedPtr
+{
+private:
+    T* ptr;            // managed object
+    size_t* refCount;  // reference count
+
+public:
+
+    // Constructor
+    explicit MySharedPtr(T* p = nullptr)
+        : ptr(p)
+    {
+        if (p)
+            refCount = new size_t(1);
+        else
+            refCount = nullptr;
+    }
+
+    // Destructor
+    ~MySharedPtr()
+    {
+        release();
+    }
+
+    // Copy Constructor
+    MySharedPtr(const MySharedPtr& other)
+    {
+        ptr = other.ptr;
+        refCount = other.refCount;
+
+        if (refCount)
+            ++(*refCount);
+    }
+
+    // Copy Assignment
+    MySharedPtr& operator=(const MySharedPtr& other)
+    {
+        if (this != &other)
+        {
+            release();
+
+            ptr = other.ptr;
+            refCount = other.refCount;
+
+            if (refCount)
+                ++(*refCount);
+        }
+
+        return *this;
+    }
+
+    // Move Constructor
+    MySharedPtr(MySharedPtr&& other) noexcept
+    {
+        ptr = other.ptr;
+        refCount = other.refCount;
+
+        other.ptr = nullptr;
+        other.refCount = nullptr;
+    }
+
+    // Move Assignment
+    MySharedPtr& operator=(MySharedPtr&& other) noexcept
+    {
+        if (this != &other)
+        {
+            release();
+
+            ptr = other.ptr;
+            refCount = other.refCount;
+
+            other.ptr = nullptr;
+            other.refCount = nullptr;
+        }
+
+        return *this;
+    }
+
+    // Dereference
+    T& operator*() const
+    {
+        return *ptr;
+    }
+
+    // Member access
+    T* operator->() const
+    {
+        return ptr;
+    }
+
+    // Get raw pointer
+    T* get() const
+    {
+        return ptr;
+    }
+
+    // Reference count
+    size_t use_count() const
+    {
+        return refCount ? *refCount : 0;
+    }
+
+    // Reset
+    void reset(T* p = nullptr)
+    {
+        release();
+
+        if (p)
+        {
+            ptr = p;
+            refCount = new size_t(1);
+        }
+        else
+        {
+            ptr = nullptr;
+            refCount = nullptr;
+        }
+    }
+
+    // Check if pointer exists
+    explicit operator bool() const
+    {
+        return ptr != nullptr;
+    }
+
+private:
+
+    void release()
+    {
+        if (refCount)
+        {
+            --(*refCount);
+
+            if (*refCount == 0)
+            {
+                delete ptr;
+                delete refCount;
+
+                cout << "Resource Deleted\n";
+            }
+
+            ptr = nullptr;
+            refCount = nullptr;
+        }
+    }
+};
+
+//=========================================================
+// Demo
+//=========================================================
+
+int main()
+{
+    MySharedPtr<int> p1(new int(10));
+
+    cout << p1.use_count() << endl; // 1
+
+    {
+        MySharedPtr<int> p2 = p1;
+
+        cout << p1.use_count() << endl; // 2
+        cout << p2.use_count() << endl; // 2
+
+        {
+            MySharedPtr<int> p3 = p2;
+
+            cout << p1.use_count() << endl; // 3
+        }
+
+        cout << p1.use_count() << endl; // 2
+    }
+
+    cout << p1.use_count() << endl; // 1
+
+    return 0;
+}
+
+Interview Explanation
+
+Internally MySharedPtr stores:
+
+1. T* ptr
+2. size_t* refCount
+
+Copy Constructor:
+---------------
+ptr = other.ptr;
+refCount = other.refCount;
+++(*refCount);
+
+Destructor:
+-----------
+--(*refCount);
+
+if(refCount == 0)
+{
+    delete ptr;
+    delete refCount;
+}
+
+Move Constructor:
+----------------
+Steals ptr and refCount.
+No increment of reference count.
+
+Complexities:
+-------------
+Copy Constructor      : O(1)
+Copy Assignment       : O(1)
+Move Constructor      : O(1)
+Move Assignment       : O(1)
+use_count()           : O(1)
+
+What this implementation does NOT cover (Senior Discussion)
+Real std::shared_ptr additionally has:
+
+✔ Control block
+✔ Weak reference count
+✔ weak_ptr support
+✔ Atomic reference counting (thread-safe)
+✔ Custom deleters
+✔ Allocator support
+✔ enable_shared_from_this
+✔ make_shared single allocation optimization
+
+For most senior C++ interviews, this implementation is considered interview-ready and sufficient to explain how shared_ptr works internally.
