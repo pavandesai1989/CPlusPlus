@@ -150,7 +150,9 @@ private:
                 cout << "Resource Deleted\n";
             }
 
-            ptr = nullptr;
+            ptr = nullptr; //release() decrements the reference count. If the count becomes zero, it deletes the managed object and
+                           //the reference count. Regardless of whether deletion occurs, 
+                           //it sets the current object's pointers to nullptr because this shared_ptr no longer participates in ownership after release().
             refCount = nullptr;
         }
     }
