@@ -238,7 +238,8 @@ int main() {
 
 ONE-LINE ANSWER
 ----------------
-std::stack is a container adaptor that follows LIFO order and provides O(1) push, pop, and top operations using deque as the default underlying container.
+std::stack is a container adaptor that follows LIFO order and provides O(1) push, pop, and top operations using 
+deque as the default underlying container.
 
 #include <iostream>
 #include <stack>
@@ -275,7 +276,7 @@ template<
 >
 class stack;
 
-*****Implement stack****
+*****Implement stack**** USE VECTOR *****
 #include <iostream>
 #include <vector>
 using namespace std;
