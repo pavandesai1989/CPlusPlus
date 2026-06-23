@@ -1,291 +1,713 @@
-=========================================
+=========================================================
 std::shared_ptr (C++11) – INTERVIEW NOTES
-=========================================
+=========================================================
 
 1. What is std::shared_ptr?
----------------------------
-- A smart pointer introduced in C++11.
+---------------------------------------------------------
+- std::shared_ptr is a smart pointer introduced in C++11.
 - Provides SHARED ownership of a dynamically allocated object.
 - Multiple shared_ptr objects can own the same resource.
-- Uses reference counting to manage lifetime.
-- Object is deleted when reference count becomes 0.
+- Uses reference counting to manage object lifetime.
+- Object is destroyed automatically when reference count becomes 0.
 
 Header:
 #include <memory>
 
------------------------------------------
+Syntax:
+std::shared_ptr<int> p = std::make_shared<int>(10);
 
-2. How shared_ptr Works Internally
-----------------------------------
-Each shared_ptr maintains:
-1. Pointer to object
-2. Pointer to control block
+=========================================================
+2. Why do we need shared_ptr?
+---------------------------------------------------------
+Problems with raw pointers:
+- Manual delete required.
+- Memory leaks.
+- Double delete.
+- Unclear ownership.
 
-Control block contains:
-- Reference count
-- Weak count
-- Deleter info
+shared_ptr provides:
+✔ Automatic memory management
+✔ Shared ownership
+✔ Exception safety
+✔ RAII
 
------------------------------------------
+=========================================================
+3. RAII (VERY IMPORTANT)
+---------------------------------------------------------
+RAII:
+Resource Acquisition Is Initialization.
 
-3. Creation of shared_ptr
--------------------------
+Principle:
+Acquire resource in constructor.
+Release resource in destructor.
 
-❌ Not recommended:
-shared_ptr<int> sp1(new int(25));
+shared_ptr follows RAII:
+- Acquires memory when created.
+- Releases memory automatically.
 
-👉 Two allocations:
-1. Object allocation (new int)
-2. Control block allocation
+=========================================================
+4. Internal Working of shared_ptr (MOST ASKED)
+---------------------------------------------------------
+shared_ptr internally maintains:
 
------------------------------------------
+1. Managed object pointer
+2. Control Block
 
-✔ Recommended: make_shared (BEST PRACTICE)
+Control block stores:
+- Strong reference count
+- Weak reference count
+- Custom deleter
+- Allocator information
 
-auto sp2 = make_shared<int>(25);
+Diagram:
 
-👉 One allocation only:
-- Object + control block together
-- Faster + memory efficient + exception safe
+shared_ptr p1 ----\
+                   \
+shared_ptr p2 ------> Control Block
+                   /     ref_count = 2
+shared_ptr p3 ----/      weak_count = 0
+                         |
+                         v
+                      Object
 
------------------------------------------
+=========================================================
+5. Reference Counting
+---------------------------------------------------------
+Example:
 
-4. Reference Count
-------------------
-- Tracks how many shared_ptr own the object.
+auto p1 = make_shared<int>(10);
+
+Count = 1
+
+auto p2 = p1;
+
+Count = 2
+
+auto p3 = p2;
+
+Count = 3
+
+When p3 goes out of scope:
+
+Count = 2
+
+When p2 goes out of scope:
+
+Count = 1
+
+When p1 goes out of scope:
+
+Count = 0
+
+Object deleted automatically.
+
+=========================================================
+6. use_count()
+---------------------------------------------------------
+Returns number of shared owners.
 
 Example:
+
+auto p1 = make_shared<int>(10);
+
+cout << p1.use_count();
+
+Output:
+1
+
+auto p2 = p1;
+
+cout << p1.use_count();
+
+Output:
+2
+
+Complexity:
+O(1)
+
+Interview:
+Avoid using use_count() for program logic in multithreaded code.
+
+=========================================================
+7. Example
+---------------------------------------------------------
+
+shared_ptr<int> p1 = make_shared<int>(100);
+
+shared_ptr<int> p2 = p1;
+
+cout << p1.use_count();
+
+Output:
+2
+
+=========================================================
+8. Copy Constructor
+---------------------------------------------------------
+
+shared_ptr<int> p1 = make_shared<int>(10);
+
+shared_ptr<int> p2(p1);
+
+Reference count:
+
+1 → 2
+
+No object copy occurs.
+
+Only:
+- pointer copied
+- reference count incremented
+
+Complexity:
+O(1)
+
+=========================================================
+9. Copy Assignment
+---------------------------------------------------------
+
+shared_ptr<int> p1 = make_shared<int>(10);
+shared_ptr<int> p2;
+
+p2 = p1;
+
+Count:
+
+1 → 2
+
+Complexity:
+O(1)
+
+=========================================================
+10. Move Constructor
+---------------------------------------------------------
+
+shared_ptr<int> p1 = make_shared<int>(10);
+
+shared_ptr<int> p2(std::move(p1));
+
+After move:
+
+p1 == nullptr
+p2 owns object
+
+Reference count remains:
+
+1
+
+No increment/decrement.
+
+Complexity:
+O(1)
+
+=========================================================
+11. Move Assignment
+---------------------------------------------------------
+
+shared_ptr<int> p1 = make_shared<int>(10);
+shared_ptr<int> p2;
+
+p2 = std::move(p1);
+
+After move:
+
+p1 == nullptr
+p2 owns object
+
+Count remains:
+
+1
+
+=========================================================
+12. reset()
+---------------------------------------------------------
+Releases ownership.
+
+Example:
+
+auto p = make_shared<int>(10);
+
+p.reset();
+
+Count becomes:
+
+0
+
+Object deleted.
+
+Can also replace object:
+
+p.reset(new int(50));
+
+=========================================================
+13. get()
+---------------------------------------------------------
+Returns raw pointer.
+
+Example:
+
+auto p = make_shared<int>(10);
+
+int* ptr = p.get();
+
+Never:
+
+delete ptr;
+
+Because shared_ptr will delete it.
+
+=========================================================
+14. swap()
+---------------------------------------------------------
+
+auto p1 = make_shared<int>(10);
+auto p2 = make_shared<int>(20);
+
+p1.swap(p2);
+
+Objects exchanged.
+
+Complexity:
+O(1)
+
+=========================================================
+15. unique()
+---------------------------------------------------------
+
+auto p = make_shared<int>(10);
+
+p.unique();
+
+Returns:
+
+true
+
+After:
+
+auto p2 = p;
+
+p.unique();
+
+Returns:
+
+false
+
+Note:
+unique() removed in C++20.
+
+=========================================================
+16. Custom Deleter (IMPORTANT)
+---------------------------------------------------------
+
+auto deleter =
+[](int* p)
+{
+    cout << "Deleting\n";
+    delete p;
+};
+
+shared_ptr<int> p(new int(10), deleter);
+
+Use cases:
+- FILE*
+- sockets
+- database handles
+- OS resources
+
+=========================================================
+17. make_shared() (VERY IMPORTANT)
+---------------------------------------------------------
+
+auto p = make_shared<int>(10);
+
+Advantages:
+
+✔ Faster
+✔ Exception safe
+✔ Single memory allocation
+✔ Better cache locality
+
+=========================================================
+18. Without make_shared()
+---------------------------------------------------------
+
+shared_ptr<int> p(new int(10));
+
+Memory:
+
+Allocation #1:
+Object
+
+Allocation #2:
+Control block
+
+Two allocations.
+
+=========================================================
+19. With make_shared()
+---------------------------------------------------------
+
+auto p = make_shared<int>(10);
+
+Memory:
+
+Single allocation:
+---------------------
+Control block
+Object
+---------------------
+
+Advantages:
+- fewer allocations
+- better performance
+- better cache locality
+
+=========================================================
+20. Why prefer make_shared over new? (MOST ASKED)
+---------------------------------------------------------
+
+shared_ptr<int> p(new int(10));
+
+Two allocations.
+
+make_shared:
+
+auto p = make_shared<int>(10);
+
+One allocation.
+
+Advantages:
+- Faster
+- Exception safe
+- Less fragmentation
+- Better cache locality
+
+=========================================================
+21. Thread Safety (MOST ASKED)
+---------------------------------------------------------
+
+Reference count manipulation is thread-safe.
+
+This is safe:
+
 shared_ptr<int> p1 = make_shared<int>(10);
 shared_ptr<int> p2 = p1;
 
-p1.use_count() → 2
-p2.use_count() → 2
+Reference count update:
+Atomic.
 
-When count becomes 0 → object is deleted.
+BUT:
 
------------------------------------------
+Object itself is NOT thread-safe.
 
-5. Basic Operations
--------------------
+Example:
 
-use_count() → returns reference count
-get()       → returns raw pointer (does NOT release ownership)
-reset()     → releases ownership
-swap()      → swaps two shared_ptrs
+shared_ptr<vector<int>> p;
 
------------------------------------------
+p->push_back(10);
 
-6. Example Code
----------------
+Multiple threads:
+Need mutex.
 
-#include <iostream>
-#include <memory>
-using namespace std;
+Interview line:
 
-int main() {
+shared_ptr's control block is thread-safe;
+managed object is not.
 
-    shared_ptr<int> sp2 = make_shared<int>(25);
+=========================================================
+22. Circular Dependency Problem (VERY IMPORTANT)
+---------------------------------------------------------
 
-    cout << "ref count: " << sp2.use_count() << endl;
+class B;
 
-    int* raw = sp2.get();
-    cout << "value: " << *raw << endl;
+class A
+{
+public:
+    shared_ptr<B> bptr;
+};
 
-    return 0;
-}
+class B
+{
+public:
+    shared_ptr<A> aptr;
+};
 
------------------------------------------
+auto a = make_shared<A>();
+auto b = make_shared<B>();
 
-7. Critical Mistake (VERY IMPORTANT)
--------------------------------------
+a->bptr = b;
+b->aptr = a;
 
-❌ NEVER do this:
+Counts:
 
-int* p = new int;
-shared_ptr<int> sp1(p);
-shared_ptr<int> sp2(p);  // ❌ WRONG
+A = 2
+B = 2
 
-👉 Problem:
-- Both shared_ptr think they own same memory
-- Leads to DOUBLE DELETE
-- Undefined behavior
+Both counts never become 0.
 
------------------------------------------
+Memory leak.
 
-8. Custom Deleter in shared_ptr
-------------------------------
+=========================================================
+23. Solution: weak_ptr
+---------------------------------------------------------
 
-✔ Using function pointer:
+class B;
 
-void deleter(int* p) {
-    cout << "Deleting memory\n";
-    delete[] p;
-}
+class A
+{
+public:
+    shared_ptr<B> bptr;
+};
 
-shared_ptr<int> sp(new int[5], deleter);
+class B
+{
+public:
+    weak_ptr<A> aptr;
+};
 
------------------------------------------
+weak_ptr:
+- Non-owning reference
+- Does not increase reference count
+- Breaks cyclic dependency
 
-✔ Using lambda (MOST COMMON):
+=========================================================
+24. enable_shared_from_this (IMPORTANT)
+---------------------------------------------------------
 
-shared_ptr<int> sp(new int[5], [](int* p) {
-    cout << "Lambda deleter called\n";
-    delete[] p;
-});
+Allows object to safely create shared_ptr to itself.
 
------------------------------------------
-
-9. Why Custom Deleter is Needed?
---------------------------------
-- To handle arrays (delete[])
-- To manage file handles, sockets, etc.
-- To define custom cleanup logic
-
------------------------------------------
-
-10. When NOT to use make_shared
--------------------------------
-- When using custom deleter (rare cases)
-- When object and control block must have separate lifetime (advanced use)
-
------------------------------------------
-
-11. Advantages of shared_ptr
-----------------------------
-✔ Automatic memory management
-✔ Safe shared ownership
-✔ Prevents memory leaks
-✔ Reference counted lifecycle
-
------------------------------------------
-
-12. Disadvantages
------------------
-✘ Slight overhead due to reference counting
-✘ Not suitable for high-performance tight loops
-✘ Possible circular dependency issue
-
------------------------------------------
-
-13. Circular Dependency Problem (IMPORTANT INTERVIEW POINT)
-----------------------------------------------------------
-shared_ptr A → shared_ptr B
-shared_ptr B → shared_ptr A
-
-👉 Reference count never becomes 0
-👉 Memory leak occurs
-
-Solution:
-✔ Use weak_ptr to break cycle
-
------------------------------------------
-
-14. ONE-LINE INTERVIEW ANSWER
------------------------------
-std::shared_ptr is a smart pointer that implements shared ownership using reference counting and automatically deletes the object when the last reference goes out of scope, but it has overhead and can cause circular dependency issues.
-
-=========================================
-
-
-
-
-
-
-*********EXTRA******
-#include <iostream>
-#include <vector>
-#include <memory>  // Needed for shared_ptr and make_shared
-using namespace std;
-
-int main() {
-    // 🔹 Creating shared_ptr (NOT recommended way)
-    shared_ptr<int> sp1(new int);  // Allocates:
-                                   // 1. memory for int
-                                   // 2. control block for reference count
-
-    // 🔹 Recommended: use make_shared (fast + exception-safe)
-    shared_ptr<int> sp2 = make_shared<int>(25);
-
-Case 1 — shared_ptr<int> sp1(new int);
-
-Two separate allocations happen:
-
-new int → allocates memory for the int.
-
-shared_ptr must also allocate a control block (reference count, deleter info, etc).
-
-So there are two allocations on the heap.
-
-Case 2 — make_shared<int>(25);
-
-Does only one allocation:
-
-Allocates memory for both the int value and the control block together in one chunk.
-
-So it’s faster and more memory-efficient.
-
-When NOT to use make_shared
-
-If you need a custom deleter, because make_shared doesn’t let you specify one.
-
-If you want separate lifetimes for the control block and the object (rare, advanced use cases).
-
-    // 🔹 Get reference count
-    cout << "ref count is " << sp2.use_count() << endl;
-
-    // 🔹 Get the raw pointer
-    int* RawPtr = sp2.get();
-    cout << "value using the raw pointer: " << *RawPtr << endl;
-
-    // ❌ BAD PRACTICE: constructing two shared_ptr from same raw pointer
-    // This causes double delete and undefined behavior
-    /*
-    int* p = new int;
-    shared_ptr<int> sp3(p);
-    shared_ptr<int> sp4(p);  // ❌ Wrong: both will try to delete same pointer
-    */
-
-    // ❌ Invalid syntax: constructor is explicit
-    // shared_ptr<int> sp3 = new int;  // ❌ Build error
-
-    // 🔹 Shared_ptr with array: use custom deleter
+class A :
+public enable_shared_from_this<A>
+{
+public:
+    shared_ptr<A> getPtr()
     {
-        shared_ptr<int> sp(new int[10], [](int* p) {
-            cout << "Custom deleter for array called!" << endl;
-            delete[] p;
-        });
+        return shared_from_this();
+    }
+};
 
-        // You can now use sp just like any shared_ptr
-    } // sp goes out of scope here, and custom deleter is called
+Without this:
 
-    return 0;
-}
+shared_ptr<A>(this);
 
-✅ 1. Custom Deletion Using a Function Pointer
-void deleter(int* x) {
-    std::cout << "DELETER FUNCTION CALLED\n";
-    delete[] x;
-}
+Can create multiple control blocks.
 
-int main() {
-    shared_ptr<int> p(new int[5], deleter);
-    // custom deleter will be called when p goes out of scope
-}
-Notes:
-deleter must match the type: void (*)(int*).
+Double delete.
 
-It will be called when the shared_ptr's reference count hits zero.
+=========================================================
+25. Aliasing Constructor (Senior Level)
+---------------------------------------------------------
 
-Used when the deletion logic is shared or reusable.
+auto p1 = make_shared<vector<int>>(10);
 
-2. Custom Deletion Using a Lambda Function
-shared_ptr<int> p(new int[5], [](int* p) {
-    std::cout << "I am using custom deletor" << std::endl;
-    delete[] p;
-});
-Notes:
-Lambdas are more flexible and inline.
+shared_ptr<int> p2(p1, &(*p1)[0]);
 
-Especially useful for one-off deletions.
+p2 shares ownership with p1
+but points to first element.
 
-Cleaner when no named function is needed.
+=========================================================
+26. Performance
+---------------------------------------------------------
+
+Copy:
+O(1)
+
+Assignment:
+O(1)
+
+Move:
+O(1)
+
+Reference count update:
+Atomic operations
+
+More expensive than:
+unique_ptr
+
+=========================================================
+27. shared_ptr vs unique_ptr
+---------------------------------------------------------
+
+unique_ptr
+-----------
+Single owner
+No reference count
+Fastest
+Cannot copy
+Can move
+
+shared_ptr
+-----------
+Multiple owners
+Reference count
+More overhead
+Can copy
+Can move
+
+=========================================================
+28. Most Asked Interview Questions & Answers
+=========================================================
+
+Q1. What is shared_ptr?
+Answer:
+A smart pointer that provides shared ownership using reference counting.
+
+---------------------------------------------------------
+
+Q2. How is shared_ptr implemented internally?
+Answer:
+It stores:
+1. Managed object pointer
+2. Control block
+3. Strong count
+4. Weak count
+5. Custom deleter
+6. Allocator
+
+---------------------------------------------------------
+
+Q3. How does reference counting work?
+Answer:
+Every copy increments count.
+Destruction decrements count.
+When count becomes 0:
+object is deleted.
+
+---------------------------------------------------------
+
+Q4. Why use make_shared?
+Answer:
+- Single allocation
+- Faster
+- Exception safe
+- Better cache locality
+- Less fragmentation
+
+---------------------------------------------------------
+
+Q5. Difference between make_shared and new?
+
+new:
+Object allocation
++
+Control block allocation
+
+make_shared:
+Single allocation.
+
+---------------------------------------------------------
+
+Q6. Is shared_ptr thread-safe?
+Answer:
+Reference count updates are thread-safe.
+Managed object access is not thread-safe.
+
+---------------------------------------------------------
+
+Q7. Why is shared_ptr slower than unique_ptr?
+Answer:
+Because of:
+- reference counting
+- atomic operations
+- control block management
+
+---------------------------------------------------------
+
+Q8. Why do we need weak_ptr?
+Answer:
+To break cyclic dependencies and avoid memory leaks.
+
+---------------------------------------------------------
+
+Q9. What is circular dependency?
+Answer:
+Two shared_ptr objects owning each other.
+Reference counts never become 0.
+
+---------------------------------------------------------
+
+Q10. What is stored inside control block?
+Answer:
+- strong count
+- weak count
+- deleter
+- allocator information
+
+---------------------------------------------------------
+
+Q11. Can shared_ptr manage arrays?
+Answer:
+Since C++17:
+
+shared_ptr<int[]> p(new int[10]);
+
+Generally:
+Prefer vector.
+
+---------------------------------------------------------
+
+Q12. Can multiple shared_ptr be created from same raw pointer?
+
+Wrong:
+
+int* p = new int(10);
+
+shared_ptr<int> p1(p);
+shared_ptr<int> p2(p);
+
+Two control blocks created.
+
+Double delete.
+
+Always:
+
+auto p = make_shared<int>(10);
+
+---------------------------------------------------------
+
+Q13. When is object destroyed?
+Answer:
+When strong reference count becomes 0.
+
+---------------------------------------------------------
+
+Q14. When is control block destroyed?
+Answer:
+When:
+strong count == 0
+AND
+weak count == 0
+
+---------------------------------------------------------
+
+Q15. Can shared_ptr point to stack object?
+
+Wrong:
+
+int x = 10;
+shared_ptr<int> p(&x);
+
+Undefined behavior.
+
+shared_ptr expects heap memory.
+
+=========================================================
+INTERVIEW RAPID REVISION
+=========================================================
+
+✔ Shared ownership smart pointer
+✔ Uses reference counting
+✔ Stores object pointer + control block
+✔ Copy increments count
+✔ Destructor decrements count
+✔ Count == 0 → object deleted
+✔ make_shared uses single allocation
+✔ Control block stores strong count + weak count
+✔ Reference count updates are thread-safe
+✔ Managed object is NOT thread-safe
+✔ Circular dependency causes memory leak
+✔ weak_ptr breaks cycle
+✔ Never create two shared_ptr from same raw pointer
+✔ Never delete pointer returned by get()
+✔ Prefer make_shared over new
+✔ shared_ptr slower than unique_ptr due to atomic reference counting
