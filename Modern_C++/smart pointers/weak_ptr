@@ -32,12 +32,10 @@ Solution:
 ✔ Use weak_ptr to break the cycle
 
 =========================================================
-3. Circular Dependency Problem (CODE)
+Circular Dependency Problem with shared_ptr (MOST ASKED)
 =========================================================
 
-#include <iostream>
-#include <memory>
-using namespace std;
+Code:
 
 class B;
 
@@ -60,9 +58,251 @@ int main()
 
     a->bptr = b;
     b->aptr = a;
-
-    // Memory leak occurs here ❌
 }
+
+=========================================================
+Step 1: Create Objects
+=========================================================
+
+shared_ptr<A> a = make_shared<A>();
+shared_ptr<B> b = make_shared<B>();
+
+Reference Counts:
+
+A count = 1
+B count = 1
+
+because:
+
+a owns A
+b owns B
+
+=========================================================
+Step 2: Assign shared_ptr
+=========================================================
+
+Initially:
+
+shared_ptr<A> a = make_shared<A>();
+shared_ptr<B> b = make_shared<B>();
+
+Memory:
+
+a ------> A
+b ------> B
+
+Reference counts:
+
+A count = 1
+B count = 1
+
+because:
+
+a owns A
+b owns B
+
+=========================================================
+Now execute:
+=========================================================
+
+a->bptr = b;
+
+This means:
+
+A object's member bptr now COPIES the shared_ptr b.
+
+Equivalent to:
+
+A.bptr = b;
+
+Since shared_ptr copy constructor is called,
+ownership is SHARED.
+
+Before:
+
+b ------> B
+
+After:
+
+b --------\
+           \
+            -----> B
+           /
+A.bptr ---/
+
+Now there are TWO owners of B:
+
+1. b
+2. a->bptr
+
+Therefore:
+
+B count = 2
+
+because:
+
+b owns B
+a->bptr also owns B
+
+---------------------------------------------------------
+
+b->aptr = a;
+
+A count becomes:
+
+A count = 2
+
+because:
+
+a owns A
+b->aptr also owns A
+
+Final counts:
+
+A count = 2
+B count = 2
+
+=========================================================
+Memory Diagram
+=========================================================
+
+a ------> A
+            |
+            | shared_ptr<B>
+            v
+            B
+            ^
+            |
+            | shared_ptr<A>
+            |
+b ----------+
+
+Or simply:
+
+A <--------> B
+(shared ownership both ways)
+
+=========================================================
+Step 3: End of main()
+=========================================================
+
+Local variables are destroyed.
+
+a destroyed:
+
+A count: 2 -> 1
+
+b destroyed:
+
+B count: 2 -> 1
+
+Final counts:
+
+A count = 1
+B count = 1
+
+Neither becomes zero.
+
+Therefore:
+
+~A() NOT called
+~B() NOT called
+Heap memory NOT freed
+Memory leak occurs.
+
+=========================================================
+Why does this happen?
+=========================================================
+
+A owns B.
+B owns A.
+
+Both objects keep each other alive.
+
+Each object is waiting for the other's reference count
+to become zero, which never happens.
+
+This is called:
+
+1. Circular Dependency
+2. Circular Reference
+3. Cyclic Ownership
+
+=========================================================
+Is it an Infinite Loop?
+=========================================================
+
+NO.
+
+=========================================================
+Does Program Crash?
+=========================================================
+
+NO.
+
+=========================================================
+Does Program Hang?
+=========================================================
+
+NO.
+
+=========================================================
+What Actually Happens?
+=========================================================
+
+Program exits normally.
+
+But:
+
+A object remains on heap.
+B object remains on heap.
+Destructors are never called.
+Memory leak occurs.
+
+=========================================================
+How to Fix?
+=========================================================
+
+Make one side weak_ptr.
+
+class B
+{
+public:
+    weak_ptr<A> aptr;
+};
+
+Now:
+
+A count = 1
+B count = 2
+
+At end of main():
+
+a destroyed
+A count: 1 -> 0
+A object deleted
+
+A's bptr destroyed
+B count: 2 -> 1
+
+b destroyed
+B count: 1 -> 0
+B object deleted
+
+No memory leak.
+
+=========================================================
+Interview One-Line Answer
+=========================================================
+
+The problem is circular ownership. Both A and B hold
+shared_ptr to each other, so their reference counts never
+become zero. As a result, destructors are never called and
+both objects leak memory. The solution is to replace one of
+the shared_ptr objects with weak_ptr because weak_ptr does
+not participate in ownership or increase the shared
+reference count.
+=========================================================
 
 =========================================================
 4. Fix using weak_ptr
