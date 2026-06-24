@@ -1,0 +1,469 @@
+=========================================
+C++ STL ALGORITHMS - INTERVIEW NOTES
+=========================================
+
+QUICK REVISION
+=========================================
+
+Header:
+--------
+#include <algorithm>
+
+Most Used Algorithms:
+---------------------
+
+sort()
+find()
+count()
+reverse()
+binary_search()
+lower_bound()
+upper_bound()
+min_element()
+max_element()
+
+=========================================
+1. What are STL Algorithms?
+=========================================
+
+STL Algorithms are generic functions that
+operate on containers through iterators.
+
+Examples:
+
+sort(v.begin(), v.end());
+
+find(v.begin(), v.end(), 10);
+
+reverse(v.begin(), v.end());
+
+Interview Answer:
+
+STL algorithms are reusable generic
+functions that work with containers
+through iterators.
+
+=========================================
+2. sort() (MOST ASKED)
+=========================================
+
+Used to sort elements.
+
+Example:
+
+sort(v.begin(), v.end());
+
+Ascending order.
+
+-----------------------------------------
+
+Descending Order
+
+sort(v.begin(),
+     v.end(),
+     greater<int>());
+
+-----------------------------------------
+
+Complexity
+
+O(n log n)
+
+-----------------------------------------
+
+Requirement
+
+Random Access Iterators required.
+
+Works:
+
+✔ vector
+✔ deque
+✔ array
+
+Does NOT work:
+
+✘ set
+✘ map
+✘ list
+
+=========================================
+3. find()
+=========================================
+
+Searches for an element.
+
+Example:
+
+auto it = find(v.begin(),
+               v.end(),
+               20);
+
+If found:
+---------
+it points to element
+
+If not found:
+-------------
+it == v.end()
+
+Complexity:
+
+O(n)
+
+=========================================
+4. count()
+=========================================
+
+Counts occurrences.
+
+Example:
+
+count(v.begin(),
+      v.end(),
+      10);
+
+Complexity:
+
+O(n)
+
+=========================================
+5. reverse()
+=========================================
+
+Reverses elements.
+
+Example:
+
+reverse(v.begin(),
+        v.end());
+
+Complexity:
+
+O(n)
+
+=========================================
+6. binary_search()
+=========================================
+
+Checks whether element exists.
+
+Example:
+
+binary_search(v.begin(),
+              v.end(),
+              20);
+
+Returns:
+
+true / false
+
+-----------------------------------------
+
+Requirement
+
+Range must be sorted.
+
+Complexity:
+
+O(log n)
+
+=========================================
+7. lower_bound()
+=========================================
+
+Returns iterator to:
+
+First element >= value
+
+Example:
+
+vector<int> v =
+{10,20,20,30};
+
+auto it =
+lower_bound(v.begin(),
+            v.end(),
+            20);
+
+Result:
+
+Points to first 20
+
+-----------------------------------------
+
+Complexity
+
+O(log n)
+
+-----------------------------------------
+
+Requirement
+
+Sorted range required.
+
+=========================================
+8. upper_bound()
+=========================================
+
+Returns iterator to:
+
+First element > value
+
+Example:
+
+vector<int> v =
+{10,20,20,30};
+
+auto it =
+upper_bound(v.begin(),
+            v.end(),
+            20);
+
+Result:
+
+Points to 30
+
+-----------------------------------------
+
+Complexity
+
+O(log n)
+
+=========================================
+9. Difference Between lower_bound and upper_bound
+=========================================
+
+Data:
+
+10 20 20 20 30
+
+lower_bound(20)
+---------------
+First element >= 20
+
+Points to first 20
+
+upper_bound(20)
+---------------
+First element > 20
+
+Points to 30
+
+Very common interview question.
+
+=========================================
+10. How To Count Duplicates In Sorted Array?
+=========================================
+
+Frequency:
+
+upper_bound() - lower_bound()
+
+Example:
+
+10 20 20 20 30
+
+Frequency of 20:
+
+3
+
+=========================================
+11. min_element()
+=========================================
+
+Returns iterator to minimum element.
+
+Example:
+
+*min_element(v.begin(),
+             v.end());
+
+Complexity:
+
+O(n)
+
+=========================================
+12. max_element()
+=========================================
+
+Returns iterator to maximum element.
+
+Example:
+
+*max_element(v.begin(),
+             v.end());
+
+Complexity:
+
+O(n)
+
+=========================================
+13. Why Doesn't sort() Work On list?
+=========================================
+
+sort() requires Random Access Iterators.
+
+list provides:
+
+Bidirectional Iterator
+
+Therefore:
+
+sort(list.begin(), list.end());
+
+Compilation Error.
+
+Use:
+
+list.sort();
+
+Interview favorite.
+
+=========================================
+14. Difference Between find() and binary_search()
+=========================================
+
+find():
+-------
+Works on any range
+
+O(n)
+
+-----------------------------------------
+
+binary_search():
+----------------
+Requires sorted range
+
+O(log n)
+
+Returns bool
+
+Very common question.
+
+=========================================
+15. Difference Between count() and find()
+=========================================
+
+find():
+-------
+Returns iterator
+
+Used to check existence
+
+-----------------------------------------
+
+count():
+--------
+Returns frequency
+
+=========================================
+16. Most Asked Complexity Questions
+=========================================
+
+sort()            -> O(n log n)
+
+find()            -> O(n)
+
+count()           -> O(n)
+
+reverse()         -> O(n)
+
+binary_search()   -> O(log n)
+
+lower_bound()     -> O(log n)
+
+upper_bound()     -> O(log n)
+
+min_element()     -> O(n)
+
+max_element()     -> O(n)
+
+=========================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================
+
+Q. What are STL algorithms?
+
+A.
+Generic functions that operate on
+containers through iterators.
+
+-----------------------------------------
+
+Q. Which header contains STL algorithms?
+
+A.
+
+#include <algorithm>
+
+-----------------------------------------
+
+Q. Complexity of sort()?
+
+A.
+
+O(n log n)
+
+-----------------------------------------
+
+Q. Why does sort() not work on list?
+
+A.
+
+sort() requires Random Access Iterators.
+
+list provides Bidirectional Iterators.
+
+-----------------------------------------
+
+Q. Difference between find() and binary_search()?
+
+A.
+
+find() -> O(n)
+
+binary_search() -> O(log n)
+Requires sorted data.
+
+-----------------------------------------
+
+Q. What is lower_bound()?
+
+A.
+
+First element >= value.
+
+-----------------------------------------
+
+Q. What is upper_bound()?
+
+A.
+
+First element > value.
+
+-----------------------------------------
+
+Q. How to count frequency in sorted data?
+
+A.
+
+upper_bound() - lower_bound()
+
+-----------------------------------------
+
+Q. What do min_element() and max_element() return?
+
+A.
+
+Iterator to minimum/maximum element.
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+STL algorithms are generic functions that
+operate on containers through iterators and
+provide efficient reusable operations such
+as sorting, searching, counting and traversal.
