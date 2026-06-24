@@ -1,77 +1,178 @@
 =========================================
-C++ STL MULTIMAP – INTERVIEW NOTES
+C++ STL MULTIMAP - FINAL INTERVIEW NOTES
 =========================================
 
+QUICK REVISION
+=========================================
+
+multimap
+
+Underlying DS      : Red-Black Tree
+Stores             : Key -> Value
+Sorted             : Yes (by key)
+Duplicate Keys     : Yes
+Iterator           : Bidirectional
+Insert             : O(log n)
+Find               : O(log n)
+Erase              : O(log n)
+Random Access      : No
+operator[]         : Not Supported
+Key Modifiable     : No
+Value Modifiable   : Yes
+Duplicate Check    : Comparator, not operator==
+Iterator Invalidate:
+    Insert -> No
+    Erase  -> Only erased iterator
+
+=========================================
 1. What is multimap?
---------------------
-multimap is an associative container that stores key-value pairs
-where DUPLICATE KEYS are allowed.
+=========================================
+
+std::multimap is an associative container that stores:
+
+Key -> Value
+
+Properties:
+
+✔ Duplicate keys allowed
+✔ Keys automatically sorted
+✔ Implemented using Red-Black Tree
+✔ O(log n) insert, find and erase
 
 Example:
-multimap<int, string> m;
 
-m.insert({1, "A"});
-m.insert({1, "B"});
-m.insert({2, "C"});
-
-Output:
 1 -> A
 1 -> B
 2 -> C
 
------------------------------------------
-2. Key Properties
------------------
-- Stores key-value pairs
-- DUPLICATE keys allowed
-- Automatically sorted by key
-- Implemented using Red-Black Tree
-- Time complexity: O(log n)
+=========================================
+2. Internal Implementation
+=========================================
 
------------------------------------------
-3. Internal Implementation
---------------------------
-multimap is implemented using a Red-Black Tree (self-balancing BST)
+Implemented using a Self-Balancing BST
+(typically Red-Black Tree).
 
-- Keeps keys sorted
-- Allows duplicates
-- O(log n) insert, delete, search
+Benefits:
+
+✔ Sorted order maintained
+✔ Duplicate keys allowed
+✔ O(log n) operations
 
 Interview Answer:
-multimap uses Red-Black Tree and allows duplicate keys while maintaining sorted order.
 
------------------------------------------
-4. Complexity
---------------
-insert    O(log n)
-erase     O(log n)
-find      O(log n)
-size      O(1)
+multimap is implemented using a Red-Black Tree
+that maintains sorted order while allowing
+multiple entries with the same key.
 
------------------------------------------
-5. Important Functions
-----------------------
+=========================================
+3. Complexity
+=========================================
+
+insert() -> O(log n)
+find()   -> O(log n)
+erase()  -> O(log n)
+count()  -> O(log n + duplicates)
+
+size()   -> O(1)
+empty()  -> O(1)
+
+=========================================
+4. Important Functions
+=========================================
+
 insert()
 erase()
 find()
 count()
 equal_range()
+lower_bound()
+upper_bound()
 begin()
 end()
 size()
 empty()
 
------------------------------------------
-6. multimap vs map
--------------------
+=========================================
+5. Iterator Type
+=========================================
+
+Bidirectional Iterator
+
+Supported:
+
+++it
+--it
+
+Not Supported:
+
+it + 1
+it - 1
+it[0]
+
+Reason:
+
+Tree-based container.
+
+=========================================
+6. Can Key Be Modified?
+=========================================
+
+No.
+
+Keys are stored as const.
+
+Reason:
+
+Changing a key may violate tree ordering.
+
+=========================================
+7. Can Value Be Modified?
+=========================================
+
+Yes.
+
+Example:
+
+it->second = "New Value";
+
+Only key is const.
+
+=========================================
+8. What is Actually Stored?
+=========================================
+
+pair<const Key, Value>
+
+Example:
+
+pair<const int,string>
+
+=========================================
+9. User Defined Key Support
+=========================================
+
+Need either:
+
+1. operator< overload
+
+OR
+
+2. Custom comparator
+
+Same as map.
+
+=========================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================
+
+1. Difference Between map and multimap?
+---------------------------------------
 
 map:
-- Unique keys only
-- One value per key
+- Unique keys
 
 multimap:
 - Duplicate keys allowed
-- Multiple values per key
 
 Example:
 
@@ -82,150 +183,210 @@ multimap:
 1 -> A
 1 -> B
 
------------------------------------------
-7. Accessing Elements
----------------------
-⚠ multimap does NOT support [] operator
+---------------------------------------
 
-Wrong:
-m[1]; ❌
+2. Why Does multimap Not Support [] ?
+-------------------------------------
 
-Reason:
-Multiple values can exist for same key.
-
-Correct way:
-- iterator
-- find()
-- equal_range()
-
------------------------------------------
-8. equal_range() (VERY IMPORTANT)
-----------------------------------
-Returns range of all values for a key.
+multimap can have multiple values
+for the same key.
 
 Example:
-auto range = m.equal_range(1);
 
-for(auto it = range.first; it != range.second; it++)
-    cout << it->first << " " << it->second << endl;
+1 -> A
+1 -> B
+1 -> C
 
------------------------------------------
-9. find()
----------
-Returns iterator to first occurrence of key.
+Which value should m[1] return?
 
------------------------------------------
-10. count()
-----------
+Therefore:
+
+operator[] is NOT provided.
+
+Very common interview question.
+
+---------------------------------------
+
+3. How Do You Access All Values For A Key?
+------------------------------------------
+
+Using equal_range().
+
+Example:
+
+auto range = mm.equal_range(1);
+
+for(auto it = range.first;
+    it != range.second;
+    ++it)
+{
+    cout << it->second;
+}
+
+Most important multimap function.
+
+---------------------------------------
+
+4. What Does find() Return?
+------------------------------------------
+
+Returns iterator to the FIRST matching key.
+
+Example:
+
+auto it = mm.find(1);
+
+If duplicate keys exist:
+
+1 -> A
+1 -> B
+1 -> C
+
+find(1) returns iterator to first 1.
+
+---------------------------------------
+
+5. What Does count() Return?
+------------------------------------------
+
 Returns number of occurrences of a key.
 
 Example:
-m.count(1); // returns how many times key 1 exists
 
------------------------------------------
-11. erase()
------------
-- erase(key) → removes all occurrences
-- erase(iterator) → removes single element
+1 -> A
+1 -> B
+1 -> C
 
------------------------------------------
-12. Iteration
--------------
-for(auto it : m)
-    cout << it.first << " " << it.second;
+mm.count(1);
 
-Gives sorted order (key-wise)
+Result:
 
------------------------------------------
-13. Advantages
+3
+
+---------------------------------------
+
+6. Difference Between find() and equal_range()?
+-----------------------------------------------
+
+find():
+-------
+Returns first matching element.
+
+equal_range():
 --------------
-- Allows duplicate keys
-- Sorted order maintained
-- Good for grouping values by key
+Returns all matching elements.
 
------------------------------------------
-14. Disadvantages
------------------
-- Slower than unordered_map
-- No direct indexing
-- Cannot use []
+Example:
 
------------------------------------------
-15. When to use multimap?
--------------------------
-Use when:
-- Duplicate keys required
-- One key → multiple values mapping
-- Grouping data
+find(1)
+-> first occurrence
 
-Examples:
-- Student marks per subject
-- Time-based logs
-- Event scheduling
+equal_range(1)
+-> all occurrences
 
------------------------------------------
-16. MOST USED FUNCTIONS IN CODING
-----------------------------------
-insert()
-erase()
-find()
-count()
-equal_range()
-begin()
-end()
-size()
+Very common question.
 
------------------------------------------
-17. CODE EXAMPLE (MOST USED)
-----------------------------------
-#include <iostream>
-#include <map>
-using namespace std;
+---------------------------------------
 
-int main() {
+7. What Does erase(key) Do?
+------------------------------------------
 
-    multimap<int, string> m;
+Removes ALL occurrences of the key.
 
-    m.insert({1, "A"});
-    m.insert({1, "B"});
-    m.insert({2, "C"});
-    m.insert({2, "D"});
+Example:
 
-    // iterate all
-    for(auto it : m)
-        cout << it.first << " -> " << it.second << endl;
+1 -> A
+1 -> B
+1 -> C
 
-    cout << "Count of 1: " << m.count(1) << endl;
+mm.erase(1);
 
-    // find
-    auto it = m.find(2);
-    cout << "Find 2: " << it->first << " " << it->second << endl;
+Result:
 
-    // equal_range
-    auto range = m.equal_range(1);
-    cout << "All values for key 1:" << endl;
-    for(auto i = range.first; i != range.second; i++)
-        cout << i->first << " " << i->second << endl;
+All removed
 
-    // erase one element
-    m.erase(m.begin());
+---------------------------------------
 
-    return 0;
+8. How To Remove Only One Occurrence?
+-------------------------------------
+
+auto it = mm.find(1);
+
+if(it != mm.end())
+{
+    mm.erase(it);
 }
 
------------------------------------------
-18. QUICK REVISION
--------------------
-- multimap = key-value store
-- duplicate keys allowed
-- sorted order maintained
-- Red-Black Tree
-- O(log n) operations
-- no [] operator
-- use equal_range for grouping
+Only one element removed.
 
+---------------------------------------
+
+9. Does multimap Use operator== ?
+---------------------------------
+
+No.
+
+Uses comparator (operator< by default).
+
+Equivalent keys:
+
+!(a < b) && !(b < a)
+
+---------------------------------------
+
+10. Can multimap Store User Defined Keys?
 -----------------------------------------
-19. ONE-LINE INTERVIEW ANSWER
-----------------------------
-multimap is an ordered associative container implemented using Red-Black Tree that allows duplicate keys and stores multiple values for the same key while maintaining sorted order.
+
+Yes.
+
+Need:
+
+1. operator<
+
+OR
+
+2. Custom comparator
+
+---------------------------------------
+
+11. Does Insertion Invalidate Iterators?
+----------------------------------------
+
+No.
+
+Insertion does NOT invalidate
+existing iterators.
+
+---------------------------------------
+
+12. When Are Iterators Invalidated?
+-----------------------------------
+
+Only when the pointed element
+is erased.
+
 =========================================
+MULTIMAP vs MAP QUICK TABLE
+=========================================
+
+map
+
+✔ Unique keys
+✔ operator[] available
+✔ One value per key
+
+multimap
+
+✔ Duplicate keys allowed
+✘ operator[] not available
+✔ Multiple values per key
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::multimap is a Red-Black Tree based
+associative container that stores sorted
+key-value pairs, allows duplicate keys,
+and provides O(log n) insert, search
+and erase operations.
