@@ -1,0 +1,556 @@
+=========================================
+C++ MEMORY MANAGEMENT - MOST ASKED INTERVIEW Q&A
+=========================================
+
+QUICK REVISION
+=========================================
+
+Memory Segments
+---------------
+Code Segment
+Stack
+Heap
+Global/Static Segment
+
+Allocation
+----------
+Stack -> Automatic
+Heap  -> Dynamic (new/delete)
+
+Important Keywords
+------------------
+new
+delete
+new[]
+delete[]
+
+Modern C++
+----------
+unique_ptr
+shared_ptr
+weak_ptr
+
+=========================================
+1. What is Memory Management?
+=========================================
+
+Memory management is the process of
+allocating, using and deallocating memory
+efficiently during program execution.
+
+Interview Answer:
+
+Memory management in C++ involves controlling
+object lifetime and memory allocation using
+stack, heap, constructors, destructors,
+new/delete and smart pointers.
+
+=========================================
+2. Stack vs Heap
+=========================================
+
+Stack
+------
+- Automatic allocation/deallocation
+- Fast
+- Managed by compiler
+- Limited size
+
+Heap
+-----
+- Dynamic allocation
+- Managed by programmer
+- Slower than stack
+- Larger memory
+
+Example:
+
+int x = 10;          // Stack
+
+int* p = new int;    // Heap
+
+=========================================
+3. What Happens During new?
+=========================================
+
+int* p = new int(10);
+
+Steps:
+
+1. Allocate memory from heap
+2. Call constructor (if object)
+3. Return memory address
+
+=========================================
+4. What Happens During delete?
+=========================================
+
+delete p;
+
+Steps:
+
+1. Call destructor
+2. Release heap memory
+
+=========================================
+5. Difference Between new/delete and malloc/free
+=========================================
+
+new/delete:
+------------
+- C++
+- Calls constructor/destructor
+- Type safe
+
+malloc/free:
+-------------
+- C
+- No constructor/destructor
+- Returns void*
+
+Interview Favorite
+
+=========================================
+6. Memory Leak
+=========================================
+
+Memory allocated but never released.
+
+Example:
+
+int* p = new int(10);
+
+p = nullptr;
+
+Memory leaked.
+
+=========================================
+
+Interview Answer:
+
+A memory leak occurs when dynamically
+allocated memory becomes unreachable
+without being deallocated.
+
+=========================================
+7. Dangling Pointer
+=========================================
+
+Pointer points to freed memory.
+
+Example:
+
+int* p = new int(10);
+
+delete p;
+
+*p = 20;  // Undefined Behavior
+
+=========================================
+8. Wild Pointer
+=========================================
+
+Uninitialized pointer.
+
+Example:
+
+int* p;
+
+*p = 10;   // Undefined Behavior
+
+=========================================
+9. Double Delete
+=========================================
+
+Deleting same memory twice.
+
+Example:
+
+delete p;
+delete p;
+
+Undefined Behavior.
+
+=========================================
+10. How To Avoid Memory Leaks?
+=========================================
+
+✔ delete allocated memory
+✔ Use RAII
+✔ Use smart pointers
+✔ Prefer stack allocation
+
+=========================================
+11. What is RAII?
+=========================================
+
+Resource Acquisition Is Initialization
+
+Resource lifetime tied to object lifetime.
+
+Constructor:
+-------------
+Acquire resource
+
+Destructor:
+------------
+Release resource
+
+Example:
+
+fstream file("a.txt");
+
+When object dies,
+resource released automatically.
+
+Most Important Modern C++ Concept.
+
+=========================================
+12. Why Destructor is Important?
+=========================================
+
+Destructor releases resources.
+
+Example:
+
+memory
+files
+mutexes
+sockets
+
+Without destructor:
+
+Resource leak possible.
+
+=========================================
+13. Rule of Three
+=========================================
+
+If class defines:
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment Operator
+
+Usually all three are needed.
+
+=========================================
+14. Rule of Five
+=========================================
+
+C++11
+
+1. Destructor
+2. Copy Constructor
+3. Copy Assignment
+4. Move Constructor
+5. Move Assignment
+
+=========================================
+15. Deep Copy vs Shallow Copy
+=========================================
+
+Shallow Copy
+------------
+Copies pointer only.
+
+Both objects share same memory.
+
+Problem:
+---------
+Double delete possible.
+
+-----------------------------------------
+
+Deep Copy
+---------
+Allocates separate memory.
+
+Safe.
+
+Interview Favorite.
+
+=========================================
+16. What is Ownership?
+=========================================
+
+Ownership means responsibility for
+releasing a resource.
+
+Modern C++ uses smart pointers
+to represent ownership.
+
+=========================================
+17. unique_ptr
+=========================================
+
+Exclusive ownership.
+
+Only one owner allowed.
+
+Example:
+
+unique_ptr<int> p =
+make_unique<int>(10);
+
+Cannot copy.
+
+Can move.
+
+=========================================
+
+Most Asked:
+
+Why unique_ptr cannot be copied?
+
+Because it provides exclusive ownership.
+
+=========================================
+18. shared_ptr
+=========================================
+
+Shared ownership.
+
+Multiple owners allowed.
+
+Uses Reference Counting.
+
+Example:
+
+shared_ptr<int> p1 =
+make_shared<int>(10);
+
+shared_ptr<int> p2 = p1;
+
+=========================================
+
+Most Asked:
+
+How does shared_ptr work?
+
+Using reference counting.
+
+=========================================
+19. weak_ptr
+=========================================
+
+Non-owning smart pointer.
+
+Used to break circular references.
+
+Does not increase reference count.
+
+=========================================
+20. Circular Reference Problem
+=========================================
+
+shared_ptr -> shared_ptr
+
+Object A owns B
+Object B owns A
+
+Reference count never becomes zero.
+
+Memory leak occurs.
+
+Solution:
+
+weak_ptr
+
+Very Common Question.
+
+=========================================
+21. What is make_unique?
+=========================================
+
+Creates unique_ptr safely.
+
+Example:
+
+auto p =
+make_unique<int>(10);
+
+Benefits:
+
+✔ Exception safe
+✔ Cleaner syntax
+
+=========================================
+22. What is make_shared?
+=========================================
+
+Creates shared_ptr efficiently.
+
+Example:
+
+auto p =
+make_shared<int>(10);
+
+Benefit:
+
+Single memory allocation.
+
+=========================================
+23. What is Reference Count?
+=========================================
+
+Number of shared_ptr objects
+owning the same resource.
+
+Example:
+
+shared_ptr<int> p1 =
+make_shared<int>(10);
+
+shared_ptr<int> p2 = p1;
+
+Count = 2
+
+=========================================
+24. Why Prefer Smart Pointers?
+=========================================
+
+✔ Automatic cleanup
+✔ Prevent memory leaks
+✔ Exception safety
+✔ Clear ownership
+
+=========================================
+25. What is Exception Safety?
+=========================================
+
+Even if exception occurs,
+resources must not leak.
+
+Smart pointers help achieve this.
+
+=========================================
+26. Most Asked Smart Pointer Question
+=========================================
+
+Q. unique_ptr vs shared_ptr?
+
+unique_ptr:
+------------
+Single owner
+No reference count
+Faster
+
+shared_ptr:
+------------
+Multiple owners
+Reference count
+Slightly slower
+
+=========================================
+27. Most Asked Memory Leak Question
+=========================================
+
+Q. How do you detect memory leaks?
+
+A.
+
+Tools:
+- Valgrind
+- AddressSanitizer (ASan)
+- Visual Studio Diagnostic Tools
+
+=========================================
+28. Most Asked Interview Questions
+=========================================
+
+Q. Stack vs Heap?
+
+A.
+Stack is automatic and fast.
+Heap is dynamic and programmer managed.
+
+-----------------------------------------
+
+Q. Difference between new and malloc?
+
+A.
+new calls constructor.
+malloc does not.
+
+-----------------------------------------
+
+Q. What is a memory leak?
+
+A.
+Allocated memory that is never released.
+
+-----------------------------------------
+
+Q. What is a dangling pointer?
+
+A.
+Pointer pointing to deleted memory.
+
+-----------------------------------------
+
+Q. What is a wild pointer?
+
+A.
+Uninitialized pointer.
+
+-----------------------------------------
+
+Q. What is RAII?
+
+A.
+Resource lifetime tied to object lifetime.
+
+-----------------------------------------
+
+Q. Why use smart pointers?
+
+A.
+Automatic memory management and ownership.
+
+-----------------------------------------
+
+Q. Why unique_ptr cannot be copied?
+
+A.
+Exclusive ownership.
+
+-----------------------------------------
+
+Q. How does shared_ptr work?
+
+A.
+Reference counting.
+
+-----------------------------------------
+
+Q. Why do we need weak_ptr?
+
+A.
+To break circular references.
+
+-----------------------------------------
+
+Q. Rule of Three?
+
+A.
+Destructor, Copy Constructor,
+Copy Assignment Operator.
+
+-----------------------------------------
+
+Q. Rule of Five?
+
+A.
+Rule of Three +
+Move Constructor +
+Move Assignment.
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+Memory management in C++ involves efficient
+allocation, ownership, lifetime management,
+and deallocation of resources using RAII,
+smart pointers, constructors and destructors.
