@@ -1,0 +1,144 @@
+STL (Standard Template Library)
+
+STL is a library of reusable generic components that provides:
+1. Containers
+2. Iterators
+3. Algorithms
+4. Function Objects (Functors)
+5. Allocators
+
+==================================================
+1. CONTAINERS
+==================================================
+
+Containers store data.
+
+A) Sequence Containers
+----------------------
+Store elements in linear order.
+
+- array
+- vector
+- deque
+- list
+- forward_list
+
+B) Associative Containers
+-------------------------
+Store data in sorted order (typically Red-Black Tree).
+
+- set
+- multiset
+- map
+- multimap
+
+C) Unordered Associative Containers
+-----------------------------------
+Store data using hashing (Hash Table).
+
+- unordered_set
+- unordered_multiset
+- unordered_map
+- unordered_multimap
+
+D) Container Adaptors
+---------------------
+Provide restricted interfaces over existing containers.
+
+- stack
+- queue
+- priority_queue
+
+==================================================
+2. ITERATORS
+==================================================
+
+Used to traverse containers.
+
+Iterator Types:
+
+- Input Iterator
+  Read data.
+
+- Output Iterator
+  Write data.
+
+- Forward Iterator
+  Move only forward.
+
+- Bidirectional Iterator
+  Move forward and backward.
+
+- Random Access Iterator
+  Jump directly to any position.
+
+==================================================
+3. ALGORITHMS
+==================================================
+
+Predefined functions that operate on containers.
+
+Examples:
+
+- sort()
+- find()
+- count()
+- reverse()
+- binary_search()
+- lower_bound()
+- upper_bound()
+- min_element()
+- max_element()
+
+==================================================
+4. FUNCTION OBJECTS (FUNCTORS)
+==================================================
+
+Objects that behave like functions.
+
+Implemented by overloading operator().
+
+Examples:
+
+- greater<>
+- less<>
+- custom comparators
+
+Used with STL algorithms.
+
+==================================================
+5. ALLOCATORS
+==================================================
+
+Responsible for memory allocation and deallocation.
+
+Default allocator:
+
+- allocator<T>
+
+Usually handled automatically by STL containers.
+
+==================================================
+STL OVERVIEW
+==================================================
+
+STL
+│
+├── Containers
+│   ├── Sequence Containers
+│   ├── Associative Containers
+│   ├── Unordered Containers
+│   └── Container Adaptors
+│
+├── Iterators
+│   ├── Input
+│   ├── Output
+│   ├── Forward
+│   ├── Bidirectional
+│   └── Random Access
+│
+├── Algorithms
+│
+├── Functors
+│
+└── Allocators
