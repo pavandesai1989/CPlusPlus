@@ -17,6 +17,79 @@ Insert:
 Stored:
 10 10 20 30
 
+set vs multiset IMpl diff*****
+Internally both set and multiset are typically implemented using a Red-Black Tree.
+
+The main difference is:
+
+set stores unique keys and rejects duplicate insertions,
+
+whereas multiset allows multiple equivalent keys and inserts all of them into the tree.
+
+
+*****IMP
+set::insert()      -> returns pair<iterator,bool>
+
+multiset::insert() -> returns iterator
+
+In set, insertion can fail due to duplicates.
+
+In multiset, insertion never fails because duplicates are allowed.
+
+#include <iostream>
+#include <set>
+using namespace std;
+
+int main()
+{
+    set<int> s;
+
+    auto result1 = s.insert(10);
+    auto result2 = s.insert(10); // duplicate
+
+    cout << boolalpha;
+
+    cout << "First insert success : "
+         << result1.second << endl;
+
+    cout << "Second insert success: "
+         << result2.second << endl;
+
+    return 0;
+}
+
+What does erase(value) do?
+
+Removes ALL occurrences.
+
+Example:
+
+multiset<int> ms = {10,10,10,20};
+
+ms.erase(10);
+
+Result:
+
+20
+
+Very common question.
+
+How to erase only one occurrence?
+
+auto it = ms.find(10);
+
+if(it != ms.end())
+    ms.erase(it);
+
+Result:
+
+Before:
+10 10 10 20
+
+After:
+10 10 20
+
+
 -----------------------------------------
 
 2. Internal Implementation
@@ -80,7 +153,7 @@ erase(x)
 --------
 ms.erase(10);
 
-⚠ IMPORTANT:
+⚠ IMPORTANT: ******************************
 - erase(value) removes ALL occurrences
 - erase(iterator) removes only one occurrence
 
@@ -102,7 +175,7 @@ first element > x
 
 -----------------------------------------
 
-7. erase important behavior (VERY IMPORTANT)
+7. erase important behavior (VERY IMPORTANT)  **************
 -------------------------------------------
 
 multiset<int> ms = {10,10,20,30};
@@ -273,4 +346,8 @@ int main() {
 
 ONE-LINE INTERVIEW ANSWER
 -------------------------
-std::multiset is a balanced BST-based associative container that stores elements in sorted order and allows duplicates, supporting O(log n) insert, delete, and search operations.
+std::multiset is a balanced BST-based associative container that stores elements in sorted 
+order and allows duplicates, supporting O(log n) insert, delete, and search operations.
+
+
+multiset impl on user defined ob same as set only *****
