@@ -17,6 +17,20 @@ Insert:
 Stored:
 10 20 30   (duplicates removed + sorted)
 
+set
+---
+Underlying DS : Red-Black Tree
+Sorted         : Yes
+Duplicates     : No
+Iterator       : Bidirectional
+Insert         : O(log n)
+Find           : O(log n)
+Erase          : O(log n)
+Random Access  : No
+Elements Modifiable : No
+Duplicates Check : Comparator, not operator==
+
+
 -----------------------------------------
 
 2. Internal Implementation
@@ -92,7 +106,61 @@ set:
 
 -----------------------------------------
 
-8. Iterator In set
+8. Iterator In set****
+Why does set use Bidirectional Iterator?
+
+Because std::set is implemented using a Red-Black Tree (balanced binary search tree).
+
+Elements are NOT stored in contiguous memory like vector.
+
+Example:
+
+       5
+      / \
+     3   8
+    / \
+   1   4
+
+Since data is stored as tree nodes:
+
+✔ Move to next element  (++it)
+✔ Move to previous element (--it)
+
+But:
+
+✘ it + 1
+✘ it - 2
+✘ it[5]
+
+are not possible efficiently because there is no direct index access.
+
+--------------------------------------------------
+
+Advantage of Bidirectional Iterator
+
+1. Can traverse both directions
+
+for(auto it = s.begin(); it != s.end(); ++it)
+
+for(auto it = prev(s.end()); ; --it)
+
+2. Supports ordered containers
+
+set, map, multiset, multimap remain sorted.
+
+3. Efficient insert/delete
+
+O(log n)
+
+without invalidating most iterators.
+
+--------------------------------------------------
+
+Interview Answer
+
+std::set provides a Bidirectional Iterator because it is implemented as a Red-Black Tree.
+Tree nodes can efficiently move to the next or previous element, so ++ and -- are supported. 
+Random access (it+1, it[5]) is not supported because elements are not stored in contiguous memory.
 ------------------
 - Bidirectional iterator
 - Used for traversal
@@ -116,7 +184,7 @@ for(auto it : s)
 
 -----------------------------------------
 
-10. lower_bound vs upper_bound
+10. lower_bound vs upper_bound**********
 ------------------------------
 
 lower_bound(x):
@@ -147,7 +215,7 @@ upper_bound(20) -> 30
 
 -----------------------------------------
 
-12. Why no indexing?
+12. Why no indexing?************
 --------------------
 - set is not stored in contiguous memory
 - it is a tree structure
@@ -276,4 +344,125 @@ int main() {
 
 ONE-LINE INTERVIEW ANSWER
 -------------------------
-std::set is a balanced BST-based associative container that stores unique elements in sorted order and provides O(log n) insert, delete, and search operations.
+std::set is a balanced BST-based associative container that stores unique elements
+in sorted order and provides O(log n) insert, delete, and search operations.
+
+
+********set on user defined objects******VVVVVIMP
+Yes. std::set can store user-defined class objects, but it must know how to compare two objects because set keeps elements sorted.
+
+Method 1: Overload operator< (Most Common)
+#include <iostream>
+#include <set>
+using namespace std;
+
+class Employee
+{
+public:
+    int id;
+    string name;
+
+    Employee(int i, string n)
+        : id(i), name(n) {}
+
+    bool operator<(const Employee& other) const
+    {
+        return id < other.id;
+    }
+};
+
+int main()
+{
+    set<Employee> s;
+
+    s.insert(Employee(2, "Bob"));
+    s.insert(Employee(1, "Alice"));
+    s.insert(Employee(3, "John"));
+
+    for(const auto& e : s)
+        cout << e.id << " " << e.name << endl;
+}
+
+1 Alice
+2 Bob
+3 John
+
+Method 2: Custom Comparator
+class Employee
+{
+public:
+    int id;
+    string name;
+
+    Employee(int i, string n)
+        : id(i), name(n) {}
+};
+
+struct Compare
+{
+    bool operator()(const Employee& a,
+                    const Employee& b) const
+    {
+        return a.id < b.id;
+    }
+};
+
+set<Employee, Compare> s;
+
+std::set can store user-defined objects.
+
+Since set keeps elements sorted, it needs a way to compare objects.
+
+This can be provided by:
+1. Overloading operator<
+2. Supplying a custom comparator
+
+Internally, set uses the comparator to maintain ordering and determine uniqueness.
+
+1. Does set use operator== to find duplicates?
+No.
+
+set uses the comparator (operator< by default).
+
+If:
+
+!(a < b) && !(b < a)
+
+then the objects are considered equivalent.
+
+
+Difference between set and unordered_set?
+set:
+- Red-Black Tree
+- Sorted
+- O(log n)
+
+unordered_set:
+- Hash Table
+- Not sorted
+- Average O(1)
+
+Can we modify an element inside set?*******
+NO
+for(auto& x : s)
+{
+    x = 100;   // Compilation Error
+}
+
+Reason:
+
+Changing a value may break tree ordering.
+
+This is a favorite interview question.
+
+8. Why are set elements treated as const?
+To preserve sorted order of the tree.
+
+12. Difference between set::find() and std::find()?
+s.find(x);
+O(log n)
+find(s.begin(), s.end(), x);
+O(n)
+
+
+
