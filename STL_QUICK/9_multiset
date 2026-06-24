@@ -1,6 +1,35 @@
 =========================================
 C++ MULTISET STL - INTERVIEW NOTES
 =========================================
+multiset
+
+Underlying DS : Red-Black Tree
+Sorted         : Yes
+Duplicates     : Yes
+Iterator       : Bidirectional
+Insert         : O(log n)
+Find           : O(log n)
+Erase          : O(log n)
+Random Access  : No
+Elements Modifiable : No
+Duplicate Check : Comparator, not operator==
+Iterator Invalidation :
+    Insert -> No
+    Erase  -> Only erased iterator
+
+User-defined object support in multiset
+is exactly the same as set.
+
+Either:
+
+1. Overload operator<
+OR
+2. Provide custom comparator
+
+Difference:
+
+set      -> equivalent key rejected
+multiset -> equivalent key accepted
 
 1. What is multiset?
 --------------------
