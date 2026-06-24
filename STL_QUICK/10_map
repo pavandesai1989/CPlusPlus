@@ -1,58 +1,89 @@
 =========================================
-C++ STL MAP – INTERVIEW NOTES
+C++ STL MAP - FINAL INTERVIEW NOTES
 =========================================
 
+QUICK REVISION
+=========================================
+
+map
+
+Underlying DS      : Red-Black Tree
+Stores             : Key -> Value
+Sorted             : Yes (by key)
+Duplicate Keys     : No
+Iterator           : Bidirectional
+Insert             : O(log n)
+Find               : O(log n)
+Erase              : O(log n)
+Random Access      : No
+Key Modifiable     : No
+Value Modifiable   : Yes
+Duplicate Check    : Comparator, not operator==
+Iterator Invalidate:
+    Insert -> No
+    Erase  -> Only erased iterator
+
+=========================================
 1. What is map?
-----------------
-map is an associative container that stores data in key-value pairs.
+=========================================
+
+std::map is an associative container that stores:
+
+Key -> Value
+
+Properties:
+✔ Keys are unique
+✔ Keys are automatically sorted
+✔ Implemented using Red-Black Tree
+✔ O(log n) insert, find and erase
 
 Example:
-map<int, string> m;
-m[1] = "A";
-m[2] = "B";
 
-Output:
-1 -> A
-2 -> B
+map<int,string> mp;
 
------------------------------------------
-2. Key Properties
------------------
-- Stores key-value pairs
-- Keys are UNIQUE
-- Automatically sorted by key (ascending)
-- Implemented using Red-Black Tree
-- Time complexity: O(log n)
+mp[1] = "Pavan";
+mp[2] = "Rahul";
 
------------------------------------------
-3. Internal Implementation
---------------------------
-map is implemented using Red-Black Tree (Self-balancing BST)
+=========================================
+2. Internal Implementation
+=========================================
 
-- Maintains sorted order
-- Guarantees O(log n) operations
-- Height = O(log n)
+Implemented using a Self-Balancing BST
+(typically Red-Black Tree).
+
+Benefits:
+
+✔ Sorted order maintained
+✔ O(log n) operations
+✔ Balanced tree height
 
 Interview Answer:
-map uses Red-Black Tree which keeps data sorted and balanced.
 
------------------------------------------
-4. Complexity
---------------
-insert    O(log n)
-erase     O(log n)
-find      O(log n)
-access[]  O(log n)
-size      O(1)
+map is implemented using a Red-Black Tree
+which keeps keys sorted and guarantees
+O(log n) insert, delete and search.
 
------------------------------------------
-5. Important Functions
-----------------------
+=========================================
+3. Complexity
+=========================================
+
+insert() -> O(log n)
+find()   -> O(log n)
+erase()  -> O(log n)
+count()  -> O(log n)
+
+size()   -> O(1)
+empty()  -> O(1)
+
+=========================================
+4. Important Functions
+=========================================
+
 insert()
 erase()
 find()
 count()
-[]
+operator[]
 at()
 begin()
 end()
@@ -60,130 +91,342 @@ size()
 empty()
 clear()
 
------------------------------------------
-6. map vs unordered_map
------------------------
-map:
-- Ordered
-- O(log n)
-- Red-Black Tree
+=========================================
+5. Iterator Type
+=========================================
 
-unordered_map:
-- Unordered
-- O(1) average
-- Hash Table
+Bidirectional Iterator
 
-Use:
-map → sorting required
-unordered_map → fast lookup required
+Supported:
 
------------------------------------------
-7. Important Behavior of []
---------------------------------
-m[key] inserts key if not present
+++it
+--it
+
+Not Supported:
+
+it + 1
+it - 1
+it[0]
+
+Reason:
+
+Map is tree-based, not contiguous memory.
+
+=========================================
+6. Can Key Be Modified?
+=========================================
+
+No.
 
 Example:
-cout << m[10]; // inserts 10 with default value
 
-Safe:
-m.at(key); // throws error if not found
-
------------------------------------------
-8. Iteration
--------------
-for(auto it : m)
-    cout << it.first << " " << it.second;
-
-Gives sorted order
-
------------------------------------------
-9. Advantages
---------------
-- Sorted keys
-- No duplicates
-- O(log n) guaranteed
-- Good for range queries
-
------------------------------------------
-10. Disadvantages
------------------
-- Slower than unordered_map
-- Higher memory usage
-
------------------------------------------
-11. When to use map?
---------------------
-Use when:
-- Sorting required
-- Ordered traversal needed
-- Range queries needed
-
-Avoid when:
-- Only fast lookup needed
-
------------------------------------------
-12. MOST USED FUNCTIONS IN CODING
-----------------------------------
-insert()
-erase()
-find()
-count()
-[]
-size()
-empty()
-
------------------------------------------
-13. CODE (MOST USED OPERATIONS)
-----------------------------------
-#include <iostream>
-#include <map>
-using namespace std;
-
-int main() {
-
-    map<int, string> m;
-
-    // insert
-    m[1] = "Apple";
-    m[2] = "Banana";
-    m[3] = "Mango";
-
-    m.insert({4, "Grapes"});
-
-    // access
-    cout << m[2] << endl;
-
-    // find
-    if(m.find(3) != m.end())
-        cout << "Found 3" << endl;
-
-    // iteration
-    for(auto it : m)
-        cout << it.first << " -> " << it.second << endl;
-
-    // erase
-    m.erase(2);
-
-    // size
-    cout << m.size() << endl;
-
-    // count
-    cout << m.count(1) << endl;
-
-    return 0;
+for(auto& p : mp)
+{
+    p.first = 100; // Compilation Error
 }
 
------------------------------------------
-14. QUICK REVISION
--------------------
-- map = key-value store
-- keys are sorted
-- implemented using Red-Black Tree
-- O(log n) operations
-- very common in interviews
+Reason:
 
------------------------------------------
-15. ONE-LINE ANSWER
--------------------
-map is an ordered key-value container implemented using Red-Black Tree that provides O(log n) insert, delete, and search operations while keeping keys sorted.
+Changing a key may violate tree ordering.
+
 =========================================
+7. Can Value Be Modified?
+=========================================
+
+Yes.
+
+Example:
+
+mp[1] = "Pavan";
+
+mp[1] = "Rahul";
+
+Only key is const.
+
+=========================================
+8. What is Actually Stored in map?
+=========================================
+
+pair<const Key, Value>
+
+Example:
+
+map<int,string>
+
+stores:
+
+pair<const int,string>
+
+This is why key cannot be modified.
+
+=========================================
+9. User Defined Key Support
+=========================================
+
+Need either:
+
+1. operator< overload
+
+OR
+
+2. Custom comparator
+
+Example:
+
+class Employee
+{
+public:
+    int id;
+
+    bool operator<(const Employee& other) const
+    {
+        return id < other.id;
+    }
+};
+
+map<Employee,string> mp;
+
+=========================================
+10. lower_bound() and upper_bound()
+=========================================
+
+lower_bound(k)
+--------------
+First key >= k
+
+upper_bound(k)
+--------------
+First key > k
+
+Example:
+
+Keys:
+
+10 20 30
+
+lower_bound(20) -> 20
+
+upper_bound(20) -> 30
+
+=========================================
+11. Why No Random Access?
+=========================================
+
+Map is tree-based.
+
+Invalid:
+
+it + 1
+it[5]
+
+Only iterator traversal is supported.
+
+=========================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================
+
+1. Difference Between map and unordered_map?
+--------------------------------------------
+
+map:
+- Red-Black Tree
+- Sorted
+- O(log n)
+
+unordered_map:
+- Hash Table
+- Unsorted
+- Average O(1)
+- Worst O(n)
+
+Use map:
+✔ Ordering required
+✔ Range queries required
+
+Use unordered_map:
+✔ Fast lookup required
+
+--------------------------------------------
+
+2. Difference Between map and multimap?
+----------------------------------------
+
+map:
+- Unique keys
+
+multimap:
+- Duplicate keys allowed
+
+--------------------------------------------
+
+3. Does map allow duplicate keys?
+----------------------------------
+
+No.
+
+Keys must be unique.
+
+--------------------------------------------
+
+4. Does map use operator== ?
+----------------------------------
+
+No.
+
+map uses comparator (operator< by default).
+
+Equivalent keys:
+
+!(a < b) && !(b < a)
+
+Map does NOT use operator== for duplicate detection.
+
+--------------------------------------------
+
+5. Difference Between operator[] and find()?
+--------------------------------------------
+
+find():
+-------
+Does NOT insert a key.
+
+Example:
+
+mp.find(100);
+
+Map size unchanged.
+
+operator[]:
+------------
+May insert a new key.
+
+Example:
+
+mp[100];
+
+If absent:
+
+100 -> default value
+
+is inserted.
+
+VERY COMMON INTERVIEW QUESTION
+
+--------------------------------------------
+
+6. Difference Between operator[] and at()?
+-------------------------------------------
+
+operator[]:
+------------
+Creates element if key absent.
+
+Example:
+
+mp[10];
+
+May insert a new node.
+
+at():
+-----
+Does NOT insert.
+
+mp.at(10);
+
+Throws out_of_range exception
+if key not found.
+
+--------------------------------------------
+
+7. What Does find() Return?
+--------------------------------------------
+
+Iterator.
+
+Example:
+
+auto it = mp.find(10);
+
+if(it != mp.end())
+{
+    cout << it->second;
+}
+
+If not found:
+
+it == mp.end()
+
+--------------------------------------------
+
+8. Does Insertion Invalidate Iterators?
+----------------------------------------
+
+No.
+
+Insertion into map does NOT invalidate
+existing iterators.
+
+Reason:
+
+Tree nodes are linked.
+No reallocation like vector.
+
+--------------------------------------------
+
+9. When Are Iterators Invalidated?
+-----------------------------------
+
+Only when the pointed element is erased.
+
+Example:
+
+auto it = mp.find(10);
+
+mp.erase(10);
+
+Now 'it' becomes invalid.
+
+--------------------------------------------
+
+10. Why Is Key Stored As const?
+--------------------------------
+
+To preserve tree ordering.
+
+Changing a key may break the
+Red-Black Tree structure.
+
+--------------------------------------------
+
+11. Can map Store User Defined Keys?
+------------------------------------
+
+Yes.
+
+Need:
+
+1. operator<
+
+OR
+
+2. Custom comparator
+
+--------------------------------------------
+
+12. What Is The Type Stored In map?
+-----------------------------------
+
+pair<const Key, Value>
+
+Example:
+
+pair<const int, string>
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+std::map is a Red-Black Tree based associative
+container that stores unique sorted keys with
+their values and provides O(log n) insert,
+search and erase operations.
