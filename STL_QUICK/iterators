@@ -1,0 +1,342 @@
+=========================================
+C++ ITERATORS - INTERVIEW NOTES
+=========================================
+
+QUICK REVISION
+=========================================
+
+Iterator:
+---------
+Used to traverse elements of a container.
+
+Similar to a pointer.
+
+Example:
+
+vector<int> v = {10,20,30};
+
+auto it = v.begin();
+
+cout << *it;   // 10
+
+=========================================
+1. Why Do We Need Iterators?
+=========================================
+
+✔ Traverse containers
+✔ Work with STL algorithms
+✔ Provide a common interface for all containers
+
+Example:
+
+sort(v.begin(), v.end());
+
+find(v.begin(), v.end(), 10);
+
+=========================================
+2. Iterator Categories
+=========================================
+
+1. Input Iterator
+-----------------
+Read only.
+
+Supports:
+
+*
+++
+
+=========================================
+
+2. Output Iterator
+------------------
+Write only.
+
+Supports:
+
+*
+++
+
+=========================================
+
+3. Forward Iterator
+-------------------
+Move only forward.
+
+Supports:
+
+*
+++
+
+Containers:
+
+forward_list
+unordered_set
+unordered_map
+unordered_multiset
+unordered_multimap
+
+=========================================
+
+4. Bidirectional Iterator
+-------------------------
+Move both directions.
+
+Supports:
+
+*
+++
+--
+
+Containers:
+
+list
+
+set
+multiset
+
+map
+multimap
+
+=========================================
+
+5. Random Access Iterator
+-------------------------
+Fastest iterator.
+
+Supports:
+
+*
+++
+--
++
+-
+[]
+
+Containers:
+
+vector
+array
+deque
+
+=========================================
+3. Container vs Iterator Type
+=========================================
+
+vector        -> Random Access
+array         -> Random Access
+deque         -> Random Access
+
+list          -> Bidirectional
+
+set           -> Bidirectional
+multiset      -> Bidirectional
+
+map           -> Bidirectional
+multimap      -> Bidirectional
+
+forward_list  -> Forward
+
+unordered_set       -> Forward
+unordered_multiset  -> Forward
+
+unordered_map       -> Forward
+unordered_multimap  -> Forward
+
+=========================================
+4. Why Does vector Have Random Access Iterator?
+=========================================
+
+vector stores data in contiguous memory.
+
+Example:
+
+10 20 30 40 50
+
+Iterator can directly jump:
+
+it + 3
+it - 2
+it[1]
+
+Supported.
+
+=========================================
+5. Why Does set/map Have Bidirectional Iterator?
+=========================================
+
+Implemented using Red-Black Tree.
+
+Data is not contiguous.
+
+Supported:
+
+++it
+--it
+
+Not Supported:
+
+it + 1
+it - 1
+it[0]
+
+Interview Answer:
+
+set/map provide Bidirectional Iterators because
+they are tree-based containers. Elements are
+not stored contiguously, so random access is
+not possible.
+
+=========================================
+6. Common Iterator Operations
+=========================================
+
+begin()
+-------
+First element.
+
+end()
+-----
+One position after last element.
+
+rbegin()
+--------
+Reverse begin.
+
+rend()
+------
+Reverse end.
+
+Example:
+
+for(auto it = v.begin();
+    it != v.end();
+    ++it)
+{
+    cout << *it;
+}
+
+=========================================
+7. Iterator vs Pointer
+=========================================
+
+Pointer:
+--------
+Works with arrays.
+
+Iterator:
+---------
+Works with STL containers.
+
+Iterator behaves like a generalized pointer.
+
+=========================================
+8. Iterator Invalidation (VERY IMPORTANT)
+=========================================
+
+vector
+------
+Insertion may invalidate iterators.
+
+Example:
+
+v.push_back(100);
+
+May reallocate memory.
+
+-----------------------------------------
+
+set / map
+---------
+Insertion does NOT invalidate iterators.
+
+Reason:
+
+Tree nodes are linked.
+
+-----------------------------------------
+
+erase()
+-------
+Only iterator pointing to erased element
+becomes invalid.
+
+=========================================
+9. Most Asked Interview Questions
+=========================================
+
+Q. What is an iterator?
+
+A.
+Iterator is an object used to traverse
+elements of a container. It behaves
+similar to a pointer.
+
+-----------------------------------------
+
+Q. Why are iterators needed?
+
+A.
+To provide a common traversal mechanism
+for all STL containers and algorithms.
+
+-----------------------------------------
+
+Q. Which iterator does vector provide?
+
+A.
+Random Access Iterator.
+
+-----------------------------------------
+
+Q. Which iterator does set provide?
+
+A.
+Bidirectional Iterator.
+
+-----------------------------------------
+
+Q. Which iterator does map provide?
+
+A.
+Bidirectional Iterator.
+
+-----------------------------------------
+
+Q. Which iterator does unordered_map provide?
+
+A.
+Forward Iterator.
+
+-----------------------------------------
+
+Q. Why does vector provide Random Access Iterator?
+
+A.
+Because elements are stored in contiguous memory.
+
+-----------------------------------------
+
+Q. Why does set/map provide Bidirectional Iterator?
+
+A.
+Because they are implemented using
+Red-Black Trees and do not support
+direct indexing.
+
+-----------------------------------------
+
+Q. What is iterator invalidation?
+
+A.
+An iterator becomes invalid when a
+container operation changes the element
+it refers to or the underlying storage.
+
+=========================================
+ONE-LINE INTERVIEW ANSWER
+=========================================
+
+Iterator is an object similar to a pointer
+that is used to traverse STL containers and
+connect containers with STL algorithms.
