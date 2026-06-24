@@ -2,6 +2,108 @@
 C++ STL SET - INTERVIEW NOTES
 =========================================
 
+1. set stores unique elements.
+2. Elements are always sorted.
+3. Implemented using Red-Black Tree.
+4. insert/find/erase -> O(log n).
+5. Iterator type -> Bidirectional.
+6. No random access/indexing.
+7. Cannot modify elements in-place.
+8. Duplicates checked using comparator, not operator==.
+9. User-defined types require operator< or custom comparator.
+10. set insertion does not invalidate existing iterators.
+
+18. Can set store duplicate values?
+----------------------------------
+No.
+
+set      -> Unique elements
+multiset -> Duplicate elements allowed
+
+Example:
+set<int> s = {10, 20, 10};
+
+Stored:
+10 20
+
+----------------------------------
+
+19. How are duplicates detected in set?
+----------------------------------------
+set does NOT use operator==.
+
+It uses the comparator (operator< by default).
+
+Two objects are considered equivalent if:
+
+!(a < b) && !(b < a)
+
+Example:
+
+Employee(1, "A")
+Employee(1, "B")
+
+If operator< compares only id, then both objects are considered equivalent and only one will be stored.
+
+----------------------------------
+
+20. Does insertion invalidate iterators?
+-----------------------------------------
+No.
+
+Insertion into a set does NOT invalidate existing iterators.
+
+Example:
+
+set<int> s = {10,20};
+
+auto it = s.find(10);
+
+s.insert(30);
+
+cout << *it;   // Still valid
+
+Reason:
+set is tree-based and does not reallocate memory like vector.
+
+----------------------------------
+
+21. When are set iterators invalidated?
+----------------------------------------
+Only when the pointed element itself is erased.
+
+Example:
+
+auto it = s.find(10);
+
+s.erase(10);
+
+Now 'it' becomes invalid.
+
+Other iterators remain valid.
+
+----------------------------------
+
+22. How to get smallest and largest element?
+--------------------------------------------
+
+Smallest element:
+
+*s.begin()
+
+Largest element:
+
+*prev(s.end())
+
+Example:
+
+set<int> s = {10,20,30};
+
+cout << *s.begin();      // 10
+
+cout << *prev(s.end());  // 30
+
+
 1. What is set?
 ---------------
 - std::set is an associative container in STL.
