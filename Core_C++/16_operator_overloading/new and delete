@@ -1,0 +1,129 @@
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class Test
+{
+private:
+    int m_x;
+
+public:
+    Test(int val = 0) : m_x(val) {}
+
+    // Overload new
+    static void* operator new(size_t size) ****most imp point is its static 
+    {
+        cout << "Overloaded new" << endl;
+
+        void* ptr = malloc(size);
+
+        if (ptr == nullptr)
+            throw bad_alloc();
+
+        return ptr;
+    }
+
+    // Overload delete
+    static void operator delete(void* ptr) *** static 
+    {
+        cout << "Overloaded delete" << endl;
+        free(ptr);
+    }
+};
+
+int main()
+{
+    Test* p = new Test(34);
+
+    delete p;
+
+    return 0;
+}
+
+
+Q. Why overload new/delete?
+A. To customize memory allocation and deallocation.
+
+Q. Why are operator new/delete static? *********************VVVVVVIMP
+operator new() is called before an object is created.
+
+At that time, there is no object, so there is no 'this' pointer.
+
+Therefore, operator new() cannot be a non-static member function.
+
+Similarly, operator delete() is called after the object has been destroyed, so it also cannot rely on a valid 'this' pointer.
+
+Hence, operator new() and operator delete() are declared static.
+
+operator new()      ← No object exists yet  ****IIIIMP
+        ↓
+Memory allocated
+        ↓
+Constructor
+        ↓
+Object created
+
+Notice that when operator new() is called:
+
+❌ Object does not exist
+❌ No this pointer
+
+So it must be static.
+
+Q. Does operator new construct the object?
+A. No. It only allocates raw memory.
+
+Q. Does operator delete destroy the object?
+A. No. The destructor runs first, then operator delete
+releases the memory.
+
+Execution Order:
+
+new:
+operator new() -> Constructor
+
+delete:
+Destructor -> operator delete()
+
+Q. Why throw bad_alloc?
+A. Standard C++ new throws std::bad_alloc if memory allocation fails.
+
+******* glocal scope****
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+void* operator new(size_t size)
+{
+    cout << "Global new\n";
+
+    void* ptr = malloc(size);
+
+    if(ptr == nullptr)
+        throw bad_alloc();
+
+    return ptr;
+}
+
+void operator delete(void* ptr)
+{
+    cout << "Global delete\n";
+    free(ptr);
+}
+
+class Test
+{
+};
+
+int main()
+{
+    Test* p = new Test;
+
+    delete p;
+
+    int* x = new int(10);
+
+    delete x;
+}
+
+
