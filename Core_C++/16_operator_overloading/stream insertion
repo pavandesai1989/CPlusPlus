@@ -1,1 +1,223 @@
+#include <iostream>
+using namespace std;
+
+class Num
+{
+private:
+    int m_x;
+
+public:
+    Num(int val = 0) : m_x(val) {}
+
+    // Friend functions
+    friend istream& operator>>(istream& in, Num& obj);
+    friend ostream& operator<<(ostream& out, const Num& obj);
+};
+
+// Overload >>
+istream& operator>>(istream& in, Num& obj)
+{
+    cout << "Enter value: ";
+    in >> obj.m_x;
+    return in;
+}
+
+// Overload <<
+ostream& operator<<(ostream& out, const Num& obj)
+{
+    out << obj.m_x;
+    return out;
+}
+
+int main()
+{
+    Num ob;
+
+    cin >> ob;
+
+    cout << "Value = " << ob << endl;
+
+    return 0;
+}
+
+=========================================
+MOST ASKED OPERATOR OVERLOADING INTERVIEW Q&A
+=========================================
+
+1. What is Operator Overloading?
+--------------------------------
+Operator overloading allows existing C++ operators to work with user-defined types.
+
+Example:
+cout << obj;
+cin >> obj;
+
+It is an example of Compile-Time Polymorphism.
+
+--------------------------------
+
+2. Why overload << and >> ?
+---------------------------
+To make objects behave like built-in types.
+
+Without overloading:
+obj.print();
+
+With overloading:
+cout << obj;
+cin >> obj;
+
+Improves readability.
+
+--------------------------------
+
+3. Why are << and >> friend functions?
+--------------------------------------
+Because:
+- They need access to private members.
+- Left operand is ostream/istream.
+- We cannot modify the STL ostream/istream classes.
+
+--------------------------------
+
+4. Why are they NOT member functions?*************************
+-------------------------------------
+Expression:
+
+cout << obj;
+
+Left operand is ostream.
+
+Compiler converts it to:
+
+operator<<(cout, obj);
+
+Since ostream is an STL class, we cannot add member functions to it.
+
+--------------------------------
+
+5. Why return ostream& ?
+------------------------
+To support chaining.
+
+Example:
+
+cout << a << b << c;
+
+Each operator<< returns the same ostream object.
+
+--------------------------------
+
+6. Why return istream& ?
+------------------------
+To support chaining.
+
+Example:
+
+cin >> a >> b >> c;
+
+--------------------------------
+
+7. Why does operator<< take const Object& ?
+-------------------------------------------
+Because it only reads the object.
+
+Advantages:
+- No copying
+- Cannot modify object
+- More efficient
+
+Signature:
+friend ostream& operator<<(ostream& out, const Object& obj);
+
+--------------------------------
+
+8. Why does operator>> take Object& ?
+------------------------------------
+Because input modifies the object.
+
+Signature:
+friend istream& operator>>(istream& in, Object& obj);
+
+--------------------------------
+
+9. What does the compiler convert this into?
+--------------------------------------------
+
+cout << obj;
+
+becomes
+
+operator<<(cout, obj);
+
+Similarly,
+
+cin >> obj;
+
+becomes
+
+operator>>(cin, obj);
+
+--------------------------------
+
+10. Why return by reference instead of value?
+---------------------------------------------
+- Avoids copying
+- Improves performance
+- Enables chaining
+
+--------------------------------
+
+11. Which operators MUST be member functions?
+---------------------------------------------
+=
+[]
+()
+->
+
+--------------------------------
+
+12. Which operators are commonly overloaded as friend functions?
+---------------------------------------------------------------
+<<
+>>
+
+--------------------------------
+
+13. Which OOP concept does Operator Overloading use?
+----------------------------------------------------
+Compile-Time Polymorphism.
+
+--------------------------------
+
+14. Can operator overloading change operator precedence?
+--------------------------------------------------------
+No.
+
+Precedence and associativity remain unchanged.
+
+--------------------------------
+
+15. Can we create new operators?
+--------------------------------
+No.
+
+Only existing C++ operators can be overloaded.
+
+--------------------------------
+
+16. What is the biggest advantage of operator overloading?
+----------------------------------------------------------
+Makes user-defined objects behave like built-in types.
+
+Example:
+
+Instead of:
+obj.print();
+
+We can write:
+cout << obj;
+
+Cleaner and more readable syntax.
+
 
