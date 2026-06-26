@@ -1,0 +1,257 @@
+=========================================================
+C++ TYPE CASTING (TYPE CONVERSION) – COMPLETE INTERVIEW NOTES
+=========================================================
+
+C++ provides 4 main casting operators:
+
+1. static_cast
+2. dynamic_cast
+3. const_cast
+4. reinterpret_cast
+
+PLUS:
+- C-style cast (legacy, unsafe)
+
+=========================================================
+1. static_cast ⭐⭐⭐⭐⭐ (MOST USED)
+=========================================================
+
+Use cases:
+- Compile-time conversion
+- Numeric conversions
+- Upcasting in inheritance ( derived to base) ***
+
+Syntax:
+static_cast<type>(expression)
+
+---------------------------------------------------------
+Example 1: primitive conversion
+---------------------------------------------------------
+int a = 10;
+double b = static_cast<double>(a);
+
+---------------------------------------------------------
+Example 2: upcasting (safe)
+---------------------------------------------------------
+class Base {};
+class Derived : public Base {};
+
+Base* b = static_cast<Base*>(new Derived);
+
+Base* b = static_cast<Base*>(new Derived);
+
+👉 is technically unnecessary and not recommended
+
+Because upcasting is ALWAYS implicit in C++
+
+---------------------------------------------------------
+Important points:
+- Checked at compile time only
+- No runtime type safety
+- Fast
+- Safe only when you are sure about types
+
+=========================================================
+2. dynamic_cast ⭐⭐⭐⭐⭐ (RUNTIME SAFE CASTING)
+=========================================================
+
+Use cases:
+- Runtime polymorphism (RTTI)
+- Downcasting safely
+
+Requirements:
+- Must have at least one virtual function
+
+Syntax:
+dynamic_cast<type>(expression)
+
+---------------------------------------------------------
+Example:
+---------------------------------------------------------
+class Base {
+public:
+    virtual void show() {}
+};
+
+class Derived : public Base {};
+
+Base* b = new Derived;
+
+Derived* d = dynamic_cast<Derived*>(b);
+
+---------------------------------------------------------
+If invalid:
+- returns nullptr (for pointers)
+- throws bad_cast (for references)
+
+---------------------------------------------------------
+Important points:
+- Slower (runtime check)
+- Safe
+- Used in polymorphic classes
+
+=========================================================
+3. const_cast ⭐⭐⭐⭐ (REMOVE CONST)
+=========================================================
+
+Use case:
+- Remove const or volatile qualifier
+
+Syntax:
+const_cast<type>(expression)
+
+---------------------------------------------------------
+Example:
+---------------------------------------------------------
+void func(int* p)
+{
+    *p = 20;
+}
+
+const int a = 10;
+
+func(const_cast<int*>(&a));
+
+---------------------------------------------------------
+Important points:
+- ONLY modifies const/volatile qualifiers
+- Does NOT change actual object constness safely
+- Misuse leads to undefined behavior
+
+=========================================================
+4. reinterpret_cast ⭐⭐⭐ (MOST DANGEROUS)
+=========================================================
+
+Use case:
+- Low-level casting
+- Pointer to pointer conversion
+- Address manipulation
+
+Syntax:
+reinterpret_cast<type>(expression)
+
+---------------------------------------------------------
+Example:
+---------------------------------------------------------
+int a = 10;
+
+char* p = reinterpret_cast<char*>(&a);
+
+---------------------------------------------------------
+Important points:
+- No safety checks
+- Just reinterprets memory bits
+- Highly unsafe
+- Used in:
+  - hardware programming
+  - serialization
+  - network packets
+
+=========================================================
+5. C-STYLE CAST (OLD STYLE)
+=========================================================
+
+Syntax:
+(type) expression
+
+Example:
+int x = (int)3.14;
+
+---------------------------------------------------------
+Problem:
+- Can behave like any of the above casts
+- No clarity
+- Unsafe
+
+=========================================================
+COMPARISON TABLE (VERY IMPORTANT)
+=========================================================
+
+Cast               Safety     Speed     Use case
+---------------------------------------------------------
+static_cast        Medium     Fast      general conversions
+dynamic_cast       High       Slow      polymorphism
+const_cast         Low        Fast      remove const
+reinterpret_cast   Very Low   Fast      low-level memory
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q. Why do we need type casting?
+A.
+To convert one data type into another safely or explicitly.
+
+---------------------------------------------------------
+
+Q. Difference between static_cast and dynamic_cast?
+
+static_cast:
+- compile-time
+- unsafe for downcasting
+
+dynamic_cast:
+- runtime
+- safe for polymorphism
+
+---------------------------------------------------------
+
+Q. Why is dynamic_cast slow?
+A.
+Because it performs runtime type checking using RTTI.
+
+---------------------------------------------------------
+
+Q. Why is reinterpret_cast dangerous?
+A.
+Because it only reinterprets memory without type safety.
+
+---------------------------------------------------------
+
+Q. When do we use const_cast?
+A.
+To remove const/volatile qualifier.
+
+---------------------------------------------------------
+
+Q. Which cast should be preferred in C++?
+A.
+Always prefer:
+- static_cast for normal conversions
+- dynamic_cast for polymorphism
+
+Avoid C-style casts.
+
+=========================================================
+REAL-WORLD USE CASES
+=========================================================
+
+static_cast:
+- numeric conversions
+- type-safe conversions
+- upcasting
+
+dynamic_cast:
+- plugin systems
+- GUI frameworks
+- runtime polymorphism checks
+
+const_cast:
+- legacy APIs
+- C library compatibility
+
+reinterpret_cast:
+- device drivers
+- networking
+- serialization
+
+=========================================================
+ONE-LINE SUMMARY
+=========================================================
+
+C++ casts provide controlled type conversion:
+- static_cast → compile-time safe conversion
+- dynamic_cast → runtime safe polymorphic conversion
+- const_cast → remove constness
+- reinterpret_cast → low-level unsafe memory reinterpretation
+=========================================================
