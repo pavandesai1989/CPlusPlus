@@ -1,0 +1,79 @@
+class Employee
+{
+private:
+    string name;
+
+public:
+    Employee(string n) : name(n) {}
+
+    Employee& operator*()
+    {
+        return *this;
+    }
+
+    Employee* operator->()
+    {
+        return this;
+    }
+
+    void display() const
+    {
+        cout << "Employee: " << name << endl;
+    }
+};
+
+int main()
+{
+    employee ob("pavan");
+
+    (*ob).display();
+    ob->display();
+}
+
+why not *ob.display()************VVVVIMP
+Why?
+
+The . (member access) operator has higher precedence than the unary * operator.
+
+So the compiler interprets:
+
+*ob.display();
+
+as
+
+*(ob.display());
+
+It first tries to call:
+
+ob.display();
+
+which returns void.
+
+Then it becomes:
+
+
+
+*(void);
+
+which is invalid.
+
+
+(*ob).display();
+
+is required because '.' has higher precedence than '*'.
+
+If we write:
+
+*ob.display();
+
+the compiler interprets it as:
+
+*(ob.display());
+
+which is invalid because display() returns void.
+
+Therefore we write:
+
+(*ob).display();
+
+This first calls operator*(), then invokes display() on the returned object.
