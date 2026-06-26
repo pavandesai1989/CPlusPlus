@@ -1,0 +1,109 @@
+=========================================================
+EXPLICIT CONSTRUCTOR (C++ INTERVIEW QUICK NOTES)
+=========================================================
+
+WHAT IS EXPLICIT CONSTRUCTOR?
+-----------------------------
+- explicit constructor prevents implicit type conversion.
+- It forces the programmer to do explicit conversion only.
+
+=========================================================
+WITHOUT explicit (IMPLICIT CONVERSION ALLOWED)
+=========================================================
+
+class Test
+{
+public:
+    Test(int x)
+    {
+        cout << "Constructor called";
+    }
+};
+
+int main()
+{
+    Test t = 10;   // implicit conversion allowed
+}
+
+EXPLANATION:
+- 10 is automatically converted to Test(10)
+- This is implicit conversion
+
+=========================================================
+PROBLEM
+=========================================================
+- Unexpected object creation
+- Hidden conversions
+- Can lead to bugs in large systems
+
+=========================================================
+WITH explicit KEYWORD
+=========================================================
+
+class Test
+{
+public:
+    explicit Test(int x)
+    {
+        cout << "Constructor called";
+    }
+};
+
+int main()
+{
+    Test t = 10;     // ❌ ERROR
+}
+
+=========================================================
+CORRECT USAGE WITH explicit
+=========================================================
+
+Test t(10);          // OK
+Test t = Test(10);   // OK
+
+=========================================================
+WHY USE explicit?
+=========================================================
+- Prevents implicit conversions
+- Improves type safety
+- Avoids accidental object creation
+- Makes code more readable and predictable
+
+=========================================================
+WHERE USED?
+=========================================================
+1. Single-argument constructors
+2. Conversion constructors
+3. Conversion operators (C++11+)
+
+Example:
+explicit operator bool() const;
+
+=========================================================
+INTERVIEW QUESTIONS
+=========================================================
+
+Q. What is explicit constructor?
+A. It prevents implicit type conversion for constructors.
+
+---------------------------------------------------------
+
+Q. What happens without explicit?
+A. Compiler allows implicit conversion.
+
+---------------------------------------------------------
+
+Q. Why do we use explicit?
+A. To avoid unintended implicit conversions and improve safety.
+
+---------------------------------------------------------
+
+Q. Can explicit be used with operators?
+A. Yes, in C++11 for conversion operators.
+
+=========================================================
+ONE LINE DEFINITION
+=========================================================
+explicit constructor disables automatic implicit conversion
+from other types to class objects.
+=========================================================
