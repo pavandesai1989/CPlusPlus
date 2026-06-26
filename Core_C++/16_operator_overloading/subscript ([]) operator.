@@ -1,0 +1,51 @@
+#include <iostream>
+using namespace std;
+
+class Array
+{
+private:
+    int arr[5] = {10, 20, 30, 40, 50};
+
+public:
+    int& operator[](int index)
+    {
+        return arr[index];
+    }
+};
+
+int main()
+{
+    Array ob;
+
+    cout << ob[2] << endl;   // 30
+
+    ob[2] = 100;
+
+    cout << ob[2] << endl;   // 100
+
+    return 0;
+}
+
+ob[2]
+
+Compiler converts it to:
+
+ob.operator[](2);
+
+operator[] overloads the subscript operator.
+
+It allows objects to be accessed like arrays.
+
+Returning int& allows both reading and writing.
+
+Why is operator[] a member function?
+operator[] must be a member function because
+the left operand must be the object itself.
+
+Example:
+
+ob[2]
+
+becomes
+
+ob.operator[](2);
