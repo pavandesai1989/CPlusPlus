@@ -1,0 +1,104 @@
+#include <iostream>
+using namespace std;
+
+class Counter
+{
+private:
+    int value;
+
+public:
+    Counter(int v = 0) : value(v) {}
+
+    // Pre-increment (++obj)
+    Counter& operator++()
+    {
+        ++value;
+        return *this;
+    }
+
+    // Post-increment (obj++)
+    Counter operator++(int)
+    {
+        Counter temp = *this;
+        value++;
+        return temp;
+    }
+
+    void display() const
+    {
+        cout << value << endl;
+    }
+};
+
+int main()
+{
+    Counter c(10);
+
+    (++c).display();   // 11
+
+    (c++).display();   // 11
+
+    c.display();       // 12
+
+    return 0;
+}
+
+=========================================
+PRE & POST INCREMENT INTERVIEW Q&A
+=========================================
+
+Q. Difference between pre and post increment?
+
+Pre (++obj)
+------------
+Increment first, then return.
+
+Post (obj++)
+-------------
+Return old value, then increment.
+
+-----------------------------------------
+
+Q. How does the compiler distinguish them?
+
+Pre:
+operator++()
+
+Post:
+operator++(int)
+
+The int parameter is a dummy parameter.
+
+-----------------------------------------
+
+Q. Why does pre-increment return a reference?  **********
+
+Because it returns the current object after increment.
+
+Signature:
+Counter& operator++()
+
+-----------------------------------------
+
+Q. Why does post-increment return an object?
+
+Because it must return the old value before increment.
+
+Signature:
+Counter operator++(int)
+
+-----------------------------------------
+
+Q. Compiler conversion?
+
+++obj
+
+↓
+
+obj.operator++();
+
+obj++
+
+↓
+
+obj.operator++(0);
