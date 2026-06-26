@@ -1,0 +1,63 @@
+#include <iostream>
+using namespace std;
+
+class Square
+{
+public:
+    int operator()(int x)
+    {
+        return x * x;
+    }
+};
+
+int main()
+{
+    Square ob;
+
+    cout << ob(4);
+
+    return 0;
+}
+
+ob(4);
+
+Compiler converts it to:
+
+ob.operator()(4);
+
+operator() overloads the function call operator.
+
+It allows an object to behave like a function.
+
+Objects overloading operator() are called Function Objects (Functors).
+
+=========================================
+FUNCTION CALL OPERATOR () INTERVIEW Q&A
+=========================================
+
+Q. What is operator()?
+A. It overloads the function call operator so that an object
+can be called like a function.
+
+Q. What are objects overloading operator() called?
+A. Function Objects (Functors).
+
+Q. What does the compiler convert this into?
+
+calc(10,20);
+
+↓
+
+calc.operator()(10,20);
+
+Q. Why use Functors instead of normal functions?
+
+- Can store state.****************
+- Can be passed to STL algorithms.
+- Can be inlined by the compiler.
+
+Q. Where is operator() used?
+
+- STL Algorithms
+- Custom Comparators
+- Lambda expressions (internally use function objects)
