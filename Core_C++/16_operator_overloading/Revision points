@@ -1,3 +1,25 @@
+Why do we need operator overloading?
+C++ was designed so that user-defined types (classes) can behave like built-in types (int, float).
+Operator overloading helps achieve this by allowing operators like +, -, [], <<, etc. to work with objects.
+
+🚀 Real-World Use Cases
+1. 🧮 Mathematical Systems (Complex Numbers / Vectors)
+c3 = c1 + c2;
+v3 = v1 + v2;
+
+Operator overloading is used to make user-defined classes behave like built-in types.
+
+It improves code readability and allows natural expression of operations like +, -, <<, [], etc. on objects.
+
+It is widely used in STL (vectors, iterators), smart pointers, math libraries, and stream I/O systems.
+
+Operator overloading = making objects behave like primitive types.
+
+
+
+
+
+
 =========================================================
 C++ OPERATOR OVERLOADING – QUICK REVISION NOTES
 =========================================================
