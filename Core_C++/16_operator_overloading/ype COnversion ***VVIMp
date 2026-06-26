@@ -1,0 +1,388 @@
+=========================================================
+C++ TYPE CONVERSION INTERVIEW NOTES (MOST ASKED)
+=========================================================
+
+C++ supports three types of conversions:
+
+1. Primitive Type  -> Class Type
+2. Class Type      -> Primitive Type
+3. Class Type      -> Class Type
+
+
+=========================================================
+1. PRIMITIVE TYPE -> CLASS TYPE
+=========================================================
+
+Uses:
+Conversion Constructor
+
+Syntax:
+
+class Test
+{
+public:
+    Test(int x);
+};
+
+Example:
+
+Test obj = 10;
+
+Compiler converts it to:
+
+Test obj = Test(10);
+
+Interview Q:
+-------------
+Q. How do you convert a primitive type into a class object?
+
+A.
+Using a Conversion Constructor.
+
+Example:
+
+Test(int);
+
+
+=========================================================
+2. CLASS TYPE -> PRIMITIVE TYPE
+=========================================================
+
+Uses:
+Conversion Operator (Casting Operator)
+
+Syntax:
+
+operator int() const ****vvvvimp we have operator keyword first *****
+{
+    return value;
+}
+
+Example:
+
+Test obj(100);
+
+int x = obj;
+
+Compiler converts it to:
+
+int x = obj.operator int();
+
+Interview Q:
+-------------
+Q. How do you convert a class object into a primitive type?
+
+A.
+Using a Conversion Operator.
+
+Example:
+
+operator int();
+
+Common examples:
+
+operator int();
+operator bool();
+
+
+Important Points
+----------------
+• No return type is written.
+• No parameters are allowed.
+• Usually declared const.
+
+Correct:
+
+operator int() const;
+
+Wrong:
+
+int operator int();
+
+
+=========================================================
+3. CLASS TYPE -> CLASS TYPE
+=========================================================
+
+There are TWO approaches.
+
+
+Approach 1 : Conversion Constructor
+-----------------------------------
+
+#include <iostream>
+using namespace std;
+
+class Product
+{
+private:
+    int m, n;
+
+public:
+    Product(int x = 0, int y = 0)
+    {
+        m = x;
+        n = y;
+    }
+
+    int getM() const { return m; }
+    int getN() const { return n; }
+};
+
+class Item
+{
+private:
+    int a, b;
+
+public:
+    Item()
+    {
+        a = 0;
+        b = 0;
+    }
+
+    // Conversion Constructor (KEY PART)
+    Item(Product p)
+    {
+        a = p.getM();
+        b = p.getN();
+    }
+
+    void show()
+    {
+        cout << "a = " << a << ", b = " << b << endl;
+    }
+};
+
+int main()
+{
+    Product p1(10, 20);
+
+    Item i1 = p1;   // Class -> Class conversion
+
+    i1.show();
+
+    return 0;
+}
+
+
+Approach 2 : Conversion Operator
+--------------------------------
+
+#include <iostream>
+using namespace std;
+
+class Item;
+
+class Product
+{
+private:
+    int m, n;
+
+public:
+    Product(int x = 0, int y = 0)
+    {
+        m = x;
+        n = y;
+    }
+
+    int getM() const { return m; }
+    int getN() const { return n; }
+
+    // Conversion Operator
+    operator Item();
+};
+
+class Item
+{
+private:
+    int a, b;
+
+public:
+    Item()
+    {
+        a = 0;
+        b = 0;
+    }
+
+    Item(int x, int y)
+    {
+        a = x;
+        b = y;
+    }
+
+    void show()
+    {
+        cout << "a = " << a << ", b = " << b << endl;
+    }
+
+    friend class Product;
+};
+
+// definition of conversion operator
+Product::operator Item()
+{
+    return Item(m, n);
+}
+
+int main()
+{
+    Product p1(10, 20);
+
+    Item i1 = p1;   // Class -> Class conversion
+
+    i1.show();
+
+    return 0;
+}
+
+
+
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+Q. What are the three types of conversions in C++?
+
+A.
+1. Primitive -> Class
+2. Class -> Primitive
+3. Class -> Class
+
+---------------------------------------------------------
+
+Q. How do you convert Primitive -> Class?
+
+A.
+Using a Conversion Constructor.
+
+Example:
+
+Test(int);
+
+---------------------------------------------------------
+
+Q. How do you convert Class -> Primitive?
+
+A.
+Using a Conversion Operator.
+
+Example:
+
+operator int();
+
+---------------------------------------------------------
+
+Q. How do you convert Class -> Class?
+
+A.
+Two ways:
+
+1. Conversion Constructor
+
+2. Conversion Operator
+
+---------------------------------------------------------
+
+Q. What does
+
+int x = obj;
+
+become?
+
+A.
+
+int x = obj.operator int();
+
+---------------------------------------------------------
+
+Q. Can a Conversion Operator have a return type?
+
+A.
+No.
+
+Correct:
+
+operator int();
+
+Wrong:
+
+int operator int();
+
+---------------------------------------------------------
+
+Q. Can a Conversion Operator take parameters?
+
+A.
+No.
+
+---------------------------------------------------------
+
+Q. Can a Conversion Operator be const?
+
+A.
+Yes.
+
+Usually:
+
+operator int() const;
+
+=========================================================
+INTERVIEW CHEAT SHEET
+=========================================================
+
+Primitive -> Class
+------------------
+Conversion Constructor
+
+Test(int);
+
+↓
+
+Test obj = 10;
+
+=========================================================
+
+Class -> Primitive
+------------------
+
+Conversion Operator
+
+operator int();
+
+↓
+
+int x = obj;
+
+=========================================================
+
+Class -> Class
+--------------
+
+Method 1:
+Conversion Constructor
+
+ClassB(ClassA);
+
+Method 2:
+Conversion Operator
+
+operator ClassB();
+
+=========================================================
+MOST IMPORTANT TO REMEMBER
+=========================================================
+
+✓ Primitive -> Class
+      Conversion Constructor
+
+✓ Class -> Primitive
+      Conversion Operator
+
+✓ Class -> Class
+      Conversion Constructor
+      OR
+      Conversion Operator
+
+These are the three standard type conversions asked in C++ interviews.
