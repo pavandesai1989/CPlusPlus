@@ -1,0 +1,134 @@
+=========================================================
+🔥 TOP 10 C++ MULTITHREADING INTERVIEW QUESTIONS
+=========================================================
+
+=========================================================
+1. What is multithreading?
+=========================================================
+Answer:
+Multithreading is a technique where multiple threads execute concurrently within a single process, sharing the same memory space.
+
+Benefit:
+- Better CPU utilization
+- Faster execution
+- Responsive applications
+
+=========================================================
+2. What is a race condition?
+=========================================================
+Answer:
+A race condition occurs when multiple threads access shared data simultaneously and at least one thread modifies it, leading to unpredictable results.
+
+Example:
+counter++
+
+Problem:
+Lost updates due to concurrent execution.
+
+=========================================================
+3. What is a mutex?
+=========================================================
+Answer:
+A mutex (mutual exclusion) is a synchronization primitive used to protect shared resources so that only one thread can access the critical section at a time.
+
+Purpose:
+- Prevent race conditions
+
+=========================================================
+4. Difference between mutex and atomic?
+=========================================================
+Answer:
+Mutex:
+- Used for complex critical sections
+- Can protect multiple variables
+- Slower due to locking
+
+Atomic:
+- Used for simple variables
+- Lock-free operations
+- Faster but limited functionality
+
+=========================================================
+5. What is deadlock?
+=========================================================
+Answer:
+Deadlock occurs when two or more threads wait indefinitely for each other to release resources.
+
+Example:
+Thread 1 holds lock A, waits for B
+Thread 2 holds lock B, waits for A
+
+Result:
+Infinite waiting
+
+=========================================================
+6. How do you prevent deadlock?
+=========================================================
+Answer:
+- Acquire locks in same order
+- Use std::lock() for multiple mutexes
+- Use std::scoped_lock (C++17)
+- Reduce lock scope
+
+=========================================================
+7. What is a lock_guard?
+=========================================================
+Answer:
+lock_guard is an RAII wrapper for mutex that automatically locks on creation and unlocks when it goes out of scope.
+
+Benefit:
+- Exception safe
+- No manual unlock needed
+
+=========================================================
+8. What is a condition variable?
+=========================================================
+Answer:
+A condition variable is used for thread synchronization where a thread waits until another thread signals it.
+
+Used in:
+- Producer-consumer problems
+- Event-based synchronization
+
+Functions:
+- wait()
+- notify_one()
+- notify_all()
+
+=========================================================
+9. What is the producer-consumer problem?
+=========================================================
+Answer:
+A classic synchronization problem where:
+- Producer thread adds data to a shared queue
+- Consumer thread removes data
+- Requires mutex + condition variable
+
+Purpose:
+To safely coordinate shared buffer access.
+
+=========================================================
+10. What is the difference between join and detach?
+=========================================================
+Answer:
+join():
+- Main thread waits for worker thread
+- Safe and commonly used
+
+detach():
+- Thread runs independently
+- Main thread does not wait
+- Risky if resources go out of scope
+
+=========================================================
+🔥 BONUS (VERY IMPORTANT INTERVIEW POINT)
+=========================================================
+
+Q: Can atomic replace mutex everywhere?
+A:
+No. Atomic works only for simple operations.
+Mutex is needed for complex critical sections.
+
+=========================================================
+🔥 END
+=========================================================
