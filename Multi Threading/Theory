@@ -1,0 +1,352 @@
+=========================================================
+🔥 C++ MULTITHREADING – MASTER INTERVIEW NOTES (COMPLETE)
+=========================================================
+
+=========================================================
+1. WHAT IS MULTITHREADING?
+=========================================================
+Multithreading = executing multiple threads concurrently within a process.
+
+Process:
+- Program in execution
+
+Thread:
+- Smallest unit of execution inside process
+
+Example:
+Chrome:
+- UI thread
+- Rendering thread
+- Network thread
+
+Benefits:
+- Parallel execution
+- Better CPU utilization
+- Responsive applications
+
+=========================================================
+2. PROCESS VS THREAD
+=========================================================
+Process:
+- Independent memory space
+- Heavyweight
+- Slower context switching
+
+Thread:
+- Shared memory within process
+- Lightweight
+- Faster context switching
+
+=========================================================
+3. C++ THREAD LIBRARY (C++11)
+=========================================================
+#include <thread>
+
+Core components:
+- std::thread
+- std::mutex
+- std::lock_guard
+- std::unique_lock
+- std::condition_variable
+- std::atomic
+- std::future
+- std::promise
+
+=========================================================
+4. CREATING THREAD
+=========================================================
+#include <thread>
+
+void func() {
+    cout << "Thread running";
+}
+
+int main() {
+    std::thread t(func);
+    t.join();   // wait for thread
+}
+
+=========================================================
+5. JOIN vs DETACH
+=========================================================
+JOIN:
+- Main thread waits for completion
+- Safe
+
+DETACH:
+- Thread runs independently
+- Dangerous if resources go out of scope
+
+Rule:
+Always prefer join unless required otherwise.
+
+=========================================================
+6. RACE CONDITION
+=========================================================
+Occurs when:
+- Multiple threads access shared data
+- At least one modifies it
+
+Example:
+counter++
+
+Problem:
+- Lost updates
+
+=========================================================
+7. CRITICAL SECTION
+=========================================================
+Code accessing shared resource.
+
+Must be protected using synchronization.
+
+=========================================================
+8. MUTEX
+=========================================================
+Mutex = Mutual Exclusion
+Ensures only one thread accesses resource.
+
+#include <mutex>
+
+std::mutex m;
+
+m.lock();
+shared_data++;
+m.unlock();
+
+PROBLEM:
+If exception occurs → deadlock risk
+
+=========================================================
+9. LOCK_GUARD (BEST PRACTICE)
+=========================================================
+RAII wrapper for mutex
+
+std::lock_guard<std::mutex> lock(m);
+
+- Auto unlocks
+- Exception safe
+- Preferred in interviews
+
+=========================================================
+10. UNIQUE_LOCK
+=========================================================
+More flexible than lock_guard
+
+Supports:
+- lock()
+- unlock()
+- try_lock()
+
+Use when:
+Need manual control over locking.
+
+=========================================================
+11. DEADLOCK
+=========================================================
+Two or more threads waiting forever.
+
+Example:
+Thread1 locks A → waits B
+Thread2 locks B → waits A
+
+=========================================================
+12. HOW TO AVOID DEADLOCK
+=========================================================
+- Lock in same order
+- Use std::lock()
+- Use std::scoped_lock (C++17)
+- Reduce lock scope
+
+=========================================================
+13. STARVATION
+=========================================================
+Thread never gets resource due to others monopolizing CPU.
+
+=========================================================
+14. LIVELock
+=========================================================
+Threads keep reacting to each other but no progress.
+
+=========================================================
+15. CONDITION VARIABLE
+=========================================================
+Used for thread communication.
+
+Avoids busy waiting.
+
+#include <condition_variable>
+
+Used with:
+- mutex
+- unique_lock
+
+=========================================================
+16. PRODUCER–CONSUMER (IMPORTANT)
+=========================================================
+Producer:
+- Adds data
+
+Consumer:
+- Removes data
+
+Uses:
+- queue
+- mutex
+- condition_variable
+
+=========================================================
+17. CONDITION VARIABLE EXAMPLE
+=========================================================
+std::mutex m;
+std::condition_variable cv;
+bool ready = false;
+
+Thread A:
+std::unique_lock<std::mutex> lock(m);
+cv.wait(lock, []{ return ready; });
+
+Thread B:
+{
+    std::lock_guard<std::mutex> lock(m);
+    ready = true;
+}
+cv.notify_one();
+
+=========================================================
+18. ATOMIC
+=========================================================
+#include <atomic>
+
+std::atomic<int> counter(0);
+
+- Lock-free synchronization
+- Faster than mutex
+- Used for counters/flags
+
+=========================================================
+19. ATOMIC vs MUTEX
+=========================================================
+Atomic:
+- Simple operations
+- Fast
+- Lock-free
+
+Mutex:
+- Complex operations
+- Multiple variables
+- Slower but flexible
+
+=========================================================
+20. THREAD LOCAL STORAGE
+=========================================================
+thread_local int x = 0;
+
+Each thread gets its own copy.
+
+=========================================================
+21. ASYNC / FUTURE / PROMISE
+=========================================================
+std::async:
+- Runs task asynchronously
+
+std::future:
+- Retrieves result later
+
+std::promise:
+- Sends value to future
+
+=========================================================
+22. THREAD POOL (CONCEPT)
+=========================================================
+- Fixed set of worker threads
+- Tasks queued and executed
+Benefits:
+- Avoid thread creation overhead
+- Efficient scheduling
+
+=========================================================
+23. MEMORY ORDERING (ADVANCED)
+=========================================================
+Default:
+std::memory_order_seq_cst
+
+Interview level:
+- Just know atomics provide synchronization guarantees
+
+=========================================================
+24. THREAD SAFETY
+=========================================================
+Code is thread-safe if:
+- Works correctly under concurrent execution
+
+Techniques:
+- Mutex
+- Atomic
+- Immutability
+- Thread local storage
+
+=========================================================
+25. REENTRANT FUNCTION
+=========================================================
+Safe to call concurrently by multiple threads.
+
+No shared mutable state.
+
+=========================================================
+26. COMMON INTERVIEW QUESTIONS
+=========================================================
+
+Q1. What is multithreading?
+A: Multiple threads executing concurrently.
+
+Q2. What is race condition?
+A: Multiple threads accessing shared data causing inconsistency.
+
+Q3. What is mutex?
+A: Synchronization primitive to protect shared data.
+
+Q4. lock_guard vs unique_lock?
+A: lock_guard is simple, unique_lock is flexible.
+
+Q5. What is deadlock?
+A: Circular wait between threads.
+
+Q6. How to avoid deadlock?
+A: Lock ordering, std::lock, scoped_lock.
+
+Q7. What is condition variable?
+A: Used for thread communication and waiting.
+
+Q8. What is atomic?
+A: Lock-free thread-safe variable.
+
+Q9. Atomic vs mutex?
+A: Atomic for simple ops, mutex for complex logic.
+
+Q10. What is producer-consumer?
+A: One thread produces, another consumes shared queue.
+
+=========================================================
+27. MUST-KNOW CODING PROBLEMS
+=========================================================
+✔ Create thread + join
+✔ Race condition counter (bad vs fixed)
+✔ Mutex protected counter
+✔ Atomic counter
+✔ Producer-consumer
+✔ Condition variable example
+
+=========================================================
+28. FINAL INTERVIEW SUMMARY
+=========================================================
+Multithreading = coordination of threads using:
+
+- thread → execution
+- mutex → protection
+- condition_variable → communication
+- atomic → lightweight sync
+
+=========================================================
+🔥 END OF NOTES
+=========================================================
