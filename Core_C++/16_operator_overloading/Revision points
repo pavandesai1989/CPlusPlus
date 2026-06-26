@@ -1,0 +1,145 @@
+=========================================================
+C++ OPERATOR OVERLOADING – QUICK REVISION NOTES
+=========================================================
+
+========================
+1. BASIC IDEA
+========================
+- Gives special meaning to operators for user-defined types.
+- Example:
+    obj1 + obj2
+  becomes:
+    obj1.operator+(obj2)
+
+- It is Compile-Time Polymorphism.
+
+========================
+2. GENERAL SYNTAX
+========================
+return_type operator op (parameters)
+{
+    // logic
+}
+
+Example:
+Complex operator+(Complex obj);
+
+========================
+3. COMMON INTERVIEW OVERLOADS
+========================
+
+STREAM OPERATORS (MOST IMPORTANT)
+----------------------------------
+cout << obj   → operator<<(cout, obj)
+cin  >> obj   → operator>>(cin, obj)
+
+Must be FRIEND functions.
+
+----------------------------------
+SUBSCRIPT
+----------------------------------
+obj[i] → operator[](i)
+
+Must be MEMBER function.
+
+----------------------------------
+FUNCTION CALL
+----------------------------------
+obj() → operator()(args)
+
+Used for Functors.
+
+----------------------------------
+INCREMENT/DECREMENT
+----------------------------------
+++obj  → operator++()
+obj++  → operator++(int)
+
+----------------------------------
+DEREFERENCE / POINTER
+----------------------------------
+*obj   → operator*()
+obj->  → operator->()
+
+Used in Smart Pointers.
+
+----------------------------------
+NEW / DELETE
+----------------------------------
+Overload memory allocation:
+operator new
+operator delete
+
+========================
+4. KEY RULES (VERY IMPORTANT)
+========================
+
+✔ Must be member functions:
+   - operator[]
+   - operator()
+   - operator=
+
+✔ Usually friend functions:
+   - operator<<
+   - operator>>
+
+✔ Cannot be overloaded:
+   - .
+   - ::
+   - ?:
+   - sizeof
+   - typeid
+
+========================
+5. IMPORTANT CONCEPTS
+========================
+
+✔ Pre-increment:
+   return reference (obj&)
+
+✔ Post-increment:
+   takes dummy int parameter
+
+✔ operator* returns reference for chaining
+
+✔ operator-> returns pointer to object
+
+✔ return type often reference to support chaining
+
+========================
+6. MOST ASKED INTERVIEW QUESTIONS
+========================
+
+Q. Why operator overloading?
+A. To make user-defined types behave like built-in types.
+
+Q. Why friend functions for << and >>?
+A. Left operand is stream object (cannot modify std classes).
+
+Q. Difference between pre and post ++?
+A. Pre returns updated object, post returns old value.
+
+Q. What is functor?
+A. Class with operator() overloaded.
+
+Q. Why operator new/delete are static?
+A. No object exists during allocation/deallocation.
+
+========================
+7. KEY COMPILER CONVERSIONS
+========================
+
+obj + obj2     → obj.operator+(obj2)
+obj[i]         → obj.operator[](i)
+obj()          → obj.operator()()
+obj++          → obj.operator++(0)
+++obj          → obj.operator++()
+cout << obj    → operator<<(cout, obj)
+cin >> obj     → operator>>(cin, obj)
+
+=========================================================
+ONE-LINE SUMMARY
+=========================================================
+Operator overloading = making objects behave like primitives
+using compile-time polymorphism.
+=========================================================
