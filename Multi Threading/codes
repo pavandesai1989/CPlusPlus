@@ -1,0 +1,327 @@
+=========================================================
+🔥 C++ MULTITHREADING – MUST KNOW CODES (INTERVIEW READY)
+=========================================================
+
+=========================================================
+1. BASIC THREAD CREATION
+=========================================================
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void func()
+{
+    cout << "Thread running\n";
+}
+
+int main()
+{
+    thread t(func);
+    t.join();
+    return 0;
+}
+
+=========================================================
+2. THREAD WITH ARGUMENTS
+=========================================================
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void print(int x)
+{
+    cout << "Value: " << x << endl;
+}
+
+int main()
+{
+    thread t(print, 10);
+    t.join();
+}
+
+=========================================================
+3. RACE CONDITION (BAD CODE)
+=========================================================
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+int counter = 0;
+
+void increment()
+{
+    for(int i = 0; i < 100000; i++)
+    {
+        counter++;  // NOT thread-safe
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter << endl;
+}
+
+=========================================================
+4. FIX RACE CONDITION USING MUTEX
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+using namespace std;
+
+int counter = 0;
+mutex m;
+
+void increment()
+{
+    for(int i = 0; i < 100000; i++)
+    {
+        m.lock();
+        counter++;
+        m.unlock();
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter << endl;
+}
+
+=========================================================
+5. BEST PRACTICE: LOCK_GUARD
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+using namespace std;
+
+int counter = 0;
+mutex m;
+
+void increment()
+{
+    for(int i = 0; i < 100000; i++)
+    {
+        lock_guard<mutex> lock(m);
+        counter++;
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter << endl;
+}
+
+=========================================================
+6. ATOMIC VARIABLE (NO MUTEX REQUIRED)
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <atomic>
+using namespace std;
+
+atomic<int> counter(0);
+
+void increment()
+{
+    for(int i = 0; i < 100000; i++)
+    {
+        counter++;
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter << endl;
+}
+
+=========================================================
+7. DEADLOCK EXAMPLE (BAD CODE)
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+using namespace std;
+
+mutex m1, m2;
+
+void task1()
+{
+    m1.lock();
+    this_thread::sleep_for(chrono::milliseconds(10));
+    m2.lock();
+}
+
+void task2()
+{
+    m2.lock();
+    this_thread::sleep_for(chrono::milliseconds(10));
+    m1.lock();
+}
+
+int main()
+{
+    thread t1(task1);
+    thread t2(task2);
+
+    t1.join();
+    t2.join();
+}
+
+=========================================================
+8. FIX DEADLOCK USING std::lock
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+using namespace std;
+
+mutex m1, m2;
+
+void task1()
+{
+    lock(m1, m2);
+    lock_guard<mutex> lg1(m1, adopt_lock);
+    lock_guard<mutex> lg2(m2, adopt_lock);
+}
+
+void task2()
+{
+    lock(m1, m2);
+    lock_guard<mutex> lg1(m1, adopt_lock);
+    lock_guard<mutex> lg2(m2, adopt_lock);
+}
+
+int main()
+{
+    thread t1(task1);
+    thread t2(task2);
+
+    t1.join();
+    t2.join();
+}
+
+=========================================================
+9. CONDITION VARIABLE (PRODUCER–CONSUMER)
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <queue>
+#include <mutex>
+#include <condition_variable>
+using namespace std;
+
+queue<int> q;
+mutex m;
+condition_variable cv;
+
+void producer()
+{
+    for(int i = 1; i <= 5; i++)
+    {
+        unique_lock<mutex> lock(m);
+        q.push(i);
+        cout << "Produced: " << i << endl;
+        cv.notify_one();
+    }
+}
+
+void consumer()
+{
+    for(int i = 1; i <= 5; i++)
+    {
+        unique_lock<mutex> lock(m);
+
+        cv.wait(lock, [] { return !q.empty(); });
+
+        int val = q.front();
+        q.pop();
+
+        cout << "Consumed: " << val << endl;
+    }
+}
+
+int main()
+{
+    thread t1(producer);
+    thread t2(consumer);
+
+    t1.join();
+    t2.join();
+}
+
+=========================================================
+10. FUTURE & ASYNC
+=========================================================
+
+#include <iostream>
+#include <future>
+using namespace std;
+
+int compute()
+{
+    return 42;
+}
+
+int main()
+{
+    future<int> f = async(launch::async, compute);
+
+    cout << f.get() << endl;
+}
+
+=========================================================
+11. THREAD SLEEP
+=========================================================
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void task()
+{
+    this_thread::sleep_for(chrono::seconds(2));
+    cout << "Done\n";
+}
+
+int main()
+{
+    thread t(task);
+    t.join();
+}
+=========================================================
+🔥 END OF MULTITHREADING CODES
+=========================================================
