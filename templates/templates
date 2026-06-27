@@ -1,0 +1,1437 @@
+=========================================================
+C++ TEMPLATES – COMPLETE INTERVIEW NOTES
+=========================================================
+
+What are Templates?
+-------------------
+Templates allow writing generic (type-independent) code.
+
+Instead of writing separate functions/classes for int, float, string, etc.,
+we write one template that works for any type.
+
+Benefits:
+✓ Code reuse
+✓ Type safety
+✓ Compile-time polymorphism
+✓ Better performance (no runtime overhead)
+
+=========================================================
+1. Function Template ⭐⭐⭐⭐⭐
+=========================================================
+
+Syntax:
+
+template<typename T>
+return_type function_name(parameters)
+
+Example:
+
+template<typename T>
+T maximum(T a, T b)
+{
+    return (a > b) ? a : b;
+}
+
+Usage:
+
+cout << maximum(10,20);
+cout << maximum(3.5,4.8);
+cout << maximum('A','B');
+
+Compiler generates separate functions for each type.
+
+=========================================================
+2. class vs typename
+=========================================================
+
+Both are identical.
+
+template<class T>
+
+template<typename T>
+
+Modern C++ prefers:
+
+template<typename T>
+
+=========================================================
+3. Class Template ⭐⭐⭐⭐⭐
+=========================================================
+
+Example:
+
+template<typename T>
+class Box
+{
+    T value;
+
+public:
+
+    Box(T v)
+    {
+        value = v;
+    }
+
+    void display()
+    {
+        cout << value;
+    }
+};
+
+Usage:
+
+Box<int> b1(10);
+
+Box<string> b2("Hello");
+
+=========================================================
+4. Multiple Template Parameters ⭐⭐⭐⭐
+=========================================================
+
+template<typename T, typename U>
+
+class Pair
+{
+    T first;
+    U second;
+};
+
+Usage:
+
+Pair<int,string> p;
+
+=========================================================
+5. Non-Type Template Parameter ⭐⭐⭐⭐
+=========================================================
+
+#include <iostream>
+using namespace std;
+
+template<typename T, int SIZE>
+class Array
+{
+private:
+    T arr[SIZE];
+
+public:
+    void set(int index, T value)
+    {
+        arr[index] = value;
+    }
+
+    void display() const
+    {
+        for(int i = 0; i < SIZE; i++)
+            cout << arr[i] << " ";
+
+        cout << endl;
+    }
+};
+
+int main()
+{
+    Array<int,5> a;
+
+    a.set(0,10);
+    a.set(1,20);
+    a.set(2,30);
+    a.set(3,40);
+    a.set(4,50);
+
+    a.display();
+
+    return 0;
+}
+
+=========================================================
+6. Template Instantiation ⭐⭐⭐⭐⭐  *****MOST ASKED 
+=========================================================
+
+What is Template Instantiation?
+-------------------------------
+Template Instantiation is the process by which the compiler generates
+actual functions or classes from a template when they are used.
+
+A template itself is only a blueprint.
+
+The compiler creates real code only when the template is instantiated.
+
+---------------------------------------------------------
+Example
+---------------------------------------------------------
+
+template<typename T>
+T maximum(T a, T b)
+{
+    return (a > b) ? a : b;
+}
+
+int main()
+{
+    cout << maximum(10,20);
+    cout << maximum(3.5,4.8);
+}
+
+---------------------------------------------------------
+What happens internally?
+---------------------------------------------------------
+
+Step 1:
+Compiler sees
+
+maximum(10,20);
+
+It deduces:
+
+T = int
+
+Compiler generates:
+
+int maximum(int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+---------------------------------------------------------
+
+Step 2:
+Compiler sees
+
+maximum(3.5,4.8);
+
+It deduces:
+
+T = double
+
+Compiler generates:
+
+double maximum(double a, double b)
+{
+    return (a > b) ? a : b;
+}
+
+---------------------------------------------------------
+
+If later we write
+
+string s1="ABC";
+string s2="XYZ";
+
+maximum(s1,s2);
+
+Compiler generates
+
+string maximum(string a,string b)
+{
+    return (a>b)?a:b;
+}
+
+---------------------------------------------------------
+Important Point
+---------------------------------------------------------
+
+Compiler generates ONLY the versions that are actually used.******************
+
+If we never write
+
+maximum(char,char);
+
+then compiler never generates
+
+char maximum(char,char);
+
+---------------------------------------------------------
+Compile-Time Process  ********
+---------------------------------------------------------
+
+Template Definition
+        │
+        ▼
+Compiler sees function call
+        │
+        ▼
+Template Argument Deduction
+        │
+        ▼
+Template Instantiation
+        │
+        ▼
+Compiler generates actual function
+        │
+        ▼
+Executable
+
+---------------------------------------------------------
+Class Template Example
+---------------------------------------------------------
+
+template<typename T>
+class Box
+{
+    T value;
+};
+
+Usage:
+
+Box<int> b1;
+Box<double> b2;
+
+Compiler generates
+
+class Box_int
+{
+    int value;
+};
+
+class Box_double
+{
+    double value;
+};
+
+(Conceptually. The actual generated names are compiler-specific.)
+
+---------------------------------------------------------
+Explicit Instantiation  *********
+---------------------------------------------------------
+
+Instead of letting the compiler generate automatically,
+we can explicitly request instantiation.
+
+template class Box<int>;
+
+Compiler immediately generates
+
+Box<int>
+
+even if it is not used.
+
+---------------------------------------------------------
+Implicit Instantiation
+---------------------------------------------------------
+
+Most common.
+
+Simply writing
+
+Box<int> obj;
+
+or
+
+maximum(10,20);
+
+causes the compiler to instantiate automatically.
+
+---------------------------------------------------------
+Advantages
+---------------------------------------------------------
+
+✓ No duplicate code
+
+✓ Type safety
+
+✓ Better performance
+
+✓ Code generated only when required
+
+---------------------------------------------------------
+Disadvantages
+---------------------------------------------------------
+
+✗ Can increase executable size
+  (One copy generated for each type.)
+
+Example:
+
+maximum<int>()
+
+maximum<double>()
+
+maximum<float>()
+
+Three different functions are generated.
+
+This is called Code Bloat.
+
+---------------------------------------------------------
+Most Asked Interview Questions
+---------------------------------------------------------
+
+Q. What is Template Instantiation?
+
+It is the compile-time process in which the compiler generates
+actual functions or classes from a template based on the
+template arguments used.
+
+---------------------------------------------------------
+
+Q. When does template instantiation happen?
+
+At compile time.
+
+---------------------------------------------------------
+
+Q. Does the compiler generate code for all possible types?***************
+
+No.
+
+It generates code only for the types that are actually used
+(or explicitly instantiated).
+
+---------------------------------------------------------
+
+Q. Difference between template definition and instantiation?
+
+Definition:
+Blueprint only.
+
+Instantiation:
+Actual function/class generated by the compiler.
+
+---------------------------------------------------------
+
+Q. What is implicit instantiation?
+
+Compiler automatically generates code when the template is used.
+
+---------------------------------------------------------
+
+Q. What is explicit instantiation?
+
+Programmer explicitly asks the compiler to generate a particular
+template specialization.
+
+Example:
+
+template class Box<int>;
+
+---------------------------------------------------------
+
+Q. Can template instantiation increase executable size?
+
+Yes.
+
+Every different type creates a separate generated function/class.
+
+This may increase binary size (Code Bloat).
+
+=========================================================
+Interview Answer (30 seconds)
+=========================================================
+
+"A template is only a blueprint. The compiler does not generate code
+until the template is used. When the compiler encounters a template
+with a specific type, such as maximum(10,20), it deduces T as int
+and generates an actual function int maximum(int,int). This process
+is called template instantiation. It happens at compile time and
+only for the types that are used, which provides type safety and
+code reuse. However, generating separate code for many types can
+increase binary size, known as code bloat."
+
+=========================================================
+7. Template Specialization ⭐⭐⭐⭐⭐ (VERY IMPORTANT)
+=========================================================
+
+What is Template Specialization?
+--------------------------------
+
+Template Specialization allows us to provide a custom implementation
+for a specific data type while keeping the generic implementation
+for all other types.
+
+Think of it as saying:
+
+"Normally use the generic template,
+but if the type is X, use this special implementation."
+
+---------------------------------------------------------
+Why do we need Template Specialization?
+---------------------------------------------------------
+
+Suppose we have a generic Printer class.
+
+template<typename T>
+class Printer
+{
+public:
+    void print()
+    {
+        cout << "Generic Printer";
+    }
+};
+
+This works for all types.
+
+But suppose we want char to print differently.
+
+Example:
+
+Printer<int>      -> Generic Printer
+Printer<double>   -> Generic Printer
+Printer<char>     -> Character Printer
+
+Generic code cannot satisfy this requirement.
+
+Hence we specialize it.
+
+---------------------------------------------------------
+Example
+---------------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+template<typename T>
+class Printer
+{
+public:
+    void print()
+    {
+        cout << "Generic Printer" << endl;
+    }
+};
+
+template<>
+class Printer<char>
+{
+public:
+    void print()
+    {
+        cout << "Character Printer" << endl;
+    }
+};
+
+int main()
+{
+    Printer<int> p1;
+    Printer<double> p2;
+    Printer<char> p3;
+
+    p1.print();
+    p2.print();
+    p3.print();
+}
+
+Output:
+
+Generic Printer
+Generic Printer
+Character Printer
+
+---------------------------------------------------------
+What happens internally?
+---------------------------------------------------------
+
+Compiler sees:
+
+Printer<int>
+
+No specialization exists.
+
+Uses generic template.
+
+---------------------------------------------------------
+
+Compiler sees:
+
+Printer<double>
+
+No specialization exists.
+
+Uses generic template.
+
+---------------------------------------------------------
+
+Compiler sees:
+
+Printer<char>
+
+Compiler finds
+
+template<>
+class Printer<char>
+
+Uses specialized version.
+
+---------------------------------------------------------
+Flow
+---------------------------------------------------------
+
+Printer<int>
+      │
+      ▼
+Specialization available?
+      │
+      ├── No
+      ▼
+Generic Template
+
+-----------------------------------------
+
+Printer<char>
+      │
+      ▼
+Specialization available?
+      │
+      ├── Yes
+      ▼
+Specialized Template
+
+---------------------------------------------------------
+Function Template Specialization
+---------------------------------------------------------
+
+template<typename T>
+void show(T x)
+{
+    cout << "Generic" << endl;
+}
+
+template<>
+void show<char>(char x)
+{
+    cout << "Character" << endl;
+}
+
+Usage:
+
+show(10);
+
+Output:
+
+Generic
+
+----------------------------
+
+show('A');
+
+Output:
+
+Character
+
+---------------------------------------------------------
+Real World Example
+---------------------------------------------------------
+
+Suppose generic comparison:
+
+template<typename T>
+bool compare(T a, T b)
+{
+    return a == b;
+}
+
+Works for:
+
+int
+
+double
+
+float
+
+But for C-style strings:
+
+compare("ABC","ABC")
+
+Generic version compares addresses.
+
+Wrong!
+
+Need specialization.
+
+template<>
+bool compare<const char*>(const char* a,
+                          const char* b)
+{
+    return strcmp(a,b)==0;
+}
+
+Now actual string contents are compared.
+
+This is a very common interview example.
+
+---------------------------------------------------------
+Advantages
+---------------------------------------------------------
+
+✓ Handle special cases
+
+✓ Reuse generic implementation
+
+✓ Improve performance
+
+✓ Customize behavior for particular types
+
+---------------------------------------------------------
+Disadvantages
+---------------------------------------------------------
+
+✗ More code to maintain
+
+✗ Too many specializations reduce readability
+
+---------------------------------------------------------
+Important Rules
+---------------------------------------------------------
+
+1. Generic template must exist first.
+
+2. Specialization must exactly match the type.
+
+Correct:
+
+template<>
+class Printer<char>
+
+Wrong:
+
+template<>
+class Printer<int*>
+
+unless specifically required.
+
+3. Compiler prefers specialization over generic template.
+
+---------------------------------------------------------
+Template Specialization vs Overloading
+---------------------------------------------------------
+
+Overloading
+
+Different parameter list.
+
+Example
+
+void print(int);
+
+void print(double);
+
+-------------------------------------
+
+Specialization
+
+Same template
+
+Different implementation for specific type.
+
+Example
+
+Printer<T>
+
+Printer<char>
+
+---------------------------------------------------------
+Template Specialization vs Inheritance
+---------------------------------------------------------
+
+Inheritance changes behavior through runtime polymorphism.
+
+Template specialization changes behavior at compile time.
+
+---------------------------------------------------------
+Most Asked Interview Questions
+---------------------------------------------------------
+
+Q. What is template specialization?
+
+A.
+
+Template specialization provides a custom implementation
+for a particular template argument while keeping
+the generic implementation for all other types.
+
+---------------------------------------------------------
+
+Q. Why do we need template specialization?
+
+Sometimes one type requires completely different behavior.
+
+---------------------------------------------------------
+
+Q. When is specialization selected?
+
+At compile time.
+
+---------------------------------------------------------
+
+Q. Does specialization improve runtime performance?
+
+Yes.
+
+Selection happens during compilation.
+
+No runtime overhead.
+
+---------------------------------------------------------
+
+Q. Which implementation is chosen?
+
+Compiler first looks for an exact specialization.
+
+If found
+
+↓
+
+Uses specialization.
+
+Else
+
+↓
+
+Uses generic template.
+
+---------------------------------------------------------
+
+Q. Can we specialize function templates?
+
+Yes.
+
+---------------------------------------------------------
+
+Q. Can we specialize class templates?
+
+Yes.
+
+---------------------------------------------------------
+
+Interview Answer (30 seconds)
+---------------------------------------------------------
+
+"Template specialization allows us to provide a custom implementation
+for a specific template type while keeping the generic implementation
+for all other types. During compilation, the compiler first checks
+whether a specialization exists for the requested type. If it does,
+that version is instantiated; otherwise, the generic template is used.
+A common real-world example is specializing code for const char*
+because generic templates compare pointer addresses rather than string
+contents."
+
+=========================================================
+9. Function Overloading vs Templates ⭐⭐⭐⭐⭐
+=========================================================
+
+Overloading
+
+max(int,int)
+
+max(double,double)
+
+Templates
+
+One function
+
+template<typename T>
+
+Compiler generates required versions.
+
+=========================================================
+10. Template vs Macro ⭐⭐⭐⭐
+=========================================================
+
+Macro
+
+#define MAX(a,b)
+
+No type checking.
+
+Template
+
+template<typename T>
+
+Type safe.
+
+Compiler checks types.
+
+Prefer templates.
+
+=========================================================
+11. Template Type Deduction ⭐⭐⭐⭐
+=========================================================
+
+template<typename T>
+
+void fun(T x)
+{
+}
+
+fun(10);
+
+Compiler deduces:
+
+T = int
+
+=========================================================
+12. Explicit Template Arguments
+=========================================================
+
+template<typename T>
+
+void fun(T x)
+{
+}
+
+fun<int>(100);
+
+Compiler need not deduce.
+
+=========================================================
+13. Templates with References ⭐⭐⭐⭐
+=========================================================
+
+template<typename T>
+
+void swap(T& a,T& b)
+{
+    T temp=a;
+    a=b;
+    b=temp;
+}
+
+
+=========================================================
+15. Variadic Templates (C++11) ⭐⭐⭐⭐⭐ (VERY IMPORTANT)
+=========================================================
+
+What are Variadic Templates?
+----------------------------
+
+Variadic Templates allow a function or class template
+to accept ANY number of template arguments.
+
+Before C++11, if we wanted functions with different numbers
+of arguments, we had to overload them.
+
+Example:
+
+print(int)
+
+print(int,int)
+
+print(int,int,int)
+
+print(int,int,int,int)
+
+Many overloads were required.
+
+With Variadic Templates,
+ONE function handles all cases.
+
+---------------------------------------------------------
+Syntax
+---------------------------------------------------------
+
+template<typename... Args>
+
+Args...
+
+is called a
+
+Template Parameter Pack
+
+---------------------------------------------------------
+
+Function Parameters
+
+Args... args
+
+args...
+
+is called a
+
+Function Parameter Pack
+
+---------------------------------------------------------
+Simple Example
+---------------------------------------------------------
+
+template<typename... Args>
+void print(Args... args)
+{
+}
+
+Can accept
+
+print(10);
+
+print(10,20);
+
+print(10,20,30);
+
+print(10,"ABC",3.5);
+
+---------------------------------------------------------
+Why do we need Variadic Templates?******************************
+---------------------------------------------------------
+
+Without variadic templates
+
+void print(int);
+
+void print(int,int);
+
+void print(int,int,int);
+
+void print(int,int,int,int);
+
+Large amount of duplicate code.
+
+Variadic templates solve this problem.
+
+=========================================================
+Example 1 : Recursive Variadic Template ⭐⭐⭐⭐⭐*********************
+=========================================================
+
+#include<iostream>
+using namespace std;
+
+void print()
+{
+    cout << "End" << endl;
+}
+
+template<typename T, typename... Args>
+void print(T first, Args... rest)
+{
+    cout << first << " ";
+
+    print(rest...);
+}
+
+int main()
+{
+    print(10,20,30);
+
+    print("ABC",3.14,'X');
+}
+
+Output
+
+10 20 30 End
+
+ABC 3.14 X End
+
+---------------------------------------------------------
+How does recursion work?
+---------------------------------------------------------
+
+Compiler sees
+
+print(10,20,30);
+
+Step 1
+
+first = 10
+
+rest = 20,30
+
+Calls
+
+print(20,30);
+
+-------------------------------------
+
+Step 2
+
+first = 20
+
+rest = 30
+
+Calls
+
+print(30);
+
+-------------------------------------
+
+Step 3
+
+first = 30
+
+rest = empty
+
+Calls
+
+print();
+
+-------------------------------------
+
+Base function executes
+
+End
+
+---------------------------------------------------------
+Visualization
+---------------------------------------------------------
+
+print(10,20,30)
+
+↓
+
+10
+
+↓
+
+print(20,30)
+
+↓
+
+20
+
+↓
+
+print(30)
+
+↓
+
+30
+
+↓
+
+print()
+
+↓
+
+End
+
+=========================================================
+Example 2 : Count Number of Arguments
+=========================================================
+
+#include<iostream>
+using namespace std;
+
+template<typename... Args>
+void countArgs(Args... args)
+{
+    cout << sizeof...(Args) << endl;
+}
+
+int main()
+{
+    countArgs();
+
+    countArgs(10);
+
+    countArgs(10,20);
+
+    countArgs(10,20,30,40);
+}
+
+Output
+
+0
+
+1
+
+2
+
+4
+
+---------------------------------------------------------
+sizeof...(Args)
+
+returns
+
+Number of template arguments.
+
+=========================================================
+Example 3 : Mixed Types
+=========================================================
+
+print(10,
+      3.14,
+      'A',
+      "Hello",
+      true);
+
+All arguments have different types.
+
+Compiler deduces everything automatically.
+
+=========================================================
+Example 4 : Fold Expression (C++17)
+=========================================================
+
+Before C++17
+
+Recursion required.
+
+C++17 introduced Fold Expressions.
+
+template<typename... Args>
+auto sum(Args... args)
+{
+    return (... + args);
+}
+
+Usage
+
+cout << sum(1,2,3,4);
+
+Output
+
+10
+
+Very common interview question.
+
+=========================================================
+Real World Uses
+=========================================================
+
+Used by
+
+std::make_shared()
+
+std::make_unique()
+
+std::thread()
+
+std::tuple
+
+std::function
+
+std::bind
+
+emplace()
+
+forward()
+
+perfect forwarding
+
+Most STL libraries internally use variadic templates.
+
+=========================================================
+Advantages
+=========================================================
+
+✓ Unlimited arguments
+
+✓ No overload explosion
+
+✓ Compile-time type safety
+
+✓ Cleaner generic code
+
+✓ Better performance
+
+=========================================================
+Most Asked Interview Questions
+=========================================================
+
+Q. What is a Variadic Template?
+
+A template that accepts zero or more template arguments.
+
+---------------------------------------------------------
+
+Q. What is a Template Parameter Pack?
+
+Args...
+
+Represents zero or more template parameters.
+
+---------------------------------------------------------
+
+Q. What is a Function Parameter Pack?
+
+args...
+
+Represents zero or more function arguments.
+
+---------------------------------------------------------
+
+Q. What is sizeof...(Args)?
+
+Returns the number of template arguments.
+
+---------------------------------------------------------
+
+Q. How were variable arguments handled before C++11?
+
+Function overloading
+
+or
+
+C-style variadic functions (va_list).
+
+---------------------------------------------------------
+
+Q. Difference between Variadic Templates and C-style varargs?
+
+Variadic Templates
+
+✓ Compile-time type safe
+
+✓ Supports any type
+
+✓ Checked by compiler
+
+-------------------------------------
+
+C-style varargs
+
+printf()
+
+va_list
+
+Not type safe.
+
+=========================================================
+Interview Answer (30 seconds)
+=========================================================
+
+"Variadic templates, introduced in C++11, allow a template to accept
+any number of template arguments using parameter packs. They eliminate
+the need for writing multiple overloaded functions, provide compile-time
+type safety, and are heavily used in the STL. Common examples include
+std::make_shared, std::make_unique, std::tuple, std::thread, and
+emplace functions. In C++17, fold expressions simplify many recursive
+variadic template implementations."
+
+=========================================================
+16. Alias Templates (C++11)
+=========================================================
+
+template<typename T>
+
+using Vec = vector<T>;
+
+Usage:
+
+Vec<int> v;
+
+=========================================================
+17. Variable Templates (C++14)
+=========================================================
+
+template<typename T>
+
+constexpr T PI = T(3.1415926535);
+
+Usage:
+
+cout<<PI<double>;
+
+=========================================================
+18. Template Advantages
+=========================================================
+
+✓ Generic programming
+
+✓ Compile-time polymorphism
+
+✓ Code reuse
+
+✓ Type safety
+
+✓ Better performance
+
+=========================================================
+19. Template Disadvantages
+=========================================================
+
+✗ Large binaries
+
+✗ Long compile time
+
+✗ Difficult error messages
+
+=========================================================
+20. Most Asked Interview Questions
+=========================================================
+
+Q. What are templates?
+
+Templates allow generic programming by writing code
+independent of data type.
+
+---------------------------------------------------------
+
+Q. Why use templates?
+
+Code reuse.
+
+Compile-time polymorphism.
+
+Type safety.
+
+---------------------------------------------------------
+
+Q. Difference between class and typename?
+
+No difference.
+
+typename is preferred.
+
+---------------------------------------------------------
+
+Q. Template vs Macro?
+
+Templates are type-safe.
+
+Macros are text substitution.
+
+---------------------------------------------------------
+
+Q. When are templates instantiated?
+
+At compile time.
+
+---------------------------------------------------------
+
+Q. What is template specialization?
+
+Special implementation for a particular type.
+
+---------------------------------------------------------
+
+Q. What is non-type template parameter?
+
+Compile-time constant parameter.
+
+Example:
+
+Array<int,10>
+
+---------------------------------------------------------
+
+Q. What is template deduction?
+
+Compiler automatically determines template type.
+
+---------------------------------------------------------
+
+Q. What is compile-time polymorphism?
+
+Function/Class templates
+
+Function overloading
+
+Operator overloading
+
+=========================================================
+REAL WORLD USES
+=========================================================
+
+vector<T>
+
+list<T>
+
+map<Key,Value>
+
+set<T>
+
+shared_ptr<T>
+
+unique_ptr<T>
+
+optional<T>
+
+pair<T,U>
+
+tuple<Ts...>
+
+=========================================================
+One-Line Summary
+=========================================================
+
+Templates provide generic, reusable, type-safe code that is
+instantiated by the compiler at compile time.
