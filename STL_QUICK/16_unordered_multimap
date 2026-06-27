@@ -1,0 +1,270 @@
+=========================================
+C++ unordered_multimap – Interview Notes
+=========================================
+
+1. What is unordered_multimap?
+------------------------------
+unordered_multimap is an unordered associative container that stores
+multiple key-value pairs with the same key.
+
+Implemented using:
+- Hash Table
+
+Header:
+#include <unordered_map>
+
+Syntax:
+unordered_multimap<int, string> umm;
+
+----------------------------------------
+
+2. Properties
+-------------
+✓ Stores key-value pairs
+✓ Duplicate keys are allowed
+✓ Keys are NOT sorted
+✓ Values are NOT sorted
+✓ Average O(1) insertion/search/deletion
+✓ Worst case O(n) (hash collisions)
+
+Example:
+Key   Value
+10    A
+10    B
+20    C
+30    D
+
+----------------------------------------
+
+3. Example
+----------
+
+#include <iostream>
+#include <unordered_map>
+using namespace std;
+
+int main()
+{
+    unordered_multimap<int, string> umm;
+
+    umm.insert({1, "Apple"});
+    umm.insert({2, "Banana"});
+    umm.insert({1, "Mango"});
+    umm.insert({3, "Orange"});
+
+    for(auto &p : umm)
+        cout << p.first << " -> " << p.second << endl;
+}
+
+Possible Output:
+1 -> Apple
+3 -> Orange
+1 -> Mango
+2 -> Banana
+
+(Output order is NOT guaranteed.)
+
+----------------------------------------
+
+4. Common Functions
+-------------------
+
+insert()
+
+umm.insert({1, "Apple"});
+
+emplace()
+
+umm.emplace(2, "Banana");
+
+find()
+
+auto it = umm.find(1);
+
+Returns iterator to ONE element with key 1.
+
+count()
+
+cout << umm.count(1);
+
+Returns number of elements having key 1.
+
+equal_range()
+
+auto range = umm.equal_range(1);
+
+Returns iterators to ALL elements with key 1.
+
+erase(key)
+
+umm.erase(1);
+
+Removes ALL elements with key 1.
+
+erase(iterator)
+
+auto it = umm.find(1);
+if(it != umm.end())
+    umm.erase(it);
+
+Removes only ONE element.
+
+size()
+
+umm.size();
+
+empty()
+
+umm.empty();
+
+clear()
+
+umm.clear();
+
+----------------------------------------
+
+5. Iterating over all elements
+------------------------------
+
+for(auto &p : umm)
+{
+    cout << p.first << " "
+         << p.second << endl;
+}
+
+----------------------------------------
+
+6. Iterating over duplicate keys
+--------------------------------
+
+auto range = umm.equal_range(1);
+
+for(auto it = range.first;
+    it != range.second;
+    ++it)
+{
+    cout << it->first
+         << " "
+         << it->second << endl;
+}
+
+----------------------------------------
+
+7. Time Complexity
+------------------
+
+Insert      O(1) average
+Find        O(1) average
+Erase       O(1) average
+Count       O(1) average
+
+Worst Case:
+O(n)
+
+----------------------------------------
+
+8. unordered_map vs unordered_multimap
+--------------------------------------
+
+unordered_map
+-------------
+Duplicate keys NOT allowed
+
+unordered_multimap
+------------------
+Duplicate keys allowed
+
+Both:
+- Hash Table
+- Unordered
+- Average O(1)
+
+----------------------------------------
+
+9. multimap vs unordered_multimap
+---------------------------------
+
+multimap
+---------
+Red-Black Tree
+Sorted by key
+O(log n)
+
+unordered_multimap
+------------------
+Hash Table
+Not sorted
+Average O(1)
+
+----------------------------------------
+
+10. Important Interview Questions
+---------------------------------
+
+Q1. Can unordered_multimap have duplicate keys?
+Yes.
+
+Q2. Are keys sorted?
+No.
+
+Q3. Which data structure is used?
+Hash Table.
+
+Q4. Can we use operator[]?
+No.
+
+Reason:
+A key may have multiple values, so operator[]
+cannot uniquely identify one mapped value.
+
+Q5. How do we access all values of a key?
+
+auto range = umm.equal_range(key);
+
+Q6. How to count duplicate keys?
+
+umm.count(key);
+
+Q7. How to remove all values of a key?
+
+umm.erase(key);
+
+Q8. How to remove only one occurrence?
+
+auto it = umm.find(key);
+if(it != umm.end())
+    umm.erase(it);
+
+----------------------------------------
+
+11. When to Use?
+----------------
+
+Use unordered_multimap when:
+
+✓ One key maps to multiple values.
+✓ Order is not important.
+✓ Fast lookup is required.
+
+Examples:
+
+Student -> Subjects
+Author -> Books
+Department -> Employees
+Category -> Products
+
+----------------------------------------
+
+12. Points to Mention in Interview
+----------------------------------
+
+✓ Hash Table based container.
+✓ Stores key-value pairs.
+✓ Duplicate keys are allowed.
+✓ Keys are NOT ordered.
+✓ Average O(1) operations.
+✓ operator[] is NOT available.
+✓ equal_range() retrieves all values for a key.
+✓ erase(key) removes ALL elements with that key.
+✓ erase(iterator) removes ONE element.
+✓ lower_bound()/upper_bound() are NOT available.
