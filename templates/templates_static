@@ -1,39 +1,216 @@
-Function templates and static variables:
-Each instantiation of function template has its own copy of local static variables. For example, in the following program there are two instances: void fun(int ) and void fun(double ). So two copies of static variable i exist.
+=========================================================
+Templates and Static Variables ⭐⭐⭐⭐
+=========================================================
 
+Key Rule
+--------
 
+Each template instantiation gets its OWN copy of static variables.
 
-Class templates and static variables:
-The rule for class templates is same as function templates
-Each instantiation of class template has its own copy of member static variables. For example, in the following program there are two instances Test and Test. So two copies of static variable count exist.
-#include <iostream>
+This applies to:
 
+✓ Function Templates
+✓ Class Templates
+
+Compiler treats every template instantiation as a completely
+different function/class.
+
+=========================================================
+1. Function Template and Static Variables
+=========================================================
+
+Example
+
+#include<iostream>
 using namespace std;
 
-template <class T> class Test
+template<typename T>
+void fun()
 {
-private:
-T val;
-public:
-static int count;
-Test()
-{
-	count++;
+    static int count = 0;
+
+    count++;
+
+    cout << count << endl;
 }
-// some other stuff in class
+
+int main()
+{
+    fun<int>();
+    fun<int>();
+
+    fun<double>();
+    fun<double>();
+}
+
+Output
+
+1
+2
+1
+2
+
+---------------------------------------------------------
+Explanation
+---------------------------------------------------------
+
+Compiler creates
+
+void fun<int>()
+
+and
+
+void fun<double>()
+
+Each function has its own static variable.*************
+
+Internally it is similar to
+
+void fun_int()
+{
+    static int count;
+}
+
+void fun_double()
+{
+    static int count;
+}
+
+These are two different functions,
+therefore each has its own static variable.
+
+=========================================================
+2. Class Template and Static Variables
+=========================================================
+
+Example
+
+#include<iostream>
+using namespace std;
+
+template<typename T>
+class Test
+{
+public:
+    static int count;
+
+    Test()
+    {
+        count++;
+    }
 };
 
-template<class T>
+template<typename T>
 int Test<T>::count = 0;
 
 int main()
 {
-Test<int> a; // value of count for Test<int> is 1 now
-Test<int> b; // value of count for Test<int> is 2 now
-Test<double> c; // value of count for Test<double> is 1 now
-cout << Test<int>::count << endl; // prints 2
-cout << Test<double>::count << endl; //prints 1
-	
-getchar();
-return 0;
+    Test<int> a;
+    Test<int> b;
+
+    Test<double> c;
+
+    cout << Test<int>::count << endl;
+
+    cout << Test<double>::count << endl;
 }
+
+Output
+
+2
+1
+
+---------------------------------------------------------
+Explanation
+---------------------------------------------------------
+
+Compiler generates
+
+class Test<int>
+{
+    static int count;
+};
+
+and
+
+class Test<double>
+{
+    static int count;
+};
+
+These are different classes.
+
+Therefore
+
+Test<int>::count
+
+and
+
+Test<double>::count
+
+are different variables.
+
+=========================================================
+Memory Visualization
+=========================================================
+
+Test<int>
+
++----------------+
+| count = 2      |
++----------------+
+
+----------------------------
+
+Test<double>
+
++----------------+
+| count = 1      |
++----------------+
+
+Both static variables are independent.
+
+=========================================================
+Why?
+=========================================================
+
+Templates are blueprints.
+
+Compiler creates a separate class/function for every type.
+
+Since they become different generated classes/functions,
+their static variables are also separate.
+
+=========================================================
+Most Asked Interview Questions
+=========================================================
+
+Q. Does every template specialization have its own static variable? ********************
+
+Yes.
+
+---------------------------------------------------------
+
+Q. Is static variable shared between Test<int>
+and Test<double>?*************************
+
+No.
+
+Each specialization owns its own copy.
+
+---------------------------------------------------------
+
+Q. Why?
+
+Because every template instantiation creates a completely
+different function/class.
+
+=========================================================
+Interview Answer (30 seconds)
+=========================================================
+
+"Each template instantiation has its own copy of static variables.
+For example, Test<int> and Test<double> are treated as two separate
+classes by the compiler, so each specialization has its own static
+member. Similarly, function template instantiations like fun<int>()
+and fun<double>() each maintain separate local static variables."
