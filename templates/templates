@@ -2,7 +2,7 @@
 C++ TEMPLATES – COMPLETE INTERVIEW NOTES
 =========================================================
 
-What are Templates?
+*******What are Templates?
 -------------------
 Templates allow writing generic (type-independent) code.
 
@@ -14,6 +14,47 @@ Benefits:
 ✓ Type safety
 ✓ Compile-time polymorphism
 ✓ Better performance (no runtime overhead)
+
+*******Why are template definitions usually in header files? ⭐⭐⭐⭐⭐
+
+Templates are instantiated at compile time. The compiler must see the complete template
+definition whenever it generates code for a specific type.
+
+Template definitions are typically placed in header files because the compiler needs the full definition 
+at the point of instantiation. Unlike normal functions, templates are instantiated during compilation, so hiding the implementation 
+in a .cpp file usually results in linker errors unless explicit instantiations are provided.
+
+Code Bloat ⭐⭐⭐⭐
+
+Interviewers often ask:
+
+*********What is one disadvantage of templates?
+Every type creates a separate instantiation.
+maximum<int>()
+
+maximum<double>()
+
+maximum<float>()
+
+Compiler generates
+int maximum(...)
+
+double maximum(...)
+
+float maximum(...)
+More generated code can increase executable size.
+
+This is called Code Bloat.
+
+***Implicit vs Explicit Instantiation ⭐⭐⭐⭐
+Implicit
+Box<int> b;
+Compiler automatically generates Box<int>.
+
+Explicit
+template class Box<int>;
+You explicitly ask the compiler to instantiate it, even if it's not used.
+
 
 =========================================================
 1. Function Template ⭐⭐⭐⭐⭐
