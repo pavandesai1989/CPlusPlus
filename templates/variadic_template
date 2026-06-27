@@ -1,20 +1,427 @@
+=========================================================
+Variadic Template - Recursive Example ⭐⭐⭐⭐⭐
+=========================================================
+
+Code
+-----
+
 #include <iostream>
 using namespace std;
 
 void log()
 {
-    cout<<"base "<<endl;
+    cout << "Base Function\n";
 }
 
-template<typename T,typename...Args>
-void log(T first,Args...args)
+template<typename T, typename... Args>
+void log(T first, Args... args)
 {
-    cout<<first<<endl;
+    cout << first << endl;
+
     log(args...);
 }
 
 int main()
 {
-    log(1,2.3,'A',"pavan");
-    return 0;
+    log(1, 2.3, 'A', "Pavan");
 }
+
+=========================================================
+Output
+=========================================================
+
+1
+2.3
+A
+Pavan
+Base Function
+
+=========================================================
+Why do we need the base function?
+=========================================================
+
+Base function
+
+void log()
+{
+    cout<<"Base Function";
+}
+
+terminates the recursion.
+
+Without it,
+
+log(args...)
+
+would keep calling itself forever.
+
+Eventually compiler won't find a matching function
+when no arguments remain.
+
+Compilation Error.
+
+=========================================================
+Understanding the Template
+=========================================================
+
+template<typename T, typename... Args>
+
+T
+↓
+
+Represents FIRST argument.
+
+--------------------------------------
+
+Args...
+↓
+
+Represents REMAINING arguments.
+
+This is called
+
+Template Parameter Pack.
+
+=========================================================
+Function Parameters
+=========================================================
+
+void log(T first, Args... args)
+
+first
+
+↓
+
+Stores first argument.
+
+args...
+
+↓
+
+Stores remaining arguments.
+
+Called
+
+Function Parameter Pack.
+
+=========================================================
+Step-by-Step Execution
+=========================================================
+
+Call
+
+log(1,2.3,'A',"Pavan");
+
+Compiler deduces
+
+T = int
+
+Args...
+
+↓
+
+double,char,const char*
+
+Therefore function becomes
+
+log(int first,
+    double,
+    char,
+    const char*)
+
+---------------------------------------------------------
+Step 1
+---------------------------------------------------------
+
+first = 1
+
+args...
+
+↓
+
+2.3,'A',"Pavan"
+
+Print
+
+1
+
+Now
+
+log(args...)
+
+becomes
+
+log(2.3,'A',"Pavan");
+
+=========================================================
+Step 2
+=========================================================
+
+Compiler instantiates
+
+T = double
+
+Args...
+
+↓
+
+char,const char*
+
+Function becomes
+
+log(double,
+    char,
+    const char*)
+
+Print
+
+2.3
+
+Calls
+
+log('A',"Pavan");
+
+=========================================================
+Step 3
+=========================================================
+
+Compiler instantiates
+
+T = char
+
+Args...
+
+↓
+
+const char*
+
+Print
+
+A
+
+Calls
+
+log("Pavan");
+
+=========================================================
+Step 4
+=========================================================
+
+Compiler instantiates
+
+T = const char*
+
+Args...
+
+↓
+
+(empty)
+
+Print
+
+Pavan
+
+Calls
+
+log();
+
+=========================================================
+Step 5
+=========================================================
+
+Now compiler finds
+
+void log()
+
+Prints
+
+Base Function
+
+Recursion Ends.
+
+=========================================================
+Visualization
+=========================================================
+
+log(1,2.3,'A',"Pavan")
+
+↓
+
+Print 1
+
+↓
+
+log(2.3,'A',"Pavan")
+
+↓
+
+Print 2.3
+
+↓
+
+log('A',"Pavan")
+
+↓
+
+Print A
+
+↓
+
+log("Pavan")
+
+↓
+
+Print Pavan
+
+↓
+
+log()
+
+↓
+
+Base Function
+
+↓
+
+End
+
+=========================================================
+What happens internally?
+=========================================================
+
+Compiler generates something conceptually similar to
+
+log<int,double,char,const char*>
+
+↓
+
+log<double,char,const char*>
+
+↓
+
+log<char,const char*>
+
+↓
+
+log<const char*>
+
+↓
+
+log()
+
+Each recursive call creates another template instantiation
+with one fewer template argument.
+
+=========================================================
+Parameter Pack Expansion
+=========================================================
+
+This line
+
+log(args...);
+
+expands the parameter pack.
+
+Initially
+
+args...
+
+↓
+
+2.3,'A',"Pavan"
+
+Compiler converts
+
+log(args...)
+
+into
+
+log(2.3,'A',"Pavan");
+
+Next call
+
+args...
+
+↓
+
+'A',"Pavan"
+
+Compiler converts into
+
+log('A',"Pavan");
+
+Eventually
+
+args...
+
+↓
+
+(empty)
+
+Compiler converts into
+
+log();
+
+=========================================================
+Most Asked Interview Questions
+=========================================================
+
+Q. Why is recursion used?
+
+Because parameter packs cannot be processed directly.
+We process one argument at a time.
+
+---------------------------------------------------------
+
+Q. Why do we need the base function?
+
+To terminate recursion.
+
+---------------------------------------------------------
+
+Q. What is T?
+
+First argument type.
+
+---------------------------------------------------------
+
+Q. What is Args...?
+
+Remaining argument types.
+
+---------------------------------------------------------
+
+Q. What is args...?
+
+Remaining function arguments.
+
+---------------------------------------------------------
+
+Q. What does
+
+log(args...)
+
+mean?
+
+It expands the parameter pack and recursively calls log()
+with the remaining arguments.
+
+---------------------------------------------------------
+
+Q. Does recursion happen at runtime?
+
+Function calls happen at runtime.
+
+The template instantiations are generated at compile time.
+
+=========================================================
+Interview Answer (30 seconds)
+=========================================================
+
+"Variadic templates use a template parameter pack (Args...) to accept
+any number of arguments. In this recursive implementation, each call
+processes the first argument and recursively calls itself with the
+remaining arguments using parameter pack expansion (args...). The base
+function with no parameters terminates the recursion. The compiler
+generates a separate template instantiation for each recursive step,
+while the recursive function calls execute at runtime."
