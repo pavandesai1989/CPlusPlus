@@ -268,7 +268,123 @@ delete ptr;
 ptr = nullptr;
 
 =========================================================
-NEW vs MALLOC
+malloc() - C INTERVIEW NOTES
+=========================================================
+
+What is malloc()?
+-----------------
+malloc (Memory Allocation) is used to dynamically allocate memory at runtime from the heap.
+
+Header File:
+-------------
+#include <stdlib.h>
+
+Syntax:
+-------
+ptr = (type*)malloc(n * sizeof(type));
+
+Example:
+--------
+int *ptr = (int*)malloc(5 * sizeof(int));
+
+Allocates memory for 5 integers.
+
+---------------------------------------------------------
+
+Key Points
+----------
+1. Allocates memory on the heap.
+2. Memory is uninitialized (contains garbage values).
+3. Returns a void* pointer.
+4. Must be typecast in C++.
+5. Returns NULL if allocation fails.
+6. Memory must be released using free().
+7. Size is specified in bytes.
+
+---------------------------------------------------------
+
+Example
+-------
+
+int *ptr = (int*)malloc(5 * sizeof(int));
+
+if(ptr == NULL)
+{
+    cout << "Allocation failed";
+}
+else
+{
+    ptr[0] = 10;
+}
+
+free(ptr);
+ptr = nullptr;
+
+---------------------------------------------------------
+
+malloc vs new
+--------------
+
+malloc()
+---------
+• C function
+• Allocates memory only
+• Does NOT call constructor
+• Returns void*
+• Free using free()
+
+new
+----
+• C++ operator
+• Allocates memory + calls constructor
+• Returns typed pointer
+• Free using delete
+
+---------------------------------------------------------
+
+Common Interview Questions
+--------------------------
+Q. Where is malloc memory allocated?
+Ans: Heap.
+
+Q. Does malloc initialize memory?
+Ans: No. Memory contains garbage values.
+
+Q. What does malloc return?
+Ans: void* (NULL on failure).
+
+Q. Which header file contains malloc()?
+Ans: <stdlib.h>
+
+Q. How do you free malloc memory?
+Ans: free(ptr);
+
+Q. Can malloc allocate objects?
+Ans: Yes, but constructors are NOT called. In C++, prefer new.
+
+Q. What happens if you forget free()?
+Ans: Memory leak.
+
+Q. Is malloc used in Modern C++?
+Ans: Rarely. Prefer new, smart pointers, or STL containers.
+
+---------------------------------------------------------
+
+Best Practices
+--------------
+✓ Always check for NULL.
+✓ Always free allocated memory.
+✓ Set pointer to nullptr after free().
+✓ Prefer new/delete or smart pointers in C++.
+✓ Use std::vector instead of malloc for arrays in Modern C++.
+
+=========================================================
+
+
+****
+
+=========================================================
+NEW vs MALLOC****************
 =========================================================
 
 Feature              new                  malloc()
@@ -331,21 +447,47 @@ if(ptr == nullptr)
 }
 
 =========================================================
-PLACEMENT NEW (ADVANCED)
+PLACEMENT NEW (SHORT INTERVIEW NOTES)
 =========================================================
 
+Definition:
+Placement new constructs an object in pre-allocated memory.
+It does NOT allocate memory.
+
+Syntax:
+new(memory_address) Type(arguments);
+
+Example:
+
 char buffer[sizeof(int)];
+int* ptr = new(buffer) int(10);
 
-int* ptr =
-    new(buffer) int(10);
+Key Points:
+• Uses existing memory.
+• Does NOT allocate heap memory.
+• Calls constructor only.
+• delete cannot be used.
+• Destructor must be called manually for class objects.
 
-Constructs object in pre-allocated memory.
-
-Used in:
+Used In:
 • Memory pools
-• STL Allocators
-• Embedded Systems
+• STL allocators
+• Embedded systems
+• Shared memory
+• Game engines
+• High-performance applications
 
+Normal new vs Placement new
+
+new
+• Allocates memory + calls constructor.
+
+Placement new
+• Uses existing memory + calls constructor only.
+
+Interview One-liner:
+Placement new constructs an object at a specified memory location without allocating new memory.
+=========================================================
 =========================================================
 MOST ASKED INTERVIEW QUESTIONS
 =========================================================
@@ -414,6 +556,488 @@ Answer:
 Prevents dangling pointers.
 
 ---------------------------------------------------------
+
+=========================================================
+ADDITIONAL NEW & DELETE INTERVIEW NOTES ⭐⭐⭐⭐⭐
+=========================================================
+
+=========================================================
+new vs operator new (INTERVIEW NOTES) ⭐⭐⭐⭐⭐
+=========================================================
+
+new
+----
+• new is a C++ operator.
+• Allocates memory by calling operator new().
+• Calls the constructor.
+• Returns a typed pointer.
+• Throws std::bad_alloc on allocation failure.
+
+Example:
+int* p = new int(10);
+
+---------------------------------------------------------
+
+operator new()
+--------------
+• operator new() is a function.
+• Only allocates raw memory.
+• Does NOT call the constructor.
+• Returns void*.
+• Can be overloaded for custom memory allocation.
+
+Example:
+void* p = operator new(sizeof(int));
+
+---------------------------------------------------------
+
+What happens internally?
+
+int* p = new int(10);
+
+Internally:
+
+1. operator new(sizeof(int));   // Allocate memory
+2. Constructor initializes object (stores 10)
+3. Return int*
+
+---------------------------------------------------------
+
+Difference
+
+new
+• C++ operator
+• Allocates memory + calls constructor
+• Returns typed pointer
+• Used for object creation
+
+operator new()
+• Function
+• Allocates raw memory only
+• Does NOT call constructor
+• Returns void*
+• Used for custom memory management
+
+---------------------------------------------------------
+
+Interview Questions
+
+Q. Is new a function?
+Ans: No. It is an operator.
+
+Q. Does operator new() call the constructor?
+Ans: No.
+
+Q. Who calls operator new()?
+Ans: The new operator.
+
+Q. Can operator new() be overloaded?
+Ans: Yes.
+
+---------------------------------------------------------
+
+Interview One-liner
+
+The new operator allocates memory using operator new(), constructs the object by calling 
+its constructor, and returns a typed pointer. The operator new() function only allocates raw memory and does not construct the object.
+
+=========================================================
+
+---------------------------------------------------------
+
+new performs FOUR operations
+
+1. Calls operator new() to allocate memory.
+2. Allocates raw memory.
+3. Calls constructor.
+4. Returns typed pointer.
+
+Example:
+
+Test* ptr = new Test();
+
+Internally (conceptually):
+
+void* mem = operator new(sizeof(Test));
+
+Test* ptr = new(mem) Test;
+
+---------------------------------------------------------
+
+operator new()
+
+Only allocates raw memory.
+
+It DOES NOT call constructor.
+
+=========================================================
+2. delete nullptr ⭐⭐⭐⭐
+=========================================================
+
+Deleting a nullptr is completely safe.
+
+Example:
+
+int* ptr = nullptr;
+
+delete ptr;
+
+Output:
+
+Nothing happens.
+
+No crash.
+
+No exception.
+
+---------------------------------------------------------
+
+Interview Question
+
+Can we delete nullptr?
+
+Answer:
+
+Yes.
+
+delete nullptr is safe.
+
+=========================================================
+3. Virtual Destructor with delete ⭐⭐⭐⭐⭐*******VVVVVVVVIMP
+=========================================================
+
+Whenever a base pointer points to a derived object,
+the base class should have a virtual destructor.
+
+Example
+
+class Base
+{
+public:
+
+    virtual ~Base()
+    {
+        cout<<"Base Destructor"<<endl;
+    }
+};
+
+class Derived : public Base
+{
+public:
+
+    ~Derived()
+    {
+        cout<<"Derived Destructor"<<endl;
+    }
+};
+
+int main()
+{
+    Base* ptr = new Derived;
+
+    delete ptr;
+}
+
+Output
+
+Derived Destructor
+
+Base Destructor
+
+---------------------------------------------------------
+
+Without virtual destructor
+
+Deleting through Base*
+
+↓
+
+Undefined Behavior
+
+Derived destructor may not execute.
+
+Resources owned by Derived may leak.
+
+=========================================================
+4. delete DOES NOT set pointer to nullptr ⭐⭐⭐⭐
+=========================================================
+
+delete only frees memory.
+
+It does NOT modify the pointer.
+
+Example
+
+int* ptr = new int(10);
+
+delete ptr;
+
+cout << ptr;
+
+Pointer still contains the old address.
+
+It is now a
+
+Dangling Pointer.
+
+Correct
+
+delete ptr;
+
+ptr = nullptr;
+
+=========================================================
+5. Matching Allocation and Deallocation ⭐⭐⭐⭐⭐
+=========================================================
+
+Always match allocation and deallocation correctly.
+
+Correct
+
+new
+↓
+
+delete
+
+-------------------------------------
+
+new[]
+↓
+
+delete[]
+
+Wrong
+
+new
+↓
+
+delete[]
+
+Undefined Behavior
+
+-------------------------------------
+
+Wrong
+
+new[]
+↓
+
+delete
+
+Undefined Behavior
+
+=========================================================
+6. Double Delete ⭐⭐⭐⭐
+=========================================================
+
+Example
+
+int* ptr = new int(10);
+
+delete ptr;
+
+delete ptr;
+
+Result
+
+Undefined Behavior
+
+Reason
+
+Memory has already been released.
+
+Always write
+
+delete ptr;
+
+ptr = nullptr;
+
+=========================================================
+7. Never Mix new/delete with malloc/free ⭐⭐⭐⭐⭐
+=========================================================
+
+Correct
+
+new
+↓
+
+delete
+
+-------------------------------------
+
+malloc()
+↓
+
+free()
+
+Wrong
+
+int* p = new int;
+
+free(p);
+
+-------------------------------------
+
+Wrong
+
+int* p = (int*)malloc(sizeof(int));
+
+delete p;
+
+Both are
+
+Undefined Behavior
+
+=========================================================
+8. Modern C++ Recommendation (RAII) ⭐⭐⭐⭐⭐
+=========================================================
+
+Modern C++ recommends avoiding raw new/delete.
+
+Prefer Smart Pointers.
+
+Instead of
+
+Test* ptr = new Test();
+
+/* work */
+
+delete ptr;
+
+Use
+
+auto ptr = make_unique<Test>();
+
+or
+
+auto ptr = make_shared<Test>();
+
+Benefits
+
+✓ Automatic cleanup
+
+✓ Exception safe
+
+✓ No memory leaks
+
+✓ Follows RAII
+
+=========================================================
+9. Most Asked Interview Questions
+=========================================================
+
+Q. Is new an operator or function?
+
+Answer:
+
+new is an operator.
+
+Internally it calls operator new().
+
+---------------------------------------------------------
+
+Q. What is operator new()?
+
+=========================================================
+What is operator new()?
+=========================================================
+
+operator new() is a low-level function that allocates raw memory only.
+
+It:
+• Allocates memory from the heap.
+• Returns a void* pointer.
+• Does NOT call constructors.
+• Does NOT create an object.
+
+Example:
+
+void* mem = operator new(sizeof(int));
+
+Only memory is allocated.
+
+To construct an object in that memory, placement new is required.
+
+Example:
+
+new(mem) int(10);
+
+---------------------------------------------------------
+
+Normal new internally performs:
+
+1. operator new(sizeof(T));    // Allocate raw memory
+2. Placement new               // Call constructor
+3. Return typed pointer
+
+---------------------------------------------------------
+
+Interview One-liner:
+
+operator new() only allocates raw memory. It does not construct an object or call the constructor.
+The new operator uses operator new() internally and then constructs the object.
+=========================================================
+
+---------------------------------------------------------
+
+Q. Can delete be called on nullptr?
+
+Yes.
+
+It is completely safe.
+
+---------------------------------------------------------
+
+Q. Does delete make pointer nullptr?
+
+No.
+
+Programmer must manually assign nullptr.
+
+---------------------------------------------------------
+
+Q. Why should base class destructor be virtual?
+
+To ensure correct destructor chain when deleting
+derived objects through a base pointer.
+
+---------------------------------------------------------
+
+Q. What happens on double delete?
+
+Undefined Behavior.
+
+---------------------------------------------------------
+
+Q. Can new memory be freed using free()?
+
+No.
+
+Use
+
+new ↔ delete
+
+malloc ↔ free
+
+Never mix them.
+
+---------------------------------------------------------
+
+Q. What is preferred in Modern C++?
+
+Avoid manual new/delete.
+
+Prefer
+
+unique_ptr
+
+shared_ptr
+
+make_unique()
+
+make_shared()
+
+using RAII.
 
 Q8. What happens if delete is called twice?
 
