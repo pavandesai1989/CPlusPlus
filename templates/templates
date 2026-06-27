@@ -12,8 +12,8 @@ we write one template that works for any type.
 Benefits:
 ✓ Code reuse
 ✓ Type safety
-✓ Compile-time polymorphism
-✓ Better performance (no runtime overhead)
+✓ Compile-time polymorphism  **********
+✓ Better performance (no runtime overhead) **********
 
 *******Why are template definitions usually in header files? ⭐⭐⭐⭐⭐
 
@@ -196,6 +196,47 @@ actual functions or classes from a template when they are used.
 A template itself is only a blueprint.
 
 The compiler creates real code only when the template is instantiated.
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+template<typename T, typename U>
+class box
+{
+private:
+    T mx;
+    U my;
+
+public:
+    box(const T& val = 0, const U& v = 0);
+    void display() const;
+};
+
+template<typename T, typename U>
+box<T,U>::box(const T& val, const U& v)
+{
+    mx = val;
+    my = v;
+}
+
+template<typename T, typename U>
+void box<T,U>::display() const
+{
+    cout << "display mx = " << mx << endl;
+    cout << "display my = " << my << endl;
+}
+
+// Explicit template instantiation
+template class box<string, int>;
+
+int main()
+{
+    box<string, int> ob("rahul", 34);
+    ob.display();
+
+    return 0;
+}
 
 ---------------------------------------------------------
 Example
