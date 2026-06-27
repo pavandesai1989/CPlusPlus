@@ -25,7 +25,8 @@ int main()
 }
 
 ************ class specialization***
-Template specialization allows you to provide a custom implementation for a specific type or a set of types while still keeping the general template for other types. It gives you the ability to customize behavior for certain types, such as integers, floating-point numbers, or pointers, without affecting the generic template for other types.
+Template specialization allows you to provide a custom implementation for a specific type or a
+set of types while still keeping the general template for other types. It gives you the ability to customize behavior for certain types, such as integers, floating-point numbers, or pointers, without affecting the generic template for other types.
 
 1. Full Specialization
 In full specialization, you define the entire template for a specific type. It overrides the general template for that type.
@@ -92,11 +93,13 @@ template <typename T>
 void print(T* value) {
     cout << "Pointer value: " << *value << endl;  // Dereferencing the pointer
 }
-This is a partial specialization of the general template. Specifically, it specializes the template for pointer types (i.e., T*). This means the print function with a T* type (i.e., a pointer) will be handled by this function.
+This is a partial specialization of the general template. Specifically, it specializes the template 
+for pointer types (i.e., T*). This means the print function with a T* type (i.e., a pointer) will be handled by this function.
 
 Why Is This Partial Specialization and Not Full?
 This is partial specialization because:
 
 You haven’t fully specialized the template for a particular type like int. Instead, you've specialized it for pointer types.
 
-The template still remains generic for all other types. For example, you can still use print with an int, float, char, etc., and it will use the general template, but only pointer types (like int*, float*, etc.) will use the partial specialization.
+The template still remains generic for all other types. For example, you can still use print with an int,
+float, char, etc., and it will use the general template, but only pointer types (like int*, float*, etc.) will use the partial specialization.
