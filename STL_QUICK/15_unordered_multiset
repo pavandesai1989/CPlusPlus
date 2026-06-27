@@ -1,0 +1,232 @@
+----------------------------------------
+
+11. Points to Mention in Interview
+----------------------------------
+
+✓ Hash Table based container.
+✓ Stores duplicate values.
+✓ No ordering.
+✓ Average O(1) operations.
+✓ erase(value) removes ALL occurrences.
+✓ erase(iterator) removes only ONE occurrence.
+✓ count() returns duplicate count.
+✓ lower_bound()/upper_bound() are NOT available.
+
+
+=========================================
+C++ unordered_multiset – Interview Notes
+=========================================
+
+1. What is unordered_multiset?
+------------------------------
+unordered_multiset is an unordered associative container that stores duplicate values.
+
+Implemented using:
+- Hash Table
+
+Header:
+#include <unordered_set>
+
+Syntax:
+unordered_multiset<int> ums;
+
+----------------------------------------
+
+2. Properties
+-------------
+✓ Stores only values (no key-value pair)
+✓ Duplicate values are allowed
+✓ No ordering of elements
+✓ Average O(1) insertion/search/deletion
+✓ Worst case O(n) (hash collisions)
+✓ Elements are stored according to hash buckets
+
+----------------------------------------
+
+3. Example
+----------
+
+#include <iostream>
+#include <unordered_set>
+using namespace std;
+
+int main()
+{
+    unordered_multiset<int> ums;
+
+    ums.insert(10);
+    ums.insert(20);
+    ums.insert(10);
+    ums.insert(30);
+    ums.insert(20);
+
+    for(auto x : ums)
+        cout << x << " ";
+}
+
+Possible Output:
+20 10 30 20 10
+
+(Output order is NOT guaranteed.)
+
+----------------------------------------
+
+4. Common Functions
+-------------------
+
+insert()
+
+ums.insert(10);
+
+erase(value)
+
+ums.erase(10);
+
+Removes ALL occurrences of 10.
+
+erase(iterator)
+
+auto it = ums.find(10);
+if(it != ums.end())
+    ums.erase(it);
+
+Removes only one occurrence.
+
+find()
+
+auto it = ums.find(20);
+
+Returns iterator to one occurrence.
+
+count()
+
+cout << ums.count(10);
+
+Returns number of occurrences.
+
+size()
+
+ums.size();
+
+empty()
+
+ums.empty();
+
+clear()
+
+ums.clear();
+
+equal_range()
+
+auto range = ums.equal_range(10);
+
+Returns iterators to all occurrences.
+
+----------------------------------------
+
+5. Iteration
+------------
+
+for(auto x : ums)
+    cout << x << " ";
+
+OR
+
+for(auto it = ums.begin(); it != ums.end(); ++it)
+    cout << *it << " ";
+
+----------------------------------------
+
+6. Time Complexity
+------------------
+
+Insert      O(1) average
+Find        O(1) average
+Erase       O(1) average
+Count       O(1) average
+
+Worst Case:
+O(n)
+
+----------------------------------------
+
+7. unordered_set vs unordered_multiset
+--------------------------------------
+
+unordered_set
+--------------
+Duplicates NOT allowed
+
+unordered_multiset
+------------------
+Duplicates allowed
+
+Both:
+- Hash Table
+- Unordered
+- Average O(1)
+
+----------------------------------------
+
+8. multiset vs unordered_multiset
+---------------------------------
+
+multiset
+---------
+Balanced BST (Red-Black Tree)
+Sorted
+O(log n)
+
+unordered_multiset
+------------------
+Hash Table
+Not Sorted
+Average O(1)
+
+----------------------------------------
+
+9. Important Interview Questions
+--------------------------------
+
+Q1. Can unordered_multiset store duplicates?
+Yes.
+
+Q2. Is data sorted?
+No.
+
+Q3. Which data structure is used internally?
+Hash Table.
+
+Q4. Can we use lower_bound()?
+No.
+Works only for ordered containers.
+
+Q5. How do we count duplicates?
+
+ums.count(value);
+
+Q6. How to remove only one duplicate?
+
+auto it = ums.find(value);
+if(it != ums.end())
+    ums.erase(it);
+
+Q7. How to remove all duplicates?
+
+ums.erase(value);
+
+----------------------------------------
+
+10. When to Use?
+----------------
+
+Use unordered_multiset when:
+✓ Duplicate values are needed.
+✓ Order doesn't matter.
+✓ Fast insertion/search/deletion is required.
+
+Examples:
+- Frequency tracking with duplicate storage
+- Counting repeated values
+- Fast duplicate lookups
+
