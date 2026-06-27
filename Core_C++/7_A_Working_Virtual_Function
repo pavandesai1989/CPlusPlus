@@ -1,0 +1,584 @@
+=========================================================
+VIRTUAL FUNCTION INTERNAL WORKING ⭐⭐⭐⭐⭐
+=========================================================
+
+Definition
+----------
+
+A virtual function enables Runtime Polymorphism.
+
+The function to execute is determined at Runtime,
+not Compile Time.
+
+=========================================================
+Example
+=========================================================
+
+#include<iostream>
+using namespace std;
+
+class Base
+{
+public:
+
+    virtual void display()
+    {
+        cout<<"Base"<<endl;
+    }
+};
+
+class Derived : public Base
+{
+public:
+
+    void display() override
+    {
+        cout<<"Derived"<<endl;
+    }
+};
+
+int main()
+{
+    Base* ptr = new Derived;
+
+    ptr->display();
+}
+
+Output
+
+Derived
+
+=========================================================
+Question
+=========================================================
+
+How does compiler know to call Derived::display() ?
+
+Answer
+
+Using
+
+1. vtable
+2. vptr
+
+=========================================================
+Step 1 : Compiler Creates Virtual Table (vtable)
+=========================================================
+
+Whenever a class contains at least ONE virtual function,
+
+Compiler automatically creates a table called
+
+Virtual Table (vtable)
+
+It stores addresses of virtual functions.
+
+---------------------------------------------------------
+Base Class
+---------------------------------------------------------
+
+class Base
+{
+public:
+
+    virtual void display();
+};
+
+Compiler conceptually creates
+
+Base vtable
+
+--------------------------
+display()  ---> Base::display
+--------------------------
+
+---------------------------------------------------------
+Derived Class
+---------------------------------------------------------
+
+class Derived : public Base
+{
+public:
+
+    void display();
+};
+
+Compiler creates another table
+
+Derived vtable
+
+-----------------------------
+display() ---> Derived::display
+-----------------------------
+
+Every polymorphic class gets its own vtable.
+
+=========================================================
+Step 2 : Compiler Adds vptr
+=========================================================
+
+Compiler secretly adds one hidden pointer
+inside every object.
+
+Called
+
+Virtual Pointer
+
+(vptr)
+
+Programmer never writes it.
+
+Conceptually
+
+class Base
+{
+    vptr;
+
+    virtual void display();
+};
+
+Object Layout
+
+----------------------
+
+Base Object
+
++-----------------+
+| vptr            |
++-----------------+
+
+=========================================================
+Step 3 : Constructor Initializes vptr
+=========================================================
+
+When object is created,
+
+Constructor initializes
+
+vptr
+
+to point to the class's vtable.
+
+---------------------------------------------------------
+
+Base b;
+
+Constructor sets
+
+b.vptr
+
+↓
+
+Base vtable
+
+---------------------------------------------------------
+
+Derived d;
+
+Constructor sets
+
+d.vptr
+
+↓
+
+Derived vtable
+
+=========================================================
+Memory Diagram
+=========================================================
+
+Base Object
+
++----------------------+
+| vptr --------------+ |
++--------------------|-+
+                     |
+                     v
+
+             Base vtable
+
+        -----------------------
+        display -> Base::display
+        -----------------------
+
+---------------------------------------------------------
+
+Derived Object
+
++----------------------+
+| vptr --------------+ |
++--------------------|-+
+                     |
+                     v
+
+          Derived vtable
+
+      --------------------------
+      display -> Derived::display
+      --------------------------
+
+=========================================================
+Step 4 : Base Pointer Points to Derived Object
+=========================================================
+
+Base* ptr = new Derived;
+
+Memory
+
+ptr
+
+↓
+
++----------------------+
+| vptr                 |
++----------------------+
+
+Object is
+
+Derived
+
+Therefore
+
+vptr
+
+↓
+
+Derived vtable
+
+=========================================================
+Step 5 : Virtual Function Call
+=========================================================
+
+ptr->display();
+
+Compiler DOES NOT directly call
+
+Base::display()
+
+Instead it generates conceptually
+
+ptr
+
+↓
+
+vptr
+
+↓
+
+vtable
+
+↓
+
+display()
+
+↓
+
+Derived::display()
+
+Therefore
+
+Output
+
+Derived
+
+=========================================================
+Runtime Flow
+=========================================================
+
+ptr->display()
+
+↓
+
+Read object's vptr
+
+↓
+
+Locate vtable
+
+↓
+
+Find display()
+
+↓
+
+Call corresponding function
+
+↓
+
+Execute Derived::display()
+
+=========================================================
+Compile Time vs Runtime
+=========================================================
+
+Without virtual
+
+ptr->display()
+
+↓
+
+Compiler decides
+
+↓
+
+Base::display()
+
+Compile Time Binding
+
+---------------------------------------------------------
+
+With virtual
+
+ptr->display()
+
+↓
+
+Look inside object
+
+↓
+
+vptr
+
+↓
+
+vtable
+
+↓
+
+Runtime decides
+
+Runtime Binding
+
+=========================================================
+What Happens if virtual is Removed?
+=========================================================
+
+class Base
+{
+public:
+
+    void display()
+    {
+        cout<<"Base";
+    }
+};
+
+Base* ptr = new Derived;
+
+ptr->display();
+
+Output
+
+Base
+
+Reason
+
+Compiler binds function during compilation.
+
+=========================================================
+Object Layout
+=========================================================
+
+Without Virtual Function ********IIIIIMP
+
++----------------------+
+| Data Members         |
++----------------------+
+
+---------------------------------------------------------
+
+With Virtual Function
+
++----------------------+
+| vptr                |  <-- Hidden Pointer
++----------------------+
+| Data Members         |
++----------------------+
+
+Object size increases by one pointer.
+
+=========================================================
+Multiple Virtual Functions
+=========================================================
+
+class Base
+{
+public:
+
+    virtual void f1();
+
+    virtual void f2();
+
+    virtual void f3();
+};
+
+Compiler creates
+
+Base vtable
+
+----------------------------
+
+f1 -> Base::f1
+
+f2 -> Base::f2
+
+f3 -> Base::f3
+
+----------------------------
+
+Only ONE vptr exists per object.
+
+Not one vptr per virtual function.
+
+=========================================================
+Inheritance Example
+=========================================================
+
+class Base
+{
+public:
+
+    virtual void f1();
+
+    virtual void f2();
+};
+
+class Derived : public Base
+{
+public:
+
+    void f2() override;
+
+    virtual void f3();
+};
+
+Derived vtable
+
+------------------------------------
+
+f1 -> Base::f1
+
+f2 -> Derived::f2
+
+f3 -> Derived::f3
+
+------------------------------------
+
+Functions not overridden continue to
+point to the base implementation.
+
+=========================================================
+Performance Cost
+=========================================================
+
+Advantages
+
+✓ Runtime Polymorphism
+
+✓ Flexible Design
+
+✓ Extensible Code
+
+---------------------------------------------------------
+
+Overheads
+
+✓ One hidden pointer (vptr)
+
+✓ One vtable per class
+
+✓ One extra pointer dereference during call
+
+Usually negligible.
+
+=========================================================
+Most Asked Interview Questions
+=========================================================
+
+Q. What is vtable?
+
+A compiler-generated table that stores addresses
+of virtual functions.
+
+---------------------------------------------------------
+
+Q. What is vptr?
+
+A hidden pointer inside every object of a polymorphic
+class that points to the class's vtable.
+
+---------------------------------------------------------
+
+Q. Who creates the vtable?
+
+Compiler.
+
+---------------------------------------------------------
+
+Q. Who initializes vptr?
+
+Constructor.
+
+---------------------------------------------------------
+
+Q. Where is vptr stored?********IIIMP
+
+Inside every object.
+
+---------------------------------------------------------
+
+Q. Where is vtable stored?
+
+Compiler-dependent, typically in read-only memory
+or a static data section.
+
+---------------------------------------------------------
+
+Q. How many vptrs are there?
+
+One per object.
+
+---------------------------------------------------------
+
+Q. How many vtables are there?
+
+One per polymorphic class.
+
+---------------------------------------------------------
+
+Q. Does every object have a vtable?
+
+No.
+
+Objects have a vptr.
+
+Classes have a vtable.
+
+---------------------------------------------------------
+
+Q. Does a class without virtual functions have a vptr?
+
+No.
+
+---------------------------------------------------------
+
+Q. Does virtual increase object size?
+
+Yes.
+
+Typically by the size of one pointer.
+
+=========================================================
+Interview Answer (1 Minute)
+=========================================================
+
+"A virtual function enables runtime polymorphism. Internally, the
+compiler creates a virtual table (vtable) for every class that has
+virtual functions. The vtable stores the addresses of the virtual
+functions. Every object of such a class contains a hidden pointer
+called the vptr, which is initialized by the constructor to point
+to the appropriate vtable. When a virtual function is called through
+a base class pointer or reference, the compiler generates code that
+looks up the function address through the object's vptr and invokes
+the correct function at runtime. This is why a Base* pointing to a
+Derived object correctly calls Derived's overridden implementation."
