@@ -14,6 +14,15 @@ Example:
 
 virtual void draw() = 0;
 
+Q. If a pure virtual function has an implementation, why is it still called "pure"?*******MOST ASKED 
+
+Answer:
+
+Because = 0 makes the function pure virtual, which makes the class abstract. 
+The presence of a function body does not change that. The implementation simply provides 
+common functionality that derived classes can call using Base::function().
+
+
 =========================================================
 WHY DO WE NEED PURE VIRTUAL FUNCTIONS?
 =========================================================
@@ -179,6 +188,83 @@ Even though implementation exists:
 
 Shape is STILL an Abstract Class.
 
+
+whats the use>********
+"If a pure virtual function can have an implementation, then what's the point of making it pure virtual?"
+Suppose we have:
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+void Shape::draw()
+{
+    cout << "Common Drawing Code\n";
+}
+
+Even though draw() is pure virtual:
+
+Shape is still abstract
+You cannot create a Shape object
+But derived classes can call the base implementation
+
+#include <iostream>
+using namespace std;
+
+class Shape
+{
+public:
+    virtual void draw() = 0;
+};
+
+void Shape::draw()
+{
+    cout << "Common Drawing Code\n";
+}
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        Shape::draw();      // Call base implementation
+
+        cout << "Drawing Circle\n";
+    }
+};
+
+int main()
+{
+    Shape* s = new Circle;
+
+    s->draw();
+
+    delete s;
+}
+
+Why is this useful?****VVVVVVIVMP
+
+Suppose every derived class needs some common work.
+
+Instead of duplicating it:
+Move the common code to the base class:
+
+void Shape::draw()
+{
+    cout << "Open Graphics Context\n";
+}
+Now every derived class can reuse it:
+
+void Circle::draw()
+{
+    Shape::draw();
+
+    cout << "Draw Circle\n";
+}
+
+
 =========================================================
 CAN DERIVED CLASS CALL BASE IMPLEMENTATION?
 =========================================================
@@ -235,7 +321,7 @@ Base::~Base()
 
 Rule:
 
-Pure Virtual Destructor MUST have a definition.
+Pure Virtual Destructor MUST have a definition. **********VVVIMP 
 
 Reason:
 Destructor is always called during object destruction.
