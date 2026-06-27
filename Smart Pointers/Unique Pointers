@@ -60,6 +60,15 @@ std::unique_ptr<int> p2(new int(10));    // owns int
 Array version:
 std::unique_ptr<int[]> arr(new int[5]);
 
+Creating a unique_ptr
+
+Wrong:
+
+unique_ptr<int> p = new int(10);    // Compilation Error ****VVVVVIMP
+
+Reason:
+unique_ptr constructor is explicit, so implicit conversion from int* to unique_ptr is not allowed.
+
 -----------------------------------------
 IMPORTANT:
 -----------------------------------------
@@ -103,7 +112,7 @@ Returns raw pointer (does NOT release ownership)
 release()
 ---------
 Releases ownership and returns raw pointer
-(manual delete required)
+(manual delete required)******
 
 reset()
 ------
@@ -285,7 +294,7 @@ auto deleter = [](int* p) {
     delete p;
 };
 
-std::unique_ptr<int, decltype(deleter)> p(new int(10), deleter);
+std::unique_ptr<int, decltype(deleter)> p(new int(10), deleter); *** vimp pass del in p also VVIMP
 
 ✔ Used for custom cleanup logic
 
