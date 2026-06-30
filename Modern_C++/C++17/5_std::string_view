@@ -1,0 +1,349 @@
+=========================================
+C++17 std::string_view
+INTERVIEW NOTES
+=========================================
+
+1. What is std::string_view?
+
+std::string_view is a C++17 lightweight, non-owning view of a string.
+
+It does NOT own the string data.
+It only provides a window (view) into existing string memory.
+
+Header
+
+#include <string_view>
+
+Syntax
+
+std::string_view
+
+-----------------------------------------
+
+2. Why was std::string_view introduced?
+
+Before C++
+
+void print(const string& s)
+{
+    cout << s;
+}
+
+Problem:
+
+Even when you pass:
+
+• string literal
+• substring
+• temporary string
+
+you often end up with unnecessary copies or constraints.
+
+Also:
+
+• std::string is heavy (memory allocation possible)
+• copying strings is expensive
+
+-----------------------------------------
+
+3. C++17 Solution
+
+#include <string_view>
+using namespace std;
+
+void print(string_view s)
+{
+    cout << s;
+}
+
+Now you can pass:
+
+• std::string
+• string literal
+• substring
+• char arrays
+
+All without copying.
+
+-----------------------------------------
+
+4. Example
+
+#include <iostream>
+#include <string_view>
+using namespace std;
+
+void print(string_view s)
+{
+    cout << s << endl;
+}
+
+int main()
+{
+    string str = "Hello";
+    print(str);              // string
+    print("World");          // string literal
+    print(string("Hi"));    // temporary string
+}
+
+Output
+
+Hello
+World
+Hi
+
+-----------------------------------------
+
+5. Key Feature
+
+std::string_view does NOT copy data.
+
+It stores only:
+
+• pointer to string data
+• length
+
+Internally:
+
+struct string_view
+{
+    const char* ptr;
+    size_t size;
+};
+
+-----------------------------------------
+
+6. Why is it fast?
+
+Because:
+
+• No memory allocation
+• No string copying
+• Only pointer + size
+
+-----------------------------------------
+
+7. Important Warning ⚠️ (VERY IMPORTANT INTERVIEW POINT)
+
+string_view does NOT own memory.
+
+So this is dangerous:
+
+string_view sv;
+
+{
+    string s = "Hello";
+    sv = s;
+}
+
+Now s is destroyed → sv becomes dangling → Undefined Behavior
+
+-----------------------------------------
+
+8. Safe usage rules
+
+✔ Use with:
+
+• string literals
+• long-lived strings
+• function parameters
+
+❌ Avoid:
+
+• returning string_view to local string
+• storing string_view beyond lifetime of original string
+
+-----------------------------------------
+
+9. Substring without copying
+
+string str = "HelloWorld";
+
+string_view sv(str);
+
+cout << sv.substr(0,5);
+
+Output
+
+Hello
+
+No new string is created.
+
+-----------------------------------------
+
+10. Common Methods
+
+size()
+
+cout << sv.size();
+
+data()
+
+const char* p = sv.data();
+
+substr()
+
+auto sub = sv.substr(2,3);
+
+remove_prefix()
+
+sv.remove_prefix(2);
+
+remove_suffix()
+
+sv.remove_suffix(2);
+
+-----------------------------------------
+
+11. Difference: string vs string_view
+
+std::string
+
+• Owns memory
+• Copy is expensive
+• Can modify
+
+std::string_view
+
+• Does NOT own memory
+• Very fast
+• Read-only view
+
+-----------------------------------------
+
+12. When to use string_view?
+
+Best use cases:
+
+• function parameters
+• logging systems
+• parsing
+• read-only string processing
+• APIs needing high performance
+
+-----------------------------------------
+
+13. Example of optimization
+
+Before
+
+void log(const string& s)
+{
+    cout << s;
+}
+
+C++17
+
+void log(string_view s)
+{
+    cout << s;
+}
+
+Now accepts:
+
+• string
+• "literal"
+• substring
+
+without overhead
+
+-----------------------------------------
+
+14. Interview Questions
+
+Q. What is std::string_view?
+
+Answer
+
+std::string_view is a C++17 non-owning reference to a string that provides a lightweight view without copying or allocating memory.
+
+-----------------------------------------
+
+Q. Which C++ version introduced string_view?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. What problem does it solve?
+
+Answer
+
+It avoids unnecessary copying of strings and allocations by providing a lightweight view instead of owning string data.
+
+-----------------------------------------
+
+Q. Does string_view own memory?
+
+Answer
+
+No. It only references existing string data.
+
+-----------------------------------------
+
+Q. What is the risk of string_view?
+
+Answer
+
+If the original string goes out of scope, string_view becomes dangling and leads to undefined behavior.
+
+-----------------------------------------
+
+Q. Difference between string and string_view?
+
+Answer
+
+string owns memory and allows modifications, while string_view is a non-owning, read-only view with no memory allocation.
+
+-----------------------------------------
+
+Q. Can string_view modify data?
+
+Answer
+
+No. It is read-only.
+
+-----------------------------------------
+
+15. Interview Explanation (30 seconds)
+
+"std::string_view is a C++17 feature that provides a non-owning, lightweight view of a string. Unlike std::string, 
+it does not allocate memory or copy data; it only stores a pointer and length. This makes it very efficient for 
+function parameters and read-only string operations. However, it must be used carefully because it does not own the 
+underlying data, so dangling references can occur if the original string is destroyed."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Header
+
+#include <string_view>
+
+Key Feature
+
+Non-owning string reference
+
+Stores
+
+pointer + length
+
+Advantages
+
+• No copy
+• No allocation
+• Very fast
+
+Risk
+
+Dangling reference if original string dies
+
+Best Use
+
+Function parameters & read-only operations
