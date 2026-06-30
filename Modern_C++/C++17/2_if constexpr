@@ -1,0 +1,403 @@
+=========================================
+C++17 if constexpr
+INTERVIEW NOTES
+=========================================
+
+1. What is if constexpr?
+
+if constexpr is a C++17 feature that allows compile-time conditional branching.
+
+Unlike a normal if statement, only the branch whose condition evaluates to true at compile time is compiled.
+
+The other branch is discarded by the compiler.
+
+Syntax
+
+if constexpr(condition)
+{
+    // Compiled only if condition is true
+}
+else
+{
+    // Compiled only if condition is false
+}
+
+-----------------------------------------
+
+2. Why was it introduced?
+
+Before C++17, template code often required SFINAE (Substitution Failure Is Not An Error), std::enable_if, or 
+tag dispatching to write different implementations for different types.
+
+if constexpr provides a much simpler and more readable solution.
+
+-----------------------------------------
+
+3. Example
+
+#include <iostream>
+#include <type_traits>
+using namespace std;
+
+template<typename T>
+void print(T x)
+{
+    if constexpr (is_integral_v<T>)
+        cout << "Integer";
+    else
+        cout << "Other";
+}
+
+int main()
+{
+    print(10);
+    print(3.14);
+}
+
+Output
+
+Integer
+Other
+
+-----------------------------------------
+
+4. What happens internally?
+
+Call
+
+print(10);
+
+Compiler deduces
+
+T = int
+
+Condition becomes
+
+if constexpr(true)
+
+Compiler generates
+
+void print(int x)
+{
+    cout << "Integer";
+}
+
+The else branch is completely discarded.
+
+-----------------------------------------
+
+Similarly
+
+print(3.14);
+
+Compiler deduces
+
+T = double
+
+Condition becomes
+
+if constexpr(false)
+
+Compiler generates
+
+void print(double x)
+{
+    cout << "Other";
+}
+
+The first branch is discarded.
+
+-----------------------------------------
+
+5. Difference between if and if constexpr
+
+Normal if
+
+Both branches are compiled.
+
+Condition is checked at runtime.
+
+-----------------------------------------
+
+if constexpr
+
+Only one branch is compiled.
+
+Condition is checked at compile time.
+
+Unused branch is discarded.
+
+-----------------------------------------
+
+6. Why is this important?
+
+Suppose
+
+template<typename T>
+void fun(T x)
+{
+    if (is_pointer_v<T>)
+        cout << *x;
+    else
+        cout << x;
+}
+
+Now call
+
+fun(10);
+
+Although the runtime condition is false,
+
+the compiler STILL compiles
+
+cout << *x;
+
+But
+
+*x
+
+is invalid for an int.
+
+Compilation fails.
+
+-----------------------------------------
+
+Using if constexpr
+
+template<typename T>
+void fun(T x)
+{
+    if constexpr (is_pointer_v<T>)
+        cout << *x;
+    else
+        cout << x;
+}
+
+Call
+
+fun(10);
+
+Compiler removes
+
+cout << *x;
+
+Only
+
+cout << x;
+
+is compiled.
+
+Program compiles successfully.
+
+-----------------------------------------
+
+7. Real Example
+
+template<typename T>
+void display(T value)
+{
+    if constexpr(is_pointer_v<T>)
+    {
+        cout << "Pointer value = " << *value;
+    }
+    else
+    {
+        cout << "Value = " << value;
+    }
+}
+
+int x = 100;
+
+display(x);
+
+display(&x);
+
+Output
+
+Value = 100
+
+Pointer value = 100
+
+-----------------------------------------
+
+8. Why not use normal if?
+
+Normal if compiles BOTH branches.
+
+if constexpr compiles ONLY the valid branch.
+
+This is the biggest advantage.
+
+-----------------------------------------
+
+9. Common Type Traits Used
+
+is_integral_v<T>
+
+is_pointer_v<T>
+
+is_floating_point_v<T>
+
+is_same_v<T,int>
+
+is_arithmetic_v<T>
+
+-----------------------------------------
+
+10. Advantages
+
+• Compile-time branching
+
+• Eliminates invalid code
+
+• Cleaner than SFINAE
+
+• Easier to read
+
+• Better compiler optimization
+
+• No runtime overhead
+
+-----------------------------------------
+
+11. Where is it used?
+
+• Generic programming
+
+• Template libraries
+
+• STL implementations
+
+• Serialization libraries
+
+• Logging frameworks
+
+• Smart pointers
+
+• Compile-time utilities
+
+-----------------------------------------
+
+12. Interview Questions
+
+Q. What is if constexpr?
+
+Answer
+
+if constexpr is a C++17 feature that performs compile-time conditional branching. Only the branch whose 
+condition evaluates to true is compiled, while the other branch is discarded.
+
+-----------------------------------------
+
+Q. Which C++ version introduced if constexpr?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. What problem does it solve?
+
+Answer
+
+Before C++17, template code required complex techniques like SFINAE, std::enable_if, or tag dispatching to select 
+different implementations based on type. if constexpr makes this much simpler and more readable.
+
+-----------------------------------------
+
+Q. Difference between if and if constexpr?
+
+Answer
+
+Normal if
+
+• Runtime decision
+• Both branches are compiled
+
+if constexpr
+
+• Compile-time decision
+• Only the valid branch is compiled
+
+-----------------------------------------
+
+Q. Why is if constexpr useful in templates?
+
+Answer
+
+Template code may contain operations that are valid only for certain types. if constexpr removes invalid 
+branches during compilation, preventing compilation errors.
+
+-----------------------------------------
+
+Q. Does if constexpr have runtime overhead?
+
+Answer
+
+No.
+
+The condition is evaluated at compile time, and the unused branch is removed completely.
+
+-----------------------------------------
+
+13. Interview Explanation (30 Seconds)
+
+"if constexpr was introduced in C++17 to perform compile-time conditional branching. Unlike a normal if statement, 
+only the branch whose condition evaluates to true is compiled, while the other branch is discarded. It is mainly used 
+in template programming to write type-dependent code without using SFINAE or std::enable_if. This results in cleaner, 
+safer, and more efficient template code."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Syntax
+
+if constexpr(condition)
+
+Difference
+
+if
+↓
+
+Runtime
+
+Both branches compiled
+
+-----------------------
+
+if constexpr
+↓
+
+Compile Time
+
+Only one branch compiled
+
+Benefits
+
+• Cleaner templates
+• No SFINAE needed
+• Better optimization
+• No runtime overhead
+• Prevents compilation errors
+
+Common Type Traits
+
+is_integral_v<T>
+
+is_pointer_v<T>
+
+is_same_v<T,int>
+
+is_floating_point_v<T>
+
+Most Asked Interview Point
+
+Normal if compiles BOTH branches.
+
+if constexpr compiles ONLY the valid branch and completely discards the invalid branch.
