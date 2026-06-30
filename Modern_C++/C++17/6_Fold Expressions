@@ -1,0 +1,326 @@
+=========================================
+C++17 FOLD EXPRESSIONS
+INTERVIEW NOTES
+=========================================
+
+1. What are Fold Expressions?
+
+Fold expressions are a C++17 feature that simplifies working with variadic templates.
+
+They allow you to apply an operator (+, *, &&, ||, etc.) over a parameter pack in a very concise way.
+
+-----------------------------------------
+
+2. Why were Fold Expressions introduced?
+
+Before C++17, variadic template code was complex and recursive.
+
+Example (Before C++17)
+
+template<typename T>
+T sum(T a)
+{
+    return a;
+}
+
+template<typename T, typename... Args>
+T sum(T first, Args... args)
+{
+    return first + sum(args...);
+}
+
+Problems:
+
+• Recursive template calls
+• Hard to read
+• More boilerplate
+• Hard to maintain
+
+-----------------------------------------
+
+3. C++17 Solution (Fold Expression)
+
+template<typename... Args>
+auto sum(Args... args)
+{
+    return (... + args);
+}
+
+-----------------------------------------
+
+4. What does (... + args) mean?
+
+This is a unary left fold.
+
+It expands like:
+
+sum(1,2,3,4)
+
+becomes:
+
+(((1 + 2) + 3) + 4)
+
+-----------------------------------------
+
+5. Types of Fold Expressions
+
+C++17 supports 4 types of folds:
+
+-----------------------------------------
+
+A) Unary Left Fold
+
+( ... op pack )
+
+Example:
+
+(... + args)
+
+Expands to:
+
+(((a + b) + c) + d)
+
+-----------------------------------------
+
+B) Unary Right Fold
+
+( pack op ... )
+
+Example:
+
+(args + ...)
+
+Expands to:
+
+(a + (b + (c + d)))
+
+-----------------------------------------
+
+C) Binary Left Fold
+
+(init op ... op pack)
+
+Example:
+
+(0 + ... + args)
+
+Expands to:
+
+(((0 + a) + b) + c)
+
+-----------------------------------------
+
+D) Binary Right Fold
+
+(pack op ... op init)
+
+Example:
+
+(args + ... + 0)
+
+Expands to:
+
+(a + (b + (c + 0)))
+
+-----------------------------------------
+
+6. Example: Sum
+
+#include <iostream>
+using namespace std;
+
+template<typename... Args>
+auto sum(Args... args)
+{
+    return (... + args);
+}
+
+int main()
+{
+    cout << sum(1,2,3,4);
+}
+
+Output
+
+10
+
+-----------------------------------------
+
+7. Example: Multiplication
+
+template<typename... Args>
+auto multiply(Args... args)
+{
+    return (... * args);
+}
+
+multiply(2,3,4);
+
+Output
+
+24
+
+-----------------------------------------
+
+8. Example: Logical AND
+
+template<typename... Args>
+bool allTrue(Args... args)
+{
+    return (... && args);
+}
+
+allTrue(true, true, false);
+
+Output
+
+false
+
+-----------------------------------------
+
+9. Example: Print all values
+
+#include <iostream>
+using namespace std;
+
+template<typename... Args>
+void print(Args... args)
+{
+    (cout << ... << args);
+}
+
+int main()
+{
+    print(1,2,3);
+}
+
+Output
+
+123
+
+-----------------------------------------
+
+10. Why are fold expressions powerful?
+
+• Replace recursive templates
+• Very compact syntax
+• Faster compile-time evaluation
+• Easier to read and maintain
+
+-----------------------------------------
+
+11. Where are fold expressions used?
+
+• Logging frameworks
+• Mathematical libraries
+• Variadic utilities
+• STL implementations
+• Generic programming
+• Parameter forwarding
+
+-----------------------------------------
+
+12. Important Edge Cases
+
+Empty parameter pack is NOT allowed for unary fold.
+
+Example:
+
+(... + args)
+
+If args is empty → compilation error
+
+Solution:
+
+Use binary fold with identity value
+
+Example:
+
+(0 + ... + args)
+
+-----------------------------------------
+
+13. Interview Questions
+
+Q. What are fold expressions?
+
+Answer
+
+Fold expressions are a C++17 feature that applies a binary operator to a parameter pack in a concise way, 
+eliminating the need for recursive variadic templates.
+
+-----------------------------------------
+
+Q. Which C++ version introduced fold expressions?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. What problem do they solve?
+
+Answer
+
+They remove the need for recursive variadic templates by providing a simple syntax to operate on parameter packs.
+
+-----------------------------------------
+
+Q. What are types of fold expressions?
+
+Answer
+
+• Unary left fold
+• Unary right fold
+• Binary left fold
+• Binary right fold
+
+-----------------------------------------
+
+Q. Example of fold expression?
+
+Answer
+
+(... + args)
+
+-----------------------------------------
+
+14. Interview Explanation (30 seconds)
+
+"Fold expressions are a C++17 feature that simplify variadic templates by applying an operator over a parameter pack. 
+Instead of writing recursive template functions, we can use syntax like (... + args), which expands internally to a 
+sequence of operations. This makes code shorter, more readable, and easier to maintain."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Main Idea
+
+Operate on parameter packs using operators
+
+Syntax
+
+(... op args)
+
+Example
+
+(... + args)
+
+Types
+
+• Unary left
+• Unary right
+• Binary left
+• Binary right
+
+Benefit
+
+• No recursion
+• Clean code
+• Easy variadic handling
