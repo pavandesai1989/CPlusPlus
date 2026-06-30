@@ -1,0 +1,313 @@
+=========================================
+C++17 std::variant
+INTERVIEW NOTES
+=========================================
+
+1. What is std::variant?
+
+std::variant is a C++17 type-safe union that can hold one value from a fixed set of types at a time.
+
+It is a safer replacement for C-style unions.
+
+Header
+
+#include <variant>
+
+Syntax
+
+std::variant<T1, T2, T3...>
+
+-----------------------------------------
+
+2. Why was std::variant introduced?
+
+Before C++
+
+union Data
+{
+    int x;
+    float y;
+};
+
+Problem
+
+• No type safety
+• You must manually track which type is active
+• Accessing wrong type = Undefined Behavior
+• No compiler protection
+
+-----------------------------------------
+
+3. C++17 Solution
+
+#include <variant>
+using namespace std;
+
+variant<int, string, double> data;
+
+data = 10;
+
+cout << get<int>(data);
+
+data = string("Hello");
+
+cout << get<string>(data);
+
+Output
+
+10
+Hello
+
+-----------------------------------------
+
+4. What is happening internally?
+
+variant stores:
+
+• One of the possible types
+• A tag (index) indicating which type is active
+
+Example
+
+variant<int, string>
+
+data = 10;
+
+Internally:
+
+index = 0
+value = 10
+
+data = "Hello";
+
+index = 1
+value = "Hello"
+
+-----------------------------------------
+
+5. Accessing values
+
+Method 1: get<T>
+
+cout << get<int>(data);
+
+⚠ Must know the correct active type
+
+Throws exception if wrong type is accessed
+
+-----------------------------------------
+
+Method 2: get_if (safer)
+
+if(auto p = get_if<int>(&data))
+{
+    cout << *p;
+}
+
+-----------------------------------------
+
+Method 3: holds_alternative
+
+if(holds_alternative<int>(data))
+{
+    cout << get<int>(data);
+}
+
+-----------------------------------------
+
+6. Changing value
+
+data = 10;
+data = 3.14;
+data = string("Hello");
+
+Only ONE value is active at a time.
+
+-----------------------------------------
+
+7. Example
+
+#include <iostream>
+#include <variant>
+using namespace std;
+
+int main()
+{
+    variant<int,string,double> v;
+
+    v = 10;
+    cout << get<int>(v) << endl;
+
+    v = "Hello";
+    cout << get<string>(v) << endl;
+
+    v = 3.14;
+    cout << get<double>(v) << endl;
+}
+
+Output
+
+10
+Hello
+3.14
+
+-----------------------------------------
+
+8. What happens if wrong type is accessed?
+
+variant<int,string> v = 10;
+
+cout << get<string>(v);
+
+Throws:
+
+std::bad_variant_access
+
+-----------------------------------------
+
+9. safer visit() method (VERY IMPORTANT ⭐⭐⭐⭐⭐)
+
+#include <iostream>
+#include <variant>
+using namespace std;
+
+int main()
+{
+    variant<int,string> v = "Hello";
+
+    visit([](auto&& val)
+    {
+        cout << val;
+    }, v);
+}
+
+Output
+
+Hello
+
+visit automatically handles all types safely.
+
+-----------------------------------------
+
+10. Difference: union vs variant
+
+C union
+
+• Unsafe
+• No type tracking
+• Manual control
+• Undefined behavior risk
+
+std::variant
+
+• Type-safe
+• Compiler tracks active type
+• Safe access methods
+• No undefined behavior (if used correctly)
+
+-----------------------------------------
+
+11. Advantages
+
+• Type safety
+• No undefined behavior
+• Better than union
+• Works with complex types (string, class, etc.)
+• Compile-time type checking
+
+-----------------------------------------
+
+12. Where is std::variant used?
+
+• State machines
+• Parsers
+• JSON handling
+• Compilers
+• Event systems
+• Message passing systems
+• APIs with multiple return types
+
+-----------------------------------------
+
+13. Interview Questions
+
+Q. What is std::variant?
+
+Answer
+
+std::variant is a C++17 type-safe union that can hold one value from a set of specified types at a time.
+
+-----------------------------------------
+
+Q. Which C++ version introduced std::variant?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. How is variant different from union?
+
+Answer
+
+union is unsafe and does not track the active type, while std::variant is type-safe and keeps track of which type is currently active.
+
+-----------------------------------------
+
+Q. What happens if wrong type is accessed?
+
+Answer
+
+It throws std::bad_variant_access.
+
+-----------------------------------------
+
+Q. What is visit()?
+
+Answer
+
+visit() applies a callable to the currently active type in the variant and is the safest way to access variant values.
+
+-----------------------------------------
+
+14. Interview Explanation (30 Seconds)
+
+"std::variant is a C++17 type-safe union that can store one value from multiple types. Unlike a traditional union, 
+it keeps track of the active type internally and prevents undefined behavior. Values are accessed using get<T>, 
+get_if, or the safer visit function. It is commonly used in state machines, parsers, and APIs that need to return multiple possible types."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Header
+
+#include <variant>
+
+Syntax
+
+variant<int,string,double>
+
+Key Feature
+
+Stores only one active type at a time
+
+Access Methods
+
+• get<T>
+• get_if
+• holds_alternative
+• visit (best)
+
+Risk
+
+Wrong access → std::bad_variant_access
+
+Advantage
+
+Type-safe replacement for union
