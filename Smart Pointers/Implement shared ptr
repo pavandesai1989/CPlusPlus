@@ -1,33 +1,176 @@
-
 #include <iostream>
 using namespace std;
 
-template <typename T>
-class MySharedPtr {
+template<typename T>
+class MySharedPtr
+{
 private:
-    T* ptr;          // raw pointer to object
-    int* refCount;   // pointer to shared reference count
+    T* ptr;
+    int* refCount;
+
+    void release()
+    {
+        if (refCount)
+        {
+            (*refCount)--;
+
+            if (*refCount == 0)
+            {
+                delete ptr;
+                delete refCount;
+
+                cout << "Resource deleted\n";
+            }
+        }
+
+        ptr = nullptr;
+        refCount = nullptr;
+    }
 
 public:
+
     // Constructor
-    explicit MySharedPtr(T* p = nullptr) {
-        ptr = p;
-        if (p) {
-            refCount = new int(1);  // first owner
-        } else {
+    explicit MySharedPtr(T* p = nullptr)
+        : ptr(p)
+    {
+        if (p)
+            refCount = new int(1);
+        else
             refCount = nullptr;
+    }
+
+    // Destructor
+    ~MySharedPtr()
+    {
+        release();
+    }
+
+    // Copy Constructor
+    MySharedPtr(const MySharedPtr& other)
+        : ptr(other.ptr),
+          refCount(other.refCount)
+    {
+        if (refCount)
+            ++(*refCount);
+    }
+
+    // Copy Assignment
+    MySharedPtr& operator=(const MySharedPtr& other)
+    {
+        if (this != &other)
+        {
+            release();
+
+            ptr = other.ptr;
+            refCount = other.refCount;
+
+            if (refCount)
+                ++(*refCount);
+        }
+
+        return *this;
+    }
+
+    // Move Constructor
+    MySharedPtr(MySharedPtr&& other) noexcept
+        : ptr(other.ptr),
+          refCount(other.refCount)
+    {
+        other.ptr = nullptr;
+        other.refCount = nullptr;
+    }
+
+    // Move Assignment
+    MySharedPtr& operator=(MySharedPtr&& other) noexcept
+    {
+        if (this != &other)
+        {
+            release();
+
+            ptr = other.ptr;
+            refCount = other.refCount;
+
+            other.ptr = nullptr;
+            other.refCount = nullptr;
+        }
+
+        return *this;
+    }
+
+    T* get() const
+    {
+        return ptr;
+    }
+
+    int use_count() const
+    {
+        return refCount ? *refCount : 0;
+    }
+
+    void reset(T* p = nullptr)
+    {
+        release();
+
+        if (p)
+        {
+            ptr = p;
+            refCount = new int(1);
         }
     }
 
-    // Copy constructor (IMPORTANT: increases ref count)
-    MySharedPtr(const MySharedPtr& other) {
-        ptr = other.ptr;
-        refCount = other.refCount;
-
-        if (refCount) {
-            (*refCount)++;   // increase shared ownership
-        }
+    T& operator*() const
+    {
+        return *ptr;
     }
 
-    // Copy assignment operator
-    MySharedPtr& operator=(const
+    T* operator->() const
+    {
+        return ptr;
+    }
+
+    operator bool() const
+    {
+        return ptr != nullptr;
+    }
+};
+
+int main()
+{
+    MySharedPtr<int> p1(new int(100));
+
+    cout << "p1 = " << *p1 << endl;
+    cout << "Count = " << p1.use_count() << endl;
+
+    cout << "\nCopy Constructor\n";
+    MySharedPtr<int> p2 = p1;
+
+    cout << "Count = " << p1.use_count() << endl;
+
+    cout << "\nCopy Assignment\n";
+    MySharedPtr<int> p3;
+    p3 = p1;
+
+    cout << "Count = " << p1.use_count() << endl;
+
+    cout << "\nMove Constructor\n";
+    MySharedPtr<int> p4 = std::move(p3);
+
+    cout << "Count = " << p4.use_count() << endl;
+
+    cout << "\nMove Assignment\n";
+    MySharedPtr<int> p5;
+    p5 = std::move(p4);
+
+    cout << "Count = " << p5.use_count() << endl;
+
+    cout << "\nReset\n";
+    p5.reset(new int(500));
+
+    cout << *p5 << endl;
+    cout << "Count = " << p5.use_count() << endl;
+
+    if (p5)
+        cout << "Pointer is valid\n";
+
+    return 0;
+}
