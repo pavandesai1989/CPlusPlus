@@ -1,0 +1,334 @@
+=========================================
+C++17 STRUCTURED BINDINGS
+INTERVIEW NOTES
+=========================================
+
+1. What are Structured Bindings?
+
+Structured Bindings were introduced in C++17.
+
+They allow a single object (such as a pair, tuple, array, or struct) to be unpacked into individual variables.
+
+Instead of accessing members using .first, .second, std::get<>(), or object.member, we can directly create named variables.
+
+Syntax
+
+auto [var1, var2, ...] = object;
+
+-----------------------------------------
+
+2. Why were Structured Bindings introduced?
+
+Before C++17, unpacking objects was verbose.
+
+Example
+
+pair<int,string> p = {1,"Pavan"};
+
+cout << p.first << endl;
+cout << p.second << endl;
+
+With C++17
+
+auto [id, name] = p;
+
+cout << id << endl;
+cout << name << endl;
+
+The code becomes cleaner and easier to read.
+
+-----------------------------------------
+
+3. Pair Example
+
+#include <iostream>
+#include <utility>
+using namespace std;
+
+int main()
+{
+    pair<int,string> p = {1,"Pavan"};
+
+    auto [id, name] = p;
+
+    cout << id << endl;
+    cout << name << endl;
+}
+
+Output
+
+1
+Pavan
+
+-----------------------------------------
+
+4. What happens internally?
+
+pair<int,string> p = {1,"Pavan"};
+
+auto [id,name] = p;
+
+is roughly equivalent to
+
+int id = p.first;
+string name = p.second;
+
+It simply creates two variables initialized from the pair.
+
+-----------------------------------------
+
+5. Tuple Example
+
+tuple<int,string,double> t = {1,"Pavan",95.5};
+
+auto [id,name,marks] = t;
+
+cout << id << endl;
+cout << name << endl;
+cout << marks << endl;
+
+-----------------------------------------
+
+6. Array Example
+
+int arr[] = {10,20};
+
+auto [a,b] = arr;
+
+cout << a << " " << b;
+
+-----------------------------------------
+
+7. Struct Example
+
+struct Employee
+{
+    int id;
+    string name;
+};
+
+Employee e{1,"Pavan"};
+
+auto [id,name] = e;
+
+cout << id << endl;
+cout << name << endl;
+
+-----------------------------------------
+
+8. Map Example (Most Asked)
+
+map<int,string> mp;
+
+mp[1] = "Pavan";
+mp[2] = "Rahul";
+
+for(auto& [key,value] : mp)
+{
+    cout << key << " " << value << endl;
+}
+
+Instead of
+
+for(auto& it : mp)
+{
+    cout << it.first << " " << it.second << endl;
+}
+
+This is one of the most common interview examples.
+
+-----------------------------------------
+
+9. By Value vs By Reference
+
+By Value
+
+auto [id,name] = p;
+
+Copies the values.
+
+Changing id or name does NOT change the original pair.
+
+-----------------------------------------
+
+By Reference
+
+auto& [id,name] = p;
+
+No copy.
+
+Changing id or name modifies the original pair.
+
+Example
+
+pair<int,string> p = {1,"Pavan"};
+
+auto& [id,name] = p;
+
+id = 100;
+
+cout << p.first;
+
+Output
+
+100
+
+-----------------------------------------
+
+10. Advantages
+
+• Cleaner code
+
+• No .first/.second
+
+• No std::get<0>()
+
+• Better readability
+
+• Easier iteration over maps
+
+• Less typing
+
+-----------------------------------------
+
+11. Where can Structured Bindings be used?
+
+✔ pair
+
+✔ tuple
+
+✔ array
+
+✔ struct/class (with public members)
+
+✔ map iteration
+
+-----------------------------------------
+
+12. Interview Questions
+
+Q. What are Structured Bindings?
+
+Answer
+
+Structured Bindings are a C++17 feature that allows objects such as pairs, tuples, arrays, and structs to be unpacked into separate variables.
+
+-----------------------------------------
+
+Q. Which C++ version introduced Structured Bindings?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. What problem do they solve?
+
+Answer
+
+Before C++17, we had to access pair members using .first and .second or tuple elements using std::get<>(). 
+Structured Bindings provide a cleaner and more readable way to unpack these objects into named variables.
+
+-----------------------------------------
+
+Q. What objects support Structured Bindings?
+
+Answer
+
+• pair
+• tuple
+• array
+• struct/class with public members
+• map elements
+
+-----------------------------------------
+
+Q. What is the difference between
+
+auto
+
+and
+
+auto&
+
+with Structured Bindings?
+
+Answer
+
+auto creates copies of the values.
+
+auto& creates references to the original object.
+
+Using auto&, modifying the bound variables modifies the original object.
+
+-----------------------------------------
+
+Q. Why are Structured Bindings useful in map iteration?
+
+Answer
+
+Instead of writing
+
+for(auto& it : mp)
+{
+    cout << it.first << " " << it.second;
+}
+
+we can write
+
+for(auto& [key,value] : mp)
+{
+    cout << key << " " << value;
+}
+
+This improves readability and eliminates the need for .first and .second.
+
+-----------------------------------------
+
+13. Interview Explanation (30 Seconds)
+
+"Structured Bindings were introduced in C++17 to simplify unpacking of objects like std::pair, std::tuple,
+arrays, structs, and map elements. Instead of accessing members using .first, .second, or std::get<>(), 
+we can bind them directly to named variables using the syntax auto [a, b] = object. This improves readability, 
+reduces boilerplate code, and is especially useful when iterating over maps."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Syntax
+
+auto [a,b] = object;
+
+Works With
+
+• pair
+• tuple
+• array
+• struct
+• map
+
+Most Common Example
+
+for(auto& [key,value] : mp)
+{
+    cout << key << " " << value;
+}
+
+Benefits
+
+• Cleaner code
+• No .first/.second
+• No std::get<>()
+• Better readability
+
+Key Point
+
+auto      -> Copies values
+
+auto&     -> References original object
