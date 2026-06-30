@@ -1,18 +1,34 @@
-#include <iostream>
-using namespace std;
-
 template<typename T>
 class MySharedPtr
 {
 private:
+
+    // Pointer to actual object
     T* ptr;
+
+    // Shared reference count
+    // All copies point to the SAME counter.
     int* refCount;
 
+    //-------------------------------------------------------
+    // release()
+    //
+    // Called whenever THIS object is giving up ownership.
+    //
+    // Used by:
+    // 1. Destructor
+    // 2. Copy Assignment
+    // 3. Move Assignment
+    // 4. reset()
+    //
+    // Decrements reference count.
+    // Deletes resource only when last owner goes away.
+    //-------------------------------------------------------
     void release()
     {
         if (refCount)
         {
-            (*refCount)--;
+            --(*refCount);
 
             if (*refCount == 0)
             {
@@ -29,7 +45,9 @@ private:
 
 public:
 
+    //-------------------------------------------------------
     // Constructor
+    //-------------------------------------------------------
     explicit MySharedPtr(T* p = nullptr)
         : ptr(p)
     {
@@ -39,13 +57,23 @@ public:
             refCount = nullptr;
     }
 
+    //-------------------------------------------------------
     // Destructor
+    //
+    // Current object is destroyed.
+    // Release its ownership.
+    //-------------------------------------------------------
     ~MySharedPtr()
     {
         release();
     }
 
+    //-------------------------------------------------------
     // Copy Constructor
+    //
+    // Share ownership.
+    // Increase reference count.
+    //-------------------------------------------------------
     MySharedPtr(const MySharedPtr& other)
         : ptr(other.ptr),
           refCount(other.refCount)
@@ -54,7 +82,12 @@ public:
             ++(*refCount);
     }
 
+    //-------------------------------------------------------
     // Copy Assignment
+    //
+    // First release current resource.
+    // Then share other's resource.
+    //-------------------------------------------------------
     MySharedPtr& operator=(const MySharedPtr& other)
     {
         if (this != &other)
@@ -71,7 +104,12 @@ public:
         return *this;
     }
 
+    //-------------------------------------------------------
     // Move Constructor
+    //
+    // Steal ownership.
+    // No reference count increment.
+    //-------------------------------------------------------
     MySharedPtr(MySharedPtr&& other) noexcept
         : ptr(other.ptr),
           refCount(other.refCount)
@@ -80,7 +118,12 @@ public:
         other.refCount = nullptr;
     }
 
+    //-------------------------------------------------------
     // Move Assignment
+    //
+    // Release current ownership.
+    // Steal other's ownership.
+    //-------------------------------------------------------
     MySharedPtr& operator=(MySharedPtr&& other) noexcept
     {
         if (this != &other)
@@ -97,16 +140,26 @@ public:
         return *this;
     }
 
+    //-------------------------------------------------------
+    // Return raw pointer.
+    // Ownership is NOT transferred.
+    //-------------------------------------------------------
     T* get() const
     {
         return ptr;
     }
 
+    //-------------------------------------------------------
+    // Number of owners.
+    //-------------------------------------------------------
     int use_count() const
     {
         return refCount ? *refCount : 0;
     }
 
+    //-------------------------------------------------------
+    // Replace managed object.
+    //-------------------------------------------------------
     void reset(T* p = nullptr)
     {
         release();
@@ -118,16 +171,26 @@ public:
         }
     }
 
+    //-------------------------------------------------------
+    // Dereference operator
+    //-------------------------------------------------------
     T& operator*() const
     {
         return *ptr;
     }
 
+    //-------------------------------------------------------
+    // Member access operator
+    //-------------------------------------------------------
     T* operator->() const
     {
         return ptr;
     }
 
+    //-------------------------------------------------------
+    // Allow:
+    // if(ptr)
+    //-------------------------------------------------------
     operator bool() const
     {
         return ptr != nullptr;
