@@ -1,0 +1,361 @@
+=========================================
+C++14 BINARY LITERALS (0b)
+INTERVIEW NOTES
+=========================================
+
+1. What are Binary Literals?
+
+Binary Literals were introduced in C++14.
+
+They allow integer constants to be written directly in binary form using the prefix
+
+0b
+
+or
+
+0B
+
+Syntax
+
+0bBinaryDigits
+
+Example
+
+int x = 0b1010;
+
+-----------------------------------------
+
+2. Why were Binary Literals introduced?
+
+Before C++14, C++ had
+
+Decimal
+
+int x = 10;
+
+Octal
+
+int x = 012;
+
+Hexadecimal
+
+int x = 0xA;
+
+But there was NO way to write binary numbers directly.
+
+C++14 solved this by introducing
+
+0b
+
+-----------------------------------------
+
+3. Example
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int x = 0b1010;
+
+    cout << x;
+
+    return 0;
+}
+
+Output
+
+10
+
+-----------------------------------------
+
+4. How does Binary Literal work?
+
+Example
+
+0b1010
+
+Calculation
+
+1 × 2³ = 8
+
+0 × 2² = 0
+
+1 × 2¹ = 2
+
+0 × 2⁰ = 0
+
+Total
+
+8 + 2 = 10
+
+Therefore
+
+0b1010
+
+equals
+
+10
+
+-----------------------------------------
+
+5. More Examples
+
+0b1        = 1
+
+0b10       = 2
+
+0b11       = 3
+
+0b100      = 4
+
+0b101      = 5
+
+0b1111     = 15
+
+0b10000    = 16
+
+0b100000   = 32
+
+-----------------------------------------
+
+6. Decimal vs Binary
+
+Decimal
+
+10
+
+Binary
+
+1010
+
+Binary Literal
+
+0b1010
+
+-----------------------------------------
+
+7. Why is it useful?
+
+Very useful in
+
+• Bit Manipulation
+• Bit Masks
+• Flags
+• Embedded Programming
+• Networking
+• Device Drivers
+• Operating Systems
+
+Instead of writing
+
+int mask = 170;
+
+Write
+
+int mask = 0b10101010;
+
+Now the bit pattern is immediately visible.
+
+-----------------------------------------
+
+8. Example - Bit Mask
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int mask = 0b00001111;
+
+    cout << mask;
+
+    return 0;
+}
+
+Output
+
+15
+
+-----------------------------------------
+
+9. Example - Bitwise AND
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int a = 0b1010;
+    int b = 0b1100;
+
+    cout << (a & b);
+
+    return 0;
+}
+
+Calculation
+
+1010
+
+1100
+
+----
+
+1000
+
+Output
+
+8
+
+-----------------------------------------
+
+10. Supported Integer Literals
+
+Decimal
+
+10
+
+Octal
+
+012
+
+Hexadecimal
+
+0xA
+
+Binary (C++14)
+
+0b1010
+
+-----------------------------------------
+
+11. Important Interview Question
+
+Q. Does 0b1010 store the number in binary inside memory?
+
+Answer
+
+No.
+
+0b1010 is only a way of writing the number in source code.
+
+After compilation, the compiler converts it into the corresponding integer value (10).
+It is stored in memory just like any other integer using the machine's integer representation (typically two's complement for signed integers).
+
+-----------------------------------------
+
+12. Advantages
+
+• Easy to read
+
+• Easier bit manipulation
+
+• Better readability for flags
+
+• Less error-prone than decimal values
+
+-----------------------------------------
+
+13. Interview Questions
+
+Q. What are Binary Literals?
+
+Answer
+
+Binary Literals were introduced in C++14. They allow integer constants to be written directly in binary form using the prefix 0b or 0B.
+
+Example
+
+int x = 0b1010;
+
+-----------------------------------------
+
+Q. Why were Binary Literals introduced?
+
+Answer
+
+They improve the readability of code involving bit manipulation, bit masks, flags, 
+and low-level programming by allowing developers to write binary values directly instead of converting them to decimal or hexadecimal.
+
+-----------------------------------------
+
+Q. Where are Binary Literals commonly used?
+
+Answer
+
+• Bit manipulation
+• Bit masks
+• Flags
+• Embedded systems
+• Networking
+• Device drivers
+• Operating systems
+
+-----------------------------------------
+
+Q. Which C++ version introduced Binary Literals?
+
+Answer
+
+C++14
+
+-----------------------------------------
+
+Q. What is the difference between
+
+10
+
+and
+
+0b1010 ?
+
+Answer
+
+Both represent the same integer value (10).
+
+The difference is only the notation in the source code. Binary literals make the bit pattern easier for humans to understand.
+
+-----------------------------------------
+
+14. Interview Explanation (30 Seconds)
+
+"Binary Literals were introduced in C++14 to allow integer constants to be written 
+directly in binary form using the 0b prefix. Before C++14, C++ supported decimal, octal, and 
+hexadecimal literals but not binary. Binary literals improve readability, especially in bit manipulation,
+flags, bit masks, embedded systems, networking, and low-level programming. For example, 0b1010 represents the decimal value 10."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Syntax
+
+0b1010
+
+Examples
+
+0b1010 = 10
+
+0b1111 = 15
+
+0b100000 = 32
+
+Introduced In
+
+C++14
+
+Used For
+
+• Bit Manipulation
+• Flags
+• Bit Masks
+• Embedded Systems
+• Networking
+• Device Drivers
+
+Key Point
+
+0b1010 is only a source-code representation.
+
+After compilation, it is stored in memory exactly like any other integer.
