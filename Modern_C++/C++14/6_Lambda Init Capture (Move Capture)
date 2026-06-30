@@ -1,0 +1,277 @@
+=========================================
+C++14 LAMBDA INIT CAPTURE (MOVE CAPTURE)
+INTERVIEW NOTES
+=========================================
+
+1. What is Lambda Init Capture?
+
+Lambda Init Capture is a C++14 feature that allows a lambda to create its own captured variable and initialize it using any expression.
+
+Syntax
+
+[captured_variable = expression]
+
+Example
+
+[p = std::move(ptr)]
+
+Before C++14, lambdas could only capture existing variables by value or reference. 
+Since std::unique_ptr cannot be copied, it couldn't be captured by value.
+Lambda Init Capture solves this by allowing ownership to be moved into the lambda.
+
+-----------------------------------------
+
+2. Why was it introduced?
+
+Before C++14, lambdas could only capture existing variables.
+
+Example
+
+auto ptr = make_unique<int>(100);
+
+auto f = [ptr]()
+{
+    cout << *ptr;
+};
+
+This DOES NOT compile because:
+
+• unique_ptr cannot be copied.
+• [ptr] performs capture by value (copy).
+
+-----------------------------------------
+
+3. C++14 Solution
+
+auto ptr = make_unique<int>(100);
+
+auto f = [p = move(ptr)]()
+{
+    cout << *p;
+};
+
+f();
+
+Output
+
+100
+
+-----------------------------------------
+
+4. What happens internally?
+
+Before move
+
+ptr
+ |
+ v
+100
+
+After
+
+[p = move(ptr)]
+
+ptr
+ |
+nullptr
+
+Lambda Object
+
+p
+ |
+ v
+100
+
+Ownership is transferred from ptr to the lambda.
+
+-----------------------------------------
+
+5. Why use std::move()?
+
+unique_ptr is
+
+✔ Moveable
+✘ Copyable
+
+Without move
+
+[p = ptr]
+
+Compiler tries to copy ptr.
+
+Compilation Error.
+
+With move
+
+[p = move(ptr)]
+
+Ownership is transferred successfully.
+
+-----------------------------------------
+
+6. What is 'p'?
+
+'p' is a NEW variable created inside the lambda.
+
+Example
+
+[p = move(ptr)]
+
+Here
+
+Outside lambda
+
+ptr
+
+Inside lambda
+
+p
+
+The names can even be different.
+
+Example
+
+[myPtr = move(ptr)]
+
+-----------------------------------------
+
+7. What happens to ptr?
+
+After move
+
+ptr == nullptr
+
+Example
+
+if(ptr == nullptr)
+{
+    cout << "Ownership transferred";
+}
+
+-----------------------------------------
+
+8. Why not capture by reference?
+
+Example
+
+[&ptr]
+
+This compiles.
+
+But the lambda does NOT own the resource.
+
+If ptr is destroyed before the lambda executes,
+the lambda has a dangling reference.
+
+Move capture transfers ownership safely.
+
+-----------------------------------------
+
+9. Where is it used?
+
+Very common in
+
+• std::thread
+• Async programming
+• Callbacks
+• Event handlers
+• Task queues
+• Executors
+• Background workers
+
+Example
+
+thread t(
+    [p = move(ptr)]()
+    {
+        cout << *p;
+    });
+
+The thread becomes the owner of the unique_ptr.
+
+-----------------------------------------
+
+10. Difference
+
+Capture by Value
+
+[ptr]
+
+Copies ptr
+
+Works only for copyable objects.
+
+Cannot be used with unique_ptr.
+
+------------------------------
+
+Move Capture
+
+[p = move(ptr)]
+
+Moves ownership.
+
+Works perfectly with unique_ptr.
+
+-----------------------------------------
+
+11. Interview Questions
+
+Q. What is Lambda Init Capture?
+
+Answer:
+
+Lambda Init Capture is a C++14 feature that allows a lambda to declare and 
+initialize its own captured variables using expressions.
+It is commonly used to move ownership of move-only objects like std::unique_ptr into a lambda.
+
+-----------------------------------------
+
+Q. Why was Lambda Init Capture introduced?
+
+Answer:
+
+Before C++14, lambdas could only capture existing variables by value or reference. 
+Since std::unique_ptr cannot be copied, it couldn't be captured by value.
+Lambda Init Capture solves this by allowing ownership to be moved into the lambda.
+
+-----------------------------------------
+
+Q. Why use std::move()?
+
+Answer:
+
+std::unique_ptr is non-copyable but movable. 
+std::move converts the object into an rvalue so that ownership can be transferred to the lambda instead of copied.
+
+-----------------------------------------
+
+Q. What happens after std::move(ptr)?
+
+Answer:
+
+Ownership is transferred to the lambda's captured variable, and the original ptr becomes nullptr.
+
+-----------------------------------------
+
+Q. Why not capture by reference? VVVVVIVIVIVIVIVIVMP
+
+Answer:
+
+Capturing by reference does not transfer ownership.
+If the original unique_ptr is destroyed before the lambda executes, 
+the lambda will contain a dangling reference, leading to undefined behavior.
+
+-----------------------------------------
+
+12. Interview Explanation (30 Seconds)******
+
+"Lambda Init Capture is a C++14 feature that lets a lambda create and 
+initialize its own captured variables. 
+It's mainly used to move move-only objects 
+like std::unique_ptr into a lambda. 
+
+For example, [p = std::move(ptr)] transfers 
+ownership of ptr to the lambda, making p the new owner while ptr becomes nullptr. 
+This feature is widely used in
+asynchronous programming, threads, callbacks, and task queues."
