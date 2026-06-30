@@ -1,0 +1,464 @@
+=========================================
+C++17 std::optional
+INTERVIEW NOTES
+=========================================
+
+1. What is std::optional?
+
+std::optional is a C++17 feature that represents an object that may or may not contain a value.
+
+Instead of returning special values like
+
+-1
+
+0
+
+nullptr
+
+or an empty string to indicate failure, std::optional explicitly represents "a value may exist" or "no value".
+
+Header
+
+#include <optional>
+
+Syntax
+
+std::optional<T>
+
+-----------------------------------------
+
+2. Why was std::optional introduced?
+
+Before C++17
+
+int find()
+{
+    return -1;
+}
+
+Problem
+
+Suppose
+
+-1
+
+is a valid value.
+
+How do we know whether
+
+-1
+
+means
+
+"Not Found"
+
+or
+
+"The actual value is -1"
+
+This ambiguity is called using a "magic value".
+
+std::optional solves this problem.
+
+-----------------------------------------
+
+3. C++17 Solution
+
+#include <optional>
+
+optional<int> find()
+{
+    return 10;
+}
+
+int main()
+{
+    auto x = find();
+
+    if(x)
+        cout << *x;
+}
+
+Output
+
+10
+
+-----------------------------------------
+
+4. Returning "No Value"
+
+optional<int> find()
+{
+    return {};
+}
+
+or
+
+optional<int> find()
+{
+    return nullopt;
+}
+
+Usage
+
+auto x = find();
+
+if(x)
+{
+    cout << *x;
+}
+else
+{
+    cout << "No Value";
+}
+
+Output
+
+No Value
+
+-----------------------------------------
+
+5. What happens internally?
+
+optional<int>
+
+contains
+
+• Storage for an int
+• A boolean flag indicating whether a value exists
+
+Conceptually
+
+optional<int>
+
++------------------+
+| hasValue = true  |
+| value = 10       |
++------------------+
+
+or
+
++------------------+
+| hasValue = false |
+| no value         |
++------------------+
+
+-----------------------------------------
+
+6. How to check whether a value exists?
+
+Method 1 (Most Common)
+
+if(opt)
+{
+    cout << *opt;
+}
+
+Method 2
+
+if(opt.has_value())
+{
+    cout << opt.value();
+}
+
+-----------------------------------------
+
+7. Accessing the value
+
+Using *
+
+cout << *opt;
+
+Using value()
+
+cout << opt.value();
+
+Note
+
+Calling
+
+value()
+
+when no value exists throws
+
+std::bad_optional_access
+
+-----------------------------------------
+
+8. Default Value
+
+optional<int> find()
+{
+    return {};
+}
+
+cout << find().value_or(100);
+
+Output
+
+100
+
+If the optional is empty,
+
+value_or()
+
+returns the supplied default value.
+
+-----------------------------------------
+
+9. Example
+
+#include <iostream>
+#include <optional>
+using namespace std;
+
+optional<int> divide(int a,int b)
+{
+    if(b==0)
+        return nullopt;
+
+    return a/b;
+}
+
+int main()
+{
+    auto ans = divide(20,5);
+
+    if(ans)
+        cout << *ans;
+    else
+        cout << "Division by zero";
+}
+
+Output
+
+4
+
+-----------------------------------------
+
+10. Member Functions
+
+has_value()
+
+Checks whether a value exists.
+
+--------------------------------
+
+value()
+
+Returns the stored value.
+
+Throws an exception if empty.
+
+--------------------------------
+
+value_or(default)
+
+Returns stored value.
+
+Otherwise returns the default.
+
+--------------------------------
+
+reset()
+
+Removes the stored value.
+
+Example
+
+opt.reset();
+
+--------------------------------
+
+emplace()
+
+Constructs a new value in place.
+
+Example
+
+opt.emplace(50);
+
+-----------------------------------------
+
+11. Advantages
+
+• Eliminates magic values
+
+• Makes APIs clearer
+
+• Expresses optional return values
+
+• Safer than nullptr
+
+• Better readability
+
+-----------------------------------------
+
+12. Where is std::optional used?
+
+• Database queries
+
+• File searching
+
+• Configuration lookup
+
+• Cache lookup
+
+• Parsing
+
+• Search functions
+
+• Network requests
+
+• STL-style APIs
+
+-----------------------------------------
+
+13. Interview Questions
+
+Q. What is std::optional?
+
+Answer
+
+std::optional is a C++17 wrapper that represents an object which may or may not contain a value.
+
+-----------------------------------------
+
+Q. Which C++ version introduced std::optional?
+
+Answer
+
+C++17
+
+-----------------------------------------
+
+Q. What problem does std::optional solve?
+
+Answer
+
+Before C++17, functions often returned special values like -1, nullptr, or empty strings to indicate 
+failure. These "magic values" could also be valid results, causing ambiguity. std::optional removes 
+this ambiguity by explicitly representing the presence or absence of a value.
+
+-----------------------------------------
+
+Q. How do you check whether an optional contains a value?
+
+Answer
+
+Method 1
+
+if(opt)
+
+Method 2
+
+if(opt.has_value())
+
+-----------------------------------------
+
+Q. How do you access the stored value?
+
+Answer
+
+Using
+
+*opt
+
+or
+
+opt.value()
+
+-----------------------------------------
+
+Q. What is value_or()?
+
+Answer
+
+value_or(default)
+
+returns the stored value if present; otherwise it returns the specified default value.
+
+Example
+
+cout << opt.value_or(100);
+
+-----------------------------------------
+
+Q. What happens if value() is called on an empty optional?
+
+Answer
+
+It throws
+
+std::bad_optional_access
+
+-----------------------------------------
+
+Q. Difference between std::optional and nullptr?
+
+Answer
+
+nullptr represents the absence of an object pointer.
+
+std::optional can represent the absence of any type, including int, double, string, or user-defined classes.
+
+-----------------------------------------
+
+14. Interview Explanation (30 Seconds)
+
+"std::optional was introduced in C++17 to represent values that may or may not exist. Instead of 
+returning magic values like -1 or nullptr, a function returns std::optional<T>. The caller checks 
+whether a value exists using if(optional) or has_value(), and then accesses it using *optional or 
+value(). This makes APIs safer, more expressive, and eliminates ambiguity."
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced In
+
+C++17
+
+Header
+
+#include <optional>
+
+Syntax
+
+std::optional<int>
+
+No Value
+
+std::nullopt
+
+Check
+
+if(opt)
+
+or
+
+opt.has_value()
+
+Access
+
+*opt
+
+or
+
+opt.value()
+
+Default Value
+
+opt.value_or(default)
+
+Benefits
+
+• No magic values
+• Safer APIs
+• Clear intent
+• Better readability
+
+Most Asked Interview Point
+
+Instead of returning special values like -1 or nullptr, std::optional explicitly represents whether 
+a value exists, making function return values unambiguous.
