@@ -12,6 +12,31 @@ std::auto_ptr (C++98) – INTERVIEW NOTES
 Header:
 #include <memory>
 
+why deprecated?
+#include<iostream>
+#include<memory>
+using namespace std;
+
+void print(auto_ptr<int> p)
+{
+    cout << "p is " << *p.get() << endl;
+}
+
+int main()
+{
+    auto_ptr<int> p1(new int(23));
+
+    print(p1);
+
+    cout << *p1 << endl;   // Undefined Behavior
+
+    if(!p1)
+        cout << "p1 is null" << endl;
+}
+
+auto_ptr violated normal copy semantics because copying transferred ownership implicitly, leaving the source pointer null. 
+unique_ptr fixes this by deleting copy operations and requiring explicit ownership transfer with std::move.`
+
 -----------------------------------------
 
 2. Key Idea
