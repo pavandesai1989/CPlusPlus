@@ -66,6 +66,36 @@ IMPORTANT:
 - unique_ptr<T>     → single object
 - unique_ptr<T[]>    → array (uses delete[] internally)
 
+Why is unique_ptr constructor explicit?*******
+
+Answer:
+Because unique_ptr represents exclusive ownership of a resource. 
+Making the constructor explicit prevents accidental implicit conversion from a raw pointer to a unique_ptr, 
+avoiding unintended ownership transfer and making resource management clearer and safer.
+
+why constructor is made explicit????**************
+Why did C++ designers want this?
+
+Imagine
+
+void process(unique_ptr<int> p)
+{
+}
+
+Now someone writes
+
+process(new int(10));
+
+If the constructor weren't explicit,
+
+compiler would silently do
+
+process(unique_ptr<int>(new int(10)));
+
+Ownership is transferred without the programmer realizing it.
+
+The language designers wanted ownership transfer to be obvious.
+
 =========================================
 3. KEY PROPERTIES
 =========================================
@@ -100,10 +130,10 @@ get()
 -----
 Returns raw pointer (does NOT release ownership)
 
-release()
+release()******
 ---------
 Releases ownership and returns raw pointer
-(manual delete required)
+(manual delete required)*****
 
 reset()
 ------
@@ -264,7 +294,7 @@ arr[2] = 30;
 10. C++14 IMPROVEMENT (IMPORTANT)
 =========================================
 
-std::make_unique<T>()
+std::make_unique<T>()*********
 
 Example:
 auto p = std::make_unique<int>(10);
@@ -278,7 +308,7 @@ NOTE:
 make_unique NOT available in C++11
 
 =========================================
-11. CUSTOM DELETER
+11. CUSTOM DELETER  *******VVVVVVVVVVIMP
 =========================================
 
 auto deleter = [](int* p) {
@@ -289,6 +319,51 @@ std::unique_ptr<int, decltype(deleter)> p(new int(10), deleter);
 
 ✔ Used for custom cleanup logic
 
+⭐⭐⭐⭐⭐ 1. Why do we need a custom deleter?
+
+Answer:
+
+Some resources cannot be released using delete.
+
+Examples:
+
+FILE* → fclose()
+Socket → close()
+Mutex → pthread_mutex_destroy()
+Windows HANDLE → CloseHandle()
+
+Use a custom deleter to release such resources correctly.
+
+⭐⭐⭐⭐⭐ 2. Syntax of custom deleter
+auto deleter = [](FILE* fp)
+{
+    fclose(fp);
+};
+
+unique_ptr<FILE, decltype(deleter)> file(fopen("a.txt","r"), deleter);
+
+⭐⭐⭐⭐⭐ 3. Why is decltype(deleter) used?******VVVVVVVVVVIMP
+
+Because every lambda has a unique compiler-generated type.
+
+We don't know its type.
+
+decltype lets the compiler deduce it.
+
+⭐⭐⭐⭐ 8. Where is the deleter stored?
+
+Inside the unique_ptr object.
+
+A unique_ptr contains:
+
+Pointer
+Deleter
+
+⭐⭐⭐ 14. Why is make_unique not used with a custom deleter?**********
+
+Because make_unique always uses the default deleter.
+
+To use a custom deleter, construct the unique_ptr directly. 
 ********vvvimp 
 =========================================
 CUSTOM DELETER IN std::unique_ptr
@@ -400,7 +475,8 @@ If not:
 14. INTERVIEW ONE-LINER
 =========================================
 
-std::unique_ptr is a smart pointer that provides exclusive ownership of a dynamically allocated object and automatically deletes it when it goes out of scope.
+std::unique_ptr is a smart pointer that provides exclusive ownership of a 
+dynamically allocated object and automatically deletes it when it goes out of scope.
 
 =========================================
 QUICK REVISION
