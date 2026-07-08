@@ -1,6 +1,10 @@
 #include <iostream>
 #include <utility>   // std::move, std::swap
 
+operator* and operator-> do not return this or *this because their purpose is to provide access to the managed object. 
+operator* returns a reference to the managed object (T&), and operator-> returns a pointer to it (T*). 
+Returning the smart pointer itself would prevent expressions like *p or p->member from working as intended.
+
 template<typename T> 
 class MyUniquePtr
 {
