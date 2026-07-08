@@ -60,7 +60,7 @@ Compiler error:
 
 -----------------------------------------
 
-4. Rules of override
+4. Rules of override ****************
 --------------------
 To use override:
 - Base function must be virtual
