@@ -1,0 +1,479 @@
+=========================================================
+STL QUICK REVISION GUIDE (Senior C++ Interview)
+=========================================================
+
+=========================================================
+1. vector ⭐⭐⭐⭐⭐
+=========================================================
+
+Internal DS
+-----------
+Dynamic Array
+
+Time Complexity
+---------------
+Access          O(1)
+push_back       Amortized O(1)
+insert          O(n)
+erase           O(n)
+
+Most Asked
+
+✔ reserve vs resize
+
+✔ push_back vs emplace_back
+
+✔ Capacity growth
+
+✔ Iterator invalidation
+
+✔ Why move constructor should be noexcept?
+
+Remember
+
+- Contiguous memory
+- Cache friendly
+- Fast random access
+- Slow insertion/deletion in middle
+
+---------------------------------------------------------
+
+=========================================================
+2. deque ⭐⭐⭐⭐☆
+=========================================================
+
+Internal DS
+
+Multiple fixed-size blocks
+
+Time
+
+push_front   O(1)
+
+push_back    O(1)
+
+Random Access O(1)
+
+Insert middle O(n)
+
+Use
+
+Need fast insertion at both ends.
+
+---------------------------------------------------------
+
+=========================================================
+3. list ⭐⭐⭐⭐☆
+=========================================================
+
+Internal DS
+
+Doubly Linked List
+
+Time
+
+Insert/Delete
+
+O(1) after iterator
+
+Random Access
+
+O(n)
+
+Remember
+
+No contiguous memory.
+
+Stable iterators.
+
+---------------------------------------------------------
+
+=========================================================
+4. forward_list ⭐⭐⭐☆☆
+=========================================================
+
+Internal DS
+
+Singly Linked List
+
+Smaller memory than list.
+
+Only forward traversal.
+
+---------------------------------------------------------
+
+=========================================================
+5. array ⭐⭐⭐⭐☆
+=========================================================
+
+Fixed-size array.
+
+Allocated on stack (if local).
+
+No dynamic allocation.
+
+Fastest container.
+
+---------------------------------------------------------
+
+=========================================================
+6. map ⭐⭐⭐⭐⭐
+=========================================================
+
+Internal DS
+
+Red Black Tree
+
+Sorted
+
+Yes
+
+Duplicate Keys
+
+No
+
+Complexity
+
+Insert
+
+O(log n)
+
+Find
+
+O(log n)
+
+Erase
+
+O(log n)
+
+Remember
+
+Maintains sorted order.
+
+---------------------------------------------------------
+
+=========================================================
+7. multimap ⭐⭐⭐☆☆
+=========================================================
+
+Same as map
+
+Allows duplicate keys.
+
+---------------------------------------------------------
+
+=========================================================
+8. unordered_map ⭐⭐⭐⭐⭐
+=========================================================
+
+Internal DS
+
+Hash Table
+
+Average
+
+Insert O(1)
+
+Find O(1)
+
+Worst Case
+
+O(n)
+
+Remember
+
+No ordering.
+
+Hash collisions possible.
+
+---------------------------------------------------------
+
+=========================================================
+9. set ⭐⭐⭐⭐☆
+=========================================================
+
+Red Black Tree
+
+Sorted
+
+Unique elements
+
+O(log n)
+
+---------------------------------------------------------
+
+=========================================================
+10. unordered_set ⭐⭐⭐☆☆
+=========================================================
+
+Hash Table
+
+Unique elements
+
+Average O(1)
+
+---------------------------------------------------------
+
+=========================================================
+11. multiset ⭐⭐⭐☆☆
+=========================================================
+
+Red Black Tree
+
+Allows duplicates.
+
+---------------------------------------------------------
+
+=========================================================
+12. stack ⭐⭐⭐⭐☆
+=========================================================
+
+Container Adapter
+
+Default container
+
+deque
+
+Operations
+
+push
+
+pop
+
+top
+
+---------------------------------------------------------
+
+=========================================================
+13. queue ⭐⭐⭐⭐☆
+=========================================================
+
+FIFO
+
+Default container
+
+deque
+
+Operations
+
+push
+
+pop
+
+front
+
+back
+
+---------------------------------------------------------
+
+=========================================================
+14. priority_queue ⭐⭐⭐⭐⭐
+=========================================================
+
+Internal DS
+
+Heap
+
+Default
+
+Max Heap
+
+Min Heap
+
+priority_queue<int,
+vector<int>,
+greater<int>> pq;
+
+Operations
+
+push
+
+pop
+
+top
+
+---------------------------------------------------------
+
+=========================================================
+15. pair ⭐⭐⭐☆☆
+=========================================================
+
+Stores two values.
+
+pair<int,string>
+
+make_pair()
+
+---------------------------------------------------------
+
+=========================================================
+16. tuple ⭐⭐⭐☆☆
+=========================================================
+
+Stores multiple heterogeneous values.
+
+get<0>()
+
+tie()
+
+---------------------------------------------------------
+
+=========================================================
+Algorithms to Revise
+=========================================================
+
+sort()
+
+stable_sort()
+
+lower_bound()
+
+upper_bound()
+
+binary_search()
+
+find()
+
+count()
+
+reverse()
+
+remove()
+
+remove_if()
+
+min_element()
+
+max_element()
+
+accumulate()
+
+for_each()
+
+copy()
+
+transform()
+
+---------------------------------------------------------
+
+Iterator Categories
+=========================================================
+
+Input
+
+Output
+
+Forward
+
+Bidirectional
+
+Random Access
+
+Remember
+
+vector -> Random Access
+
+deque -> Random Access
+
+list -> Bidirectional
+
+forward_list -> Forward
+
+---------------------------------------------------------
+
+Most Asked Complexities
+=========================================================
+
+vector push_back
+
+Amortized O(1)
+
+map find
+
+O(log n)
+
+unordered_map find
+
+Average O(1)
+
+set insert
+
+O(log n)
+
+priority_queue push
+
+O(log n)
+
+priority_queue top
+
+O(1)
+
+---------------------------------------------------------
+
+Top 15 STL Interview Questions
+=========================================================
+
+1. vector vs list
+
+2. map vs unordered_map
+
+3. reserve vs resize
+
+4. push_back vs emplace_back
+
+5. Iterator invalidation
+
+6. Why vector uses contiguous memory?
+
+7. Why move constructor should be noexcept?
+
+8. Internal implementation of vector
+
+9. How does unordered_map work?
+
+10. What is a Red Black Tree?
+
+11. Why is map sorted?
+
+12. Why is unordered_map O(1)?
+
+13. Heap implementation of priority_queue
+
+14. Difference between set and unordered_set
+
+15. lower_bound vs upper_bound
+
+---------------------------------------------------------
+
+Golden Rules
+=========================================================
+
+✔ vector -> Dynamic Array
+
+✔ deque -> Segmented Array
+
+✔ list -> Doubly Linked List
+
+✔ forward_list -> Singly Linked List
+
+✔ map/set -> Red Black Tree
+
+✔ unordered_map/set -> Hash Table
+
+✔ priority_queue -> Heap
+
+✔ stack/queue -> Container Adapters
+
+✔ vector provides contiguous memory.
+
+✔ map keeps elements sorted.
+
+✔ unordered_map gives average O(1) lookup.
+
+✔ reserve changes capacity.
+
+✔ resize changes size.
+
+✔ emplace_back constructs in-place.
+
+✔ push_back copies/moves an existing object.
