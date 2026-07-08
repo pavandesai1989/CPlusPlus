@@ -60,6 +60,8 @@ public:
         delete[] data;
     }
 };
+Move semantics do not destroy the source object. 
+They transfer its resources, but the moved-from object remains alive until the end of its lifetime.
 
 Usage:
 
