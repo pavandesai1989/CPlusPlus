@@ -1,0 +1,298 @@
+**************** Perfect Forwarding ****************
+
+Definition
+
+Perfect Forwarding is the technique of passing arguments to another
+function while preserving their original value category (Lvalue/Rvalue).
+
+Introduced in C++11.
+
+Uses:
+- Forwarding Reference (T&&)
+- std::forward()
+
+------------------------------------------------------------
+
+Problem Without Perfect Forwarding
+
+void process(int& x)
+{
+    cout << "Lvalue\n";
+}
+
+void process(int&& x)
+{
+    cout << "Rvalue\n";
+}
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(arg);
+}
+
+int x = 10;
+
+wrapper(x);
+wrapper(20);
+
+Output:
+
+Lvalue
+Lvalue
+
+Why?
+
+Even though arg has type T&&, it is a named variable.
+
+Every named variable is an Lvalue.******************
+
+Rule 1 (Very Important)
+
+The type of a variable and the value category of an expression are different things.
+
+Example:
+
+int&& x = 10;
+
+Here,
+
+Type of x → int&&
+Expression x → Lvalue
+
+Why?
+
+Because x has a name.
+
+Every named variable is an Lvalue
+
+Example:
+
+int a = 10;
+a
+
+is an Lvalue.
+
+int&& b = 20;
+b
+
+is also an Lvalue.
+
+Even though its type is int&&.
+
+void fun(int&)
+{
+    cout<<"Lvalue\n";
+}
+
+void fun(int&&)
+{
+    cout<<"Rvalue\n";
+}
+
+int main()
+{
+    int&& x = 20;
+
+    fun(x);
+}
+
+Output
+
+Lvalue
+
+------------------------------------------------------------
+
+Solution : Perfect Forwarding
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(std::forward<T>(arg));
+}
+
+int x = 10;
+
+wrapper(x);
+wrapper(20);
+
+Output:
+
+Lvalue
+Rvalue
+
+Now the original value category is preserved.
+
+------------------------------------------------------------
+
+How Perfect Forwarding Works
+
+Caller
+
+wrapper(x);     // Lvalue
+
+        │
+
+        ▼
+
+wrapper(T&&)
+
+        │
+
+std::forward<T>(arg)
+
+        │
+
+        ▼
+
+process(int&)
+
+---------------------------------------
+
+Caller
+
+wrapper(20);    // Rvalue
+
+        │
+
+        ▼
+
+wrapper(T&&)
+
+        │
+
+std::forward<T>(arg)
+
+        │
+
+        ▼
+
+process(int&&)
+
+------------------------------------------------------------
+
+Requirements
+
+1. Forwarding Reference
+
+template<typename T>
+void wrapper(T&& arg)
+
+2. std::forward
+
+std::forward<T>(arg)
+
+Both are required.
+
+------------------------------------------------------------
+
+Perfect Forwarding vs std::move
+
+std::move
+
+- Always converts to an Rvalue.
+- Unconditionally casts.
+- Used to transfer ownership.
+- Even Lvalues become Rvalues.
+
+std::forward
+
+- Preserves original value category.
+- Lvalue remains Lvalue.
+- Rvalue remains Rvalue.
+- Used only with forwarding references.
+
+------------------------------------------------------------
+
+Why not use std::move?
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(std::move(arg));
+}
+
+Output
+
+wrapper(x);
+
+Rvalue
+
+Problem
+
+The caller passed an Lvalue,
+but wrapper converted it into an Rvalue.
+
+This is usually incorrect.
+
+------------------------------------------------------------
+
+Where is Perfect Forwarding Used?
+
+- Wrapper functions
+- Factory functions
+- std::make_unique()
+- std::make_shared()
+- STL implementations
+- Generic template libraries
+
+------------------------------------------------------------
+
+Interview Questions
+
+Q. What is Perfect Forwarding?
+
+Passing arguments to another function while preserving
+their original value category (Lvalue/Rvalue).
+
+------------------------------------------------------------
+
+Q. Why do we need Perfect Forwarding?
+
+Because every named variable is an Lvalue.***************************
+Without std::forward, Rvalues are treated as Lvalues. ****************
+
+------------------------------------------------------------
+
+Q. What is a Forwarding Reference?
+
+A parameter of the form:
+
+template<typename T>
+void func(T&& arg)
+
+where T is deduced by the compiler.
+
+It can bind to both Lvalues and Rvalues.
+
+------------------------------------------------------------
+
+Q. Difference between Rvalue Reference and Forwarding Reference?
+
+Rvalue Reference
+
+void func(int&& x);
+
+- Accepts only Rvalues.
+
+Forwarding Reference
+
+template<typename T>
+void func(T&& x);
+
+- Accepts both Lvalues and Rvalues.
+- Used with std::forward.
+
+------------------------------------------------------------
+
+Interview One-Liners
+
+✔ Perfect Forwarding preserves the original value category.
+
+✔ It requires both a forwarding reference (T&&) and std::forward.
+
+✔ Every named variable is an Lvalue.
+
+✔ std::forward preserves; std::move always casts to an Rvalue.
+
+✔ Perfect Forwarding is mainly used in generic/template wrapper functions.
