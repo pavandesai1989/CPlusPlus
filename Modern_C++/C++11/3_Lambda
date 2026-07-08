@@ -296,7 +296,7 @@ use mutable
 int main()
 {
     int a=20;
-    auto ptr = [=]()mutable{a++;return a;}; //compiler error a not captured 
+    auto ptr = [=]()mutable{a++;return a;};
     cout<<ptr(); 
     return 0;
 }
@@ -398,6 +398,32 @@ Why use noexcept?
 1. Better Optimization
 
 Since the compiler knows exceptions won't occur, it can generate more efficient code.
+
+****
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int a = 10;
+    int b = 20;
+
+    auto squareSum = [a, &b](int x) mutable constexpr noexcept -> int
+    {
+        a++;        // OK because of mutable (modifies the lambda's copy)
+        b++;        // OK because b is captured by reference
+
+        return a + b + x;
+    };
+
+    cout << squareSum(5) << endl;   // 36
+    cout << b << endl;              // 21
+}
+
+
+
+
+****
 
 2. Required by STL*****VVVVVIMPP
 
