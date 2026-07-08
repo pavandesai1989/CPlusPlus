@@ -32,6 +32,23 @@ When capacity is full:
 
 👉 This process = RELOCATION / REALLOCATION
 
+Q. Why is vector::push_back() Amortized O(1)?
+
+Answer:
+
+Most calls to push_back() simply place the new element at the end of the
+vector, which takes O(1) time.
+
+Occasionally, when the vector's capacity is full, it reallocates a larger
+memory block, moves/copies all existing elements, and then inserts the
+new element. That single operation takes O(n).
+
+However, reallocations happen infrequently (typically when capacity
+doubles), so over a large number of insertions, the average cost per
+push_back() remains constant.
+
+Therefore, push_back() has an amortized time complexity of O(1).
+
 -----------------------------------------
 
 4. Size vs Capacity (MOST ASKED)
@@ -208,6 +225,10 @@ constructor arguments and can avoid an extra copy/move.
 -----------------------------------------
 
 7. Iterator invalidation (CRITICAL)
+
+std::vector iterators are invalidated whenever the vector reallocates its storage because the old 
+contiguous memory block is released and a new one is allocated. 
+Any iterator, pointer, or reference to the old storage becomes dangling, and using it results in undefined behavior.
 
 Invalid when:
 - reallocation occurs
