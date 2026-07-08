@@ -8,8 +8,41 @@ auto (C++11) – INTERVIEW NOTES
 - It tells the compiler to automatically deduce the type of a variable
   from its initializer.
 
+ Usually removes const and references. *********
+int x = 10;
+int& ref = x;
+const int cx = 20;
+const int& cref = cx;
+
+auto a = ref;    // int
+auto b = cx;     // int
+auto c = cref;   // int
+
+If you write auto&, the reference is preserved.
+int x = 10;
+int& ref = x;
+
+auto& a = ref;   // int&
+a = 20;
+
+cout << x;       // 20
+
+keep const***
+const int x = 10;
+
+const auto a = x;   // const int
+auto b = x;         // int
+
 Interview Line:
 "auto enables compile-time type inference."
+
+| Declaration            | Deduced Type                                             |
+| ---------------------- | -------------------------------------------------------- |
+| `auto a = expr;`       | Removes references and top-level `const`                 |
+| `auto& a = expr;`      | Keeps reference, preserves constness                     |
+| `const auto a = expr;` | Adds top-level `const` to deduced type                   |
+| `auto&& a = expr;`     | Universal/forwarding reference (special deduction rules) |
+
 
 =========================================================
 2. BASIC EXAMPLE
