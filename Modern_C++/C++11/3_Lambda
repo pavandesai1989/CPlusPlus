@@ -10,6 +10,23 @@ LAMBDA EXPRESSIONS (C++11 onwards) – INTERVIEW NOTES
 - Used to write inline, short functions without defining a separate function.
 - Very commonly used with STL algorithms.
 
+Now:
+
+Lambda object → stored inside std::function
+std::function hides the actual type.
+
+Think of it like this:
+Lambda object
+      │
+      ▼
++-------------------+
+| std::function<>   |
+|  (wrapper)        |
++-------------------+
+
+A lambda expression creates an object of a unique, compiler-generated closure type. It is not a std::function. 
+std::function is a separate type-erased wrapper that can hold a lambda, function pointer, or any other callable.****
+
 *****VVVVIMP********
 =========================================
 C++ LAMBDA EXPRESSIONS - COMPLETE INTERVIEW NOTES
