@@ -1,0 +1,155 @@
+**************** std::forward ****************
+
+What is std::forward?
+
+- Introduced in C++11.
+- Preserves the original value category (Lvalue/Rvalue).
+- Used for Perfect Forwarding.
+- Primarily used in template wrapper functions.
+- Unlike std::move, it does NOT always convert to an rvalue.
+
+------------------------------------------------------------
+
+Why do we need std::forward?
+
+Consider:
+
+void process(int& x)
+{
+    cout << "Lvalue\n";
+}
+
+void process(int&& x)
+{
+    cout << "Rvalue\n";
+}
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(arg);
+}
+
+int x = 10;
+
+wrapper(x);
+wrapper(20);
+
+Output:
+
+Lvalue
+Lvalue
+
+Reason:
+
+Although arg may have type T&&, it is a named variable.
+Every named variable is an Lvalue.
+
+------------------------------------------------------------
+
+Using std::forward
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(std::forward<T>(arg));
+}
+
+int x = 10;
+
+wrapper(x);
+wrapper(20);
+
+Output:
+
+Lvalue
+Rvalue
+
+std::forward preserves the original value category.
+
+------------------------------------------------------------
+
+Why not std::move?
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(std::move(arg));
+}
+
+Output:
+
+Rvalue
+Rvalue
+
+Problem:
+
+Even an Lvalue becomes an Rvalue.
+
+std::move always casts to an Rvalue reference.
+
+------------------------------------------------------------
+
+Perfect Forwarding
+
+Definition:
+
+Passing arguments to another function while preserving
+their original value category (Lvalue/Rvalue).
+
+Example:
+
+template<typename T>
+void wrapper(T&& arg)
+{
+    process(std::forward<T>(arg));
+}
+
+Lvalue  -> forwarded as Lvalue
+
+Rvalue  -> forwarded as Rvalue
+
+------------------------------------------------------------
+
+std::move vs std::forward
+
+std::move
+
+- Unconditionally converts to Rvalue.
+- Used to transfer ownership.
+- Always casts to T&&.
+- Used when object is no longer needed.
+
+std::forward
+
+- Preserves original value category.
+- Used with forwarding references (T&&).
+- Mainly used inside template wrapper functions.
+- Enables Perfect Forwarding.
+
+------------------------------------------------------------
+
+When is std::forward used?
+
+- Wrapper functions
+- Factory functions
+- Generic libraries
+- std::make_unique
+- std::make_shared
+- STL implementation
+
+------------------------------------------------------------
+
+Interview One-Liners
+
+✔ std::move does not move anything; it only casts to an Rvalue reference.
+
+✔ std::forward preserves the original value category.
+
+✔ Every named variable is an Lvalue, even if its type is T&&.
+
+✔ std::forward is used for Perfect Forwarding.
+
+✔ std::move = "I don't need this object anymore."
+
+✔ std::forward = "Pass this argument exactly as I received it."
