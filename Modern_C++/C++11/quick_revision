@@ -1,0 +1,483 @@
+========================================
+           C++11 REVISION NOTES
+========================================
+
+******** auto ********
+
+- Introduced in C++11
+- Performs compile-time type deduction.
+- Type is deduced from the initializer.
+- Reduces code verbosity.
+- Commonly used with STL iterators, lambdas and templates.
+- Mandatory initialization.
+- Does NOT mean dynamic typing.
+
+Rules:
+- Removes top-level const.
+- Removes references.
+- Preserves low-level const.
+
+Example:
+const int x = 10;
+const int& ref = x;
+
+auto a = x;      // int
+auto b = ref;    // int
+auto& c = ref;   // const int&
+
+----------------------------------------
+
+******** decltype ********
+
+- Deduces the exact type of an expression.
+- Expression is NOT evaluated.
+- Preserves const and reference qualifiers.
+- Useful in templates and generic programming.
+- Used when return type depends on an expression.
+
+Example:
+
+decltype(a+b) sum(T1 a,T2 b);
+
+Difference:
+
+auto      -> drops top-level const & references
+decltype  -> preserves exact type
+
+----------------------------------------
+
+******** nullptr ********
+
+- Introduced in C++11.
+- Type = std::nullptr_t
+- Replaces NULL.
+- Represents only a null pointer.
+- Eliminates overload ambiguity.
+- Preferred over NULL.
+
+Example:
+
+void fun(int);
+void fun(char*);
+
+fun(NULL);      // May call int overload
+fun(nullptr);   // Calls pointer overload
+
+----------------------------------------
+
+******** Lambda Expressions ********
+
+Anonymous function object.
+
+A lambda creates an object of a unique compiler-generated
+closure type.
+
+It is NOT std::function.
+
+std::function is a type-erased wrapper capable of storing
+lambdas, function pointers and functors.
+
+Syntax:
+
+[capture](parameters) mutable constexpr noexcept -> return_type
+{
+    // body
+};
+
+Capture Types:
+
+[]        -> capture nothing
+[=]       -> capture all by value
+[&]       -> capture all by reference
+[x]       -> capture x by value
+[&x]      -> capture x by reference
+[this]    -> capture this pointer
+
+mutable
+- Allows modification of variables captured by value.
+
+Return Type
+- Usually deduced automatically.
+- Can be specified using -> return_type.
+
+Immediately Invoked Lambda (IIFE):
+
+[]()
+{
+    cout<<"Hello";
+}();
+
+----------------------------------------
+
+******** Lvalue and Rvalue ********
+
+Lvalue
+- Has identity.
+- Has memory address.
+- Can appear on left side of assignment.
+
+Rvalue
+- Temporary object.
+- No persistent identity.
+- Usually appears on right side.
+
+Examples:
+
+int x = 10;      // x -> lvalue
+10               // rvalue
+x+5              // rvalue
+
+----------------------------------------
+
+******** Rvalue References (&&) ********
+
+- Introduced in C++11.
+- Bind only to rvalues.
+- Enable move semantics.
+- Improve performance.
+
+Example:
+
+int&& r = 10;
+
+----------------------------------------
+
+******** std::move ********
+
+- Introduced in C++11.
+- Does NOT move anything.
+- Performs a cast to an rvalue reference.
+- Enables move constructor/assignment selection.
+
+Example:
+
+buffer b2 = std::move(b1);
+
+----------------------------------------
+
+******** Move Semantics ********
+
+Purpose:
+Transfer ownership instead of copying resources.
+
+Benefits:
+- Eliminates expensive deep copies.
+- O(1) transfer instead of O(n) copy.
+- Major STL performance improvement.
+
+Need:
+Classes owning resources:
+
+- dynamic memory
+- file handles
+- sockets
+- mutexes
+
+Move Constructor
+
+Class(Class&& other) noexcept;
+
+Move Assignment
+
+Class& operator=(Class&& other) noexcept;
+
+After move:
+- Source object remains valid.
+- Usually left empty/null.
+- Destructor still executes safely.
+
+Rule:
+std::move does not move.
+Move constructor performs the move.
+
+----------------------------------------
+
+******** Rule of Five ********
+
+If a class manages resources, define:
+
+Destructor
+
+Copy Constructor
+
+Copy Assignment
+
+Move Constructor
+
+Move Assignment
+
+----------------------------------------
+
+******** enum class ********
+
+Strongly typed scoped enumeration.
+
+Advantages:
+
+- No implicit conversion to int.
+- Scoped (Color::Red).
+- Prevents name collisions.
+- Underlying type can be specified.
+
+Example:
+
+enum class Color : int
+{
+    Red,
+    Green,
+    Blue
+};
+
+----------------------------------------
+
+******** override ********
+
+- Ensures a virtual function is actually overriding
+  a base class function.
+- Compile-time checking.
+- Prevents signature mismatch bugs.
+
+Example:
+
+void display() override;
+
+----------------------------------------
+
+******** final ********
+
+Function:
+
+virtual void fun() final;
+
+Cannot be overridden.
+
+Class:
+
+class Base final
+{
+};
+
+Cannot be inherited.
+
+----------------------------------------
+
+******** Range-based for Loop ********
+
+Simplifies container traversal.
+
+for(auto &x : vec)
+{
+    cout << x;
+}
+
+Benefits:
+- Cleaner syntax.
+- Fewer iterator errors.
+
+----------------------------------------
+
+******** Smart Pointers ********
+
+Introduced in <memory>
+
+1. unique_ptr
+- Exclusive ownership.
+- Cannot be copied.
+- Can be moved.
+
+2. shared_ptr
+- Shared ownership.
+- Reference counting.
+
+3. weak_ptr
+- Non-owning observer.
+- Prevents cyclic references.
+
+----------------------------------------
+
+******** constexpr ********
+
+Requests compile-time evaluation whenever possible.
+
+Example:
+
+constexpr int square(int x)
+{
+    return x*x;
+}
+
+Benefits:
+- Better optimization.
+- Compile-time constants.
+
+----------------------------------------
+
+******** static_assert ********
+
+Compile-time assertion.
+
+Example:
+
+static_assert(sizeof(int)==4,
+              "Unexpected int size");
+
+Useful in templates and libraries.
+
+----------------------------------------
+
+******** Delegating Constructors ********
+
+One constructor calls another constructor
+of the same class.
+
+Example:
+
+class A
+{
+public:
+    A() : A(10) {}
+    A(int x){}
+};
+
+----------------------------------------
+
+******** Inheriting Constructors ********
+
+Reuse base class constructors.
+
+Example:
+
+class Derived : public Base
+{
+public:
+    using Base::Base;
+};
+
+----------------------------------------
+
+******** Defaulted Functions ********
+
+Ask compiler to generate default implementation.
+
+Example:
+
+MyClass() = default;
+
+----------------------------------------
+
+******** Deleted Functions ********
+
+Disable a function.
+
+Example:
+
+MyClass(const MyClass&) = delete;
+
+Commonly used to prevent copying.
+
+----------------------------------------
+
+******** Thread Support Library ********
+
+Major addition in C++11.
+
+Headers:
+
+<thread>
+<mutex>
+<condition_variable>
+<future>
+<atomic>
+
+Supports:
+- Multithreading
+- Synchronization
+- Async programming
+
+----------------------------------------
+
+******** Type Aliases ********
+
+Preferred over typedef.
+
+using ll = long long;
+
+Template aliases also supported.
+
+----------------------------------------
+
+******** Variadic Templates ********
+
+Accept variable number of template arguments.
+
+template<typename... Args>
+
+Foundation of many STL utilities.
+
+----------------------------------------
+
+******** Uniform Initialization ********
+
+Single initialization syntax.
+
+int x{10};
+vector<int> v{1,2,3};
+
+Benefits:
+- Consistent syntax.
+- Prevents narrowing conversions.
+
+----------------------------------------
+
+******** initializer_list ********
+
+Allows list initialization.
+
+Example:
+
+vector<int> v{1,2,3,4};
+
+Can create constructors accepting multiple values.
+
+----------------------------------------
+
+******** noexcept ********
+
+Indicates function will not throw exceptions.
+
+Benefits:
+- Better optimization.
+- Essential for efficient move semantics.
+- STL prefers move operations marked noexcept.
+
+----------------------------------------
+
+******** C++11 Interview One-Liners ********
+
+✔ auto removes top-level const and references.
+
+✔ decltype preserves exact type.
+
+✔ nullptr has type std::nullptr_t.
+
+✔ std::move only casts to an rvalue.
+
+✔ Move constructor transfers ownership.
+
+✔ Moved-from object is valid but unspecified.
+
+✔ Lambdas create closure objects, not std::function.
+
+✔ unique_ptr cannot be copied but can be moved.
+
+✔ override catches incorrect overriding.
+
+✔ final prevents inheritance/overriding.
+
+✔ enum class provides type safety and scope.
+
+✔ constexpr enables compile-time computation.
+
+✔ noexcept improves move performance.
+
+✔ Rule of Five applies to resource-owning classes.
