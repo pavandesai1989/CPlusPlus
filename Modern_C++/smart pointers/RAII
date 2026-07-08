@@ -1,0 +1,186 @@
+=========================================================
+RAII (Resource Acquisition Is Initialization)
+=========================================================
+
+Q1. What is RAII?
+
+Answer:
+
+RAII (Resource Acquisition Is Initialization) is a C++ idiom where a
+resource is acquired in a constructor and automatically released in the
+destructor.
+
+This ensures deterministic resource cleanup, even if an exception is
+thrown.
+
+---------------------------------------------------------
+
+Q2. Why do we need RAII?
+
+Answer:
+
+RAII prevents:
+
+- Memory leaks
+- Resource leaks
+- Forgetting to release resources
+- Exception-related resource leaks
+
+It provides automatic resource management.
+
+---------------------------------------------------------
+
+Q3. Which resources can RAII manage?
+
+Answer:
+
+RAII can manage any resource, not just memory.
+
+Examples:
+
+- Heap memory (new/delete)
+- Files (fopen/fclose)
+- Mutexes (lock/unlock)
+- Database connections
+- Network sockets
+- Threads
+- Windows HANDLEs
+
+---------------------------------------------------------
+
+Q4. Give a simple RAII example.
+
+class Buffer
+{
+    int* ptr;
+
+public:
+    Buffer()
+    {
+        ptr = new int[100];
+    }
+
+    ~Buffer()
+    {
+        delete[] ptr;
+    }
+};
+
+When the object goes out of scope, the destructor automatically frees
+the memory.
+
+---------------------------------------------------------
+
+Q5. How does RAII help with exceptions?**********
+
+Answer:
+
+Even if an exception is thrown, local objects are destroyed during stack
+unwinding, so their destructors release resources automatically.
+
+Example:
+
+void foo()
+{
+    Buffer b;
+
+    throw runtime_error("Error");
+}
+
+Although an exception is thrown, Buffer's destructor is still called.
+
+---------------------------------------------------------
+
+Q6. Which STL classes use RAII?
+
+Answer:
+
+- std::unique_ptr
+- std::shared_ptr
+- std::lock_guard
+- std::unique_lock
+- std::fstream
+- std::vector
+- std::string
+
+---------------------------------------------------------
+
+Q7. Is RAII only for memory?
+
+Answer:
+
+No.
+
+RAII manages any resource whose lifetime should be tied to an object's
+lifetime.
+
+---------------------------------------------------------
+
+Q8. What is the difference between RAII and garbage collection?
+
+Answer:
+
+RAII
+
+- Deterministic cleanup
+- Resource released immediately when object goes out of scope
+- Uses constructors and destructors
+
+Garbage Collection
+
+- Cleanup time is unpredictable
+- Focuses mainly on memory
+- Does not automatically manage resources like files or mutexes
+
+---------------------------------------------------------
+
+Q9. Why is RAII preferred in Modern C++?
+
+Answer:
+
+Because it:
+
+- Eliminates manual cleanup
+- Makes code exception-safe
+- Prevents resource leaks
+- Simplifies resource management
+- Is the foundation of smart pointers and many STL classes
+
+---------------------------------------------------------
+
+Q10. Give real-world examples of RAII.
+
+Answer:
+
+Memory
+
+unique_ptr<int> p(new int(10));
+
+File
+
+std::fstream file("data.txt");
+
+Mutex
+
+std::lock_guard<std::mutex> lock(mtx);
+
+Each resource is automatically released when the object goes out of
+scope.
+
+---------------------------------------------------------
+
+Interview One-Liners
+
+✔ RAII = Acquire resource in constructor, release it in destructor.
+
+✔ RAII guarantees deterministic resource cleanup.
+
+✔ RAII makes code exception-safe.
+
+✔ Smart pointers are the best example of RAII.
+
+✔ RAII manages all kinds of resources, not just memory.
+
+✔ Destructor is responsible for releasing the resource.
+
+✔ RAII is one of the core design principles of Modern C++.
