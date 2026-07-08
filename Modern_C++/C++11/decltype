@@ -41,7 +41,7 @@ auto vs decltype
 
 auto
 - Deduces from initializer.
-- Usually removes const and references.
+- Usually removes const and references. *********
 - Gives a simplified type.
 
 decltype
