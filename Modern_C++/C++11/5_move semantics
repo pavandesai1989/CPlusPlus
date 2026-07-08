@@ -3,7 +3,10 @@
 Interview Example : Custom Class Without Move vs With Move
 (Using Dynamic Array Class)
 =========================================================
-
+"Suppose my class owns a large dynamically allocated buffer. If I copy it, 
+I allocate new memory and copy every element, which is expensive. If I know the source object won't be used anymore,
+I can transfer ownership of the buffer instead. That's exactly what 
+move semantics provide—they avoid deep copies by stealing the resource."
 class Buffer
 {
     int* data;
@@ -74,7 +77,7 @@ b2 ----> [1M integers]
 4. Extra memory usage.
 
 Complexity:
-O(n)
+O(n) "Although I'm done with ob1, the compiler doesn't know that. Since ob1 is an lvalue, it invokes the copy constructor."
 
 ---------------------------------------------------------
 Issue
