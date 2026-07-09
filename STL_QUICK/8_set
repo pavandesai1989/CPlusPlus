@@ -13,6 +13,52 @@ C++ STL SET - INTERVIEW NOTES
 9. User-defined types require operator< or custom comparator.
 10. set insertion does not invalidate existing iterators.
 
+
+Why does std::set use a Red-Black Tree?****VVVVVIMP
+
+A Red-Black Tree (RBT) is a self-balancing Binary Search Tree (BST). 
+It keeps the tree approximately balanced after every insertion and deletion, ensuring efficient operations.
+
+It provides:
+
+Search: O(log n)
+Insert: O(log n)
+Delete: O(log n)
+
+These are exactly the complexity guarantees required by the C++ Standard for std::set.
+
+A Red-Black Tree is a self-balancing Binary Search Tree in which every node is assigned a color (Red or Black). 
+The tree maintains a set of balancing rules so that its height remains O(log n), ensuring efficient search, insertion, and deletion.
+
+Q2. Why not a normal BST?
+
+A normal BST can become skewed:
+
+10
+ \
+ 20
+  \
+  30
+   \
+   40
+
+Its height becomes O(n), making search, insertion, and deletion O(n).
+
+Q3. Why not an AVL Tree?
+
+AVL trees are more strictly balanced, so searches can be a little faster. 
+However, they require more rotations during insertions and deletions. 
+Red-Black Trees strike a good balance between lookup and update performance.
+
+Q5. What is the difference between std::set and std::unordered_set?
+set	unordered_set
+Red-Black Tree	Hash Table
+Sorted	Unordered
+O(log n)	Average O(1)
+Supports lower_bound()	Does not support ordered operations
+
+
+
 18. Can set store duplicate values?
 ----------------------------------
 No.
@@ -467,11 +513,20 @@ public:
     Employee(int i, string n)
         : id(i), name(n) {}
 
-    bool operator<(const Employee& other) const
+    bool operator<(const Employee& other) const //******VVVVVVImp why build error if operator < is not const
     {
         return id < other.id;
     }
 };
+
+why build error if operator < is not const****VVVVVVIMP
+The reason is that std::set stores its elements as const, so it can only call const member functions on them.
+set<employee> s;
+
+s.insert(employee("Pavan",23));
+Internally, the Red-Black Tree stores const employee
+
+*****
 
 int main()
 {
