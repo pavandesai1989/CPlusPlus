@@ -11,192 +11,73 @@ into a Base object by value.
 Only the Base part is copied.
 
 The Derived-specific members and behavior are lost.
-
-=========================================================
-Example (Most Asked Interview Example)
-=========================================================
-
 #include <iostream>
 using namespace std;
 
-class Animal
+class Shape
 {
 public:
-
-    virtual void sound()
+    virtual void draw()
     {
-        cout << "Animal Sound" << endl;
+        cout << "Drawing Shape" << endl;
+    }
+
+    virtual ~Shape() = default;
+};
+
+class Circle : public Shape
+{
+public:
+    void draw() override
+    {
+        cout << "Drawing Circle" << endl;
     }
 };
 
-class Dog : public Animal
+// Passed by VALUE -> Object Slicing
+void process(Shape s)
 {
-public:
-
-    void sound() override
-    {
-        cout << "Dog Bark" << endl;
-    }
-};
-
-void makeSound(Animal a)      // Passed by VALUE
-{
-    a.sound();
+    s.draw();
 }
 
 int main()
 {
-    Dog d;
+    Circle c;
 
-    makeSound(d);
+    process(c);
+
+    return 0;
 }
+"Here, process() takes a Shape by value. When I pass a Circle object, 
+the compiler creates a new Shape object by copying only the base-class part of Circle. The derived Circle portion is discarded—this is object slicing. 
+Since s is now an actual Shape object,
+s.draw() calls Shape::draw() instead of Circle::draw(). To avoid object slicing, I would pass Shape by reference or pointer."
 
-Output
 
-Animal Sound
-
-=========================================================
-Why?
-=========================================================
-
-When we call
-
-makeSound(d);
-
-Compiler internally creates
-
-Animal a = d;
-
-This creates a NEW Animal object.
-
-The Dog part is discarded.
-
-Only the Animal portion is copied.
-
-=========================================================
-Memory Diagram
-=========================================================
-
-Dog Object
-
-+----------------------+
-| Animal Part          |
-+----------------------+
-| Dog Part             |
-+----------------------+
-
-          Object Slicing
-                 ↓
-
-Animal Object
-
-+----------------------+
-| Animal Part          |
-+----------------------+
-
-Dog Part is LOST.
-
-=========================================================
-Why does Animal::sound() execute?
-=========================================================
-
-After slicing,
-
-'a' is no longer a Dog object.
-
-It is a completely new Animal object.
-
-Therefore,
-
-a.sound();
-
-calls
-
-Animal::sound()
-
-instead of
-
-Dog::sound()
-
-=========================================================
-Correct Way
-=========================================================
-
-Pass by Reference
-
-void makeSound(Animal& a)
-{
-    a.sound();
-}
-
-int main()
-{
-    Dog d;
-
-    makeSound(d);
-}
-
-Output
-
-Dog Bark
-
-=========================================================
 Why does this work?
-=========================================================
 
-No copy is created.
+With a reference:
 
-The reference refers to the original Dog object.
+void process(Shape& s)
 
-Therefore,
+No copy is created. The reference s refers to the original Circle object.
 
-Virtual Function
+Circle object
+      ▲
+      │
+Shape& s
 
-↓
+Since the actual object is still a Circle, the virtual function mechanism dispatches the call to:
 
-Runtime Polymorphism
+Circle::draw();
 
-↓
 
-Dog::sound()
+Object slicing occurs when a derived object is copied into a base object by value.
+Only the base portion is copied, and the derived-specific state is discarded. 
 
-=========================================================
-Object Slicing vs Reference
-=========================================================
-
-Pass by Value
-
-Dog
-
-↓
-
-Animal Copy Created
-
-↓
-
-Dog Part Lost
-
-↓
-
-Animal::sound()
-
----------------------------------------------------------
-
-Pass by Reference
-
-Dog
-
-↓
-
-No Copy
-
-↓
-
-Original Dog Object
-
-↓
-
-Dog::sound()
+As a result, the copied object becomes a pure base object, 
+and virtual function calls resolve to the base implementation. 
+To avoid object slicing, always pass or store polymorphic objects using base class references or pointers.
 
 =========================================================
 When does Object Slicing occur?
