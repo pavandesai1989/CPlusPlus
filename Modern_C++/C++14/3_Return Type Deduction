@@ -50,14 +50,14 @@ int add(int a, int b);
 Important Rules
 ---------------
 
-✔ All return statements must have the same type.
+✔ All return statements must have the same type. ********************
 
-✔ No explicit return statement ⇒ return type is `void`.
+✔ No explicit return statement ⇒ return type is `void`. *********
 
-✔ Recursive functions generally require an explicit return type.
+✔ Recursive functions generally require an explicit return type. *******
 
 ✔ `auto` does not preserve references.
-Use `decltype(auto)` if you need the exact type (including references).
+Use `decltype(auto)` if you need the exact type (including references). ****VVVVVVVIMP
 
 -----------------------------------------
 
@@ -80,10 +80,10 @@ A. C++11 could not deduce function return types from the function body, so a tra
 Q. How does the compiler deduce the return type?
 A. By examining all `return` statements.
 
-Q. Can different return statements have different types?
+Q. Can different return statements have different types? ******VVVVIMP
 A. No. They must deduce to one common type.
 
-Q. Can overloaded functions differ only by return type?
+Q. Can overloaded functions differ only by return type? *****
 A. No. Return type is not part of the function signature.
 
 -----------------------------------------
