@@ -74,19 +74,34 @@ Risk:
 
 Example:
 
-void func()
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void func(const string& name)
 {
-    cout << name;
+    cout << name << endl;
 }
 
 int main()
 {
     string name = "Test";
 
-    thread t(func);
+    thread t(func, std::ref(name));
     t.detach();
 
-} // name destroyed, thread may still run
+}   // name destroyed, detached thread may still use it
+
+Here:
+
+name is created in main().
+std::ref(name) passes a reference to the thread.
+t.detach() lets the thread run independently.
+main() exits.
+name is destroyed.
+The detached thread may still access that reference.
+
+This is undefined behavior because the thread has a dangling reference.
 
 
 ---------------------------------------------------------
