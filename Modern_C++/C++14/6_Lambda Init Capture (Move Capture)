@@ -5,23 +5,139 @@ INTERVIEW NOTES
 
 1. What is Lambda Init Capture?
 
-Lambda Init Capture is a C++14 feature that allows a lambda to create its own captured variable and initialize it using any expression.
+Lambda Init Capture is a C++14 feature that allows a lambda to create a NEW
+variable inside itself and initialize it using any expression.
+Syntax:
 
-Syntax
-
-[captured_variable = expression]
+[new_variable = expression]
 
 Example
 
+Example:
+
 [p = std::move(ptr)]
 
-Before C++14, lambdas could only capture existing variables by value or reference. 
-Since std::unique_ptr cannot be copied, it couldn't be captured by value.
-Lambda Init Capture solves this by allowing ownership to be moved into the lambda.
+Here:
+
+Outside lambda:
+ptr
+
+Inside lambda:
+p
+
+The lambda creates a new variable `p` and initializes it by moving `ptr` into it.
+
+Before C++14, lambdas could only capture existing variables by value or reference. ****************
+Since std::unique_ptr cannot be copied, it couldn't be captured by value. *********
+
+**********Problem***
+#include <iostream>
+#include<memory>
+using namespace std;
+int main() 
+{
+    unique_ptr<int> sp(new int(23));
+
+    auto p = [sp](){
+        cout<<"sp is "<<*sp.get();
+    };
+}
+comipler error: why?
+it means capture sp by value.
+
+Capture by value = make a copy.
+
+Conceptually, the compiler generates something like:
+class Lambda
+{
+    unique_ptr<int> sp;    // Copy of sp
+
+public:
+    Lambda(unique_ptr<int> temp)
+        : sp(temp)          // ❌ Copy constructor required
+    {
+    }
+
+    void operator()() const
+    {
+        cout << *sp;
+    }
+};
+
+But std::unique_ptr has its copy constructor deleted:
+
+unique_ptr(const unique_ptr&) = delete;
+
+So the compiler cannot copy sp.
+
+****solution C++14***
+Lambda Init Capture solves this by allowing ownership to be moved into the lambda.*********
+
+#include <iostream>
+#include <memory>
+using namespace std;
+
+int main()
+{
+    auto sp = make_unique<int>(23);
+
+    auto p = [ptr = std::move(sp)]()
+    {
+        cout << *ptr;
+    };
+
+    p();
+}
+
+Now:
+
+sp transfers ownership to ptr.
+ptr becomes the owner inside the lambda.
+sp becomes nullptr.
+
+Before move
+
+sp -----> 23
+
+After
+
+sp -----> nullptr
+
+Lambda
+
+ptr -----> 23
+Interview one-liner ⭐⭐⭐⭐⭐
+
+"[sp] means capture by value, which requires copying sp. Since std::unique_ptr is non-copyable, 
+it fails to compile. C++14 Lambda Init Capture allows us to 
+create a new variable inside the lambda and move ownership using [ptr = std::move(sp)]."
+
+*********************
+
+another use case:Capture an Expression****************
+int a = 10;
+int b = 20;
+
+auto f = [sum = a + b]()
+{
+    std::cout << sum;
+};
+
+Capture Function Result ****************
+int square(int x)
+{
+    return x * x;
+}
+
+auto f = [result = square(5)]()
+{
+    std::cout << result;
+};
+
 
 -----------------------------------------
 
-2. Why was it introduced?
+2. Why was it introduced?*******
 
 Before C++14, lambdas could only capture existing variables.
 
@@ -191,7 +307,7 @@ The thread becomes the owner of the unique_ptr.
 
 -----------------------------------------
 
-10. Difference
+10. Difference************
 
 Capture by Value
 
@@ -217,7 +333,7 @@ Works perfectly with unique_ptr.
 
 11. Interview Questions
 
-Q. What is Lambda Init Capture?
+Q. What is Lambda Init Capture?*******
 
 Answer:
 
@@ -268,6 +384,7 @@ the lambda will contain a dangling reference, leading to undefined behavior.
 
 "Lambda Init Capture is a C++14 feature that lets a lambda create and 
 initialize its own captured variables. 
+
 It's mainly used to move move-only objects 
 like std::unique_ptr into a lambda. 
 
