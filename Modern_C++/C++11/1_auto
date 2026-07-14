@@ -1,6 +1,10 @@
 =========================================================
 auto (C++11) - FINAL REVISION NOTES
 =========================================================
+auto was introduced in C++11 to provide compile-time type deduction.
+It reduces verbosity, especially with complex STL types and iterators.
+The compiler determines the type from the initializer, improving
+readability and maintainability without any runtime overhead.
 
 What is auto?
 --------------
