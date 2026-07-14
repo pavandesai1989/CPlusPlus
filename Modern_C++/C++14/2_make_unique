@@ -2,6 +2,16 @@
 std::make_unique (C++14) – INTERVIEW NOTES
 =========================================
 
+5 Points to Remember
+------------------------
+
+1. Introduced in C++14.
+2. Creates a std::unique_ptr.
+3. Eliminates explicit use of `new`.
+4. Provides better exception safety.*******
+5. Recommended modern C++ way to create unique_ptr objects.
+
+
 1. What is std::make_unique?
 ----------------------------
 • Introduced in C++14.
@@ -23,8 +33,35 @@ std::unique_ptr<Employee> ptr(new Employee());
 
 Problems:
 ✔ Explicit use of `new`
-✔ More verbose
-✔ Less exception-safe in complex expressions
+✔ More verbose (Verbose simply means requiring more code than necessary. More typing, more clutter, and less readable.)
+✔*****************Less exception-safe in complex expressions****
+Less Exception-Safe in Complex Expressions
+------------------------------------------
+
+Using explicit `new`:
+
+foo(std::unique_ptr<Employee>(new Employee()), bar());
+
+During the function call, both arguments must be evaluated.
+
+1. `new Employee()` allocates memory.
+2. Before the `unique_ptr` fully takes ownership, `bar()` is evaluated.
+3. If `bar()` throws an exception at that point, the raw pointer created by
+   `new` may not be properly managed, leading to a potential memory leak.
+
+Using `std::make_unique`:
+
+foo(std::make_unique<Employee>(), bar());
+
+`std::make_unique` creates the object and transfers ownership to `unique_ptr`
+in a single operation. If an exception occurs later (e.g., in `bar()`), the
+temporary `unique_ptr` is automatically destroyed, and the memory is released.
+
+✔ No unmanaged raw pointer
+✔ Better exception safety
+✔ No resource leak
+
+***
 ✔ Modern C++ discourages direct use of `new`
 
 C++14 introduced:
@@ -39,7 +76,7 @@ Benefits:
 
 --------------------------------------------------
 
-3. How does std::make_unique work?
+3. How does std::make_unique work?*****************
 ----------------------------------
 
 It performs two operations together:
@@ -73,14 +110,14 @@ auto p = std::make_unique<Employee>();
 Advantages:
 
 ✔ No explicit `new`
-✔ Immediate ownership transfer
+✔ Immediate ownership transfer*****************
 ✔ Cleaner syntax
 ✔ Better exception safety
 ✔ Follows RAII
 
 --------------------------------------------------
 
-5. Exception Safety (MOST IMPORTANT)
+5. Exception Safety (MOST IMPORTANT)********************
 ------------------------------------
 
 Problem:
@@ -168,7 +205,7 @@ A. A C++14 utility function that creates an object and returns a std::unique_ptr
 
 Q. Why was std::make_unique introduced?
 
-A. To eliminate explicit use of `new`, improve readability, and provide better exception safety.
+A. To eliminate explicit use of `new`, improve readability, and provide better exception safety.*****
 
 --------------------------------------------------
 
@@ -215,17 +252,14 @@ make_shared
 11. 30-Second Interview Answer
 ------------------------------
 
-"std::make_unique was introduced in C++14 to simplify the creation of std::unique_ptr objects. It allocates the object and transfers ownership to a unique_ptr in a single step, eliminating explicit use of `new`. It provides cleaner syntax, better exception safety, follows the RAII principle, and is the recommended way to create unique_ptr objects in modern C++."
+"std::make_unique was introduced in C++14 to simplify the creation of std::unique_ptr objects. 
+It allocates the object and transfers ownership to a unique_ptr in a single step, 
+eliminating explicit use of `new`. 
+It provides cleaner syntax, better exception safety, 
+follows the RAII principle, and is the recommended way to create unique_ptr objects in modern C++."
 
 --------------------------------------------------
 
-12. 5 Points to Remember
-------------------------
 
-1. Introduced in C++14.
-2. Creates a std::unique_ptr.
-3. Eliminates explicit use of `new`.
-4. Provides better exception safety.
-5. Recommended modern C++ way to create unique_ptr objects.
 
 =========================================
