@@ -1,0 +1,193 @@
+=========================================
+VARIABLE TEMPLATES (C++14) – INTERVIEW NOTES
+=========================================
+
+5 Points to Remember
+--------------------
+
+1. Introduced in C++14.
+2. Allows variables to be templated.
+3. Eliminates repetitive variable definitions.
+4. Improves generic programming.
+5. Commonly used with constexpr constants.
+
+--------------------------------------------------
+
+1. What are Variable Templates?
+-------------------------------
+
+• Introduced in C++14.
+• Allow variables to be parameterized by type, just like function templates
+  and class templates.
+• A single variable template can generate variables for different types.
+
+Syntax
+
+template<typename T>
+constexpr T variable_name = value;
+
+--------------------------------------------------
+
+2. Why were Variable Templates introduced?
+------------------------------------------
+
+Before C++14, if you wanted the same constant for multiple types, you had to
+define separate variables.
+
+Example
+
+constexpr float pi_f = 3.1415926f;
+constexpr double pi_d = 3.1415926;
+constexpr long double pi_ld = 3.1415926L;
+
+This leads to duplicate code.
+
+C++14 introduced Variable Templates to define it once and use it for any type.
+
+--------------------------------------------------
+
+3. Example
+----------
+
+template<typename T>
+constexpr T pi = T(3.141592653589793);
+
+Usage
+
+cout << pi<float> << endl;
+
+cout << pi<double> << endl;
+
+cout << pi<long double> << endl;
+
+--------------------------------------------------
+
+4. How does it work?
+--------------------
+
+The compiler creates a separate variable for each type used.
+
+Example
+
+pi<int>
+
+pi<float>
+
+pi<double>
+
+Conceptually similar to
+
+constexpr int pi<int>;
+
+constexpr float pi<float>;
+
+constexpr double pi<double>;
+
+--------------------------------------------------
+
+5. When should you use Variable Templates?
+------------------------------------------
+
+✔ Mathematical constants (pi, e)
+✔ Type-specific constants
+✔ Generic libraries
+✔ Template metaprogramming
+✔ Modern C++ generic programming
+
+--------------------------------------------------
+
+6. Advantages
+-------------
+
+✔ Eliminates duplicate constants
+✔ Cleaner code
+✔ Better code reuse
+✔ Type-safe
+✔ Works naturally with constexpr
+
+--------------------------------------------------
+
+7. Variable Template vs Function Template
+-----------------------------------------
+
+Variable Template
+
+template<typename T>
+constexpr T pi = T(3.14);
+
+Represents data.
+
+----------------------------
+
+Function Template
+
+template<typename T>
+T square(T x)
+{
+    return x * x;
+}
+
+Represents behavior.
+
+--------------------------------------------------
+
+8. Most Asked Interview Questions
+---------------------------------
+
+Q. What is a Variable Template?
+
+A.
+
+A Variable Template is a C++14 feature that allows variables to be templated,
+just like function templates and class templates.
+
+--------------------------------------------------
+
+Q. Why was it introduced?
+
+A.
+
+To avoid defining the same variable separately for different types and to
+support generic programming.
+
+--------------------------------------------------
+
+Q. Where is it commonly used?
+
+A.
+
+Mostly for compile-time constants such as pi, e, limits, and other
+type-dependent values.
+
+--------------------------------------------------
+
+Q. Does a Variable Template create one variable?
+
+A.
+
+No.
+
+The compiler creates a separate variable for every type used.
+
+Example
+
+pi<int>
+
+pi<float>
+
+pi<double>
+
+Each is a different variable.
+
+--------------------------------------------------
+
+9. 30-Second Interview Answer
+-----------------------------
+
+"Variable Templates were introduced in C++14 to allow variables to be
+parameterized by type, similar to function and class templates. They eliminate
+duplicate definitions of type-specific constants and are commonly used with
+constexpr values such as mathematical constants. The compiler instantiates a
+separate variable for each type."
+
+=========================================
