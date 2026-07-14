@@ -1,0 +1,115 @@
+=========================================================
+JOIN vs DETACH (Interview Point of View)
+=========================================================
+
+1. JOIN()
+
+Syntax:
+std::thread t(func);
+t.join();
+
+
+Meaning:
+- The calling thread (usually main thread) waits until the worker thread finishes.
+- Thread resources are cleaned up after completion.
+
+Execution:
+
+Main Thread
+    |
+    | creates
+    ↓
+Worker Thread
+    |
+    | completes task
+    ↓
+Main Thread continues
+
+
+Advantages:
+- Safe and predictable execution.
+- Ensures thread completes before program exits.
+- Avoids accessing destroyed resources.
+
+Use when:
+- Main thread needs to wait for the result.
+- Task completion is mandatory.
+
+
+---------------------------------------------------------
+
+2. DETACH()
+
+Syntax:
+std::thread t(func);
+t.detach();
+
+
+Meaning:
+- Thread runs independently in the background.
+- Main thread does not wait for completion.
+- Thread manages its own resources.
+
+Execution:
+
+Main Thread
+    |
+    | creates
+    ↓
+Worker Thread
+    |
+    | runs independently
+
+Main Thread continues
+
+
+Use when:
+- Background tasks do not need synchronization.
+- Example: logging, monitoring service.
+
+
+Risk:
+- Detached thread may continue running after the main thread exits.
+- It can access objects that are already destroyed.
+
+Example:
+
+void func()
+{
+    cout << name;
+}
+
+int main()
+{
+    string name = "Test";
+
+    thread t(func);
+    t.detach();
+
+} // name destroyed, thread may still run
+
+
+---------------------------------------------------------
+
+JOIN vs DETACH Difference:
+
+JOIN:
+- Waits for thread completion.
+- Thread lifetime is controlled.
+- Safer.
+- Preferred in most cases.
+
+DETACH:
+- Runs independently.
+- Thread lifetime is not controlled.
+- Risk of dangling references.
+- Use only for independent background tasks.
+
+
+Interview Answer:
+
+"join() blocks the calling thread until the worker thread completes, 
+which makes resource management safer. detach() allows a thread to run 
+independently in the background, but it should be used carefully because 
+the detached thread may outlive the objects it accesses. Generally, 
+prefer join() unless there is a specific requirement for background execution."
