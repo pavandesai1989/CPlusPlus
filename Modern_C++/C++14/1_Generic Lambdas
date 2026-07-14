@@ -1,150 +1,253 @@
 =========================================
-GENERIC LAMBDAS (C++14) – INTERVIEW NOTES
+GENERIC LAMBDA (C++14)
 =========================================
+5 Points to Remember
+--------------------
 
-1. What is a Generic Lambda?
-----------------------------
-- Generic lambda is a C++14 feature.
-- It allows lambda parameters to use "auto".
-- This makes the lambda work with multiple data types.
-- Also called "polymorphic lambda".
+1. Introduced in C++14.
+2. Uses `auto` for lambda parameters.
+3. Works with any data type.
+4. Implemented internally as a templated `operator()`.
+5. Widely used with STL algorithms.
 
------------------------------------------
 
-2. Syntax
----------
-auto lambdaName = [](auto param) {
-    // logic
-};
+What is a Generic Lambda?
+-------------------------
+• Introduced in C++14.
+• A lambda whose parameters are declared using `auto`.
+• The compiler automatically deduces the parameter types.
+• Makes lambdas generic, similar to function templates.
 
------------------------------------------
+--------------------------------------------------
 
-3. Basic Example
-----------------
-#include <iostream>
-using namespace std;
+Before C++14
+------------
 
-int main() {
-
-    auto print = [](auto x) {
-        cout << x << endl;
-    };
-
-    print(10);        // int
-    print(3.14);      // double
-    print("Hello");   // string
-
-    return 0;
-}
-
------------------------------------------
-
-4. Why Generic Lambdas are Needed?
------------------------------------
-Before C++14:
-- Lambda needed fixed parameter types
-
-Example (C++11 limitation):
-[](int x) { ... }  // only int
-
-Problem:
-- Needed multiple overloads or templates
-
-Solution:
-- Generic lambda removes duplication
-
------------------------------------------
-
-5. How it works internally
---------------------------
-- Compiler treats it like a templated call operator:
-
-Equivalent concept:
-
-struct Lambda {
-    template <typename T>
-    void operator()(T x) const {
-        cout << x;
-    }
-};
-
------------------------------------------
-
-6. Multiple Parameters
-----------------------
-
-auto add = [](auto a, auto b) {
+auto add = [](int a, int b)
+{
     return a + b;
 };
 
-cout << add(10, 20);
-cout << add(2.5, 3.5);
+Works only for int.
 
------------------------------------------
+--------------------------------------------------
 
-7. Mix with STL (VERY IMPORTANT)
--------------------------------
+C++14 Generic Lambda
+--------------------
 
-#include <vector>
-#include <algorithm>
+auto add = [](auto a, auto b)
+{
+    return a + b;
+};
 
-vector<int> v = {1, 2, 3, 4};
+add(10, 20);                  // int
+add(3.5, 2.5);                // double
+add(string("Hi "), string("C++"));   // string
 
-for_each(v.begin(), v.end(), [](auto &x) {
-    x = x * 2;
+One lambda works with multiple data types.
+
+--------------------------------------------------
+
+How does the Compiler Implement It?***********************
+-----------------------------------
+
+A generic lambda is conceptually equivalent to:
+
+class Lambda
+{
+public:
+
+    template<typename T1, typename T2>
+    auto operator()(T1 a, T2 b) const
+    {
+        return a + b;
+    }
+};
+
+Lambda add;
+
+Interview Point:
+A generic lambda is syntactic sugar for a closure class with a templated
+`operator()`.
+
+--------------------------------------------------
+
+Why was it introduced?
+----------------------
+
+Before C++14:
+
+template<typename T>
+T square(T x)
+{
+    return x * x;
+}
+
+C++14:
+
+auto square = [](auto x)
+{
+    return x * x;
+};
+
+Less code, easier generic programming.
+
+--------------------------------------------------
+
+Generic Lambda with Different Types
+-----------------------------------
+
+auto print = [](auto a, auto b)
+{
+    cout << a << " " << b;
+};
+
+print(10, "Hello");
+print(3.14, 'A');
+
+Each parameter type is deduced independently.
+
+--------------------------------------------------
+
+Generic Lambda with Capture
+---------------------------
+
+int x = 10;
+
+auto f = [x](auto y)
+{
+    return x + y;
+};
+
+cout << f(20);
+cout << f(5.5);
+
+Captures work exactly like normal lambdas.
+
+--------------------------------------------------
+
+Generic Lambda with STL
+-----------------------
+
+vector<int> v{5,2,8,1};
+
+sort(v.begin(), v.end(),
+[](auto a, auto b)
+{
+    return a < b;
 });
 
------------------------------------------
+Commonly used with STL algorithms.
 
-8. Generic Lambda with Reference
+--------------------------------------------------
+
+Advantages
+----------
+
+✔ Less boilerplate
+✔ Works with any data type
+✔ Cleaner generic programming
+✔ No need to write function templates
+✔ Commonly used with STL algorithms
+
+--------------------------------------------------
+
+Normal Lambda vs Generic Lambda  *******************
 -------------------------------
 
-auto modify = [](auto &x) {
-    x += 10;
+Normal Lambda
+
+[](int x)
+{
+    return x * x;
+}
+
+• Fixed parameter type
+• Works only for int
+
+--------------------------------------------------
+
+Generic Lambda
+
+[](auto x)
+{
+    return x * x;
+}
+
+• Parameter type deduced automatically
+• Works for int, double, string, etc.
+
+--------------------------------------------------
+
+Most Asked Interview Questions
+------------------------------
+
+Q. What is a Generic Lambda?
+A. A lambda whose parameters are declared using `auto`, allowing the compiler to deduce the parameter types.
+
+--------------------------------------------------
+
+Q. Which C++ version introduced Generic Lambdas?
+A. C++14.
+
+--------------------------------------------------
+
+Q. How is a Generic Lambda implemented internally?*******
+A. A generic lambda is internally converted by the compiler into a unique closure
+(class) that has a templated `operator()`. Each time you call the lambda with
+different argument types, the compiler instantiates the appropriate version of
+`operator()`, just like a function template.
+
+auto add = [](auto a, auto b)
+{
+    return a + b;
 };
 
-int a = 5;
-modify(a);  // a becomes 15
+The compiler conceptually generates something like:
+class Lambda
+{
+public:
+    template<typename T1, typename T2>
+    auto operator()(T1 a, T2 b) const
+    {
+        return a + b;
+    }
+};
 
------------------------------------------
+When you call:add(10, 20);
+The compiler generates:operator()<int, int>(10, 20);
 
-9. Capture + Generic Lambda
+A generic lambda is essentially syntactic sugar for a compiler-generated closure class whose operator() is a 
+function template. Each call instantiates the appropriate version based on the argument types.
+
+--------------------------------------------------
+
+Q. Difference between a normal lambda and a generic lambda?
+A.
+• Normal lambda has fixed parameter types.
+• Generic lambda uses `auto` and works with multiple types.
+
+--------------------------------------------------
+
+Q. Is a Generic Lambda the same as a function template?
+A. Conceptually yes. Internally, it is implemented using a templated `operator()` inside the closure class.
+
+--------------------------------------------------
+
+Q. Can Generic Lambdas capture variables?
+A. Yes. They support all lambda capture modes (`[]`, `[=]`, `[&]`, init-capture) just like normal lambdas.
+
+--------------------------------------------------
+
+30-Second Interview Answer
 --------------------------
 
-int factor = 2;
+"Generic Lambdas were introduced in C++14. They allow lambda parameters to be declared using `auto`, 
+enabling automatic type deduction. Internally, the compiler generates a closure class with a templated `operator()`. 
+They simplify generic programming and are widely used with STL algorithms."
 
-auto multiply = [factor](auto x) {
-    return x * factor;
-};
+--------------------------------------------------
 
-cout << multiply(10);    // 20
-cout << multiply(2.5);   // 5.0
 
------------------------------------------
-
-10. Limitations
---------------
-- Cannot partially specialize lambdas
-- Complex templates inside lambda may reduce readability
-- Overuse can make code unclear
-
------------------------------------------
-
-11. When to use?
----------------
-- STL algorithms (for_each, transform, sort)
-- Generic utilities
-- Callback functions
-- Quick reusable logic
-
------------------------------------------
-
-12. Interview Key Points
-------------------------
-- Introduced in C++14
-- Uses "auto" in lambda parameters
-- Equivalent to templated function operator()
-- Works with any data type
-- Commonly used with STL algorithms
 
 =========================================
