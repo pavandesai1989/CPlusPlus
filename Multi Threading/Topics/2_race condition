@@ -1,0 +1,319 @@
+=========================================================
+6. RACE CONDITION – EXPLANATION
+=========================================================
+
+Definition
+----------
+
+A race condition occurs when:
+
+• Multiple threads access the same shared data
+• At least one thread modifies that data
+• The final result depends on the timing/order of execution
+
+The threads are "racing" to access/update the same resource.
+
+=========================================================
+WHY DOES IT HAPPEN?
+=========================================================
+
+Because operations that look simple are not always atomic.
+
+Example:
+
+counter++;
+
+Looks like one operation, but internally it is:
+
+Step 1:
+Read counter value from memory
+
+Step 2:
+Increment value
+
+Step 3:
+Write updated value back to memory
+
+
+=========================================================
+EXAMPLE WITHOUT SYNCHRONIZATION
+=========================================================
+
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+int counter = 0;
+
+void increment()
+{
+    for(int i=0; i<1000; i++)
+    {
+        counter++;
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter;
+}
+
+
+Expected Output:
+
+2000
+
+
+But output may be:
+
+1500
+1800
+1900
+
+or any unexpected value.
+
+=========================================================
+WHY LOST UPDATE HAPPENS
+=========================================================
+
+Initially:
+
+counter = 0
+
+
+Thread 1                 Thread 2
+--------                 --------
+
+Read counter = 0
+
+                         Read counter = 0
+
+Increment to 1
+
+                         Increment to 1
+
+Write counter = 1
+
+                         Write counter = 1
+
+
+Final value:
+
+counter = 1
+
+
+But two increments happened.
+
+One update is lost.
+
+This is called:
+
+LOST UPDATE PROBLEM
+
+
+=========================================================
+HOW TO FIX RACE CONDITION?
+=========================================================
+
+Use synchronization mechanisms:
+
+1. Mutex
+2. Atomic
+3. Lock-free techniques
+
+
+=========================================================
+SOLUTION 1: MUTEX
+=========================================================
+
+Mutex ensures only one thread enters the critical section.
+
+#include <mutex>
+
+mutex m;
+
+void increment()
+{
+    for(int i=0; i<1000; i++)
+    {
+        lock_guard<mutex> lock(m);
+
+        counter++;
+    }
+}
+
+
+Execution:
+
+Thread 1 gets lock
+
+↓
+
+Updates counter
+
+↓
+
+Releases lock
+
+↓
+
+Thread 2 gets lock
+
+↓
+
+Updates counter
+
+
+Output:
+
+2000
+
+
+=========================================================
+SOLUTION 2: ATOMIC
+=========================================================
+
+For simple operations use atomic.
+
+#include <atomic>
+
+atomic<int> counter(0);
+
+
+void increment()
+{
+    for(int i=0; i<1000; i++)
+    {
+        counter++;
+    }
+}
+
+
+atomic<int> makes increment operation thread-safe.
+
+
+=========================================================
+CRITICAL SECTION
+=========================================================
+
+The part of code that accesses shared data is called:
+
+Critical Section
+
+
+Example:
+
+counter++;
+
+
+is a critical section because multiple threads modify counter.
+
+
+=========================================================
+RACE CONDITION vs DEADLOCK
+=========================================================
+
+Race Condition
+
+Problem:
+Incorrect result
+
+Cause:
+Multiple threads access shared data
+
+Example:
+counter++
+
+
+Deadlock
+
+Problem:
+Threads are stuck forever
+
+Cause:
+Threads waiting for each other's locks
+
+Example:
+
+Thread 1:
+Lock A → wait for B
+
+Thread 2:
+Lock B → wait for A
+
+
+=========================================================
+HOW TO PREVENT RACE CONDITIONS?
+=========================================================
+
+1. Protect shared data
+
+Use:
+• mutex
+• lock_guard
+• unique_lock
+
+
+2. Use atomic variables
+
+For:
+• counters
+• flags
+
+
+3. Avoid shared mutable state
+
+Prefer:
+• local variables
+• immutable objects
+
+
+=========================================================
+INTERVIEW ANSWER
+=========================================================
+
+Q: What is a race condition?
+
+Answer:
+
+"A race condition occurs when multiple threads access shared data concurrently and at least one thread modifies it. 
+Since execution order is unpredictable, threads may overwrite each other's changes, causing inconsistent results.
+It can be prevented using synchronization mechanisms like mutexes or atomic variables."
+
+
+=========================================================
+1-MINUTE REVISION
+=========================================================
+
+Race Condition:
+
+Multiple threads
+        +
+Shared Data
+        +
+At least one write
+        +
+No synchronization
+        =
+Incorrect result
+
+
+Example:
+
+counter++
+
+
+Fix:
+
+mutex → protects complex operations
+
+atomic → protects simple operations
+
+=========================================================
