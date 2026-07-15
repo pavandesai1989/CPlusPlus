@@ -1,0 +1,277 @@
+=========================================================
+C++14 QUICK REVISION NOTES (INTERVIEW)
+=========================================================
+
+=========================================================
+1. Generic Lambdas
+=========================================================
+
+What?
+- Lambda parameters can use 'auto'.
+- Compiler generates a templated call operator.
+
+Example:
+auto add = [](auto a, auto b)
+{
+    return a + b;
+};
+
+add(2,3);        // int
+add(2.5,3.5);    // double
+
+Use:
+- Generic code
+- STL algorithms
+- Avoid writing function templates
+
+Interview:
+Generic lambdas allow lambda parameters to be declared using auto,
+making lambdas work with multiple data types.
+
+---------------------------------------------------------
+
+=========================================================
+2. std::make_unique
+=========================================================
+
+What?
+- Safely creates std::unique_ptr.
+- Introduced in C++14.
+
+Example:
+auto ptr = std::make_unique<int>(10);
+
+Benefits:
+✓ Exception safe
+✓ Cleaner syntax
+✓ No explicit new
+
+Interview:
+std::make_unique creates and initializes a unique_ptr while avoiding
+manual memory management.
+
+---------------------------------------------------------
+
+=========================================================
+3. Return Type Deduction
+=========================================================
+
+What?
+- Compiler deduces function return type.
+- No need for trailing return type.
+
+Example:
+auto add(int a, int b)
+{
+    return a + b;
+}
+
+Rules:
+- All return statements must deduce the same type.
+
+Interview:
+C++14 allows normal functions using auto to have their return type
+deduced from the return statement.
+
+---------------------------------------------------------
+
+=========================================================
+4. constexpr Improvements
+=========================================================
+
+C++11:
+- Only one return statement allowed.
+
+C++14:
+- Local variables allowed.
+- Loops allowed.
+- if/else allowed.
+- Multiple statements allowed.
+
+Example:
+constexpr int factorial(int n)
+{
+    int result = 1;
+    for(int i=2;i<=n;i++)
+        result *= i;
+    return result;
+}
+
+Interview:
+C++14 relaxed constexpr restrictions, allowing loops, local variables
+and conditional statements.
+
+---------------------------------------------------------
+
+=========================================================
+5. Lambda Init Capture (Move Capture)
+=========================================================
+
+What?
+- Initialize captured variables.
+- Enables moving move-only objects into lambdas.
+
+Example:
+auto ptr = std::make_unique<int>(10);
+
+auto f = [p = std::move(ptr)]()
+{
+    cout << *p;
+};
+
+Use:
+- Capture unique_ptr
+- Rename captured variables
+- Compute values during capture
+
+Interview:
+Init capture lets you initialize captured variables and move resources
+such as unique_ptr into lambdas.
+
+---------------------------------------------------------
+
+=========================================================
+6. Binary Literals
+=========================================================
+
+What?
+- Write binary numbers directly.
+
+Example:
+int x = 0b1010;      // 10
+
+Benefits:
+✓ Easy bit manipulation
+✓ Readable binary values
+
+Interview:
+Binary literals begin with 0b and improve readability of bit operations.
+
+---------------------------------------------------------
+
+=========================================================
+7. Digit Separators
+=========================================================
+
+What?
+- Single quote (') separates digits.
+- Improves readability.
+
+Example:
+int x = 1'000'000;
+long y = 9'876'543'210LL;
+double z = 3.141'592;
+
+No effect on value.
+
+Interview:
+Digit separators improve readability of numeric literals without
+changing their value.
+
+---------------------------------------------------------
+
+=========================================================
+8. [[deprecated]]
+=========================================================
+
+What?
+- Marks APIs as obsolete.
+- Compiler generates a warning when used.
+
+Example:
+[[deprecated("Use newFunction() instead")]]
+void oldFunction();
+
+Use:
+oldFunction();   // Warning
+
+Can be applied to:
+✓ Function
+✓ Class
+✓ Variable
+✓ Enum
+
+Interview:
+[[deprecated]] is a C++14 attribute that marks functions, classes,
+variables or enums as obsolete and generates compiler warnings.
+
+---------------------------------------------------------
+
+=========================================================
+9. Copy-and-Swap Idiom
+=========================================================
+
+What?
+- Idiom for implementing copy assignment safely.
+- Not a C++14 feature (works since C++98).
+
+Idea:
+1. Make a copy.
+2. Swap resources.
+3. Temporary destroys old resources.
+
+Example:
+
+MyClass& operator=(MyClass other)
+{
+    swap(other);
+    return *this;
+}
+
+Advantages:
+✓ Strong exception safety
+✓ Handles self-assignment
+✓ No resource leaks
+✓ Simple implementation
+
+Interview:
+Copy-and-Swap creates a copy of the source object, swaps resources,
+and lets the temporary automatically clean up old resources. C++11
+made it more efficient using move semantics.
+
+
+=========================================================
+Variable Templates
+=========================================================
+
+What?
+- Templates can be used for variables.
+- Introduced in C++14.
+
+Example:
+
+template<typename T>
+constexpr T pi = T(3.1415926535897932385);
+
+Usage:
+
+double d = pi<double>;
+float  f = pi<float>;
+
+Benefits:
+✓ Avoid duplicate constants
+✓ Type-safe constants
+✓ Cleaner template code
+
+Use:
+- Mathematical constants
+- Compile-time constants
+- Generic libraries
+
+Interview:
+Variable templates allow variables to be parameterized by type, enabling
+generic constants such as pi<double> and pi<float>.
+
+=========================================================
+MOST IMPORTANT INTERVIEW QUESTIONS
+=========================================================
+
+✓ What problem does make_unique solve?
+✓ Difference between C++11 and C++14 constexpr?
+✓ Why Generic Lambdas?
+✓ What is Lambda Init Capture?
+✓ auto return type deduction rules?
+✓ Why use [[deprecated]]?
+✓ What is Copy-and-Swap and why is it exception safe?
+✓ Difference between auto and decltype(auto)?
+✓ Why Binary Literals and Digit Separators?
