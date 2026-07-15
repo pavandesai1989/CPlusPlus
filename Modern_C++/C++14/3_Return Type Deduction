@@ -2,6 +2,16 @@
 RETURN TYPE DEDUCTION (C++14)
 =========================================
 
+5 Points to Remember
+--------------------
+
+1. Introduced in C++14.
+2. Uses `auto` as the return type.
+3. Compiler examines all return statements.
+4. All return statements must have the same type.
+5. Return type is deduced at compile time.
+
+
 What is Return Type Deduction?
 ------------------------------
 • Introduced in C++14.
@@ -10,6 +20,62 @@ What is Return Type Deduction?
 • Reduces boilerplate and improves readability.
 
 --------------------------------------------------
+
+#include <iostream>
+using namespace std;
+
+auto fun1(int a,int b)
+{
+    return a+b;
+}
+
+auto fun2(int& a)
+{
+    a++;
+    return a;//not returning the int ref here ***
+}
+int main() 
+{
+    int x=10;
+    int y= fun1(1,2);//3 correct 
+    cout<<y<<endl; //3 correct 
+    int& ref=fun2(x); //error  ***VVVIMP
+}
+
+
+How to fix ???
+auto& fun2(int& a)
+{
+    a++;
+    return a;
+}
+
+OR
+
+decltype(auto) fun2(int& a) ****VVVIMp
+{
+    a++;
+    return a;
+}
+
+
+*****VVVVIMp
+const int x = 10;
+auto y = x;
+
+What is the type of y?
+y is int, not const int. ******
+
+Reason:
+auto drops the top-level const when deducing the type.
+A copy of x is made.
+
+to preserve const 
+const int x = 10;
+
+decltype(auto) a = x;   // const int
+decltype(auto) b = (x); // const int&
+
 
 Why was it introduced?
 ----------------------
@@ -135,17 +201,13 @@ A. No. It is performed at compile time.
 30-Second Interview Answer
 --------------------------
 
-"Return Type Deduction was introduced in C++14. It allows the compiler to automatically deduce a function's return type from its return statements. The compiler examines all return statements, and they must all deduce to the same type. This reduces boilerplate code and makes generic and template-based code cleaner."
+"Return Type Deduction was introduced in C++14. It allows the compiler to automatically deduce a
+function's return type from its return statements. 
+The compiler examines all return statements, and 
+they must all deduce to the same type. This reduces boilerplate code and makes generic and template-based code cleaner."
 
 --------------------------------------------------
 
-5 Points to Remember
---------------------
 
-1. Introduced in C++14.
-2. Uses `auto` as the return type.
-3. Compiler examines all return statements.
-4. All return statements must have the same type.
-5. Return type is deduced at compile time.
 
 =========================================
