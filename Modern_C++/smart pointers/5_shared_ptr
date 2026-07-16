@@ -1,0 +1,339 @@
+=========================================
+std::shared_ptr (C++11)
+INTERVIEW NOTES
+=========================================
+1. What is std::shared_ptr?
+---------------------------
+std::shared_ptr is a C++11 smart pointer that allows
+multiple smart pointers to share ownership of the same object.
+The object is automatically destroyed when the last owner releases it.
+Header
+#include <memory>
+-----------------------------------------
+
+2. Why shared_ptr?
+------------------
+Use unique_ptr when there is only one owner.
+Use shared_ptr when multiple objects need to own the same resource.
+
+Example
+Employee object used by multiple departments.
+
+        Employee
+        /   |   \
+      HR   IT  Payroll
+
+All three departments use the same Employee object.
+-----------------------------------------
+
+3. Simple Example
+-----------------
+
+auto emp = make_shared<Employee>();
+
+shared_ptr<Employee> hr = emp;
+shared_ptr<Employee> it = emp;
+shared_ptr<Employee> payroll = emp;
+
+All point to the SAME object.
+Reference Count = 4
+
+emp
+hr
+it
+payroll
+
+When the last shared_ptr is destroyed,
+Employee is automatically deleted.
+
+-----------------------------------------
+
+4. Reference Counting
+---------------------
+
+Every copy increases the reference count.
+
+shared_ptr<int> p1 = make_shared<int>(10);
+
+Reference Count = 1
+
+shared_ptr<int> p2 = p1;
+
+Reference Count = 2
+
+shared_ptr<int> p3 = p2;
+
+Reference Count = 3
+
+When one owner goes away
+
+p2.reset();
+
+Reference Count = 2
+
+When count becomes zero
+
+Object is deleted automatically.
+
+-----------------------------------------
+
+5. Control Block
+----------------
+
+shared_ptr internally maintains a Control Block.
+
+It stores
+
+• Reference count
+• Weak pointer count
+• Custom deleter (if any)
+
+Conceptually
+
+shared_ptr ----\
+                \
+                 Control Block -----> Object
+                /
+shared_ptr ----/
+
+-----------------------------------------
+
+6. make_shared()
+----------------
+
+Preferred
+auto p = make_shared<Employee>();
+
+Avoid
+shared_ptr<Employee> p(new Employee);
+
+Why?
+• Faster (single allocation)
+• Exception safe
+• Cleaner
+
+-----------------------------------------
+
+7. Common Member Functions
+--------------------------
+
+use_count()
+Returns current reference count.
+cout << p.use_count();
+
+------------------------
+
+get()
+Returns raw pointer.
+Employee* raw = p.get();
+Ownership remains with shared_ptr.
+
+------------------------
+
+reset()
+Releases ownership.
+
+p.reset();
+Reference count decreases.
+
+If count becomes zero,
+object is destroyed.
+
+------------------------
+
+operator*
+
+Access object.
+
+cout << *p;
+
+------------------------
+
+operator->
+
+Access members.
+
+p->display();
+
+-----------------------------------------
+
+8. Copy vs Move
+---------------
+
+Copy
+shared_ptr<int> p2 = p1;
+
+✔ Allowed
+Reference count increases.
+
+Move
+shared_ptr<int> p2 = std::move(p1);
+
+Ownership transferred.
+Reference count unchanged.
+
+p1 becomes nullptr.
+
+-----------------------------------------
+
+9. Thread Safety
+----------------
+
+Reference count updates are thread-safe.
+
+Different threads can safely copy/destroy shared_ptr.
+
+Accessing the managed object is NOT thread-safe.
+
+Protect shared data using mutex if needed.
+
+-----------------------------------------
+
+10. Circular Reference Problem**********
+------------------------------
+
+class A
+{
+    shared_ptr<B> b;
+};
+
+class B
+{
+    shared_ptr<A> a;
+};
+
+A and B keep each other alive forever.
+
+Reference count never becomes zero.
+
+Memory leak occurs.
+
+-----------------------------------------
+
+11. Solution : weak_ptr
+-----------------------
+
+Replace one shared_ptr with weak_ptr.
+
+class A
+{
+    shared_ptr<B> b;
+};
+
+class B
+{
+    weak_ptr<A> a;
+};
+
+Now
+
+Reference count reaches zero.
+
+Objects are destroyed correctly.
+
+-----------------------------------------
+
+12. shared_ptr vs unique_ptr
+----------------------------
+
+unique_ptr
+
+• One owner
+• No reference counting
+• Faster
+• Cannot copy
+• Can move
+
+shared_ptr
+
+• Multiple owners
+• Reference counting
+• Slight overhead
+• Copy allowed
+• Move allowed
+
+-----------------------------------------
+
+13. Real-Time Use Cases
+-----------------------
+
+• Shared Employee object
+• Shared configuration object
+• Shared cache
+• Shared database connection
+• Shared game texture/model
+• Shared GUI widgets
+
+-----------------------------------------
+
+14. Interview Questions
+-----------------------
+
+Q. What is shared_ptr?
+
+A smart pointer that allows multiple owners of the same object using reference counting.
+
+-----------------------------------------
+
+Q. When should you use shared_ptr?
+
+When multiple objects need shared ownership of the same resource.
+
+-----------------------------------------
+
+Q. What is use_count()?
+
+Returns the number of shared_ptr objects currently owning the resource.
+
+-----------------------------------------
+
+Q. Why make_shared()?********
+
+• Single memory allocation
+• Faster
+• Exception safe
+
+-----------------------------------------
+
+Q. Why is shared_ptr slower than unique_ptr?
+
+Because it maintains a control block and updates a reference count.
+
+-----------------------------------------
+
+Q. Is shared_ptr thread-safe?
+
+Reference counting is thread-safe.
+Access to the managed object is NOT.
+
+-----------------------------------------
+
+Q. What is the biggest problem with shared_ptr?*******
+Circular references.
+Solved using weak_ptr.
+
+-----------------------------------------
+
+30-Second Interview Answer
+
+std::shared_ptr is a C++11 smart pointer that enables multiple smart pointers to 
+share ownership of the same object. It maintains a reference count in a control block. 
+Every copy increments the count, and every destruction or reset decrements it. 
+When the reference count reaches zero, the object is automatically deleted. 
+It is commonly used when multiple objects need shared ownership, while weak_ptr is used to avoid circular references.
+
+=========================================
+QUICK REVISION
+=========================================
+
+• Multiple ownership
+• Reference counting
+• Control block
+• use_count()
+• make_shared() preferred
+• Copy ✔
+• Move ✔
+• reset()
+• Thread-safe reference counting
+• Circular reference → weak_ptr
+• Slower than unique_ptr
