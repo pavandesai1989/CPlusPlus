@@ -8,8 +8,11 @@ INTERVIEW NOTES
 if constexpr is a C++17 feature that allows compile-time conditional branching.
 
 Unlike a normal if statement, only the branch whose condition evaluates to true at compile time is compiled.
-
 The other branch is discarded by the compiler.
+
+if constexpr is a compile-time conditional introduced in C++17. 
+If the condition evaluates to true or false at compile time, the compiler discards the unused branch before compilation. 
+This is especially useful in template programming because the discarded branch does not need to be valid for the current type.
 
 Syntax
 
@@ -23,6 +26,60 @@ else
 }
 
 -----------------------------------------
+This is what the compiler actually "sees"
+
+You write one function:
+
+template<typename T>
+void print(T x)
+{
+    if constexpr (std::is_pointer_v<T>)
+        cout << *x;
+    else
+        cout << x;
+}
+
+For print(5) the compiler effectively generates:
+
+void print(int x)
+{
+    cout << x;
+}
+
+For print(&a) it effectively generates:
+
+void print(int* x)
+{
+    cout << *x;
+}
+
+*******
+how it was handled before c++17???
+Before C++17: Template Specialization
+template<typename T>
+struct Printer
+{
+    static void print(T val)
+    {
+        cout << val.length();
+    }
+};
+
+template<>
+struct Printer<int>
+{
+    static void print(int val)
+    {
+        cout << val;
+    }
+};
+
+int main()
+{
+    Printer<int>::print(10);
+    Printer<string>::print("Pavan");
+}
+*****
 
 2. Why was it introduced?
 
