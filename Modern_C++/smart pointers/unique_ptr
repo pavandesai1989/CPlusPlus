@@ -1,0 +1,286 @@
+=========================================
+std::unique_ptr (C++11)
+INTERVIEW NOTES
+=========================================
+
+1. What is std::unique_ptr?
+
+std::unique_ptr is a C++11 smart pointer that provides
+exclusive ownership of a dynamically allocated object and
+automatically deletes it when it goes out of scope (RAII).
+
+-----------------------------------------
+
+2. Why unique_ptr?
+
+Problems with raw pointers
+
+• Memory leaks
+• Dangling pointers
+• Double deletion
+• Exception safety
+
+unique_ptr automatically manages memory using RAII.
+
+-----------------------------------------
+
+3. Key Properties
+
+• Exclusive ownership
+• Cannot be copied
+• Can be moved
+• Automatic cleanup (RAII)
+• Lightweight (no reference counting)
+
+-----------------------------------------
+
+4. Declaration
+
+#include <memory>
+
+unique_ptr<int> p(new int(10));
+
+Preferred (C++14)
+
+auto p = make_unique<int>(10);
+
+-----------------------------------------
+
+5. Copy vs Move
+
+Copy ❌
+
+unique_ptr<int> p2 = p1;    // ERROR
+
+Move ✔
+
+unique_ptr<int> p2 = std::move(p1);
+
+After move
+
+p1 == nullptr
+p2 owns the resource
+
+-----------------------------------------
+
+6. Why copy is deleted?
+
+unique_ptr provides exclusive ownership.
+
+Allowing copy would create two owners,
+leading to double deletion.
+
+-----------------------------------------
+
+7. Why move is allowed?
+
+Move transfers ownership from one unique_ptr
+to another while ensuring there is only one owner.
+
+-----------------------------------------
+
+8. Member Functions
+
+get()
+
+Returns raw pointer.
+Ownership unchanged.
+
+release()
+
+Releases ownership.
+Returns raw pointer.
+
+⚠ Caller must delete manually.
+
+reset()
+
+Deletes current object and optionally manages a new one.
+
+reset();
+
+Deletes object and becomes nullptr.
+
+swap()
+
+Exchanges ownership.
+
+operator*
+
+Dereference.
+
+operator->
+
+Access members.
+
+operator bool
+
+Checks whether pointer is valid.
+
+-----------------------------------------
+
+9. get() vs release()
+
+get()
+
+✔ Returns raw pointer
+✔ Ownership retained
+
+release()
+
+✔ Returns raw pointer
+✔ Ownership released
+✔ Manual delete required
+
+-----------------------------------------
+
+10. make_unique()
+
+Introduced in C++14.
+
+Preferred over new because
+
+• Cleaner
+• Exception safe
+• Avoids explicit new
+
+-----------------------------------------
+
+11. Custom Deleter
+
+Used when delete is not the correct cleanup.
+
+Examples
+
+FILE*      → fclose()
+Socket     → close()
+HANDLE     → CloseHandle()
+
+Example
+
+auto deleter = [](FILE* fp)
+{
+    fclose(fp);
+};
+
+unique_ptr<FILE, decltype(deleter)>
+file(fopen("a.txt","r"), deleter);
+
+Why decltype?
+
+Every lambda has a unique compiler-generated type.
+
+-----------------------------------------
+
+12. Passing unique_ptr to Functions
+
+Read Only
+
+void foo(const unique_ptr<T>& p);
+
+Modify Object
+
+void foo(unique_ptr<T>& p);
+
+Take Ownership
+
+void foo(unique_ptr<T> p);
+
+foo(std::move(ptr));
+
+If function only needs the object,
+prefer passing T* or T& instead of unique_ptr.
+
+-----------------------------------------
+
+13. unique_ptr vs shared_ptr
+
+unique_ptr
+
+• Single owner
+• No reference counting
+• Faster
+• Default choice
+
+shared_ptr
+
+• Multiple owners
+• Reference counting
+• More overhead
+
+-----------------------------------------
+
+14. When to Use
+
+✔ Default smart pointer
+✔ Exclusive ownership
+✔ RAII
+✔ Factory functions
+✔ Resource management
+
+-----------------------------------------
+
+15. Interview Questions
+
+Q. Why is unique_ptr non-copyable?
+
+Exclusive ownership prevents multiple owners and double deletion.
+
+-----------------------------------------
+
+Q. Why is move allowed?
+
+Ownership can be transferred safely while maintaining a single owner.
+
+-----------------------------------------
+
+Q. get() vs release()?
+
+get() returns the raw pointer without releasing ownership.
+
+release() returns the raw pointer and releases ownership.
+The caller must delete it manually.
+
+-----------------------------------------
+
+Q. Why make_unique?
+
+Cleaner, exception-safe, and preferred over explicit new.
+
+-----------------------------------------
+
+Q. Why custom deleter?
+
+Some resources require cleanup other than delete,
+such as FILE*, sockets, or OS handles.
+
+-----------------------------------------
+
+Q. Why is the constructor explicit?
+
+To prevent accidental implicit ownership transfer
+from raw pointers.
+
+-----------------------------------------
+
+30-Second Interview Answer
+
+std::unique_ptr is a C++11 smart pointer that provides exclusive ownership of a 
+dynamically allocated object. It automatically releases memory using RAII, cannot be copied, 
+but can be moved to transfer ownership. It is lightweight because it has no reference counting and 
+is the default smart pointer whenever shared ownership is not required.
+
+=========================================
+QUICK REVISION
+=========================================
+
+• Exclusive ownership
+• No copy, only move
+• RAII
+• make_unique() preferred
+• get() → raw pointer
+• release() → ownership released
+• reset() → delete + replace
+• Custom deleter
+• Faster than shared_ptr
+• Default smart pointer
