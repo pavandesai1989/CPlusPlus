@@ -1,0 +1,114 @@
+=========================================
+SMART POINTERS (C++11)
+INTERVIEW CHECKLIST
+=========================================
+
+1. Why Smart Pointers?
+- Problems with raw pointers
+- Memory leaks
+- Exception safety
+- RAII
+
+-----------------------------------------
+
+2. std::unique_ptr
+
+- Exclusive ownership
+- Cannot be copied
+- Can be moved
+- Move constructor
+- Move assignment
+- release()
+- reset()
+- get()
+- Custom deleter
+- make_unique (C++14)
+
+Must Know
+- Why copy is deleted?
+- Why move is allowed?
+- Difference between reset() and release()?
+
+-----------------------------------------
+
+3. std::shared_ptr
+
+- Shared ownership
+- Reference counting
+- Control block
+- use_count()
+- reset()
+- get()
+- make_shared()
+
+Must Know
+- How reference counting works
+- What is stored in the control block?
+- Why make_shared is preferred?
+- Thread safety of shared_ptr
+
+-----------------------------------------
+
+4. std::weak_ptr
+
+- Non-owning reference
+- Does not increase reference count
+- lock()
+- expired()
+- reset()
+
+Must Know
+- Why weak_ptr?
+- Circular reference problem
+- lock() vs expired()
+
+-----------------------------------------
+
+5. Comparison
+
+unique_ptr vs shared_ptr
+
+- Ownership
+- Copy
+- Move
+- Performance
+- Memory overhead
+- Use cases
+
+-----------------------------------------
+
+6. Frequently Asked Interview Questions
+
+✓ Why smart pointers?
+
+✓ RAII
+
+✓ unique_ptr vs shared_ptr
+
+✓ Why is unique_ptr non-copyable?
+
+✓ How does shared_ptr work internally?
+
+✓ What is the control block?
+
+✓ What is reference counting?
+
+✓ Why is weak_ptr needed?
+
+✓ Circular dependency
+
+✓ make_shared vs new
+
+✓ make_unique vs new
+
+✓ reset() vs release()
+
+✓ get() vs release()
+
+✓ Can shared_ptr manage arrays?
+
+✓ shared_ptr thread safety
+
+✓ Custom deleter
+
+✓ When should you use each smart pointer?
