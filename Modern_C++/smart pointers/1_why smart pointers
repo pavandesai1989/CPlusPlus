@@ -1,0 +1,116 @@
+1. Why Smart Pointers?
+- Problems with raw pointers
+- Memory leaks
+- Exception safety
+- RAII
+
+=========================================
+1. WHY SMART POINTERS?
+=========================================
+
+Problem Before C++11
+
+Memory was managed manually using raw pointers.
+
+Example
+
+int* p = new int(10);
+
+// Forgot delete
+
+Memory Leak
+
+-----------------------------------------
+
+Problems with Raw Pointers *************
+
+• Memory leaks
+• Dangling pointers
+• Double deletion
+• Exception safety issues
+• Unclear ownership
+
+-----------------------------------------
+
+Memory Leak
+
+int* p = new int(10);
+
+// delete p;  <-- Forgotten
+
+Allocated memory is never released.
+
+-----------------------------------------
+
+Dangling Pointer
+
+int* p = new int(10);
+
+delete p;
+
+cout << *p;    // Undefined Behaviour
+
+Pointer still exists but points to freed memory.
+
+-----------------------------------------
+
+Double Delete
+
+int* p = new int(10);
+
+delete p;
+delete p;      // Undefined Behaviour
+
+Memory is freed twice.
+
+-----------------------------------------
+
+Exception Safety
+
+void func()
+{
+    int* p = new int(10);
+
+    throw runtime_error("Error");
+
+    delete p;      // Never executed
+}
+
+Memory leak occurs because an exception skips delete.
+
+-----------------------------------------
+
+Solution
+
+C++11 introduced Smart Pointers.
+
+Smart pointers automatically release memory when the owning object goes out of scope.*******
+
+They follow the RAII principle.
+
+-----------------------------------------
+
+RAII (Resource Acquisition Is Initialization)**************
+
+Resource is acquired in the constructor.
+
+Resource is released automatically in the destructor.
+
+Example
+
+{
+    unique_ptr<int> p = make_unique<int>(10);
+
+}   // Destructor automatically frees memory
+
+No explicit delete required.
+
+-----------------------------------------
+
+Advantages
+
+• Automatic memory management
+• No memory leaks
+• Exception safe
+• Clear ownership
+• Less error-prone
