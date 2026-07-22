@@ -1,0 +1,122 @@
+=========================================================
+MEMBER FUNCTION THREAD (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+std::thread can execute a member function of a class.
+
+To create such a thread, pass:
+
+1. Pointer to the member function
+2. Pointer (or reference) to the object
+
+---------------------------------------------------------
+
+Syntax
+
+thread t(&ClassName::memberFunction, &object);
+
+---------------------------------------------------------
+
+Example
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+class Test
+{
+public:
+    void display()
+    {
+        cout << "Member function executed\n";
+    }
+};
+
+int main()
+{
+    Test obj;
+
+    thread t(&Test::display, &obj);
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+Member function executed
+
+---------------------------------------------------------
+
+How It Works
+
+thread t(&Test::display, &obj);
+
+&Test::display
+→ Pointer to member function.
+
+&obj
+→ Object on which the member function is invoked.
+
+Equivalent to:
+
+obj.display();
+
+executed in a separate thread.
+
+---------------------------------------------------------
+
+Passing Arguments to Member Function
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+class Test
+{
+public:
+    void print(int x)
+    {
+        cout << x << endl;
+    }
+};
+
+int main()
+{
+    Test obj;
+
+    thread t(&Test::print, &obj, 100);
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+100
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Use &ClassName::memberFunction.
+✓ Pass the object pointer/reference as the first argument after the function pointer.
+✓ Additional arguments follow normally.
+✓ Don't forget to call join() or detach().
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"To run a member function in a separate thread, pass a pointer to the member function followed by the object pointer (or reference) to std::thread."
+
+---------------------------------------------------------
+
+Memory Trick
+
+thread t(&Class::Function, &object, args...);
