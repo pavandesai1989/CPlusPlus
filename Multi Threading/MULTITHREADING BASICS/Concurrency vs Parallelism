@@ -1,0 +1,88 @@
+=========================================================
+CONCURRENCY vs PARALLELISM (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Concurrency:
+Multiple tasks make progress during the same time period.
+The CPU switches between tasks (interleaving execution).
+
+Parallelism:
+Multiple tasks execute at the exact same time using multiple CPU cores.
+
+---------------------------------------------------------
+
+Key Differences
+
+| Concurrency | Parallelism |
+|-------------|-------------|
+| Multiple tasks progress together | Multiple tasks execute simultaneously |
+| May use a single CPU core | Requires multiple CPU cores |
+| Achieved by context switching | Achieved by running on different cores |
+| Improves responsiveness | Improves performance |
+
+---------------------------------------------------------
+
+Example
+
+Concurrency (Single Core)
+
+CPU
+
+Task A
+ ↓
+Task B
+ ↓
+Task A
+ ↓
+Task B
+
+(The CPU rapidly switches between tasks.)
+
+---------------------------------------------------------
+
+Parallelism (Multi Core)
+
+Core 1              Core 2
+
+Task A            Task B
+
+(Both execute simultaneously.)
+
+---------------------------------------------------------
+
+Real-world Examples
+
+Concurrency
+
+✓ Web browser
+- UI thread
+- Download thread
+- Rendering thread
+
+(OS switches between threads on a single core.)
+
+Parallelism
+
+✓ Image processing
+✓ Video encoding
+✓ Matrix multiplication
+
+(Work is divided across multiple CPU cores.)
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Concurrency is about managing multiple tasks.
+✓ Parallelism is about executing multiple tasks simultaneously.
+✓ Parallelism is a type of concurrency.
+✓ Modern multicore systems often use both.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"Concurrency means multiple tasks make progress together by interleaving execution, while parallelism means multiple tasks execute at the same time on different CPU cores."
