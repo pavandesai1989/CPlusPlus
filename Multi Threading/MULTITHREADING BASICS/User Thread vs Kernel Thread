@@ -1,0 +1,76 @@
+=========================================================
+USER THREAD vs KERNEL THREAD (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+User Thread:
+- Managed entirely by a user-level thread library.
+- Kernel is unaware of these threads.
+
+Kernel Thread:
+- Managed directly by the operating system kernel.
+- OS schedules and executes these threads.
+
+---------------------------------------------------------
+
+Key Differences
+
+| User Thread | Kernel Thread |
+|-------------|---------------|
+| Managed by thread library | Managed by OS kernel |
+| Faster to create | Slower to create |
+| Faster context switch | Slower context switch |
+| Kernel doesn't know about threads | Kernel knows every thread |
+| One blocking call may block all threads | One blocked thread doesn't block others |
+| Limited parallelism | True parallel execution on multiple CPU cores |
+
+---------------------------------------------------------
+
+Advantages
+
+User Threads
+
+✓ Fast creation
+✓ Fast switching
+✓ Low overhead
+
+Kernel Threads
+
+✓ True parallel execution
+✓ Better scheduling
+✓ Better responsiveness
+✓ One blocked thread doesn't stop others
+
+---------------------------------------------------------
+
+Disadvantages
+
+User Threads
+
+✗ No true parallelism (in many implementations)
+✗ Blocking system call can block all threads
+
+Kernel Threads
+
+✗ Higher overhead
+✗ Slower creation and context switching
+
+---------------------------------------------------------
+
+C++ Interview Perspective
+
+Modern C++ std::thread typically maps to OS (kernel) threads.
+
+So when you create:
+
+std::thread t(func);
+
+you are usually creating a kernel thread managed by the operating system.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"User threads are managed by a user-level library, whereas kernel threads are managed and scheduled by the operating system. Modern C++ std::thread typically uses kernel threads."
