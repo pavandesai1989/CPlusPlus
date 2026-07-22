@@ -1,0 +1,84 @@
+=========================================================
+THREAD LIFECYCLE (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Thread lifecycle describes the different states a thread goes through from creation until termination.
+
+---------------------------------------------------------
+
+Thread States
+
+1. New (Created)
+----------------
+- Thread object is created.
+- Execution has not started.
+
+Example:
+std::thread t(func);
+
+---------------------------------------------------------
+
+2. Running
+----------
+- Thread starts executing after creation.
+- Executes the assigned function.
+
+---------------------------------------------------------
+
+3. Blocked / Waiting
+--------------------
+- Waiting for a resource or event.
+- Examples:
+  - Waiting for a mutex
+  - Waiting on a condition variable
+  - Sleeping (sleep_for)
+
+---------------------------------------------------------
+
+4. Ready (Runnable)
+-------------------
+- Ready to execute.
+- Waiting for CPU scheduling.
+
+---------------------------------------------------------
+
+5. Terminated
+-------------
+- Thread finishes execution.
+- Must call join() or detach() before destruction.
+
+---------------------------------------------------------
+
+Lifecycle Flow
+
+New
+ ↓
+Ready
+ ↓
+Running
+ ↓
+Blocked / Waiting
+ ↓
+Ready
+ ↓
+Running
+ ↓
+Terminated
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ A thread may move between Running and Waiting multiple times.
+✓ A terminated thread cannot be restarted.
+✓ Always call join() or detach() before the thread object is destroyed.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"A thread lifecycle consists of New, Ready, Running, Waiting/Blocked, 
+and Terminated states, representing the complete execution flow of a thread."
