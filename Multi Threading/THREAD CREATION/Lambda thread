@@ -1,0 +1,127 @@
+=========================================================
+LAMBDA THREAD (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+A lambda expression can be used directly as the thread function.
+
+Useful for short tasks without creating a separate function.
+
+---------------------------------------------------------
+
+Syntax
+
+thread t([]()
+{
+    // Thread code
+});
+
+---------------------------------------------------------
+
+Example
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+int main()
+{
+    thread t([]()
+    {
+        cout << "Hello from Lambda Thread\n";
+    });
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+Hello from Lambda Thread
+
+---------------------------------------------------------
+
+Lambda with Arguments (Capture)
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    thread t([x]()
+    {
+        cout << "Value = " << x << endl;
+    });
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+Value = 10
+
+---------------------------------------------------------
+
+Capture by Reference
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    thread t([&x]()
+    {
+        x++;
+    });
+
+    t.join();
+
+    cout << x << endl;
+}
+
+Output
+
+11
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Ideal for small thread tasks.
+✓ No separate function is required.
+✓ Supports variable capture by value ([x]) and by reference ([&x]).
+✓ Improves code readability for short operations.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"A lambda thread uses a lambda expression as the thread function, making it convenient for short, self-contained tasks."
+
+---------------------------------------------------------
+
+Memory Trick
+
+Normal Thread
+
+thread t(print);
+
+↓
+
+Lambda Thread
+
+thread t([]()
+{
+    // Task
+});
