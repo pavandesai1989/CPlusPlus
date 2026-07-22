@@ -1,0 +1,130 @@
+=========================================================
+PROCESS vs THREAD (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Process:
+A process is an independent program in execution with its own memory space and resources.
+
+Thread:
+A thread is the smallest unit of execution within a process. Multiple threads of the same process share the process resources.
+
+---------------------------------------------------------
+
+Key Differences
+
+| Process | Thread |
+|---------|---------|
+| Independent program | Smallest execution unit inside a process |
+| Has its own memory | Shares process memory |
+| Heavyweight | Lightweight |
+| Creation is slower | Creation is faster |
+| Context switch is expensive | Context switch is cheaper |
+| Communication uses IPC | Communication through shared memory |
+| Failure usually doesn't affect other processes | One thread can affect the entire process |
+
+---------------------------------------------------------
+
+Memory
+
+Each Process Has:
+- Separate Code
+- Separate Heap
+- Separate Stack
+- Separate Global Variables
+
+Threads of Same Process Share:
+- Code
+- Heap
+- Global Variables
+
+Each Thread Has Its Own:
+- Stack
+- Registers
+- Program Counter
+
+---------------------------------------------------------
+
+Real-world Example
+
+Google Chrome
+
+Each browser tab → Separate Process
+
+Inside one tab:
+- UI Thread
+- Network Thread
+- JavaScript Thread
+- Rendering Thread
+
+---------------------------------------------------------
+
+Advantages of Threads
+
+✓ Faster execution
+✓ Better CPU utilization
+✓ Lower memory usage
+✓ Faster communication (shared memory)
+✓ Improved responsiveness
+
+---------------------------------------------------------
+
+Disadvantages of Threads
+
+✓ Race conditions
+✓ Deadlocks
+✓ Synchronization complexity
+✓ One thread crash may terminate the process
+
+---------------------------------------------------------
+
+When to Use Process?
+
+- High isolation required
+- Better fault tolerance
+- Security
+- Independent applications
+
+Examples:
+- Chrome tabs
+- VS Code
+- Microsoft Word
+
+---------------------------------------------------------
+
+When to Use Threads?
+
+- Tasks share data
+- Better performance
+- Parallel execution
+
+Examples:
+- Web server handling requests
+- File download + UI
+- Game engine
+- Image processing
+
+---------------------------------------------------------
+
+Interview Answer (30 Seconds)
+
+"A process is an independent program with its own memory space, whereas a 
+thread is a lightweight execution unit inside a process. Threads share code, 
+heap, and global data but have their own stack and registers. Threads are faster to create 
+and communicate efficiently through shared memory, while processes provide better isolation and fault tolerance."
+
+---------------------------------------------------------
+
+Memory Trick
+
+Process
+→ Separate Memory
+→ Heavyweight
+→ IPC Communication
+
+Thread
+→ Shared Memory
+→ Lightweight
+→ Fast Communication
