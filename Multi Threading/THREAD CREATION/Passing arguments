@@ -1,0 +1,116 @@
+=========================================================
+PASSING ARGUMENTS TO std::thread (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Arguments can be passed to the thread function when creating a std::thread.
+
+The arguments are copied (or moved) into the new thread by default.
+
+---------------------------------------------------------
+
+Syntax
+
+thread t(functionName, arg1, arg2, ...);
+
+---------------------------------------------------------
+
+Example
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void print(int x)
+{
+    cout << "Value = " << x << endl;
+}
+
+int main()
+{
+    thread t(print, 10);
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+Value = 10
+
+---------------------------------------------------------
+
+Passing Multiple Arguments
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void add(int a, int b)
+{
+    cout << a + b << endl;
+}
+
+int main()
+{
+    thread t(add, 5, 10);
+
+    t.join();
+
+    return 0;
+}
+
+Output
+
+15
+
+---------------------------------------------------------
+
+Passing by Reference
+
+By default, arguments are copied.
+
+To pass by reference, use std::ref().
+
+#include <iostream>
+#include <thread>
+#include <functional>
+using namespace std;
+
+void increment(int& x)
+{
+    x++;
+}
+
+int main()
+{
+    int value = 10;
+
+    thread t(increment, ref(value));
+
+    t.join();
+
+    cout << value << endl;
+}
+
+Output
+
+11
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Arguments are passed when creating the thread.
+✓ By default, arguments are copied.
+✓ Use std::ref() to pass arguments by reference.
+✓ Use std::move() to transfer ownership of movable objects.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"Arguments are passed to std::thread through its constructor. By default they are copied; use std::ref() to pass by reference."
