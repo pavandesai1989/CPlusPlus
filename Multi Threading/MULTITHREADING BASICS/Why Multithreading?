@@ -1,0 +1,93 @@
+=========================================================
+WHY MULTITHREADING? (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Multithreading allows multiple threads to execute concurrently within the same process.
+
+It enables a program to perform multiple tasks simultaneously while sharing the same memory.
+
+---------------------------------------------------------
+
+Why Do We Need Multithreading?
+
+Without Multithreading:
+
+- Only one task executes at a time.
+- CPU may remain idle while waiting for I/O.
+- Application becomes slow and unresponsive.
+
+With Multithreading:
+
+- Multiple tasks run concurrently.
+- Better CPU utilization.
+- Faster execution.
+- Improved responsiveness.
+
+---------------------------------------------------------
+
+Real-world Examples
+
+1. Web Browser
+- One thread handles UI.
+- One thread downloads data.
+- One thread renders web pages.
+
+2. Music Player
+- One thread plays music.
+- One thread updates the UI.
+- One thread downloads the next song.
+
+3. Game Engine
+- Rendering thread
+- Physics thread
+- AI thread
+- Audio thread
+
+4. Web Server
+- Multiple client requests handled in parallel.
+
+---------------------------------------------------------
+
+Advantages
+
+✓ Better CPU utilization
+✓ Improved application responsiveness
+✓ Parallel execution of independent tasks
+✓ Higher throughput
+✓ Shared memory makes communication efficient
+✓ Lower memory usage than multiple processes
+
+---------------------------------------------------------
+
+Disadvantages
+
+✗ Race conditions
+✗ Deadlocks
+✗ Synchronization overhead
+✗ More difficult debugging
+
+---------------------------------------------------------
+
+Interview Answer (30 Seconds)
+
+"Multithreading is used to execute multiple tasks concurrently within the same process. 
+It improves CPU utilization, increases performance, keeps applications responsive, 
+and allows threads to share memory efficiently. It is commonly used in browsers, game engines, web servers, and GUI applications."
+
+---------------------------------------------------------
+
+Memory Trick
+
+Without Threads
+→ One Task at a Time
+→ Slow
+→ CPU Often Idle
+
+With Threads
+→ Multiple Tasks Together
+→ Faster
+→ Better CPU Utilization
+→ Responsive Application
