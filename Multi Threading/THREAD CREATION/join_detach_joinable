@@ -1,0 +1,167 @@
+=========================================================
+join(), detach(), joinable() (C++ INTERVIEW NOTES)
+=========================================================
+
+---------------------------------------------------------
+1. join()
+---------------------------------------------------------
+
+Definition
+----------
+
+join() waits for the thread to finish execution.
+
+The calling thread (usually main) blocks until the worker thread completes.
+
+Syntax
+------
+
+t.join();
+
+Example
+
+#include <thread>
+#include <iostream>
+using namespace std;
+
+void task()
+{
+    cout << "Thread running\n";
+}
+
+int main()
+{
+    thread t(task);
+
+    t.join();      // Wait for thread
+
+    cout << "Main exits\n";
+}
+
+Output
+
+Thread running
+Main exits
+
+Interview Points
+
+✓ Waits for thread completion.
+✓ Synchronizes the main thread with the worker thread.
+✓ Can be called only once.
+
+---------------------------------------------------------
+
+2. detach()
+---------------------------------------------------------
+
+Definition
+----------
+
+detach() separates the thread from the thread object.
+
+The thread continues running independently.
+
+The main thread does NOT wait for it.
+
+Syntax
+------
+
+t.detach();
+
+Example
+
+thread t(task);
+
+t.detach();
+
+cout << "Main exits\n";
+
+Interview Points
+
+✓ Runs independently.
+✓ No synchronization with main thread.
+✓ Resources are released automatically after completion.
+✓ Use only when the thread doesn't need to communicate results back.
+
+---------------------------------------------------------
+
+3. joinable()
+---------------------------------------------------------
+
+Definition
+----------
+
+joinable() checks whether a thread can be joined or detached.
+
+Syntax
+------
+
+if(t.joinable())
+{
+    t.join();
+}
+
+Returns
+
+true  → Thread is active and can be joined/detached.
+
+false → Thread has already been joined, detached, or was never assigned.
+
+---------------------------------------------------------
+
+Example
+
+thread t(task);
+
+if(t.joinable())
+{
+    t.join();
+}
+
+---------------------------------------------------------
+
+Comparison
+
+| join() | detach() |
+|---------|----------|
+| Waits for thread | Doesn't wait |
+| Synchronizes threads | Runs independently |
+| Main blocks | Main continues immediately |
+| Use when result is needed | Use for background tasks |
+
+---------------------------------------------------------
+
+Important Rule
+
+Every std::thread must be either:
+
+✓ join()
+
+OR
+
+✓ detach()
+
+before the thread object is destroyed.
+
+Otherwise the program calls std::terminate().
+
+---------------------------------------------------------
+
+One-line Interview Answers
+
+join():
+"join() blocks the calling thread until the target thread finishes execution."
+
+detach():
+"detach() allows a thread to run independently without waiting for its completion."
+
+joinable():
+"joinable() checks whether a thread can still be joined or detached."
+
+---------------------------------------------------------
+
+Memory Trick
+
+join()      → Wait
+detach()    → Don't Wait
+joinable()  → Can I join/detach?
