@@ -1,0 +1,202 @@
+=========================================================
+MULTITHREADING (C++ INTERVIEW ROADMAP)
+=========================================================
+
+=========================================================
+1. MULTITHREADING BASICS ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ Process vs Thread
+✓ Why Multithreading?
+✓ Advantages & Disadvantages
+✓ Thread Lifecycle
+✓ Context Switching
+✓ User Thread vs Kernel Thread
+✓ Concurrency vs Parallelism
+
+---------------------------------------------------------
+
+=========================================================
+2. THREAD CREATION ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ std::thread
+✓ join()
+✓ detach()
+✓ joinable()
+✓ Passing arguments
+✓ Member function thread
+✓ Lambda thread
+
+---------------------------------------------------------
+
+=========================================================
+3. RACE CONDITION ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ What is Race Condition?
+✓ Example
+✓ Why it happens?
+✓ Data Race vs Race Condition
+✓ How to avoid it?
+
+---------------------------------------------------------
+
+=========================================================
+4. MUTEX ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ std::mutex
+✓ lock()
+✓ unlock()
+✓ try_lock()
+
+---------------------------------------------------------
+
+=========================================================
+5. LOCK GUARDS ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ std::lock_guard
+✓ RAII
+✓ Why better than lock()/unlock()
+
+---------------------------------------------------------
+
+=========================================================
+6. UNIQUE_LOCK ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ std::unique_lock
+✓ Difference from lock_guard
+✓ defer_lock
+✓ try_lock
+✓ unlock()/lock() again
+
+---------------------------------------------------------
+
+=========================================================
+7. DEADLOCK ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ What is Deadlock?
+✓ Example
+✓ Four Necessary Conditions
+✓ Prevention
+✓ std::lock()
+✓ std::scoped_lock (C++17)
+
+---------------------------------------------------------
+
+=========================================================
+8. CONDITION VARIABLE ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ Producer Consumer
+✓ wait()
+✓ notify_one()
+✓ notify_all()
+✓ Predicate version of wait()
+✓ Spurious Wakeup
+
+---------------------------------------------------------
+
+=========================================================
+9. ATOMIC ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ std::atomic
+✓ Why atomic?
+✓ Atomic vs Mutex
+✓ Atomic counter example
+✓ Atomic operations
+
+---------------------------------------------------------
+
+=========================================================
+10. THREAD SAFE SINGLETON ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ Meyers Singleton
+✓ Static local initialization
+✓ Why C++11 thread-safe
+
+---------------------------------------------------------
+
+=========================================================
+11. FUTURE & ASYNC ⭐⭐⭐⭐☆
+=========================================================
+
+✓ std::future
+✓ std::promise
+✓ std::async
+✓ launch::async
+✓ launch::deferred
+
+---------------------------------------------------------
+
+=========================================================
+12. THREAD POOL (CONCEPT) ⭐⭐⭐⭐☆
+=========================================================
+
+✓ What is Thread Pool?
+✓ Why use it?
+✓ Advantages
+✓ Real-world use cases
+
+---------------------------------------------------------
+
+=========================================================
+13. THREAD SAFETY ⭐⭐⭐⭐☆
+=========================================================
+
+✓ Thread-safe class
+✓ Immutable objects
+✓ Shared data protection
+✓ Critical Section
+
+---------------------------------------------------------
+
+=========================================================
+14. MEMORY MODEL (CONCEPT) ⭐⭐⭐⭐☆
+=========================================================
+
+✓ Happens-before relationship
+✓ Memory Ordering (basic idea)
+✓ Sequential Consistency
+✓ Acquire/Release (high level)
+
+(No deep memory_order interview preparation needed.)
+
+---------------------------------------------------------
+
+=========================================================
+15. COMMON INTERVIEW QUESTIONS ⭐⭐⭐⭐⭐
+=========================================================
+
+✓ Mutex vs Atomic
+✓ lock_guard vs unique_lock
+✓ join vs detach
+✓ Race Condition vs Deadlock
+✓ Deadlock vs Starvation
+✓ notify_one vs notify_all
+✓ Process vs Thread
+✓ Concurrency vs Parallelism
+✓ Why RAII in locking?
+✓ Spurious Wakeup
+✓ Thread-safe Singleton
+✓ When to use Mutex vs Condition Variable
+✓ Why is atomic faster than mutex?
+
+---------------------------------------------------------
+
+=========================================================
+16. OPTIONAL (IF TIME) ⭐⭐⭐☆☆
+=========================================================
+
+✓ shared_mutex
+✓ shared_lock
+✓ recursive_mutex
+✓ timed_mutex
+✓ call_once
+✓ once_flag
