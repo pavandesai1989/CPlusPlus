@@ -1,0 +1,78 @@
+=========================================================
+CONTEXT SWITCHING (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+Context switching is the process of the CPU saving the state of one thread/process 
+and loading the state of another so execution can continue.
+
+---------------------------------------------------------
+
+Why is Context Switching Needed?
+
+- Multiple threads/processes share a limited number of CPU cores.
+- The OS switches between them to give each a chance to execute.
+
+---------------------------------------------------------
+
+What is Saved?
+
+✓ Program Counter (PC)
+✓ CPU Registers
+✓ Stack Pointer
+✓ Thread/Process State
+
+---------------------------------------------------------
+
+Example
+
+Thread A is running.
+
+↓
+
+Time slice expires.
+
+↓
+
+OS saves Thread A's state.
+
+↓
+
+OS loads Thread B's state.
+
+↓
+
+Thread B starts running.
+
+---------------------------------------------------------
+
+Advantages
+
+✓ Enables multitasking
+✓ Better CPU utilization
+✓ Fair CPU scheduling
+
+---------------------------------------------------------
+
+Disadvantages
+
+✗ CPU time is spent saving/loading state.
+✗ Too many context switches reduce performance.
+✗ Process context switches are more expensive than thread context switches.
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Context switching is performed by the Operating System scheduler.
+✓ Thread context switching is faster because threads share the same address space.
+✓ Process context switching is slower due to separate memory spaces.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"Context switching is the OS mechanism of saving the execution state of one thread or 
+process and restoring another so multiple tasks can share the CPU."
