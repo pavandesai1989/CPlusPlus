@@ -1,0 +1,139 @@
+=========================================================
+std::thread (C++ INTERVIEW NOTES)
+=========================================================
+
+Definition
+----------
+
+std::thread is a C++11 class used to create and manage threads.
+
+Each std::thread object represents one thread of execution.
+
+Header:
+--------
+#include <thread>
+
+---------------------------------------------------------
+
+Basic Syntax
+
+std::thread t(functionName);
+
+---------------------------------------------------------
+
+Example
+
+#include <iostream>
+#include <thread>
+using namespace std;
+
+void print()
+{
+    cout << "Thread is running\n";
+}
+
+int main()
+{
+    thread t(print);
+
+    t.join();
+
+    return 0;
+}
+
+Output:
+
+Thread is running
+
+---------------------------------------------------------
+
+How It Works
+
+Main Thread
+
+↓
+
+Creates std::thread
+
+↓
+
+New thread starts executing print()
+
+↓
+
+Both threads execute concurrently
+
+↓
+
+join() waits for the thread to finish
+
+---------------------------------------------------------
+
+Creating Thread using Lambda
+
+thread t([]()
+{
+    cout << "Hello from thread\n";
+});
+
+t.join();
+
+---------------------------------------------------------
+
+Creating Thread for Member Function
+
+class Test
+{
+public:
+    void display()
+    {
+        cout << "Member function\n";
+    }
+};
+
+Test obj;
+
+thread t(&Test::display, &obj);
+
+t.join();
+
+---------------------------------------------------------
+
+Passing Arguments
+
+void print(int x)
+{
+    cout << x << endl;
+}
+
+thread t(print, 10);
+
+t.join();
+
+---------------------------------------------------------
+
+Important Member Functions
+
+✓ join()
+  Waits for thread completion.
+
+✓ detach()
+  Runs thread independently.
+
+✓ joinable()
+  Checks whether the thread can be joined or detached.
+
+---------------------------------------------------------
+
+Interview Points
+
+✓ Introduced in C++11.
+✓ Represents a single thread of execution.
+✓ Thread starts immediately after construction.
+✓ Must call join() or detach() before the thread object is destroyed.
+
+---------------------------------------------------------
+
+One-line Interview Answer
+
+"std::thread is a C++11 class that creates and manages a separate thread of execution, allowing tasks to run concurrently."
