@@ -1,0 +1,11 @@
+IPC (Inter-Process Communication) is a mechanism that allows two or more processes to exchange data and synchronize their execution. 
+Since processes have separate memory spaces, they need IPC to communicate.
+
+| IPC Mechanism      | Used For                                                |
+| ------------------ | ------------------------------------------------------- |
+| Pipes              | Communication between related processes (parent-child)  |
+| Named Pipes (FIFO) | Communication between unrelated processes               |
+| Shared Memory      | Fastest IPC, processes share a memory region            |
+| Message Queues     | Exchange structured messages                            |
+| Sockets            | Communication over a network or between local processes |
+| Signals            | Notify a process that an event has occurred             |
