@@ -6,6 +6,19 @@ A process is an independent program.
 A thread is the smallest unit of execution inside a process.
 Threads in the same process share memory (global variables, heap), but each thread has its own stack and program counter.
 
+process vs threads 
+
+| Process                                         | Thread                                            |
+| ----------------------------------------------- | ------------------------------------------------- |
+| Independent program in execution                | Smallest unit of execution within a process       |
+| Has its own memory space                        | Shares the process's memory                       |
+| Heavyweight                                     | Lightweight                                       |
+| Process creation is expensive                   | Thread creation is cheaper                        |
+| Communication is slower (IPC)                   | Communication is faster (shared memory)           |*******VVVVVIMP
+| One process crash usually doesn't affect others | A thread crash can terminate the entire process   |
+| Each process has its own resources              | Threads share resources like code, data, and heap |
+
+
 Example
 
 Imagine a web browser:
@@ -16,6 +29,17 @@ Thread 3 → Plays video
 Thread 4 → Renders the page
 
 All these threads run concurrently.
+
+Microsoft Word Multithreading Example
+
+Suppose you're typing a document.
+
+While you're typing, several things happen simultaneously:
+
+Thread 1: Handles keyboard input (typing text)
+Thread 2: Performs spell checking in the background
+Thread 3: Automatically saves the document every few minutes
+Thread 4: Updates the UI (cursor blinking, scrolling, menus)
 
 #include <iostream>
 #include <thread>
