@@ -1,0 +1,160 @@
+
+What is Deadlock?
+---------------------------------------------------------
+
+A deadlock occurs when two or more threads wait indefinitely
+for resources held by each other.
+
+As a result, none of the threads can continue execution.
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+mutex m1, m2;
+
+void thread1()
+{
+    m1.lock();
+    cout << "Thread 1 locked m1\n";
+
+    this_thread::sleep_for(chrono::seconds(1));
+
+    cout << "Thread 1 waiting for m2\n";
+    m2.lock();
+
+    cout << "Thread 1 acquired m2\n";
+
+    m2.unlock();
+    m1.unlock();
+}
+
+void thread2()
+{
+    m2.lock();
+    cout << "Thread 2 locked m2\n";
+
+    this_thread::sleep_for(chrono::seconds(1));
+
+    cout << "Thread 2 waiting for m1\n";
+    m1.lock();
+
+    cout << "Thread 2 acquired m1\n";
+
+    m1.unlock();
+    m2.unlock();
+}
+
+int main()
+{
+    thread t1(thread1);
+    thread t2(thread2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+}
+
+Thread 1 locked m1
+Thread 2 locked m2
+Thread 1 waiting for m2
+Thread 2 waiting for m1
+
+
+  =========================================================
+How to Avoid Deadlock
+=========================================================
+1. Lock mutexes in the same order.
+
+Example
+
+Thread 1
+
+lock(m1)
+lock(m2)
+
+Thread 2
+
+lock(m1)
+lock(m2)
+
+  ---------------------------------------------------------
+
+2. Use std::lock()
+
+std::lock(m1, m2);
+
+This safely locks multiple mutexes without deadlock.
+
+  =========================================================
+Interview Questions
+=========================================================
+
+Q. What is a deadlock?
+
+A deadlock is a situation where two or more threads wait
+indefinitely for resources held by each other, preventing
+all of them from making progress.
+
+---------------------------------------------------------
+
+Q. How can deadlock occur?
+
+When multiple threads acquire multiple mutexes in different
+orders and each waits for a mutex held by another thread.
+
+---------------------------------------------------------
+
+Q. How do you avoid deadlock?
+
+• Lock mutexes in the same order.
+• Use std::lock() for multiple mutexes.
+• Keep critical sections small.
+• Avoid unnecessary nested locks.
+
+---------------------------------------------------------
+
+Q. What is std::lock()?
+
+std::lock() locks multiple mutexes in a deadlock-free manner.
+
+=========================================================
+Interview Example
+=========================================================
+
+Wrong
+
+Thread 1
+
+lock(m1)
+lock(m2)
+
+Thread 2
+
+lock(m2)
+lock(m1)
+
+Deadlock
+
+---------------------------------------------------------
+
+Correct
+
+Thread 1
+
+lock(m1)
+lock(m2)
+
+Thread 2
+
+lock(m1)
+lock(m2)
+
+No Deadlock
+
+=========================================================
+
+  
