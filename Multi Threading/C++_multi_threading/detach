@@ -1,0 +1,198 @@
+JOIN NOTES
+0. Once a thread is started we wait for this thread to finish by calling join() function on thread object.
+1. Double join will result into program termination.
+2. If needed we should check thread is joinable before joining. ( using joinable() function)
+
+DETACH NOTES
+0. This is used to detach newly created thread from the parent thread.
+1. Always check before detaching a thread that it is joinable otherwise we may end up double detaching and 
+   double detach() will result into program termination.
+2. If we have detached thread and main function is returning then the detached thread execution is suspended.
+
+NOTES:
+Either join() or detach() should be called on thread object, otherwise during thread objects destructor it will terminate the program. 
+  Because inside destructor it checks if thread is still joinable? if yes then it terminates the program.
+
+
+=========================================================
+std::thread::detach() - Interview Notes
+=========================================================
+
+What is detach()?
+---------------------------------------------------------
+
+detach() separates the thread from the std::thread object.
+
+After detach(), the thread continues executing independently
+in the background.
+
+The calling thread does NOT wait for the detached thread to
+finish.
+
+Syntax
+---------------------------------------------------------
+
+t.detach();
+
+=========================================================
+Example
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <chrono>
+
+using namespace std;
+
+void worker()
+{
+    cout << "Worker Thread Started\n";
+
+    this_thread::sleep_for(chrono::seconds(2));
+
+    cout << "Worker Thread Finished\n";
+}
+
+int main()
+{
+    thread t(worker);
+
+    if (t.joinable())
+    {
+        t.detach();
+    }
+
+    cout << "Main Thread Finished\n";
+
+    return 0;
+}
+
+Possible Output
+---------------------------------------------------------
+
+Main Thread Finished
+
+OR
+
+Main Thread Finished
+Worker Thread Started
+
+(The detached thread may or may not finish before the process exits.)
+
+=========================================================
+Why do we use detach()?
+=========================================================
+
+• Run a background task independently.
+• Main thread does not wait.
+• Ownership of the thread is released.
+• Useful for fire-and-forget tasks.
+
+=========================================================
+joinable() and detach()
+=========================================================
+
+There is NO detachable() function in C++.
+
+Use joinable() to check whether a thread can be detached.**************
+
+Example
+
+thread t(worker);
+
+if (t.joinable())
+{
+    t.detach();
+}
+
+After detach()
+
+t.joinable();      // false
+
+=========================================================
+What happens after detach()?
+=========================================================
+
+Before detach()
+
+std::thread object  ------>  Worker Thread
+
+After detach()
+
+std::thread object          Worker Thread
+     (no ownership)      continues independently
+
+=========================================================
+Important Points
+=========================================================
+
+✔ A thread can be detached only if it is joinable.
+✔ detach() can be called only once.
+✔ After detach(), the thread runs independently.
+✔ After detach(), the std::thread object no longer owns the thread.
+✔ After detach(), joinable() returns false.
+✔ You cannot call join() after detach().
+✔ Calling detach() on a non-joinable thread throws std::system_error.
+
+=========================================================
+join() vs detach()
+=========================================================
+
+join()
+
+• Waits for the thread to finish.
+• Main thread blocks.
+• Used when the result of the thread is important.
+
+detach()
+
+• Does NOT wait.
+• Thread runs independently.
+• Used for background/fire-and-forget tasks.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q. What is detach()?
+
+detach() separates the thread from the std::thread object, allowing it to run independently in the background.
+
+---------------------------------------------------------
+
+Q. What happens after detach()?
+
+The thread continues executing independently, and the std::thread object no longer owns it.
+
+---------------------------------------------------------
+
+Q. Is there a detachable() function?
+
+No.
+
+C++ provides only joinable(). If joinable() returns true, the thread can be detached.
+
+---------------------------------------------------------
+
+Q. Can we call join() after detach()?
+
+No.
+
+After detach(), joinable() becomes false, and calling join() throws std::system_error.
+
+---------------------------------------------------------
+
+Q. When should we use detach()?
+
+Use detach() only for background tasks that do not need synchronization with the main thread.
+
+=========================================================
+Important Interview Note
+=========================================================
+
+• Prefer join() whenever possible.
+• Use detach() only when the thread is intentionally designed
+  to run independently and you do not need to wait for its
+  completion.
+
+=========================================================
