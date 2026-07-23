@@ -1,0 +1,72 @@
+=========================================================
+std::timed_mutex (C++11) - Interview Notes
+=========================================================
+
+What is std::timed_mutex?
+---------------------------------------------------------
+
+std::timed_mutex is similar to std::mutex, but it allows a
+thread to wait for a specified amount of time while trying
+to acquire the lock.
+
+If the mutex is not available within the timeout period,
+the lock attempt fails.
+
+=========================================================
+Common Functions
+=========================================================
+
+lock()
+    Wait indefinitely.
+
+try_lock()
+    Returns immediately.
+
+try_lock_for(duration)
+    Waits for the specified duration.
+
+try_lock_until(time_point)
+    Waits until the specified time.
+
+=========================================================
+Interview Question
+=========================================================
+
+Q. Difference between mutex and timed_mutex?
+
+std::mutex
+• Waits indefinitely for the lock.
+
+std::timed_mutex
+• Can wait for a specified timeout.
+• If the timeout expires, lock acquisition fails.
+
+=========================================================
+Real-World Use
+=========================================================
+
+Used when a thread should not wait forever for a lock.
+
+Example:
+• Database access
+• Network requests
+• Background tasks
+
+=========================================================
+Example
+=========================================================
+
+std::timed_mutex tm;
+
+if (tm.try_lock_for(std::chrono::seconds(2)))
+{
+    // Critical section
+
+    tm.unlock();
+}
+else
+{
+    // Timeout
+}
+
+=========================================================
