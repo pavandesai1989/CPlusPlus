@@ -1,0 +1,124 @@
+Thread Basics ⭐⭐⭐⭐⭐
+What is a thread?
+Process vs Thread
+Why use multithreading?
+How do you create a thread in C++?
+Different ways to create a thread.
+join() vs detach()
+What happens if you don't call join() or detach()?
+
+
+1. using function pointer 
+
+#include<stdio.h>
+#include<iostream>
+#include<thread>
+using namespace std;
+
+void foo(int x)
+{
+    cout<<"in function"<<" x is "<<x<<endl;
+}
+
+int main()
+{
+    thread t(foo,10);
+    t.join();
+
+    return 0;
+}
+
+2. Lambda 
+int main()
+{
+    auto f = [](int x){
+         cout<<"x is "<<x<<endl;
+    };
+    
+    thread t1(f,345);
+    t1.join();
+
+    return 0;
+}
+
+3.using functor:callable object 
+
+
+#include<stdio.h>
+#include<iostream>
+#include<thread>
+using namespace std;
+
+class base
+{
+  public:
+    void operator()(int x)
+    {
+        cout<<"x is "<<x<<endl;
+    }
+};
+
+int main()
+{
+
+    thread t1(base(),345);
+    t1.join();
+
+    return 0;
+}
+
+4. non static member function ***VVVVVVVIMp
+  
+
+#include<stdio.h>
+#include<iostream>
+#include<thread>
+using namespace std;
+
+class demo
+{
+  public:
+  void display(int x)
+  {
+      cout<<"calling display"<<" x is "<<x<<endl;
+  }
+};
+
+int main()
+{
+    demo ob;
+
+    thread t1(&demo::display,&ob,345);
+    t1.join();
+
+    return 0;
+}
+
+5.static member function : as this is static no ob needed here 
+    
+
+#include<stdio.h>
+#include<iostream>
+#include<thread>
+using namespace std;
+
+class demo
+{
+  public:
+  static void display(int x)
+  {
+      cout<<"calling display"<<" x is "<<x<<endl;
+  }
+};
+
+int main()
+{
+    demo ob;
+
+    thread t1(&demo::display,345);
+    t1.join();
+
+    return 0;
+}
+    
+  
