@@ -1,0 +1,18 @@
+What is Multithreading?
+
+Multithreading is the ability of a program to execute multiple threads concurrently within the same process.
+
+A process is an independent program.
+A thread is the smallest unit of execution inside a process.
+Threads in the same process share memory (global variables, heap), but each thread has its own stack and program counter.
+
+Example
+
+Imagine a web browser:
+
+Thread 1 → UI (responds to clicks)
+Thread 2 → Downloads files
+Thread 3 → Plays video
+Thread 4 → Renders the page
+
+All these threads run concurrently.
