@@ -1,0 +1,109 @@
+lock() blocks until the mutex becomes available, which can reduce responsiveness if the lock is held for a long time. 
+try_lock() avoids blocking by immediately returning true if the lock is acquired or false if it is not, 
+allowing the thread to perform other work instead of waiting.lock() is a blocking call.
+
+If another thread already owns the mutex, the calling thread waits indefinitely until the mutex becomes available.
+
+Why use try_lock()?
+
+try_lock() is non-blocking.
+
+If the mutex is busy, it immediately returns false, allowing the thread to continue doing other work.
+
+********************Real-Life Example
+
+Suppose two threads want to write to a log file.
+
+Using lock()
+Thread 1
+Writes log...
+
+Thread 2
+Waits...
+Waits...
+Waits...
+
+Thread 2 is blocked until Thread 1 finishes.
+
+Using try_lock()
+Thread 1
+Writes log...
+
+Thread 2
+Could not get lock.
+Continues processing other work.
+
+The application stays responsive because Thread 2 doesn't waste time waiting.
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+mutex m;
+
+void task(int id)
+{
+    if (m.try_lock())
+    {
+        cout << "Thread " << id << " acquired the lock\n";
+
+        this_thread::sleep_for(chrono::seconds(2));
+
+        cout << "Thread " << id << " releasing the lock\n";
+
+        m.unlock();
+    }
+    else
+    {
+        cout << "Thread " << id << " could not acquire the lock\n";
+    }
+}
+
+int main()
+{
+    thread t1(task, 1);
+    thread t2(task, 2);
+
+    t1.join();
+    t2.join();
+
+    return 0;
+}
+
+Few points to remember about try_lock():
+
+1. try_lock() attempts to lock the mutex and returns immediately.
+   • Returns true if the lock is acquired.
+   • Returns false if the mutex is already locked.
+
+2. try_lock() is a non-blocking operation.
+   If the mutex is unavailable, the calling thread does NOT wait.
+
+3. If try_lock() succeeds, the thread must eventually call unlock().
+
+4. If try_lock() fails, do NOT call unlock().
+
+5. Calling try_lock() again on the same std::mutex from the thread
+   that already owns it results in undefined behavior.
+   (std::mutex is non-recursive.)
+
+6. If you need the same thread to lock the mutex multiple times,
+   use std::recursive_mutex instead.
+
+=========================================================
+Interview Question*
+=========================================================
+
+Q. Difference between lock() and try_lock()?******
+
+lock()
+• Blocking.
+• Waits until the mutex becomes available.
+
+try_lock()
+• Non-blocking.
+• Returns immediately with true or false.
+
+=========================================================
