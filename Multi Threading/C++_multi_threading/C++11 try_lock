@@ -1,0 +1,137 @@
+Why is this useful?
+
+Imagine transferring money between two bank accounts.
+You must lock:
+Account A
+Account B
+
+If you lock only Account A and fail to lock Account B:
+You should not continue.
+You also should not keep Account A locked.
+
+std::try_lock() solves this automatically.
+
+std::try_lock() is used when we need to lock multiple mutexes. If it cannot lock all of them, it automatically ***
+releases any mutexes it has already locked, so we don't end up holding only a subset of the required locks.
+
+=========================================================
+std::try_lock() (C++11) - Interview Notes
+=========================================================
+
+What is std::try_lock()?
+---------------------------------------------------------
+
+std::try_lock() is a C++11 free function that attempts to
+lock multiple mutexes without blocking.
+
+It tries to lock each mutex one by one in the order provided.
+
+=========================================================
+Syntax
+=========================================================
+
+int result = std::try_lock(m1, m2, m3);
+
+=========================================================
+Return Value
+=========================================================
+
+Returns -1
+    -> All mutexes were successfully locked.
+
+Returns 0, 1, 2, ...
+    -> Zero-based index of the mutex that could not be locked.
+
+=========================================================
+How it Works
+=========================================================
+
+1. Attempts to lock each mutex in the given order.
+
+2. If all mutexes are locked successfully,
+   it returns -1.
+
+3. If locking any mutex fails,
+   it immediately unlocks all previously locked mutexes.
+
+4. If an exception occurs while locking,
+   all previously locked mutexes are unlocked before the
+   exception is rethrown.
+
+=========================================================
+Example
+=========================================================
+
+#include <iostream>
+#include <mutex>
+
+using namespace std;
+
+mutex m1, m2;
+
+int main()
+{
+    int result = std::try_lock(m1, m2);
+
+    if (result == -1)
+    {
+        cout << "Both mutexes locked successfully\n";
+
+        m1.unlock();
+        m2.unlock();
+    }
+    else
+    {
+        cout << "Failed to lock mutex index: "
+             << result << endl;
+    }
+
+    return 0;
+}
+
+=========================================================
+Important Points
+=========================================================
+
+✔ Introduced in C++11.
+✔ Used to lock multiple mutexes.
+✔ Non-blocking.
+✔ Returns -1 if all mutexes are locked.
+✔ Returns the zero-based index of the mutex that failed.
+✔ Automatically unlocks any previously locked mutexes if a
+  lock attempt fails.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q. What is std::try_lock()?
+
+std::try_lock() is a C++11 function that attempts to lock
+multiple mutexes without blocking. It returns -1 on success
+or the index of the mutex that could not be locked.
+
+---------------------------------------------------------
+
+Q. Why do we use std::try_lock()?
+
+To safely attempt locking multiple mutexes while avoiding
+holding a subset of locks if one of the lock attempts fails.
+
+---------------------------------------------------------
+
+Q. Difference between std::mutex::try_lock() and std::try_lock()?
+
+std::mutex::try_lock()
+
+• Member function.
+• Locks ONE mutex.
+• Returns bool.
+
+std::try_lock()
+
+• Free function.
+• Locks MULTIPLE mutexes.
+• Returns int (-1 on success).
+
+=========================================================
