@@ -1,0 +1,178 @@
+=========================================================
+std::thread::join() - Interview Notes
+=========================================================
+
+What is join()?
+---------------------------------------------------------
+
+join() waits for the associated thread to finish execution.
+
+The calling thread (usually the main thread) blocks until the worker thread completes.
+
+Syntax
+---------------------------------------------------------
+
+t.join();
+
+Example
+---------------------------------------------------------
+
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+void worker()
+{
+    cout << "Worker Thread\n";
+}
+
+int main()
+{
+    thread t(worker);
+
+    t.join();
+
+    cout << "Main Thread Finished\n";
+}
+
+Output
+---------------------------------------------------------
+
+Worker Thread
+Main Thread Finished
+
+=========================================================
+Why do we use join()?
+=========================================================
+
+• Waits for the worker thread to finish.
+• Ensures the thread completes before the program exits.
+• Prevents std::terminate() from being called.
+• Synchronizes the main thread with the worker thread.
+
+=========================================================
+joinable()
+=========================================================
+
+joinable() checks whether a std::thread object is associated
+with an active thread of execution.
+
+Syntax
+
+t.joinable();
+
+Returns
+
+true  -> Thread can be joined or detached.
+false -> Thread is not associated with any thread.
+
+Example
+
+thread t(worker);
+
+if (t.joinable())
+{
+    t.join();
+}
+
+After join()
+
+t.joinable()   // false
+
+After detach()
+
+t.joinable()   // false
+
+Default constructed thread
+
+thread t;
+
+t.joinable()   // false
+
+=========================================================
+What happens if join() is not called?
+=========================================================
+
+If a std::thread object is destroyed while it is still joinable,
+its destructor calls:
+
+std::terminate()
+
+and the program terminates abnormally.
+
+Example
+
+thread t(worker);
+
+// No join()
+// No detach()
+
+// Program ends -> std::terminate()
+
+=========================================================
+What happens internally?
+=========================================================
+
+Main Thread                 Worker Thread
+---------------------------------------------------------
+Create thread  ----------->  Starts executing
+
+Calls join()
+Blocks and waits  <--------  Finishes execution
+
+Main thread resumes
+
+=========================================================
+Important Points
+=========================================================
+
+✔ join() can be called only once.
+✔ After join(), the thread is no longer joinable.
+✔ After detach(), the thread is no longer joinable.
+✔ Always check joinable() before calling join().
+✔ Calling join() on a non-joinable thread throws std::system_error.
+✔ join() blocks the calling thread.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q. What is join()?
+
+join() blocks the calling thread until the associated worker thread finishes execution.
+
+---------------------------------------------------------
+
+Q. What is joinable()?
+
+joinable() checks whether a std::thread object owns an active thread that can be joined or detached.*****
+
+---------------------------------------------------------
+
+Q. Why do we use joinable()?
+
+To avoid calling join() or detach() on a non-joinable thread, which would throw a std::system_error.*********
+
+---------------------------------------------------------
+
+Q. Why do we use join()?
+
+To wait for a thread to finish and ensure it completes before the std::thread object is destroyed.
+
+---------------------------------------------------------
+
+Q. What happens if we don't call join() or detach()?
+
+The destructor of a joinable std::thread calls std::terminate(), causing abnormal program termination.
+
+---------------------------------------------------------
+
+Q. Does join() kill the thread?
+
+No.
+
+The worker thread runs until it finishes naturally.
+join() simply waits for it to complete.
+
+=========================================================
