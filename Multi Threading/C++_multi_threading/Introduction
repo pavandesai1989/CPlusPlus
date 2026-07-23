@@ -16,3 +16,26 @@ Thread 3 → Plays video
 Thread 4 → Renders the page
 
 All these threads run concurrently.
+
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+void task()
+{
+    cout << "Hello from Worker Thread\n";
+}
+
+int main()
+{
+    cout << "Main Thread Started\n";
+
+    thread t(task);   // Create a new thread
+
+    t.join();         // Wait for worker thread to finish
+
+    cout << "Main Thread Finished\n";
+
+    return 0;
+}
