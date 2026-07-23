@@ -1,0 +1,305 @@
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+int amount = 0;
+void addMoney()
+{
+    for (int i = 0; i < 100000; i++)
+    {
+        ++amount;    // Critical Section (Not Thread Safe)
+    }
+}
+
+int main()
+{
+    thread t1(addMoney);
+    thread t2(addMoney);
+
+    t1.join();
+    t2.join();
+
+    cout << "Amount = " << amount << endl;
+}
+
+output : Amount = 116339 expected is 200000
+
+***using mutex****
+#include <iostream>
+#include <thread>
+#include<mutex>
+
+using namespace std;
+
+int amount = 0;
+mutex m;
+void addMoney()
+{
+    for (int i = 0; i < 100000; i++)
+    {
+        m.lock();
+        ++amount;    // Critical Section (Not Thread Safe)
+        m.unlock();
+    }
+}
+
+int main()
+{
+    thread t1(addMoney);
+    thread t2(addMoney);
+
+    t1.join();
+    t2.join();
+
+    cout << "Amount = " << amount << endl;
+}
+
+
+=========================================================
+std::mutex - Interview Notes
+=========================================================
+
+What is a Mutex?
+---------------------------------------------------------
+
+Mutex (Mutual Exclusion) is a synchronization primitive used
+to protect shared resources from concurrent access.
+
+It ensures that only one thread can execute the critical
+section at a time.
+
+=========================================================
+Why do we need a Mutex?
+=========================================================
+
+When multiple threads access shared data simultaneously,
+a race condition can occur, leading to incorrect or
+unpredictable results.
+
+A mutex synchronizes access to shared resources and prevents
+race conditions.
+
+=========================================================
+Race Condition Example (Without Mutex)
+=========================================================
+
+#include <iostream>
+#include <thread>
+
+using namespace std;
+
+int amount = 0;
+
+void addMoney()
+{
+    for (int i = 0; i < 100000; i++)
+    {
+        ++amount;      // Critical Section
+    }
+}
+
+int main()
+{
+    thread t1(addMoney);
+    thread t2(addMoney);
+
+    t1.join();
+    t2.join();
+
+    cout << "Amount = " << amount << endl;
+}
+
+Expected Output
+
+Amount = 200000
+
+Possible Output
+
+Amount = 143767
+Amount = 187654
+Amount = 198521
+
+Reason
+
+++amount is NOT thread-safe.
+
+=========================================================
+Using Mutex
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+mutex m;
+int amount = 0;
+
+void addMoney()
+{
+    for (int i = 0; i < 100000; i++)
+    {
+        m.lock();
+
+        ++amount;
+
+        m.unlock();
+    }
+}
+
+int main()
+{
+    thread t1(addMoney);
+    thread t2(addMoney);
+
+    t1.join();
+    t2.join();
+
+    cout << "Amount = " << amount << endl;
+}
+
+Output
+
+Amount = 200000
+
+=========================================================
+Critical Section
+=========================================================
+
+A critical section is the part of the code that accesses or
+modifies shared data.
+
+Example
+
+m.lock();
+
+++amount;
+
+m.unlock();
+
+Only one thread should execute the critical section at a time.
+
+=========================================================
+How Mutex Works
+=========================================================
+
+Thread 1
+    |
+    |---- lock()
+    |
+Critical Section
+    |
+    |---- unlock()
+
+                Thread 2 waits
+
+After unlock(), Thread 2 acquires the mutex and enters the
+critical section.
+
+=========================================================
+How ++amount Works
+=========================================================
+
+++amount is NOT an atomic operation.
+
+Internally it performs:
+
+1. Read amount
+2. Increment value
+3. Write value back
+
+If two threads execute these steps simultaneously,
+some updates may be lost.
+
+=========================================================
+Syntax
+=========================================================
+
+std::mutex m;
+
+m.lock();
+
+// Critical Section
+
+m.unlock();
+
+=========================================================
+Important Points
+=========================================================
+
+✔ Include <mutex>.
+✔ Only one thread can own a mutex at a time.
+✔ Other threads block until the mutex is released.
+✔ Every lock() must have a matching unlock().
+✔ Forgetting unlock() may cause deadlocks.
+✔ Prefer std::lock_guard or std::unique_lock instead of
+  manual lock()/unlock().
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q. What is a mutex?
+
+A mutex (Mutual Exclusion) is a synchronization mechanism
+that allows only one thread at a time to access shared data,
+preventing race conditions.
+
+---------------------------------------------------------
+
+Q. Why do we need a mutex?
+
+To protect shared resources from concurrent access and ensure
+thread-safe execution.
+
+---------------------------------------------------------
+
+Q. What is a race condition?
+
+A race condition occurs when multiple threads access and
+modify shared data simultaneously without synchronization,
+resulting in unpredictable or incorrect results.
+
+---------------------------------------------------------
+
+Q. What is a critical section?
+
+A critical section is the portion of code that accesses
+shared resources and must be executed by only one thread at
+a time.
+
+---------------------------------------------------------
+
+Q. Why is ++amount not thread-safe?
+
+Because it performs three operations:
+
+1. Read
+2. Increment
+3. Write
+
+Multiple threads can interleave these operations, causing
+lost updates.
+
+---------------------------------------------------------
+
+Q. What are the disadvantages of mutex?
+
+• Locking introduces performance overhead.
+• Threads may block while waiting.
+• Incorrect locking can lead to deadlocks.
+
+=========================================================
+Most Asked Interview Question
+=========================================================
+
+Q. Why do we use lock_guard instead of calling lock() and
+unlock() manually?
+
+Because lock_guard automatically acquires the mutex when
+created and releases it when it goes out of scope, preventing
+forgotten unlock() calls and making the code exception-safe.
+
+=========================================================
