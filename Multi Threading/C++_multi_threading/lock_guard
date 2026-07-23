@@ -1,0 +1,120 @@
+=========================================================
+std::lock_guard (C++11) - Interview Notes
+=========================================================
+
+What is std::lock_guard?
+---------------------------------------------------------
+
+std::lock_guard is a C++11 RAII wrapper around a mutex.
+
+It automatically locks the mutex when the lock_guard object
+is created and automatically unlocks it when the object goes
+out of scope.
+
+=========================================================
+Why do we need lock_guard?
+=========================================================
+
+Using lock() and unlock() manually is error-prone.
+
+If unlock() is forgotten or an exception occurs before
+unlock(), the mutex remains locked, leading to deadlocks.
+
+lock_guard automatically releases the mutex.
+
+=========================================================
+Manual Locking
+=========================================================
+
+m.lock();
+
+// Critical Section
+
+m.unlock();
+
+=========================================================
+Using lock_guard
+=========================================================
+
+std::lock_guard<std::mutex> lock(m);
+
+// Critical Section
+
+// Automatically unlocks when 'lock' goes out of scope.
+
+=========================================================
+Example
+=========================================================
+
+#include <iostream>
+#include <thread>
+#include <mutex>
+
+using namespace std;
+
+mutex m;
+int counter = 0;
+
+void increment()
+{
+    for (int i = 0; i < 100000; i++)
+    {
+        lock_guard<mutex> lock(m);
+
+        ++counter;
+    }
+}
+
+int main()
+{
+    thread t1(increment);
+    thread t2(increment);
+
+    t1.join();
+    t2.join();
+
+    cout << counter << endl;
+}
+
+=========================================================
+Advantages
+=========================================================
+
+✔ Automatic locking and unlocking.
+✔ Exception-safe.
+✔ Prevents forgetting unlock().
+✔ Uses RAII.
+
+=========================================================
+Limitations
+=========================================================
+
+✘ Cannot unlock manually.
+✘ Cannot lock again.
+✘ Cannot transfer ownership.
+
+For these features, use std::unique_lock.
+
+=========================================================
+Interview Questions
+=========================================================
+
+Q. What is lock_guard?
+
+A lock_guard is a lightweight RAII wrapper that automatically
+locks a mutex on construction and unlocks it on destruction.
+
+---------------------------------------------------------
+
+Q. Why is lock_guard preferred over lock()/unlock()?
+
+Because it automatically releases the mutex, making the code
+safer and exception-safe.
+
+---------------------------------------------------------
+
+Q. What design principle does lock_guard use?
+
+RAII (Resource Acquisition Is Initialization).
+
+=========================================================
