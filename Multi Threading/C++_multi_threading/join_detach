@@ -1,0 +1,56 @@
+=========================================================
+JOIN NOTES
+=========================================================
+
+1. Once a thread is started, we wait for it to finish by calling join().
+
+2. join() blocks the calling thread until the worker thread completes.**********
+
+3. join() can be called only once.
+
+4. After join(), the thread becomes non-joinable.
+
+5. Always check joinable() before calling join().
+
+Example:
+
+if (t.joinable())
+    t.join();
+
+=========================================================
+DETACH NOTES
+=========================================================
+
+1. detach() separates the thread from the std::thread object.
+
+2. The detached thread continues executing independently.
+
+3. detach() can be called only once.
+
+4. Always check joinable() before calling detach().
+
+Example:
+
+if (t.joinable())
+    t.detach();
+
+5. After detach(), the thread becomes non-joinable.
+
+6. If the process exits (e.g., main() returns), all threads,
+   including detached threads, are terminated.
+
+=========================================================
+IMPORTANT NOTES
+=========================================================
+
+• Every std::thread object must be either joined or detached.
+
+• If neither join() nor detach() is called, the destructor of
+  std::thread checks whether the thread is still joinable().
+
+• If joinable() == true, the destructor calls std::terminate(),
+  causing abnormal program termination.
+
+• join() waits for the thread to finish.
+
+• detach() does not wait; the thread runs independently.
