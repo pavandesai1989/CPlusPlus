@@ -409,7 +409,8 @@ If not:
 14. INTERVIEW ONE-LINER
 =========================================
 
-std::unique_ptr is a smart pointer that provides exclusive ownership of a dynamically allocated object and automatically deletes it when it goes out of scope.
+std::unique_ptr is a smart pointer that provides exclusive ownership of a dynamically allocated object and 
+automatically deletes it when it goes out of scope.
 
 =========================================
 QUICK REVISION
