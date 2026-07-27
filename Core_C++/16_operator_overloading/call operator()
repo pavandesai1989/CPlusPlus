@@ -1,3 +1,5 @@
+operator() allows an object to behave like a function
+
 #include <iostream>
 using namespace std;
 
@@ -29,7 +31,20 @@ operator() overloads the function call operator.
 
 It allows an object to behave like a function.
 
-Objects overloading operator() are called Function Objects (Functors).
+Objects overloading operator() are called Function Objects (Functors). **********************
+Suppose you want a custom comparison for sorting.
+class Compare
+{
+public:
+    bool operator()(int a, int b)
+    {
+        return a > b;
+    }
+};
+
+Compare cmp;
+
+cout << cmp(10, 20);    // Calls cmp.operator()(10,20)
 
 =========================================
 FUNCTION CALL OPERATOR () INTERVIEW Q&A
@@ -53,6 +68,31 @@ calc.operator()(10,20);
 Q. Why use Functors instead of normal functions?
 
 - Can store state.****************
+#include <iostream>
+using namespace std;
+
+class Counter
+{
+private:
+    int count = 0;
+
+public:
+    void operator()()
+    {
+        ++count;
+        cout << "Called " << count << " times" << endl;
+    }
+};
+
+int main()
+{
+    Counter c;
+
+    c();
+    c();
+    c();
+}
+
 - Can be passed to STL algorithms.
 - Can be inlined by the compiler.
 
