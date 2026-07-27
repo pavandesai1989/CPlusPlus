@@ -1,3 +1,7 @@
+std::auto_ptr was deprecated because copying it transfers ownership instead of copying the pointer. 
+This unexpected behavior can leave the original pointer as nullptr, leading to bugs and undefined behavior. 
+It was replaced by std::unique_ptr, which disallows copying and requires explicit ownership transfer using std::move().
+
 =========================================================
 QUICK REVISION (30 Seconds) ⭐⭐⭐⭐⭐
 =========================================================
