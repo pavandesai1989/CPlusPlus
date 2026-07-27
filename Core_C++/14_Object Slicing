@@ -1,134 +1,212 @@
 =========================================================
-OBJECT SLICING - WHY IS IT A PROBLEM? ⭐⭐⭐⭐⭐
+OBJECT SLICING (INTERVIEW NOTES) ⭐⭐⭐⭐⭐
 =========================================================
 
-Definition
+DEFINITION
 ----------
 
 Object Slicing occurs when a Derived object is copied
 into a Base object by value.
 
-Only the Base part is copied.
+Only the Base-class portion is copied.
 
-The Derived-specific members and behavior are lost.
+The Derived-specific data and behavior are lost.
+
+=========================================================
+EXAMPLE
+=========================================================
+
 #include <iostream>
 using namespace std;
 
-class Shape
+class Employee
 {
 public:
-    virtual void draw()
+    string name;
+
+    Employee(string n) : name(n) {}
+
+    virtual void display()
     {
-        cout << "Drawing Shape" << endl;
+        cout << "Employee: " << name << endl;
     }
 
-    virtual ~Shape() = default;
+    virtual ~Employee() = default;
 };
 
-class Circle : public Shape
+class Manager : public Employee
 {
 public:
-    void draw() override
+    int teamSize;
+
+    Manager(string n, int size)
+        : Employee(n), teamSize(size) {}
+
+    void display() override
     {
-        cout << "Drawing Circle" << endl;
+        cout << "Manager: " << name
+             << ", Team Size: " << teamSize << endl;
     }
 };
 
 // Passed by VALUE -> Object Slicing
-void process(Shape s)
+void show(Employee emp)
 {
-    s.draw();
+    emp.display();
 }
 
 int main()
 {
-    Circle c;
+    Manager m("Alice", 10);
 
-    process(c);
+    show(m);
 
     return 0;
 }
-"Here, process() takes a Shape by value. When I pass a Circle object, 
-the compiler creates a new Shape object by copying only the base-class part of Circle. The derived Circle portion is discarded—this is object slicing. 
-Since s is now an actual Shape object,
-s.draw() calls Shape::draw() instead of Circle::draw(). To avoid object slicing, I would pass Shape by reference or pointer."
 
-
-Why does this work?
-
-With a reference:
-
-void process(Shape& s)
-
-No copy is created. The reference s refers to the original Circle object.
-
-Circle object
-      ▲
-      │
-Shape& s
-
-Since the actual object is still a Circle, the virtual function mechanism dispatches the call to:
-
-Circle::draw();
-
-
-Object slicing occurs when a derived object is copied into a base object by value.
-Only the base portion is copied, and the derived-specific state is discarded. 
-
-As a result, the copied object becomes a pure base object, 
-and virtual function calls resolve to the base implementation. 
-To avoid object slicing, always pass or store polymorphic objects using base class references or pointers.
+Output:
+Employee: Alice
 
 =========================================================
-When does Object Slicing occur?
+WHY DOES THIS HAPPEN?
+=========================================================
+
+Original Object
+
+Manager
+------------------------------
+name = Alice
+teamSize = 10
+------------------------------
+
+          Copy by Value
+                ↓
+
+Employee
+------------------------------
+name = Alice
+------------------------------
+
+Only the Employee part is copied.
+
+The Manager-specific data (teamSize) is discarded.
+
+Since emp is now an actual Employee object,
+
+emp.display()
+
+calls
+
+Employee::display()
+
+instead of
+
+Manager::display()
+
+=========================================================
+HOW TO AVOID OBJECT SLICING?
+=========================================================
+
+Pass by reference:
+
+void show(Employee& emp)
+{
+    emp.display();
+}
+
+No copy is created.
+
+Employee& refers to the original Manager object.
+
+Output:
+Manager: Alice, Team Size: 10
+
+=========================================================
+WHEN DOES OBJECT SLICING OCCUR?
 =========================================================
 
 ✓ Base b = derived;
 
-✓ Function(Base obj)
+✓ Function(Base obj);
 
-✓ Returning Base by value
+✓ Returning Base by value;
 
 ✓ Storing Derived objects in vector<Base>
 
 =========================================================
-How to avoid Object Slicing?
+HOW TO AVOID OBJECT SLICING?
 =========================================================
 
-Use
+Use:
 
 ✓ Base*
 
 ✓ Base&
 
-Instead of
+Instead of:
 
-Base object
+✗ Base object
+
+"In this example, Manager inherits from Employee and overrides the
+display() function.
+
+The function show() takes an Employee object by value.
+
+When I pass a Manager object to show(), the compiler creates a new
+Employee object by copying only the Employee portion of Manager.
+The Manager-specific part, such as teamSize, is discarded. This is
+called object slicing.
+
+Since the copied object is now an actual Employee object, the dynamic
+type becomes Employee. Therefore, even though display() is virtual,
+Employee::display() is invoked instead of Manager::display().
+
+The original Manager object is unaffected, so calling m.display()
+afterwards correctly invokes Manager::display().
+
+To avoid object slicing, I would pass the object by reference or
+pointer instead of by value."
 
 =========================================================
-Most Asked Interview Question
+MOST ASKED INTERVIEW QUESTION
 =========================================================
 
 Q. Why is Object Slicing dangerous?
 
 Answer:
 
-Object slicing removes the derived portion of an object
-when it is copied into a base object by value. As a
-result, derived data members are lost and runtime
-polymorphism no longer works because the copied object
-is now a pure Base object.***************************VVVVVVIMP
+Object slicing copies only the base-class portion of a
+derived object, discarding all derived-specific data.
+The copied object becomes a pure base object, so
+runtime polymorphism no longer works. To avoid object
+slicing, use base-class pointers or references instead
+of passing or storing objects by value.
 
 =========================================================
-Interview Answer (30 Seconds)
+INTERVIEW ANSWER (30 SECONDS)
 =========================================================
 
-"Object slicing occurs when a derived object is copied
+Object slicing occurs when a derived object is copied
 into a base object by value. Only the base-class
 subobject is copied, while the derived-specific state
-is discarded. This can break runtime polymorphism,
-because virtual function calls are now made on the
-copied base object instead of the original derived
-object. To avoid object slicing, pass or store objects
-using base class pointers or references rather than
-by value."
+is discarded. As a result, the copied object behaves
+like a base object and runtime polymorphism is lost.
+To avoid object slicing, always pass or store
+polymorphic objects using base-class pointers or
+references instead of by value.
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+Derived Object
+      │
+Copy by Value
+      │
+Only Base Part Copied
+      │
+Derived Data Lost
+      │
+Runtime Polymorphism Lost
+
+=========================================================
