@@ -1,0 +1,239 @@
+=========================================================
+OPERATOR OVERLOADING - QUICK REVISION ⭐⭐⭐⭐⭐
+=========================================================
+
+1. Assignment (=)
+---------------------------------------------------------
+Purpose:
+Copy one object to another.
+
+Syntax:
+Class& operator=(const Class& other);
+
+Example:
+obj1 = obj2;
+
+Interview Point:
+✓ Invoked on assignment.
+✓ Handle self-assignment.
+✓ Return *this.
+
+=========================================================
+
+2. Dereference (*)
+---------------------------------------------------------
+Purpose:
+Access the object pointed to by a pointer-like object.
+
+Syntax:
+T& operator*();
+
+Example:
+SmartPtr ptr(new Employee);
+(*ptr).display();
+
+Interview Point:
+✓ Returns reference to underlying object.
+✓ Commonly used in smart pointers.
+
+=========================================================
+
+3. Arrow (->)
+---------------------------------------------------------
+Purpose:
+Access members through pointer-like objects.
+
+Syntax:
+T* operator->();
+
+Example:
+SmartPtr ptr(new Employee);
+ptr->display();
+
+Interview Point:
+✓ Must return a pointer (or another object with operator->()).
+✓ Used by smart pointers and STL iterators.
+
+=========================================================
+
+4. Subscript ([])
+---------------------------------------------------------
+Purpose:
+Access container elements.
+
+Syntax:
+T& operator[](int index);
+
+Example:
+arr[2] = 100;
+cout << arr[2];
+
+Interview Point:
+✓ Should return reference for modification.
+✓ Provide const overload for read-only objects.
+
+=========================================================
+
+5. Function Call (())
+---------------------------------------------------------
+Purpose:
+Make an object behave like a function.
+
+Syntax:
+ReturnType operator()(arguments);
+
+Example:
+class Compare
+{
+public:
+    bool operator()(int a, int b)
+    {
+        return a > b;
+    }
+};
+
+Compare cmp;
+cmp(10,20);
+
+Interview Point:
+✓ Creates functors.
+✓ Can store state.
+✓ Used in sort(), priority_queue, std::thread.
+
+=========================================================
+
+6. Stream Insertion (<<)
+---------------------------------------------------------
+Purpose:
+Print objects using cout.
+
+Syntax:
+friend ostream&
+operator<<(ostream&, const Class&);
+
+Example:
+cout << obj;
+
+Interview Point:
+✓ Usually friend.
+✓ Return ostream& for chaining.
+
+=========================================================
+
+7. Stream Extraction (>>)
+---------------------------------------------------------
+Purpose:
+Read objects using cin.
+
+Syntax:
+friend istream&
+operator>>(istream&, Class&);
+
+Example:
+cin >> obj;
+
+Interview Point:
+✓ Usually friend.
+✓ Return istream& for chaining.
+
+=========================================================
+
+8. Pre-increment (++obj)
+---------------------------------------------------------
+Purpose:
+Increment then return object.
+
+Syntax:
+Class& operator++();
+
+Example:
+++obj;
+
+Interview Point:
+✓ No dummy parameter.
+✓ Return reference.
+
+=========================================================
+
+9. Post-increment (obj++)
+---------------------------------------------------------
+Purpose:
+Return old value, then increment.
+
+Syntax:
+Class operator++(int);
+
+Example:
+obj++;
+
+Interview Point:
+✓ int is a dummy parameter.
+✓ Return old copy.
+
+=========================================================
+
+10. new / delete
+---------------------------------------------------------
+Purpose:
+Customize memory allocation.
+
+Syntax:
+void* operator new(size_t size);
+void operator delete(void* ptr);
+
+Example:
+Employee* e = new Employee;
+delete e;
+
+Interview Point:
+✓ Used for memory pools.
+✓ Custom allocators.
+
+=========================================================
+
+11. Type Conversion
+---------------------------------------------------------
+Purpose:
+Convert object to another type.
+
+Syntax:
+operator int();
+operator string();
+
+Example:
+Employee e;
+int id = e;
+
+Interview Point:
+✓ Can cause implicit conversions.
+✓ Use explicit constructor to prevent unwanted conversions.
+
+=========================================================
+MOST ASKED INTERVIEW QUESTIONS
+=========================================================
+
+✓ Why is operator<< usually a friend?
+✓ Difference between copy constructor and operator=?
+✓ Difference between pre++ and post++?
+✓ Why must operator-> return a pointer?
+✓ Real-world use of operator()?
+✓ Why overload new/delete?
+✓ Why use explicit constructor?
+
+=========================================================
+MEMORY TRICK
+=========================================================
+
+=      Copy Object
+*      Dereference
+->     Member Access
+[]     Index Access
+()     Function Call
+<<     Output
+>>     Input
+++     Increment
+new    Allocate
+delete Deallocate
+type   Conversion
+
+=========================================================
