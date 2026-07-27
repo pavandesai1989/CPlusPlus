@@ -40,184 +40,126 @@ int main()
     return 0;
 }
 
-=========================================
-MOST ASKED OPERATOR OVERLOADING INTERVIEW Q&A
-=========================================
 
-1. What is Operator Overloading?
---------------------------------
-Operator overloading allows existing C++ operators to work with user-defined types.
+=========================================================
+STREAM INSERTION (<<) & EXTRACTION (>>) INTERVIEW Qs ⭐⭐⭐⭐⭐
+=========================================================
 
-Example:
-cout << obj;
-cin >> obj;
+Q1. Why are operator<< and operator>> usually friend functions?
 
-It is an example of Compile-Time Polymorphism.
+Answer:
+Because the left operand is ostream/istream, not our class.
+Friend allows access to private members.
 
---------------------------------
+---------------------------------------------------------
 
-2. Why overload << and >> ?
----------------------------
-To make objects behave like built-in types.
+Q2. Can operator<< be a member function?
 
-Without overloading:
-obj.print();
+Answer:
+No.
 
-With overloading:
-cout << obj;
-cin >> obj;
+cout << obj
 
-Improves readability.
-
---------------------------------
-
-3. Why are << and >> friend functions?
---------------------------------------
-Because:
-- They need access to private members.
-- Left operand is ostream/istream.
-- We cannot modify the STL ostream/istream classes.
-
---------------------------------
-
-4. Why are they NOT member functions?*************************
--------------------------------------
-Expression:
-
-cout << obj;
-
-Left operand is ostream.
-
-Compiler converts it to:
+is interpreted as
 
 operator<<(cout, obj);
 
-Since ostream is an STL class, we cannot add member functions to it.
+Since cout belongs to ostream, we cannot add member functions
+to the ostream class.
 
---------------------------------
+---------------------------------------------------------
 
-5. Why return ostream& ?
-------------------------
+Q3. Why does operator<< return ostream&?
+
+Answer:
 To support chaining.
 
 Example:
 
-cout << a << b << c;
+cout << obj1 << obj2 << endl;
 
-Each operator<< returns the same ostream object.
+---------------------------------------------------------
 
---------------------------------
+Q4. Why does operator>> return istream&?
 
-6. Why return istream& ?
-------------------------
+Answer:
 To support chaining.
 
 Example:
 
-cin >> a >> b >> c;
+cin >> obj1 >> obj2;
 
---------------------------------
+---------------------------------------------------------
 
-7. Why does operator<< take const Object& ?
--------------------------------------------
-Because it only reads the object.
+Q5. Why pass const Class& to operator<<?
 
-Advantages:
-- No copying
-- Cannot modify object
-- More efficient
+Answer:
 
-Signature:
-friend ostream& operator<<(ostream& out, const Object& obj);
+✓ Avoid object copy
+✓ Prevent modification
+✓ Better performance
 
---------------------------------
+---------------------------------------------------------
 
-8. Why does operator>> take Object& ?
-------------------------------------
-Because input modifies the object.
+Q6. Why pass Class& to operator>>?
 
-Signature:
-friend istream& operator>>(istream& in, Object& obj);
+Answer:
 
---------------------------------
+Because operator>> modifies the object's data.
 
-9. What does the compiler convert this into?
---------------------------------------------
+---------------------------------------------------------
 
-cout << obj;
+Q7. Why not return ostream instead of ostream&?*****
 
-becomes
+Answer:
+
+Returning by value would copy the stream, which is not allowed.
+Streams are non-copyable.
+
+---------------------------------------------------------
+
+Q8. Why shouldn't we print prompts inside operator>>?
+
+Answer:
+
+Overloaded operators should only perform input/output.
+User prompts should be written by the caller.
+
+Bad:
+operator>>()
+{
+    cout << "Enter value";
+}
+
+Good:
+cout << "Enter value: ";
+cin >> obj;
+
+---------------------------------------------------------
+
+Q9. What is the actual function call for cout << obj?
+
+Answer:
 
 operator<<(cout, obj);
 
-Similarly,
+---------------------------------------------------------
 
-cin >> obj;
+Q10. What is the actual function call for cin >> obj?
 
-becomes
+Answer:
 
 operator>>(cin, obj);
 
---------------------------------
+=========================================================
+INTERVIEW ONE-LINERS
+=========================================================
 
-10. Why return by reference instead of value?
----------------------------------------------
-- Avoids copying
-- Improves performance
-- Enables chaining
+✓ operator<< is generally a friend function.
+✓ Return ostream&/istream& to enable chaining.
+✓ Pass object by const reference for output.
+✓ Pass object by non-const reference for input.
+✓ Keep overloaded operators free of user prompts.
 
---------------------------------
-
-11. Which operators MUST be member functions?
----------------------------------------------
-=
-[]
-()
-->
-
---------------------------------
-
-12. Which operators are commonly overloaded as friend functions?
----------------------------------------------------------------
-<<
->>
-
---------------------------------
-
-13. Which OOP concept does Operator Overloading use?
-----------------------------------------------------
-Compile-Time Polymorphism.
-
---------------------------------
-
-14. Can operator overloading change operator precedence?
---------------------------------------------------------
-No.
-
-Precedence and associativity remain unchanged.
-
---------------------------------
-
-15. Can we create new operators?
---------------------------------
-No.
-
-Only existing C++ operators can be overloaded.
-
---------------------------------
-
-16. What is the biggest advantage of operator overloading?
-----------------------------------------------------------
-Makes user-defined objects behave like built-in types.
-
-Example:
-
-Instead of:
-obj.print();
-
-We can write:
-cout << obj;
-
-Cleaner and more readable syntax.
 
 
