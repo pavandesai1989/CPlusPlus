@@ -1,0 +1,504 @@
+=========================================
+C++11 TYPE TRAITS
+INTERVIEW NOTES
+=========================================
+
+
+1. What are Type Traits?
+
+Type traits are C++11 utilities provided by the <type_traits> header.
+
+They allow us to inspect properties of types at compile time.
+
+Examples:
+
+- Is this type an integer?
+- Is this type a pointer?
+- Are two types the same?
+- Is this type a class?
+
+
+Header:
+
+#include <type_traits>
+
+
+=========================================
+1. std::is_same
+=========================================
+
+Purpose:
+
+Checks whether two types are the same.
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+int main()
+{
+    cout << is_same<int,int>::value << endl;
+
+    cout << is_same<int,double>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+C++17:
+
+is_same_v<int,int>
+
+
+-----------------------------------------
+
+
+2. std::is_pointer
+=========================================
+
+Purpose:
+
+Checks whether a type is a pointer.
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+int main()
+{
+    int x = 10;
+
+    cout << is_pointer<int*>::value << endl;
+
+    cout << is_pointer<int>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+Real use with template:
+
+template<typename T>
+void print(T value)
+{
+    if constexpr(is_pointer<T>::value)
+    {
+        cout << "Pointer value: " << *value;
+    }
+    else
+    {
+        cout << "Normal value: " << value;
+    }
+}
+
+
+-----------------------------------------
+
+
+3. std::is_integral
+=========================================
+
+Purpose:
+
+Checks whether a type is an integer type.
+
+
+Integral types:
+
+int
+char
+bool
+short
+long
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+int main()
+{
+    cout << is_integral<int>::value << endl;
+
+    cout << is_integral<double>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+Template usage:
+
+template<typename T>
+void check(T value)
+{
+    if constexpr(is_integral<T>::value)
+    {
+        cout << "Integer type";
+    }
+    else
+    {
+        cout << "Not integer";
+    }
+}
+
+
+-----------------------------------------
+
+
+4. std::is_floating_point
+=========================================
+
+Purpose:
+
+Checks floating point types.
+
+
+Floating types:
+
+float
+double
+long double
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+int main()
+{
+    cout << is_floating_point<double>::value << endl;
+
+    cout << is_floating_point<int>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+-----------------------------------------
+
+
+5. std::is_arithmetic
+=========================================
+
+Purpose:
+
+Checks whether type is:
+
+- Integral
+- Floating point
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+int main()
+{
+    cout << is_arithmetic<int>::value << endl;
+
+    cout << is_arithmetic<double>::value << endl;
+
+    cout << is_arithmetic<string>::value << endl;
+}
+
+
+Output:
+
+1
+1
+0
+
+
+-----------------------------------------
+
+
+6. std::is_class
+=========================================
+
+Purpose:
+
+Checks whether a type is a class.
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+
+class Employee
+{
+
+};
+
+
+int main()
+{
+    cout << is_class<Employee>::value << endl;
+
+    cout << is_class<int>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+-----------------------------------------
+
+
+7. std::is_reference
+=========================================
+
+Purpose:
+
+Checks whether a type is a reference.
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+
+int main()
+{
+    cout << is_reference<int&>::value << endl;
+
+    cout << is_reference<int>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+-----------------------------------------
+
+
+8. std::is_const
+=========================================
+
+Purpose:
+
+Checks whether a type is const.
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+
+int main()
+{
+    cout << is_const<const int>::value << endl;
+
+    cout << is_const<int>::value << endl;
+}
+
+
+Output:
+
+1
+0
+
+
+=========================================
+Type Traits With Templates
+=========================================
+
+
+Example:
+
+#include<iostream>
+#include<type_traits>
+
+using namespace std;
+
+
+template<typename T>
+void display(T value)
+{
+    if constexpr(is_pointer<T>::value)
+    {
+        cout << "Pointer: " << *value << endl;
+    }
+    else
+    {
+        cout << "Value: " << value << endl;
+    }
+}
+
+
+int main()
+{
+    int x = 100;
+
+    display(x);
+
+    display(&x);
+}
+
+
+Output:
+
+Value: 100
+Pointer: 100
+
+
+=========================================
+C++11 vs C++17 Syntax
+=========================================
+
+
+C++11:
+
+is_pointer<T>::value
+
+is_integral<T>::value
+
+is_same<T,U>::value
+
+
+C++17:
+
+is_pointer_v<T>
+
+is_integral_v<T>
+
+is_same_v<T,U>
+
+
+Example:
+
+
+C++11:
+
+if constexpr(is_pointer<T>::value)
+
+
+C++17:
+
+if constexpr(is_pointer_v<T>)
+
+
+=========================================
+Interview Important Points
+=========================================
+
+
+Q. What are type traits?
+
+Answer:
+
+"Type traits are C++11 utilities from <type_traits> that provide
+compile-time information about types. They are commonly used in
+template programming."
+
+
+-----------------------------------------
+
+
+Q. Are type traits C++17 features?
+
+Answer:
+
+No.
+
+Type traits were introduced in C++11.
+
+C++17 added cleaner _v variable template shortcuts.
+
+
+-----------------------------------------
+
+
+Q. Why are type traits useful?
+
+Answer:
+
+- Compile-time type checking
+- Generic programming
+- Template specialization
+- if constexpr decisions
+- STL implementation
+
+
+=========================================
+QUICK REVISION
+=========================================
+
+Introduced:
+C++11
+
+Header:
+<type_traits>
+
+
+Must Know:
+
+1. is_same
+2. is_pointer
+3. is_integral
+4. is_floating_point
+5. is_arithmetic
+
+
+C++17 Shortcuts:
+
+is_same_v
+
+is_pointer_v
+
+is_integral_v
+
+
+Main Usage:
+
+Templates + if constexpr
+
+=========================================
