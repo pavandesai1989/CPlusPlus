@@ -1,3 +1,13 @@
+
+8. Interview Key Points
+-----------------------
+- Introduced in C++11
+- Used in inheritance with virtual functions
+- Ensures correct overriding
+- Helps prevent subtle bugs
+- Improves maintainability
+
+
 =========================================
 override (C++11) – INTERVIEW NOTES
 =========================================
@@ -121,12 +131,5 @@ public:
 
 -----------------------------------------
 
-8. Interview Key Points
------------------------
-- Introduced in C++11
-- Used in inheritance with virtual functions
-- Ensures correct overriding
-- Helps prevent subtle bugs
-- Improves maintainability
 
 =========================================
