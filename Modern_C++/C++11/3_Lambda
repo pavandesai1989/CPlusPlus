@@ -1,259 +1,63 @@
-=========================================
-LAMBDA EXPRESSIONS (C++11 onwards) – INTERVIEW NOTES
-=========================================
+# Lambda Expressions (C++11/14/17) – Interview Notes
 
-1. What is a Lambda Expression?
-------------------------------
-  
-- A lambda is an anonymous (unnamed) function.
-- Introduced in C++11.
-- Used to write inline, short functions without defining a separate function.
-- Very commonly used with STL algorithms.
+## 1. What is a Lambda?
 
+* Anonymous **function object (closure type/functor)**.
+* Can capture variables from the surrounding scope.
+* Mainly used with **STL algorithms, callbacks, and threads**.
 
-
-
-****What is a closure type?
-A lambda is an anonymous function object. 
-It creates an object of a unique compiler-generated closure type that implements operator().
-
-2. How is a lambda implemented internally?
-
-Explain with:
-
-auto f = [](int x)
-{
-    return x * x;
-};
-
-Compiler generates something like:
-
-class __Lambda
-{
-public:
-    int operator()(int x) const
-    {
-        return x * x;
-    }
-};
-
-3. Is a lambda a function?
-
-Answer:
-
-No.
-
-It is an object.
-
-It becomes callable because it overloads operator().
-
-4. Is lambda's type std::function?
-
-Answer:
-
-No.
-
-The lambda has a unique compiler-generated closure type.
-
-std::function is only a wrapper.
-
-5. Why do we use auto with lambdas?
-
-Because the closure type is unnamed.
-
-You cannot write
-
-Lambda f;      // impossible
-
-Instead:
-
-auto f = [](){};
-
- What is the default const behavior?
-
-Without mutable
-
-operator() const
-
-With mutable
-
-operator()
-
-*******
-
-
-
-
-
-Now:
-
-Lambda object → stored inside std::function
-std::function hides the actual type.
-
-Think of it like this:
-Lambda object
-      │
-      ▼
-+-------------------+
-| std::function<>   |
-|  (wrapper)        |
-+-------------------+
-
-A lambda expression creates an object of a unique, compiler-generated closure type. It is not a std::function. 
-std::function is a separate type-erased wrapper that can hold a lambda, function pointer, or any other callable.****
-
-*****VVVVIMP********
-=========================================
-C++ LAMBDA EXPRESSIONS - COMPLETE INTERVIEW NOTES
-=========================================
-
-1. WHAT IS A LAMBDA?
-
-A lambda is an anonymous function (compiler-generated functor) that can capture variables from its surrounding scope.
-
-Syntax:
-
-[capture](parameters) specifiers -> return_type
-{
-    // body
-};
-
-Example:
-
+```cpp
 auto add = [](int a, int b)
 {
     return a + b;
 };
+```
 
----------------------------------------------------------
+**Interview Point**
 
-2. COMPLETE LAMBDA SYNTAX
+* Lambda is **NOT a function**.
+* It is a compiler-generated object with `operator()`.
 
-[capture]
-(parameters)
-mutable
-constexpr
-noexcept
--> return_type
+---
+
+# 2. Syntax
+
+```cpp
+[capture](parameters) mutable constexpr noexcept -> return_type
 {
     // body
-};
-
-Every part is optional except:
-
-[]
-{}
-
----------------------------------------------------------
-
-3. CAPTURE LIST []
-
-Capture list tells the lambda which variables from the surrounding scope it can access.
-
----------------------------------------------------------
-A) Capture Nothing
-
-[]
-
-Example:
-
-auto f = []()
-{
-    cout << "Hello";
-};
-
-• Cannot access local variables. ****
-error as its local 
-int main()
-{
-    int a=20;
-    auto ptr = [](){a++;return a;}; //compiler error a not captured 
-    cout<<ptr(); 
-    return 0;
 }
+```
 
-to fix issue capture by ref 
-int main()
-{
-    int a=20;
-    auto ptr = [&](){a++;return a;}; //compiler error a not captured 
-    cout<<ptr(); 
-    return 0;
-}
-• Can access global variables.CVVVVVVVIMP
-int a=20;
-auto ptr = [](){a++;return a;};
-int main()
-{
-    cout<<ptr();  //prints 21 here 
-    return 0;
-}
+---
 
-[] is the capture list. An empty capture list means the lambda does not capture any local variables 
-from the surrounding scope. Therefore, it cannot access local variables unless they are passed as parameters.
-However, it can still access global variables, static variables, and other entities that don't require capture.
+# 3. Capture List (Most Important ⭐⭐⭐⭐⭐)
 
----------------------------------------------------------
-B) Capture Everything By Value
+| Capture  | Meaning                            |
+| -------- | ---------------------------------- |
+| `[]`     | Capture nothing                    |
+| `[=]`    | Capture all variables by value     |
+| `[&]`    | Capture all variables by reference |
+| `[x]`    | Capture `x` by value               |
+| `[&x]`   | Capture `x` by reference           |
+| `[=,&x]` | All by value, `x` by reference     |
+| `[&,x]`  | All by reference, `x` by value     |
+| `[this]` | Capture current object             |
 
-[=]
+### Capture by Value
 
-Example:
-
-int x = 10;
-int y = 20;
-
-auto f = [=]()
-{
-    cout << x << " " << y;
-};
-
-Characteristics
-
-• Copies all used local variables.
-• Original variables remain unchanged.
-• Variables become read-only unless mutable is used.
-
----------------------------------------------------------
-C) Capture Everything By Reference
-
-[&]
-
-Example:
-
-int x = 10;
-
-auto f = [&]()
-{
-    x++;
-};
-
-Characteristics
-
-• No copy created.
-• Modifies original variable.
-
----------------------------------------------------------
-D) Capture One Variable By Value
-
-[x]
-
-Example:
-
+```cpp
 int x = 10;
 
 auto f = [x]()
 {
     cout << x;
 };
+```
 
----------------------------------------------------------
-E) Capture One Variable By Reference
+### Capture by Reference
 
-[&x]
-
-Example:
-
+```cpp
 int x = 10;
 
 auto f = [&x]()
@@ -261,774 +65,221 @@ auto f = [&x]()
     x++;
 };
 
----------------------------------------------------------
-F) Mixed Capture
+f();
+cout << x;    //11
+```
 
-[x,&y]
+**Interview Points**
 
-Example:
+* Value → copy created.
+* Reference → original variable modified.
+* Global/static variables **do not require capture**.
 
+---
+
+# 4. Parameters
+
+```cpp
+[](int a, int b)
+{
+    return a + b;
+};
+```
+
+### Generic Lambda (C++14)
+
+```cpp
+auto print = [](auto x)
+{
+    cout << x << endl;
+};
+```
+
+---
+
+# 5. mutable (Very Important ⭐⭐⭐⭐⭐)
+
+By default, variables captured by value are **read-only**.
+
+```cpp
 int x = 10;
-int y = 20;
 
-auto f = [x,&y]()
+auto f = [x]() mutable
 {
+    x++;
     cout << x;
-    y++;
 };
 
-x is copied
+f();
 
-y is referenced
+cout << x;
+```
 
----------------------------------------------------------
-G) Capture Everything By Value Except One
+Output
 
-[=,&x]
+```
+11
+10
+```
 
-Everything copied
+**Interview Point**
 
-Only x referenced
+* `mutable` modifies **only the lambda's copy**, not the original variable.
 
----------------------------------------------------------
-H) Capture Everything By Reference Except One
+---
 
-[&,x]
+# 6. Return Type
 
-Everything referenced
+Compiler deduction
 
-Only x copied
-
----------------------------------------------------------
-I) Capture this Pointer
-
-class Test
+```cpp
+auto add = [](int a, int b)
 {
-    int x = 10;
-
-public:
-
-    void fun()
-    {
-        auto f = [this]()
-        {
-            cout << x;
-        };
-    }
+    return a + b;
 };
+```
 
-Allows access to member variables and member functions.
+Explicit return type
 
----------------------------------------------------------
-
-4. GLOBAL VARIABLES
-
-Global variables are NOT captured.
-
-They are directly accessible.
-
-Example
-
-int g = 100;
-
-auto f = []()
+```cpp
+auto divide = [](int a, int b) -> double
 {
-    cout << g;
+    return (double)a / b;
 };
+```
 
----------------------------------------------------------
+---
 
-5. PARAMETERS
+# 7. constexpr (C++17)
 
-Exactly like normal functions.
+Evaluates at compile time if possible.
 
-Example
-
-[](int a,int b)
-{
-    return a+b;
-};
-
-No parameter
-
-[]()
-{
-
-}
-
-Generic Lambda (C++14)
-
-[](auto a,auto b)
-{
-    return a+b;
-};
-
-Works for
-
-int
-double
-string
-etc.
-
----------------------------------------------------------
-
-6. mutable *****VVVVVIMP
-
-Normally value-captured variables are const.
-
-int main()
-{
-    int a=20;
-    auto ptr = [=](){a++;return a;}; //compiler error a not captured 
-    cout<<ptr(); 
-    return 0;
-}
-
-use mutable 
-int main()
-{
-    int a=20;
-    auto ptr = [=]()mutable{a++;return a;};
-    cout<<ptr(); 
-    return 0;
-}
-
----------------------------------------------------------
-
-7. constexpr :If possible, evaluate this expression/function at compile time instead of runtime.
-
-Without constexpr
-int square(int x)
-{
-    return x * x;
-}
-
-int main()
-{
-    int a = square(5);
-}
-
-Here:
-
-Compiler generates machine code.
-When the program runs, square(5) is called.
-Multiplication happens during execution.
-
-This is runtime evaluation.
-
-With constexpr
-constexpr int square(int x)
-{
-    return x * x;
-}
-
-int main()
-{
-    constexpr int a = square(5);
-}
-
-Since 5 is known during compilation,
-
-the compiler computes
-
-5 * 5 = 25
-
-while compiling.
-
-The executable already contains
-
-constexpr int a = 25;
-
-No multiplication occurs at runtime.
-
-*********
-
-Normal lambda
-
-auto square = [](int x)
-{
-    return x * x;
-};
-
-Runs at runtime.
-
-Compile-time lambda
-
+```cpp
 constexpr auto square = [](int x)
 {
     return x * x;
 };
 
-Now
-
 constexpr int ans = square(5);
+```
 
-Compiler computes
+---
 
-25
+# 8. noexcept
 
-When does constexpr actually work?
-
-Only when all inputs are known at compile time.
-
----------------------------------------------------------
-
-8. noexcept :noexcept means:
-
-"This function promises that it will not throw any exceptions.
-
-Specifies lambda won't throw exceptions.
-
-Example
-
+```cpp
 auto f = []() noexcept
 {
     cout << "Hello";
 };
+```
 
-Why use noexcept?
-1. Better Optimization
+**Interview Point**
 
-Since the compiler knows exceptions won't occur, it can generate more efficient code.
+* Promises the lambda won't throw exceptions.
+* Helps compiler optimization.
+* STL containers (e.g., `std::vector`) prefer **noexcept** move operations.
 
-****
-#include <iostream>
-using namespace std;
+---
 
-int main()
-{
-    int a = 10;
-    int b = 20;
+# 9. STL Usage (Very Important ⭐⭐⭐⭐⭐)
 
-    auto squareSum = [a, &b](int x) mutable constexpr noexcept -> int
-    {
-        a++;        // OK because of mutable (modifies the lambda's copy)
-        b++;        // OK because b is captured by reference
+### sort()
 
-        return a + b + x;
-    };
-
-    cout << squareSum(5) << endl;   // 36
-    cout << b << endl;              // 21
-}
-
-
-
-
-****
-
-2. Required by STL*****VVVVVIMPP
-
-Many STL containers prefer moving objects only if the move constructor is noexcept.
-
-Example:
-
-class A
-{
-public:
-    A(A&&) noexcept
-    {
-
-    }
-};
-
-When a std::vector grows, it may move its elements.
-If the move constructor is noexcept, the vector will move objects instead of copying them, which is usually faster.********
-
----------------------------------------------------------
-
-9. RETURN TYPE
-
-Compiler Deduction
-
-[](int a,int b)
-{
-    return a+b;
-};
-
-Explicit Return Type
-
-[](int a,int b)->int
-{
-    return a+b;
-};
-
-When needed?
-
-Different return statements
-
-[](bool flag)->double
-{
-    if(flag)
-        return 2.5;
-
-    return 0;
-}
-
----------------------------------------------------------
-
-10. FUNCTION BODY
-
-Contains executable statements.
-
-Example
-
-[](int x)
-{
-    return x*x;
-};
-
----------------------------------------------------------
-
-11. STORING LAMBDA
-
-Preferred
-
-auto add = [](int a,int b)
-{
-    return a+b;
-};
-
-Using std::function
-
-function<int(int,int)> add =
-[](int a,int b)
-{
-    return a+b;
-};
-
----------------------------------------------------------
-
-12. IMMEDIATELY INVOKED LAMBDA*******
-
-int x =
-[]()
-{
-    return 100;
-}();
-
-Output
-
-100
-
----------------------------------------------------------
-
-13. LAMBDA AS CALLBACK
-
-sort(v.begin(),v.end(),
-[](int a,int b)
-{
-    return a<b;
-});
-
-Commonly used with
-
-sort()
-
-for_each()
-
-find_if()
-
-transform()
-
-remove_if()
-
-count_if()
-
----------------------------------------------------------
-
-14. LAMBDA TYPE
-
-Every lambda has a unique compiler-generated type.
-
-Example
-
-auto f=[](){};
-
-Equivalent to
-
-class CompilerGenerated
-{
-public:
-
-    void operator()()
-    {
-
-    }
-};
-
----------------------------------------------------------
-
-15. LAMBDA IS A FUNCTOR
-
-Lambda
-
-auto add = [](int a,int b)
-{
-    return a+b;
-};
-
-Equivalent Functor
-
-class Add
-{
-public:
-
-    int operator()(int a,int b)
-    {
-        return a+b;
-    }
-};
-
----------------------------------------------------------
-
-16. COMPLETE EXAMPLE
-
-#include <iostream>
-using namespace std;
-
-int main()
-{
-    int x = 10;
-
-    auto add =
-    [=](int a,int b)
-    mutable
-    noexcept
-    -> int
-    {
-        x++;
-        return x+a+b;
-    };
-
-    cout << add(1,2) << endl;
-
-    cout << x << endl;
-
-    return 0;
-}
-
-Output
-
-14
-10
-
----------------------------------------------------------
-
-17. auto vs std::function
-
-auto
-
-• Exact lambda type
-• Fast
-• No type-erasure overhead
-• Preferred
-
-std::function
-
-• Stores any callable
-• Type erasure
-• Slight runtime overhead
-• Useful for callbacks/APIs
-
----------------------------------------------------------
-
-18. INTERVIEW QUESTIONS
-
-Q. What is a lambda?
-
-An anonymous compiler-generated function object (functor).
-
----------------------------------------------------------
-
-Q. Why use lambda?
-
-• Short inline functions
-• STL algorithms
-• Callbacks
-• Threads
-• Event handling
-
----------------------------------------------------------
-
-Q. Why mutable?*******
-
-Allows modification of variables captured by value.
-
----------------------------------------------------------
-
-Q. Can lambda capture global variables?
-
-No.*******
-
-Global variables are directly accessible.
-
----------------------------------------------------------
-
-Q. Can lambda capture class members?
-
-Yes.
-
-Using
-
-[this]
-
----------------------------------------------------------
-
-Q. Difference between lambda and function?
-
-Lambda
-
-• Anonymous
-• Can capture variables
-• Compiler-generated functor
-
-Function
-
-• Named
-• Cannot capture local variables
-
----------------------------------------------------------
-
-Q. Difference between lambda and functor?
-
-Lambda
-
-• Anonymous
-• Compiler creates functor automatically
-
-Functor
-
-• Programmer writes class with operator()
-
----------------------------------------------------------
-
-Q. Difference between lambda and std::function?
-
-Lambda
-
-• Actual callable object
-
-std::function
-
-• Wrapper that can store any callable
-
----------------------------------------------------------
-
-19. INTERVIEW TEMPLATE
-
-auto lambda =
-[capture]
-(parameters)
-mutable
-constexpr
-noexcept
--> return_type
-{
-    // body
-};
-
-Remember the order:
-
-1. Capture List
-2. Parameters
-3. mutable
-4. constexpr
-5. noexcept
-6. Return Type
-7. Function Body
-
-
-
-
-*****************************
-
-Example:
-auto add = [](int a, int b) -> int {
-    return a + b;
-};
-
-auto func = [](...) { ... };          // closure object (preferred)
-std::function<...> func = ...;        // wrapper, some overhead
-int (*func)(...) = ...;               // function pointer
-
-std::function is only a polymorphic wrapper used to store callable objects, including lambdas.  ***********
-
------------------------------------------
-
-2. Basic Example (Most Common)
-------------------------------
-#include <iostream>
-using namespace std;
-
-int main() {
-    auto greet = []() {
-        cout << "Hello Lambda!" << endl;
-    };
-
-    greet();
-}
-
-std::function<void()> greet = []() {
-    cout << "Hello Lambda!" << endl;
-};
-
------------------------------------------
-
-3. Lambda with Parameters
--------------------------
-auto sum = [](int a, int b) {
-    return a + b;
-};
-
-std::function<int(int, int)> sum =
+```cpp
+sort(v.begin(), v.end(),
 [](int a, int b)
 {
+    return a < b;
+});
+```
+
+### for_each()
+
+```cpp
+for_each(v.begin(), v.end(),
+[](int x)
+{
+    cout << x << " ";
+});
+```
+
+### count_if()
+
+```cpp
+count_if(v.begin(), v.end(),
+[](int x)
+{
+    return x % 2 == 0;
+});
+```
+
+Common algorithms:
+
+* `sort()`
+* `for_each()`
+* `find_if()`
+* `count_if()`
+* `transform()`
+* `remove_if()`
+
+---
+
+# 10. auto vs std::function
+
+```cpp
+auto f = [](int a, int b)
+{
     return a + b;
 };
 
-cout << sum(10, 20);
+std::function<int(int,int)> g = f;
+```
 
------------------------------------------
+| auto               | std::function             |
+| ------------------ | ------------------------- |
+| Exact closure type | Wrapper (type erasure)    |
+| Faster             | Small runtime overhead    |
+| Preferred          | Useful for callbacks/APIs |
 
-4. Return Type (Optional in most cases)
---------------------------------------
-- Compiler can deduce return type automatically.
+---
 
-auto mul = [](int a, int b) {
-    return a * b;   // return type deduced as int
-};
+# 11. Frequently Asked Interview Questions
 
-Explicit return type:
-auto div = [](int a, int b) -> double {
-    return (double)a / b;
-};
+### Q. Is a lambda a function?
 
------------------------------------------
+**No.** It is a compiler-generated **closure object (functor)**.
 
-5. Capture List (VERY IMPORTANT)
---------------------------------
-- Used to access outside variables inside lambda.
+### Q. Why use `auto`?***************
 
-Types of capture:
+The closure type is unnamed, so it cannot be written explicitly.
 
-(a) []  -> captures nothing
-(b) [=]  -> capture all external variables by VALUE
-(c) [&]  -> capture all external variables by REFERENCE
-(d) [x]  -> capture specific variable by VALUE
-(e) [&x] -> capture specific variable by REFERENCE
-(f) [=, &x] -> default value capture, x by reference
-(g) [&, x]  -> default reference capture, x by value
+### Q. Why `mutable`?
 
------------------------------------------
+To modify variables captured by value.
 
-Example:
-int x = 10, y = 20;
+### Q. Can lambda capture global variables?
 
-auto f1 = [=]() { return x + y; };   // by value
-auto f2 = [&]() { x++; };            // modifies original x
+**No.** Global/static variables are directly accessible.
 
------------------------------------------
+### Q. Difference between Lambda and std::function?
 
-6. Mutable Lambda ****************************************************IIIIMP
------------------
-- By default, captured-by-value variables are read-only inside lambda.
-- mutable allows modification of copied values.
+| Lambda                 | std::function            |
+| ---------------------- | ------------------------ |
+| Actual callable object | Wrapper for any callable |
+| No overhead            | Type-erasure overhead    |
 
-int x = 10;
+---
 
-auto f = [x]() mutable {
-    x++;   // allowed (modifies copy)
-    cout << x;
-};
+# Interview Checklist ✅
 
-f();
-cout << x;  // original x unchanged
-
------------------------------------------
-
-7. Lambda with STL (VERY IMPORTANT)
------------------------------------
-Example with for_each:
-
-#include <vector>
-#include <algorithm>
-
-vector<int> v = {1,2,3,4};
-
-for_each(v.begin(), v.end(), [](int &x) {
-    x = x * 2;
-});
-
------------------------------------------
-
-8. Lambda in Sorting **********IMP
---------------------
-vector<int> v = {5, 2, 8, 1};
-
-sort(v.begin(), v.end(), [](int a, int b) {
-    return a < b;   // ascending order
-});
-
------------------------------------------
-
-9. Generic Lambdas (C++14)
---------------------------
-- Uses auto in parameters.
-
-auto print = [](auto x) {
-    cout << x << endl;
-};
-
-print(10);
-print(3.14);
-print("hello");
-
------------------------------------------
-
-10. Lambda with std::function
-----------------------------
-#include <functional>
-
-std::function<int(int,int)> f = [](int a, int b) {
-    return a + b;
-};
-
------------------------------------------
-
-11. Common Interview Questions
------------------------------
-Q1: Why use lambda expressions?
-- For short, inline functions
-- Cleaner code with STL algorithms
-- Avoids writing separate function
-
-Q2: Difference between lambda and function?
-- Lambda: anonymous, inline, can capture variables
-- Function: named, no capture feature
-
-Q3: What is capture list?
-- Mechanism to access outer scope variables
-
-Q4: Can lambda be stored?
-- Yes, using auto or std::function
-
------------------------------------------
-
-12. Important Pitfalls
-----------------------
-- Dangling reference if capturing local variable by reference and lambda outlives scope
-- Overusing [&] can lead to bugs
-- Prefer explicit capture over [=] or [&] in production code
-
------------------------------------------
-
-13. Real-world Usage
---------------------
-- STL algorithms (sort, for_each, count_if)
-- Event handlers
-- Callbacks
-- Thread functions
-- Functional programming style in C++
-
-=========================================
+* ✓ Lambda syntax
+* ✓ Capture list (`[]`, `[=]`, `[&]`, `[x]`, `[&x]`, `[this]`)
+* ✓ Generic lambda (`auto`) – C++14
+* ✓ `mutable`
+* ✓ Return type (`->`)
+* ✓ `constexpr` – C++17
+* ✓ `noexcept`
+* ✓ STL usage (`sort`, `for_each`, `count_if`)
+* ✓ `auto` vs `std::function`
+* ✓ Lambda is a **closure object (functor)**, not a function
