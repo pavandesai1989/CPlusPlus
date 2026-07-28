@@ -84,7 +84,7 @@ int &&r = 10;   // OK (binds to temporary)
 
 7. Move Semantics Concept
 -------------------------
-- RVALUE references enable resource transfer instead of copying
+- RVALUE references enable resource transfer instead of copying********************VVVVVVVIMP
 - Improves performance
 
 Example:
@@ -118,6 +118,12 @@ func(20);    // calls RVALUE version
 - Converts LVALUE into RVALUE reference
 - Does NOT move anything itself
 - It is just a type cast
+void f2(int&& y)
+{
+    cout<<"r value"<<endl;
+}
+sample:
+f2(static_cast<int&&>(x));
 
 Example:
 int a = 10;
