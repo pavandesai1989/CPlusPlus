@@ -1,12 +1,31 @@
+Interview Key Points
+------------------------
+- Introduced in C++11
+- Uses rvalue references (&&)
+- std::move enables move semantics
+- Move constructor + move assignment operator
+- Solves performance issues of deep copying
+- Improves STL efficiency dramatically
+
+
+Q: Then why mark move constructor/assignment noexcept?
+
+Answer: Because standard library containers (especially std::vector) prefer 
+move operations during reallocation only if they are noexcept. 
+Otherwise, they may use the copy constructor to preserve strong exception safety.
+
+
 ***CODE showing advantage of move****
 =========================================================
 Interview Example : Custom Class Without Move vs With Move
 (Using Dynamic Array Class)
 =========================================================
-"Suppose my class owns a large dynamically allocated buffer. If I copy it, 
-I allocate new memory and copy every element, which is expensive. If I know the source object won't be used anymore,
+"Suppose my class owns a large dynamically allocated buffer. 
+If I copy it, I allocate new memory and copy every element, which is expensive. 
+If I know the source object won't be used anymore,
 I can transfer ownership of the buffer instead. That's exactly what 
 move semantics provide—they avoid deep copies by stealing the resource."
+
 class Buffer
 {
     int* data;
@@ -414,7 +433,7 @@ Move = O(1) (typically)
 
 -------------------------------------------------
 
-Real-Life Analogy **********
+Real-Life Analogy **********VVVVIIIIIIIIIIIIIIIIIIIIIIMP
 
 Copy:
 You have a 1000-page book.
@@ -431,7 +450,8 @@ Copy:
 Creates a completely new buffer and copies all elements (O(n)).
 
 Move:
-Transfers ownership of the existing buffer without copying elements (typically O(1)), avoiding extra memory allocation and unnecessary duplication.
+Transfers ownership of the existing buffer without copying elements (typically O(1)), 
+avoiding extra memory allocation and unnecessary duplication.
 *****
 
 -----------------------------------------
@@ -601,13 +621,6 @@ MOVE:
 
 -----------------------------------------
 
-15. Interview Key Points
-------------------------
-- Introduced in C++11
-- Uses rvalue references (&&)
-- std::move enables move semantics
-- Move constructor + move assignment operator
-- Solves performance issues of deep copying
-- Improves STL efficiency dramatically
+
 
 =========================================
