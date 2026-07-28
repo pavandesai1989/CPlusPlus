@@ -1,3 +1,17 @@
+Interview One-Liners
+
+✔ Perfect Forwarding preserves the original value category.
+
+✔ It requires both a forwarding reference (T&&) and std::forward.
+
+✔ Every named variable is an Lvalue.
+
+✔ std::forward preserves; std::move always casts to an Rvalue.
+
+✔ Perfect Forwarding is mainly used in generic/template wrapper functions.
+
+
+
 **************** Perfect Forwarding ****************
 
 Definition
@@ -100,7 +114,8 @@ int main()
 Output
 
 Lvalue
-
+Every named variable is an lvalue, even if its type is T&&. 
+To treat it as an rvalue again, use std::move() (or std::forward<T>() in forwarding functions).
 ------------------------------------------------------------
 
 Solution : Perfect Forwarding
@@ -285,14 +300,4 @@ void func(T&& x);
 
 ------------------------------------------------------------
 
-Interview One-Liners
 
-✔ Perfect Forwarding preserves the original value category.
-
-✔ It requires both a forwarding reference (T&&) and std::forward.
-
-✔ Every named variable is an Lvalue.
-
-✔ std::forward preserves; std::move always casts to an Rvalue.
-
-✔ Perfect Forwarding is mainly used in generic/template wrapper functions.
