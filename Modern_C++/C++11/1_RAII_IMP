@@ -1,0 +1,283 @@
+=========================================================
+RAII (Resource Acquisition Is Initialization) – Interview Notes
+=========================================================
+
+1. What is RAII?
+----------------
+RAII is a C++ programming idiom where a resource is acquired in a constructor
+and automatically released in the destructor.
+
+Resource lifetime is tied to object lifetime.
+
+Introduced:
+- Core C++ idiom (not a language feature).
+- Used extensively in modern C++.
+
+---------------------------------------------------------
+
+2. Why RAII?
+------------
+Without RAII:
+• Manual resource management.
+• Memory leaks.
+• Resource leaks (files, sockets, mutexes).
+• Exception unsafe.
+
+With RAII:
+• Automatic cleanup.
+• Exception safe.
+• No resource leaks.
+• Cleaner code.
+
+---------------------------------------------------------
+
+3. Resources Managed by RAII
+----------------------------
+• Heap memory (new/delete)
+• Files (fopen/fclose)
+• Mutexes (lock/unlock)
+• Database connections
+• Network sockets
+• Threads (join via wrapper)
+• Any OS resource
+
+---------------------------------------------------------
+
+4. RAII Example (Memory)
+------------------------
+
+class Resource
+{
+    int* ptr;
+
+public:
+    Resource()
+    {
+        ptr = new int(100);
+        cout << "Memory Allocated\n";
+    }
+
+    ~Resource()
+    {
+        delete ptr;
+        cout << "Memory Released\n";
+    }
+};
+
+int main()
+{
+    Resource obj;
+}
+
+Output:
+Memory Allocated
+Memory Released
+
+Destructor automatically frees memory.
+
+---------------------------------------------------------
+
+5. RAII During Exceptions
+-------------------------
+
+void func()
+{
+    Resource obj;
+
+    throw runtime_error("Error");
+}
+
+Even if an exception is thrown,
+the destructor is called automatically,
+so resources are released.
+
+This is why RAII provides exception safety.
+
+---------------------------------------------------------
+
+6. RAII with Smart Pointers
+---------------------------
+
+unique_ptr<int> p = make_unique<int>(10);
+
+No delete required.
+
+When p goes out of scope,
+memory is automatically released.
+
+Smart pointers are the best example of RAII.
+
+---------------------------------------------------------
+
+7. RAII with Mutex
+------------------
+
+mutex m;
+
+void func()
+{
+    lock_guard<mutex> lock(m);
+
+    // Critical Section
+
+} // lock_guard destructor unlocks mutex automatically.
+
+Without RAII:
+m.lock();
+// work
+m.unlock();
+
+If an exception occurs,
+unlock() may never execute.
+
+---------------------------------------------------------
+
+8. RAII with File
+-----------------
+
+ifstream file("data.txt");
+
+if(file)
+{
+    // Read file
+}
+
+When file goes out of scope,
+it is automatically closed.
+
+---------------------------------------------------------
+
+9. Advantages
+-------------
+• Automatic resource cleanup
+• Exception safe
+• Prevents memory leaks
+• Prevents resource leaks
+• Cleaner code
+• No manual delete/free/close/unlock
+• Easy to maintain
+
+---------------------------------------------------------
+
+10. Disadvantages
+-----------------
+• Slight overhead for wrapper objects
+• Requires proper class design
+• Cyclic shared_ptr references can still leak memory
+
+---------------------------------------------------------
+
+11. RAII in STL
+---------------
+Examples:
+• std::unique_ptr
+• std::shared_ptr
+• std::lock_guard
+• std::unique_lock
+• std::fstream / ifstream / ofstream
+• std::jthread (C++20)
+
+---------------------------------------------------------
+
+12. RAII vs Manual Resource Management
+--------------------------------------
+
+Without RAII
+
+int* p = new int(10);
+
+// work
+
+delete p;
+
+Problem:
+If an exception occurs before delete,
+memory leaks.
+
+--------------------------------------
+
+With RAII
+
+{
+    unique_ptr<int> p = make_unique<int>(10);
+
+} // Automatically deleted here.
+
+---------------------------------------------------------
+
+13. Common Interview Questions
+------------------------------
+
+Q1. What is RAII?
+
+Resource Acquisition Is Initialization.
+Acquire resources in constructor,
+release them in destructor.
+
+---------------------------------------------------------
+
+Q2. Why is RAII important?
+
+It prevents resource leaks and provides
+automatic cleanup, especially when exceptions occur.
+
+---------------------------------------------------------
+
+Q3. Give examples of RAII.
+
+• unique_ptr
+• shared_ptr
+• lock_guard
+• unique_lock
+• fstream
+• ifstream
+• ofstream
+• jthread (C++20)
+
+---------------------------------------------------------
+
+Q4. Which resources can RAII manage?
+
+• Memory
+• Files
+• Mutexes
+• Sockets
+• Database connections
+• Threads
+• Any resource requiring acquire/release
+
+---------------------------------------------------------
+
+Q5. How does RAII provide exception safety?****************************
+
+When stack unwinding occurs due to an exception,
+destructors of local objects are automatically called,
+releasing all owned resources.
+
+---------------------------------------------------------
+
+14. One-Line Interview Answer
+-----------------------------
+
+"RAII is a C++ idiom that ties the lifetime of a resource to the lifetime
+of an object. Resources are acquired in the constructor and released in
+the destructor, ensuring automatic cleanup, exception safety, and preventing
+resource leaks."
+
+=========================================================
+Interview Keywords
+=========================================================
+
+Object Lifetime
+        ↓
+Constructor acquires resource
+        ↓
+Object used
+        ↓
+Destructor releases resource
+        ↓
+Automatic cleanup
+        ↓
+Exception Safe
+        ↓
+No Resource Leaks
