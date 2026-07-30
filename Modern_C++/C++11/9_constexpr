@@ -1,3 +1,12 @@
+Interview Key Points
+------------------------
+- Introduced in C++11
+- Forces compile-time evaluation when possible
+- Used for functions, variables, constructors
+- Improves performance and optimization
+- More powerful than const for compile-time logic
+
+
 =========================================
 constexpr (C++11 onwards) – INTERVIEW NOTES
 =========================================
