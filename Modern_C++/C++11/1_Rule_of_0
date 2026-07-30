@@ -1,0 +1,157 @@
+The Rule of Zero is the modern C++ guideline that says:
+
+If your class does not directly own a resource, don't write any of the special member functions. Let the compiler generate them.
+
+This is the preferred approach in modern C++ because resource management is delegated to RAII types such as std::unique_ptr, 
+std::shared_ptr, std::vector, and std::string.
+
+=========================================================
+Rule of Zero (C++11) – Interview Notes
+=========================================================
+
+1. What is Rule of Zero?
+------------------------
+If a class does not directly manage a resource,
+do NOT write:
+
+• Destructor
+• Copy Constructor
+• Copy Assignment Operator
+• Move Constructor
+• Move Assignment Operator
+
+Let the compiler generate them automatically.
+
+---------------------------------------------------------
+
+2. Why Rule of Zero?
+--------------------
+Use RAII classes provided by the STL.
+
+Examples:
+• std::vector
+• std::string
+• std::unique_ptr
+• std::shared_ptr
+
+These classes already manage resources correctly.
+
+---------------------------------------------------------
+
+3. Example
+----------
+
+class Buffer
+{
+private:
+    std::vector<int> data;
+
+public:
+    Buffer(int size)
+        : data(size)
+    {
+    }
+};
+
+No destructor.
+No copy constructor.
+No assignment operators.
+No move constructor.
+
+Compiler-generated versions are sufficient.
+
+---------------------------------------------------------
+
+4. Why?
+-------
+
+std::vector already performs:
+• Deep copy
+• Move semantics
+• Automatic cleanup
+• Exception safety
+
+Therefore your class doesn't need to.
+
+---------------------------------------------------------
+
+5. Rule of Three vs Five vs Zero
+
+Rule of Three
+--------------
+If managing a resource manually,
+implement:
+• Destructor
+• Copy Constructor
+• Copy Assignment
+
+Rule of Five
+-------------
+In C++11+, also implement:
+• Move Constructor
+• Move Assignment
+
+Rule of Zero
+-------------
+Don't manage resources manually.
+Use RAII classes and let the compiler
+generate everything.
+
+---------------------------------------------------------
+
+6. Example using unique_ptr
+
+class Employee
+{
+private:
+    std::unique_ptr<int> salary;
+
+public:
+    Employee()
+        : salary(std::make_unique<int>(100))
+    {
+    }
+};
+
+No destructor needed.
+
+---------------------------------------------------------
+
+7. Interview Questions
+----------------------
+
+Q. Which rule should be preferred?
+
+A.
+Rule of Zero.
+
+Modern C++ encourages using standard RAII classes
+instead of managing resources manually.
+
+Q. When should Rule of Five be used?
+
+A.
+Only when your class directly owns resources
+using APIs like new/delete, malloc/free,
+or other non-RAII resources.
+
+---------------------------------------------------------
+
+8. One-Line Interview Answer
+----------------------------
+
+"Rule of Zero means classes should not directly manage resources.
+Instead, use RAII types like std::vector, std::string, and
+std::unique_ptr, allowing the compiler-generated special member
+functions to handle copying, moving, and destruction."
+
+=========================================================
+Interview Summary
+=========================================================
+
+Rule of Three  → Manual resource management (C++03)
+
+Rule of Five   → Manual resource management + Move semantics (C++11)
+
+Rule of Zero   → No manual resource management; rely on RAII types
+                 and compiler-generated special member functions.
