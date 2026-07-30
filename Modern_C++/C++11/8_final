@@ -1,3 +1,14 @@
+-----------------------------------------
+
+8. Interview Key Points
+-----------------------
+- Introduced in C++11
+- final class → cannot be inherited
+- final function → cannot be overridden
+- Helps enforce design constraints
+- Works only with classes and virtual functions
+
+
 =========================================
 final (C++11) – INTERVIEW NOTES
 =========================================
@@ -127,14 +138,6 @@ public:
     }
 };
 
------------------------------------------
 
-8. Interview Key Points
------------------------
-- Introduced in C++11
-- final class → cannot be inherited
-- final function → cannot be overridden
-- Helps enforce design constraints
-- Works only with classes and virtual functions
 
 =========================================
