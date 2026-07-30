@@ -19,7 +19,21 @@ Example:
 constexpr int x = 10;
 constexpr int y = x * 2;
 
-int arr[x];   // valid (compile-time constant)
+int arr[x];   // valid (compile-time constant)***************
+
+int getValue()
+{
+    return 10;
+}
+
+int x = getValue();   // Runtime initialization
+
+constexpr int getValue()
+{
+    return 10;
+}
+
+constexpr int x = getValue();   // Compile-time
 
 -----------------------------------------
 
