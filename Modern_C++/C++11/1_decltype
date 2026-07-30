@@ -132,6 +132,8 @@ Result:
 =========================================
 With decltype
 =========================================
+Solution in C++11: Trailing Return Type************
+C++11 introduced the trailing return type syntax:
 
 template <typename T1, typename T2>
 auto add(T1 a, T2 b) -> decltype(a + b)
@@ -165,6 +167,20 @@ auto add(T1 a, T2 b) -> decltype(a+b);
 Reason:
 After the parameter list, a and b are in scope, so
 decltype(a+b) can be evaluated.
+
+What changed in C++14?
+C++14 introduced return type deduction for normal functions.
+
+template<typename T, typename U>
+auto add(T a, U b)
+{
+    return a + b;
+}
+
+The compiler deduces the return type from the return statement.
+
+No decltype is needed.
+
 
 =========================================
 Interview One-Liner
