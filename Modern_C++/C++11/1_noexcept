@@ -1,0 +1,172 @@
+=========================================================
+noexcept (C++11) – Interview Notes
+=========================================================
+
+1. What is noexcept?
+---------------------
+- Introduced in C++11.
+- Specifies that a function will NOT throw exceptions.
+- If an exception escapes a noexcept function, std::terminate() is called.
+
+Syntax:
+-------
+void func() noexcept
+{
+    // No exceptions should escape
+}
+
+---------------------------------------------------------
+
+2. Why use noexcept?
+--------------------
+• Documents that a function never throws.
+• Enables compiler optimizations.
+• Improves performance of STL containers.
+• Important for move constructors and move assignment operators.
+
+---------------------------------------------------------
+
+3. noexcept and Move Semantics (Most Important)
+-----------------------------------------------
+Mark move constructor and move assignment as noexcept.
+
+class A
+{
+public:
+    A(A&&) noexcept {}
+    A& operator=(A&&) noexcept = default;
+};
+
+Why?
+
+- During reallocation, std::vector prefers MOVE only if it is noexcept.
+- Otherwise it may COPY elements to provide strong exception safety.
+
+Interview Answer:
+"STL containers prefer noexcept move constructors because if moving throws
+during reallocation, the container could be left in an inconsistent state."
+
+---------------------------------------------------------
+
+4. Checking noexcept
+--------------------
+
+void foo() noexcept {}
+
+void bar() {}
+
+cout << noexcept(foo()) << endl;   // true
+cout << noexcept(bar()) << endl;   // false
+
+noexcept(expression)
+
+Returns:
+true  -> expression cannot throw
+false -> expression may throw
+
+---------------------------------------------------------
+
+5. Conditional noexcept
+-----------------------
+
+template<typename T>
+void swap(T& a, T& b)
+noexcept(noexcept(std::swap(a,b)))
+{
+    std::swap(a,b);
+}
+
+Used in generic/template code.
+
+---------------------------------------------------------
+
+6. What if noexcept function throws?
+------------------------------------
+
+void func() noexcept
+{
+    throw runtime_error("Error");
+}
+
+Result:
+std::terminate() is called immediately.*********************************
+
+---------------------------------------------------------
+
+7. noexcept vs throw()
+----------------------
+
+Old C++98:
+void func() throw();
+
+Modern C++11:
+void func() noexcept;
+
+Use noexcept.
+throw() is deprecated (C++11) and removed in C++17.
+
+---------------------------------------------------------
+
+8. Interview Questions
+----------------------
+
+Q1. What is noexcept?
+A:
+Specifies that a function will not throw exceptions.
+
+Q2. What happens if a noexcept function throws?
+A:
+std::terminate() is called immediately.
+
+Q3. Why should move constructors be noexcept?
+A:
+STL containers like std::vector prefer moving elements only when move
+operations are noexcept. Otherwise they may copy elements instead.
+
+Q: How does noexcept improve performance?**********************************************
+
+A:
+
+"The biggest performance benefit is that STL containers such as std::vector
+can safely use move constructors during reallocation. Moving objects is
+typically much cheaper than copying them. Additionally, because the compiler
+knows a noexcept function cannot throw, it can perform certain optimizations
+such as simplifying exception-handling code."
+
+=========================================================
+Interview Keyword
+=========================================================
+
+noexcept
+        ↓
+Move is guaranteed not to throw
+        ↓
+std::vector chooses MOVE
+        ↓
+Less copying
+        ↓
+Better performance
+
+---------------------------------------------------------
+
+9. Key Interview Points
+-----------------------
+
+✓ Introduced in C++11.
+✓ Indicates a function will not throw exceptions.
+✓ If violated → std::terminate().
+✓ Important for move constructor and move assignment.
+✓ std::vector prefers noexcept move over copy.
+✓ Use noexcept(expression) in template code.
+✓ Replaces old throw() exception specification.
+
+---------------------------------------------------------
+
+10. One-Line Interview Answer
+-----------------------------
+
+"noexcept is a C++11 feature that guarantees a function will not throw
+exceptions. If it does, std::terminate() is called. It is especially
+important for move constructors because STL containers such as std::vector
+prefer noexcept move operations during reallocation, improving performance
+and exception safety."
