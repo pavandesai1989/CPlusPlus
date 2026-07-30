@@ -1,0 +1,80 @@
+Rule of Three: If a class manages a resource (such as dynamically allocated memory, file handles, sockets, etc.) and 
+defines any one of the destructor, copy constructor, or copy assignment operator, ***********
+it usually needs to define all three. This prevents shallow copies, double deletion, and resource leaks.
+
+It demonstrates:
+
+✔ Constructor acquires a resource (new[])
+✔ Destructor releases the resource (delete[])
+✔ Copy constructor performs a deep copy
+✔ Copy assignment operator performs a deep copy and handles self-assignment
+
+#include <iostream>
+using namespace std;
+
+class Buffer
+{
+private:
+    int* m_ptr;
+    int m_size;
+
+public:
+    // Constructor
+    Buffer(int size)
+        : m_size(size), m_ptr(new int[size])
+    {
+        cout << "Constructor\n";
+
+        for (int i = 0; i < m_size; i++)
+            m_ptr[i] = i + 1;
+    }
+
+    // Destructor
+    ~Buffer()
+    {
+        cout << "Destructor\n";
+        delete[] m_ptr;
+    }
+
+    // Copy Constructor (Deep Copy)
+    Buffer(const Buffer& other)
+        : m_size(other.m_size),
+          m_ptr(new int[other.m_size])
+    {
+        cout << "Copy Constructor\n";
+
+        for (int i = 0; i < m_size; i++)
+            m_ptr[i] = other.m_ptr[i];
+    }
+
+    // Copy Assignment Operator (Deep Copy)
+    Buffer& operator=(const Buffer& other)
+    {
+        cout << "Copy Assignment\n";
+
+        if (this == &other)
+            return *this;
+
+        int* temp = new int[other.m_size];
+
+        for (int i = 0; i < other.m_size; i++)
+            temp[i] = other.m_ptr[i];
+
+        delete[] m_ptr;
+
+        m_ptr = temp;
+        m_size = other.m_size;
+
+        return *this;
+    }
+};
+
+int main()
+{
+    Buffer b1(5);
+
+    Buffer b2 = b1;      // Copy Constructor
+
+    Buffer b3(3);
+    b3 = b1;             // Copy Assignment
+}
