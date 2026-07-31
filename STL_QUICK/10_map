@@ -504,3 +504,149 @@ std::map is a Red-Black Tree based associative
 container that stores unique sorted keys with
 their values and provides O(log n) insert,
 search and erase operations.
+
+
+#include <iostream>
+#include <map>
+using namespace std;
+
+int main()
+{
+    map<int, string> mp;
+
+    // =====================================
+    // insert()
+    // =====================================
+    mp.insert({101, "Pavan"});
+    mp.insert({102, "Rahul"});
+    mp.insert({103, "Amit"});
+
+    // =====================================
+    // emplace() - C++11
+    // =====================================
+    mp.emplace(104, "John");
+
+
+    // =====================================
+    // operator[] 
+    // Insert or update
+    // =====================================
+    mp[105] = "David";     // inserts new key
+    mp[101] = "Updated";   // updates existing value
+
+
+    // =====================================
+    // Traverse map
+    // =====================================
+    cout << "Map elements:\n";
+
+    for(auto &p : mp)
+    {
+        cout << p.first << " -> "
+             << p.second << endl;
+    }
+
+
+    // =====================================
+    // find()
+    // =====================================
+    auto it = mp.find(102);
+
+    if(it != mp.end())
+    {
+        cout << "\nFound: "
+             << it->second << endl;
+    }
+
+
+    // =====================================
+    // count()
+    // =====================================
+    if(mp.count(103))
+    {
+        cout << "Key 103 exists\n";
+    }
+
+
+    // =====================================
+    // at()
+    // =====================================
+    cout << "Value at 104: "
+         << mp.at(104) << endl;
+
+
+    // =====================================
+    // erase(key)
+    // =====================================
+    mp.erase(105);
+
+
+    // =====================================
+    // erase(iterator)
+    // =====================================
+    auto eraseIt = mp.find(104);
+
+    if(eraseIt != mp.end())
+    {
+        mp.erase(eraseIt);
+    }
+
+
+    // =====================================
+    // lower_bound()
+    // first element >= key
+    // =====================================
+    auto lb = mp.lower_bound(102);
+
+    if(lb != mp.end())
+    {
+        cout << "\nlower_bound(102): "
+             << lb->first << " "
+             << lb->second << endl;
+    }
+
+
+    // =====================================
+    // upper_bound()
+    // first element > key
+    // =====================================
+    auto ub = mp.upper_bound(102);
+
+    if(ub != mp.end())
+    {
+        cout << "upper_bound(102): "
+             << ub->first << " "
+             << ub->second << endl;
+    }
+
+
+    // =====================================
+    // begin() / end()
+    // =====================================
+    cout << "\nFirst element: "
+         << mp.begin()->first << endl;
+
+
+    // =====================================
+    // size()
+    // empty()
+    // =====================================
+    cout << "Size: "
+         << mp.size() << endl;
+
+    cout << "Empty: "
+         << (mp.empty() ? "Yes" : "No")
+         << endl;
+
+
+    // =====================================
+    // clear()
+    // =====================================
+    mp.clear();
+
+    cout << "After clear size: "
+         << mp.size() << endl;
+
+
+    return 0;
+}
