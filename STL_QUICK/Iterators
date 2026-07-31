@@ -11,6 +11,34 @@
 Example:
 vector<int>::iterator it;
 
+=========================================================
+C++ STL CONTAINERS VS ITERATOR TYPES
+=========================================================
+
+| Container              | Category                  | Internal Data Structure       | Iterator Type        |
+|------------------------|---------------------------|-------------------------------|----------------------|
+| std::array              | Sequence Container         | Fixed Array                    | Random Access        |
+| std::vector             | Sequence Container         | Dynamic Array                  | Random Access        |
+| std::deque              | Sequence Container         | Segmented Array                | Random Access        |
+| std::list               | Sequence Container         | Doubly Linked List             | Bidirectional        |
+| std::forward_list       | Sequence Container         | Singly Linked List             | Forward              |
+|------------------------|---------------------------|-------------------------------|----------------------|
+| std::map                | Ordered Associative        | Red-Black Tree                 | Bidirectional        |
+| std::multimap           | Ordered Associative        | Red-Black Tree                 | Bidirectional        |
+| std::set                | Ordered Associative        | Red-Black Tree                 | Bidirectional        |
+| std::multiset           | Ordered Associative        | Red-Black Tree                 | Bidirectional        |
+|------------------------|---------------------------|-------------------------------|----------------------|
+| std::unordered_map      | Unordered Associative      | Hash Table                     | Forward              |
+| std::unordered_multimap | Unordered Associative      | Hash Table                     | Forward              |
+| std::unordered_set      | Unordered Associative      | Hash Table                     | Forward              |
+| std::unordered_multiset | Unordered Associative      | Hash Table                     | Forward              |
+|------------------------|---------------------------|-------------------------------|----------------------|
+| std::stack              | Container Adaptor          | deque (default)                | Not Exposed          |
+| std::queue              | Container Adaptor          | deque (default)                | Not Exposed          |
+| std::priority_queue     | Container Adaptor          | vector + Heap                  | Not Exposed          |
+
+=========================================================
+
 -----------------------------------------
 2. Types of Iterators (VERY IMPORTANT)
 -----------------------------------------
