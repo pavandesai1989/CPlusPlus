@@ -1,3 +1,32 @@
+forward_list was introduced in c++11****
+
+C++11 introduced std::forward_list to provide:
+✅ Less memory per node (only one pointer instead of two)
+✅ Faster insertion/removal at the front
+✅ Suitable when only forward traversal is needed
+
+Why doesn't forward_list have push_back()? ⭐⭐⭐⭐⭐
+Because it is a singly linked list.
+To insert at the end, it must traverse from the beginning to find the last node.
+That would be O(n).
+The STL designers chose not to provide push_back() because it would suggest constant-time behavior when it isn't.
+
+Why doesn't forward_list have size()? ⭐⭐⭐⭐************
+Because maintaining the size would require an extra member variable.
+The design goal of forward_list was minimum memory overhead.
+To know the size, you can use:
+distance(fl.begin(), fl.end());
+Complexity: O(n).
+
+Why insert_after() instead of insert()? ⭐⭐⭐⭐⭐
+Because each node knows only its next node.
+Inserting before a node requires access to the previous node, which is not available in a singly linked list.
+
+When would you use forward_list?*********
+Lower memory usage is important.
+Only forward traversal is needed.
+Frequent insertion/removal at the front.
+
 =========================================
 C++ std::forward_list (Singly Linked List)
 INTERVIEW NOTES (CLEAN & FINAL)
@@ -53,7 +82,7 @@ forward_list (singly linked list):
 
 -----------------------------------------
 
-5. Why no push_back()?
+5. Why no push_back()?***************************
 -----------------------
 - No tail pointer tracking
 - Must traverse entire list to reach end
@@ -61,11 +90,11 @@ forward_list (singly linked list):
 Cost:
 O(n)
 
-👉 So STL does NOT provide push_back()
+👉 So STL does NOT provide push_back()*********************
 
 -----------------------------------------
 
-6. Why insert_after() instead of insert()?
+6. Why insert_after() instead of insert()?**********
 ------------------------------------------
 Because each node knows ONLY next node.
 
@@ -87,7 +116,7 @@ pop_front()      -> O(1)
 insert_after()   -> O(1)
 erase_after()    -> O(1)
 access/search    -> O(n)
-size()           -> O(n) or O(1) depending on implementation
+size()           there is no size() member function ********
 
 -----------------------------------------
 
