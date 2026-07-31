@@ -1,3 +1,45 @@
+push_back()
+push_front()
+
+pop_back()
+pop_front()
+
+front()
+back()
+
+insert() Inserts before the iterator position. ************
+erase()
+
+size()
+empty()
+
+begin()
+end()
+
+REFER TO THE CODE AT THE END FOR THE FUNCTIONS *********
+
+Q: Can std::list be sorted?
+You should answer:
+"Yes, using list::sort(). std::sort() cannot be used because list provides bidirectional iterators, not random access iterators."
+
+When would you use list instead of vector? ⭐⭐⭐⭐⭐
+Expected answer:
+Frequent insertions/deletions in the middle.
+Stable iterators/references are required.
+Random access is not important.
+
+Why doesn't std::sort() work on list? ⭐⭐⭐⭐⭐
+Expected answer:
+"std::sort() requires random access iterators. std::list provides only bidirectional iterators, so we use list::sort()."
+
+Does list support random access?
+Answer:
+No. operator[] and at() are not available.
+
+What is splice()? ⭐⭐⭐
+Expected answer:
+Moves nodes from one list to another without copying or reallocating them.
+
 =========================================
 C++ std::list (Doubly Linked List)
 INTERVIEW NOTES (CLEAN & FINAL)
@@ -239,120 +281,65 @@ but it does not support random access and has poor cache locality.
 ✔ Higher memory overhead
 ✔ Slower than vector in most real cases due to cache misses
 
-=========================================
-
-#include <iostream>
-#include <list>
+#include<iostream>
+#include<list>
 using namespace std;
 
-int main() {
 
-    list<int> l;
-
-    // -------------------------
-    // push_back / push_front
-    // -------------------------
-    l.push_back(10);
-    l.push_back(20);
-    l.push_front(5);
-    l.push_front(1);
-
-    cout << "After push_front/back: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // front / back
-    // -------------------------
-    cout << "Front: " << l.front() << "\n";
-    cout << "Back: " << l.back() << "\n";
-
-    // -------------------------
-    // insert (at position)
-    // -------------------------
-    auto it = l.begin();
-    advance(it, 2);   // move iterator to position 2
-    l.insert(it, 99);
-
-    cout << "After insert: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // erase
-    // -------------------------
-    it = l.begin();
-    advance(it, 1);
-    l.erase(it);
-
-    cout << "After erase: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // pop_front / pop_back
-    // -------------------------
-    l.pop_front();
-    l.pop_back();
-
-    cout << "After pop_front/back: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // size / empty
-    // -------------------------
-    cout << "Size: " << l.size() << "\n";
-    cout << "Empty? " << (l.empty() ? "Yes" : "No") << "\n";
-
-    // -------------------------
-    // push more elements
-    // -------------------------
-    l.push_back(10);
-    l.push_back(10);
-    l.push_back(30);
-    l.push_back(20);
-
-    cout << "Before remove/unique: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // remove (remove all occurrences)
-    // -------------------------
-    l.remove(10);
-
-    cout << "After remove(10): ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // unique (remove consecutive duplicates)
-    // -------------------------
-    l.sort();   // important: unique works on consecutive duplicates
-    l.unique();
-
-    cout << "After sort + unique: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // reverse
-    // -------------------------
-    l.reverse();
-
-    cout << "After reverse: ";
-    for (auto x : l) cout << x << " ";
-    cout << "\n";
-
-    // -------------------------
-    // clear
-    // -------------------------
-    l.clear();
-
-    cout << "After clear, size = " << l.size() << "\n";
-
-    return 0;
+int main()
+{
+    list<int> lst;
+    
+    lst.push_back(1);
+    lst.push_back(2);
+    lst.push_front(3);
+    lst.push_front(4);
+    
+    auto it = lst.begin();
+    for(it;it!=lst.end();++it)
+    {
+        cout<<*it<<" "; //4 3 2 1
+    }
+    cout<<endl;
+    
+    int& f = lst.front();
+    f = 23;
+    
+    int& b=lst.back();
+    b = 35;
+    
+    it = lst.begin();
+    for(it;it!=lst.end();++it)
+    {
+        cout<<*it<<" ";//23 3 1 35
+    }
+    
+    //insert : add ele before the it
+    it=lst.begin();
+    advance(it,2); //points to 1 
+    lst.insert(it,345);
+    cout<<endl;
+    it = lst.begin();
+    for(it;it!=lst.end();++it)
+    {
+        cout<<*it<<" ";//23 3 345 1 35
+    }
+    
+    //erase
+    it=lst.begin();
+    advance(it,3); //points to 1
+    
+    lst.erase(it);
+    cout<<endl;
+    it = lst.begin();
+    for(it;it!=lst.end();++it)
+    {
+        cout<<*it<<" ";//23 3 345 35
+    }
+    cout<<endl;
+    cout<<"size is "<<lst.size();
+    
+    
 }
-END OF NOTES
+
 =========================================
