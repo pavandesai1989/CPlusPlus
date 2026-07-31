@@ -38,29 +38,21 @@ deque is the default container for stack because it provides efficient O(1) inse
 back without the large reallocation costs associated with vector, and stack does not require contiguous memory.
 
 If asked "Why not vector?", say:
-
 "vector would also work, but deque avoids expensive full-container reallocations and contiguous-memory
 requirements, making it a safer general-purpose default for a stack adaptor."
-
 -----------------------------------------
-
 3. LIFO Principle
 -----------------
 Last In First Out
-
 Real example:
 Stack of plates
 - last plate placed is removed first
-
 -----------------------------------------
-
 4. Internal Implementation
 --------------------------
 stack<T> internally uses:
-
 default:
     deque<T>
-
 Can also use:
     vector<T>
     list<T>
@@ -70,9 +62,7 @@ Requirement:
 
 Example:
 stack<int, deque<int>> st;
-
 -----------------------------------------
-
 5. Default Container******VVVVVVVVVVVIMP
 --------------------
 - deque is default
@@ -95,7 +85,6 @@ list:
 ✘ Terrible cache locality
 ✘ High memory overhead
 -----------------------------------------
-
 6. Complexity
 -------------
 push()   -> O(1)
@@ -103,9 +92,7 @@ pop()    -> O(1)
 top()    -> O(1)
 size()   -> O(1)
 empty()  -> O(1)
-
 -----------------------------------------
-
 7. Allowed Operations
 ---------------------
 ✔ push()
@@ -120,9 +107,7 @@ empty()  -> O(1)
 
 Reason:
 To maintain strict LIFO behavior
-
 -----------------------------------------
-
 8. stack vs vector
 ------------------
 stack:
@@ -136,8 +121,7 @@ vector:
 - flexible
 
 -----------------------------------------
-
-9. stack vs queue
+9. stack vs queue**************
 -----------------
 Stack:
 - LIFO → last in first out
@@ -146,7 +130,6 @@ Stack:
 Queue:
 - FIFO → first in first out
 - uses front()
-
 -----------------------------------------
 
 10. Why no iteration in stack?
