@@ -18,6 +18,35 @@ end()
 
 REFER TO THE CODE AT THE END FOR THE FUNCTIONS *********
 
+What does splice() do?
+It moves nodes from one list to another.
+✅ No copying
+✅ No moving of elements
+✅ No new allocation
+✅ Just changes pointers
+
+#include <iostream>
+#include <list>
+using namespace std;
+int main()
+{
+    list<int> l1 = {1,2,3};
+    list<int> l2 = {4,5,6};
+
+    auto it = next(l1.begin(), 1);   // Points to 2
+
+    l1.splice(it, l2);
+
+    for (int x : l1)
+        cout << x << " ";
+
+    cout << "\nSize of l2 = " << l2.size();
+}
+
+
+1 4 5 6 2 3
+Size of l2 = 0
+
 Q: Can std::list be sorted?
 You should answer:
 "Yes, using list::sort(). std::sort() cannot be used because list provides bidirectional iterators, not random access iterators."
