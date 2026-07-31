@@ -5,6 +5,15 @@ C++11 introduced std::forward_list to provide:
 ✅ Faster insertion/removal at the front
 ✅ Suitable when only forward traversal is needed
 
+why was the need of before_begin()*************
+"std::forward_list only provides insert_after(), not insert(), 
+because it's implemented as a singly linked list. To insert at the front using an 'insert after' operation, 
+the STL provides a special iterator, 
+before_begin(), which conceptually points before the first element. 
+This allows insertion at the beginning in O(1) time."
+
+list 1 2 4 if you want to insert ele before 1? use this****
+
 before_begin() ⭐⭐⭐⭐
 Returns an iterator before the first element.
 Needed because insertion is done using insert_after().
