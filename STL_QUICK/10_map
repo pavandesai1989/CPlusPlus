@@ -49,6 +49,94 @@ map<int,string> mp;
 mp[1] = "Pavan";
 mp[2] = "Rahul";
 
+emplace()
+
+Constructs the element directly in-place.
+Avoids an extra copy/move compared to insert() in many cases.
+Complexity: O(log n)
+
+*****VVVIMP**
+=========================================
+Difference Between insert() and emplace()
+=========================================
+
+insert()
+--------
+- Inserts an existing object into the container.
+- The object is created before insertion.
+- May involve an extra copy or move.
+
+Example:
+
+map<int,string> mp;
+
+mp.insert({1, "Alice"});
+
+-----------------------------------------
+
+emplace()   (Introduced in C++11)
+---------------------------------
+- Constructs the element directly inside the container.
+- Avoids creating a temporary object in many cases.
+- Can be more efficient than insert().
+
+Example:
+
+map<int,string> mp;
+
+mp.emplace(1, "Alice");
+
+-----------------------------------------
+
+Example with User-Defined Type
+
+class Employee
+{
+public:
+    string name;
+    int age;
+
+    Employee(string n, int a)
+        : name(n), age(a) {}
+};
+
+map<int, Employee> mp;
+
+// insert()
+mp.insert({1, Employee("Alice", 25)});
+
+// emplace()
+mp.emplace(2, Employee("Bob", 30));
+
+// Even better (constructs Employee in place)
+mp.emplace(piecewise_construct,
+           forward_as_tuple(3),
+           forward_as_tuple("Charlie", 28));
+
+-----------------------------------------
+
+Interview Answer ⭐⭐⭐⭐⭐
+
+insert() inserts an already-created object into the container, 
+whereas emplace() constructs the object directly inside the container 
+using the provided constructor arguments, which can avoid an extra copy or move.
+
+-----------------------------------------
+
+Which should I use?
+
+✔ Use emplace() when creating a new object.
+✔ Use insert() when you already have an object.
+
+Example:
+
+Employee e("David", 35);
+
+mp.insert({4, e});    // Existing object
+
+
+
+*****
 =========================================
 2. Internal Implementation
 =========================================
