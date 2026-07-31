@@ -26,9 +26,16 @@ Iterator Invalidate:
 =========================================
 1. What is map?
 =========================================
+Why are they called "Associative"?
+Because they associate a key with a value.
+
+Associative containers are STL containers that store and retrieve elements using keys instead of numeric indices. 
+They provide efficient lookup, insertion, and deletion based on the key. 
+Ordered associative containers (map, set) are typically implemented as 
+Red-Black Trees, 
+while unordered associative containers (unordered_map, unordered_set) are implemented as hash tables.
 
 std::map is an associative container that stores:
-
 Key -> Value
 
 Properties:
@@ -38,9 +45,7 @@ Properties:
 ✔ O(log n) insert, find and erase
 
 Example:
-
 map<int,string> mp;
-
 mp[1] = "Pavan";
 mp[2] = "Rahul";
 
@@ -95,38 +100,30 @@ clear()
 5. Iterator Type
 =========================================
 
-Bidirectional Iterator
-
+Bidirectional Iterator*****************
 Supported:
-
 ++it
 --it
 
 Not Supported:
-
 it + 1
 it - 1
 it[0]
 
 Reason:
-
 Map is tree-based, not contiguous memory.
 
 =========================================
-6. Can Key Be Modified?
+6. Can Key Be Modified?***********
 =========================================
 
 No.
-
 Example:
-
 for(auto& p : mp)
 {
     p.first = 100; // Compilation Error
 }
-
 Reason:
-
 Changing a key may violate tree ordering.
 
 =========================================
@@ -134,13 +131,9 @@ Changing a key may violate tree ordering.
 =========================================
 
 Yes.
-
 Example:
-
 mp[1] = "Pavan";
-
 mp[1] = "Rahul";
-
 Only key is const.
 
 =========================================
@@ -148,79 +141,119 @@ Only key is const.
 =========================================
 
 pair<const Key, Value>
-
 Example:
-
 map<int,string>
-
 stores:
-
 pair<const int,string>
-
 This is why key cannot be modified.
 
 =========================================
-9. User Defined Key Support
+9. User Defined Key Support*****************************VVVVVVIMP
 =========================================
-
 Need either:
-
 1. operator< overload
-
 OR
-
 2. Custom comparator
 
-Example:
+Why is operator< required?
+std::map is implemented as a Red-Black Tree. It must be able to compare keys to decide whether to go left or right in the tree.
+
+*******
+#include <iostream>
+#include <map>
+#include <string>
+using namespace std;
 
 class Employee
 {
 public:
     int id;
 
+    Employee(int i) : id(i) {}
+
+    // Required by std::map
     bool operator<(const Employee& other) const
     {
         return id < other.id;
     }
 };
 
-map<Employee,string> mp;
+int main()
+{
+    map<Employee, string> employees;
 
-=========================================
-10. lower_bound() and upper_bound()
-=========================================
+    employees[Employee(103)] = "Alice";
+    employees[Employee(101)] = "Bob";
+    employees[Employee(102)] = "Charlie";
 
-lower_bound(k)
---------------
-First key >= k
+    cout << "Employees:\n";
 
-upper_bound(k)
---------------
-First key > k
+    for (const auto& emp : employees)
+    {
+        cout << "ID : " << emp.first.id
+             << "  Name : " << emp.second << endl;
+    }
 
-Example:
+    // Find employee
+    Employee e(102);
 
-Keys:
+    auto it = employees.find(e);
 
-10 20 30
+    if (it != employees.end())
+    {
+        cout << "\nFound Employee : "
+             << it->second << endl;
+    }
+    else
+    {
+        cout << "Employee not found\n";
+    }
+}
+*******
 
-lower_bound(20) -> 20
+*****using custom compare***
+#include <iostream>
+#include <map>
+using namespace std;
 
-upper_bound(20) -> 30
+class Employee
+{
+public:
+    int id;
 
+    Employee(int i) : id(i) {}
+};
+
+struct CompareEmployee
+{
+    bool operator()(const Employee& a, const Employee& b) const
+    {
+        return a.id < b.id;
+    }
+};
+
+int main()
+{
+    map<Employee, string, CompareEmployee> employees;
+
+    employees[Employee(2)] = "Alice";
+    employees[Employee(1)] = "Bob";
+
+    for (const auto& e : employees)
+    {
+        cout << e.first.id << " " << e.second << endl;
+    }
+}
+******
 =========================================
 11. Why No Random Access?
 =========================================
-
 Map is tree-based.
-
 Invalid:
-
 it + 1
 it[5]
 
 Only iterator traversal is supported.
-
 =========================================
 MOST ASKED INTERVIEW QUESTIONS
 =========================================
@@ -250,89 +283,63 @@ Use unordered_map:
 
 2. Difference Between map and multimap?
 ----------------------------------------
-
 map:
 - Unique keys
-
 multimap:
 - Duplicate keys allowed
-
 --------------------------------------------
-
 3. Does map allow duplicate keys?
 ----------------------------------
-
 No.
-
 Keys must be unique.
-
 --------------------------------------------
-
 4. Does map use operator== ?
 ----------------------------------
-
 No.
-
 map uses comparator (operator< by default).
-
 Equivalent keys:
-
 !(a < b) && !(b < a)
-
 Map does NOT use operator== for duplicate detection.
 
 --------------------------------------------
-
-5. Difference Between operator[] and find()?
+5. Difference Between operator[] and find()? **********************
 --------------------------------------------
-
 find():
 -------
 Does NOT insert a key.
 
 Example:
-
 mp.find(100);
-
 Map size unchanged.
 
 operator[]:
 ------------
 May insert a new key.
-
 Example:
-
 mp[100];
-
 If absent:
-
 100 -> default value
-
 is inserted.
+VERY COMMON INTERVIEW QUESTION****************VVVVVVVVVIMP
 
-VERY COMMON INTERVIEW QUESTION
+find() only searches and never modifies the map, 
+whereas operator[] inserts a new element with a default-constructed value if the key is not already present.
 
 --------------------------------------------
 
 6. Difference Between operator[] and at()?
 -------------------------------------------
-
 operator[]:
 ------------
 Creates element if key absent.
-
 Example:
-
 mp[10];
-
 May insert a new node.
 
 at():
 -----
 Does NOT insert.
-
 mp.at(10);
-
 Throws out_of_range exception
 if key not found.
 
@@ -340,20 +347,14 @@ if key not found.
 
 7. What Does find() Return?
 --------------------------------------------
-
 Iterator.
-
 Example:
-
 auto it = mp.find(10);
-
 if(it != mp.end())
 {
     cout << it->second;
 }
-
 If not found:
-
 it == mp.end()
 
 --------------------------------------------
@@ -375,51 +376,36 @@ No reallocation like vector.
 
 9. When Are Iterators Invalidated?
 -----------------------------------
-
 Only when the pointed element is erased.
-
 Example:
-
 auto it = mp.find(10);
-
 mp.erase(10);
-
 Now 'it' becomes invalid.
 
 --------------------------------------------
 
 10. Why Is Key Stored As const?
 --------------------------------
-
 To preserve tree ordering.
-
 Changing a key may break the
 Red-Black Tree structure.
 
 --------------------------------------------
 
-11. Can map Store User Defined Keys?
+11. Can map Store User Defined Keys?************************VVVVIMP sample code
 ------------------------------------
-
 Yes.
-
 Need:
-
 1. operator<
-
 OR
-
 2. Custom comparator
 
 --------------------------------------------
 
 12. What Is The Type Stored In map?
 -----------------------------------
-
 pair<const Key, Value>
-
 Example:
-
 pair<const int, string>
 
 =========================================
