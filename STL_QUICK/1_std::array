@@ -1,0 +1,233 @@
+=========================================================
+C++ std::array (Fixed-Size Sequence Container)
+INTERVIEW NOTES (CLEAN & FINAL)
+=========================================================
+
+1. What is std::array?
+----------------------
+- std::array is a fixed-size sequence container.
+- Introduced in C++11.
+- Wrapper around a C-style array.
+- Provides STL container interface.
+
+Header:
+#include <array>
+
+Declaration:
+
+std::array<int, 5> arr = {1,2,3,4,5};
+
+-----------------------------------------
+
+2. Internal Implementation
+--------------------------
+- Stores elements contiguously in memory.
+- Size is fixed at compile time.
+- No dynamic memory allocation.
+
+Memory Layout:
+
++----+----+----+----+----+
+| 10 | 20 | 30 | 40 | 50 |
++----+----+----+----+----+
+
+Same contiguous layout as a C array.
+
+-----------------------------------------
+
+3. Why use std::array?
+----------------------
+✔ STL container interface
+✔ Works with STL algorithms
+✔ Knows its size
+✔ Can be copied/assigned
+✔ Safer than C arrays using at()
+
+-----------------------------------------
+
+4. Common Functions
+-------------------
+operator[]
+at()
+front()
+back()
+
+begin()
+end()
+
+size()
+empty()
+
+fill()
+swap()
+
+data()
+
+-----------------------------------------
+
+5. Complexity
+-------------
+operator[]      -> O(1)
+at()            -> O(1)
+front()         -> O(1)
+back()          -> O(1)
+size()          -> O(1)
+empty()         -> O(1)
+fill()          -> O(n)
+swap()          -> O(n)
+begin()/end()   -> O(1)
+
+-----------------------------------------
+
+6. Random Access
+----------------
+✔ Supported
+
+Example:
+
+arr[2]
+arr.at(2)
+
+Complexity:
+O(1)
+
+-----------------------------------------
+
+7. Memory
+---------
+✔ Contiguous memory
+✔ No heap allocation
+✔ Fixed-size container
+
+Unlike vector:
+- Never reallocates
+- Capacity == Size
+
+-----------------------------------------
+
+8. What is NOT supported?********************
+-------------------------
+❌ push_back()
+❌ pop_back()
+❌ insert()
+❌ erase()
+❌ resize()********************************
+
+Reason:
+Size is fixed at compile time.
+
+-----------------------------------------
+
+9. std::array vs C Array
+------------------------
+
+C Array
+-------
+- No size()
+- No iterators
+- Doesn't work naturally with STL algorithms
+- Cannot be assigned directly
+
+std::array
+----------
+- size()
+- begin()/end()
+- STL compatible
+- Copyable
+- Assignable
+- at() provides bounds checking
+
+-----------------------------------------
+
+10. std::array vs std::vector
+-----------------------------
+
+std::array
+-----------
+✔ Fixed size
+✔ No dynamic allocation
+✔ Contiguous memory
+✔ No reallocation
+✔ Faster when size is known
+
+std::vector
+------------
+✔ Dynamic size
+✔ Heap allocation
+✔ Can grow/shrink
+✔ May reallocate memory
+
+-----------------------------------------
+
+11. Important Interview Questions
+---------------------------------
+
+Q. Is std::array contiguous?
+Answer:
+Yes.
+
+---------------------------------
+
+Q. Is std::array dynamic?***********
+Answer:
+No.
+Its size is fixed at compile time.
+
+---------------------------------
+
+Q. Does std::array allocate memory on the heap?
+Answer:
+No.
+Elements are stored inside the array object itself.
+
+---------------------------------
+
+Q. Can std::array grow?
+Answer:
+No.
+
+---------------------------------
+
+Q. Does std::array support random access?
+Answer:
+Yes.
+operator[] and at() are O(1).
+
+---------------------------------
+
+Q. Why use std::array instead of a C array?
+
+Answer:
+- STL compatible
+- size()
+- begin()/end()
+- at()
+- Copyable
+- Assignable
+- Safer and easier to use
+
+-----------------------------------------
+
+12. One-line Interview Answer
+-----------------------------
+std::array is a fixed-size, contiguous sequence container introduced in 
+C++11 that wraps a C-style array while providing the standard STL container interface.
+
+-----------------------------------------
+
+13. QUICK REVISION
+------------------
+✔ Introduced in C++11
+✔ Fixed-size container
+✔ Contiguous memory
+✔ Random access O(1)
+✔ No heap allocation
+✔ No push_back()/resize()
+✔ STL compatible
+✔ Works with STL algorithms
+✔ Supports copy and assignment
+✔ Better alternative to C arrays
+
+=========================================================
+END
+=========================================================
