@@ -5,6 +5,16 @@ C++11 introduced std::forward_list to provide:
 ✅ Faster insertion/removal at the front
 ✅ Suitable when only forward traversal is needed
 
+before_begin() ⭐⭐⭐⭐
+Returns an iterator before the first element.
+Needed because insertion is done using insert_after().
+
+Example:
+auto it = fl.before_begin();
+fl.insert_after(it, 5);
+Result:
+5 -> 10 -> 20
+
 Why doesn't forward_list have push_back()? ⭐⭐⭐⭐⭐
 Because it is a singly linked list.
 To insert at the end, it must traverse from the beginning to find the last node.
