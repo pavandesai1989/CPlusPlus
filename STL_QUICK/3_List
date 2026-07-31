@@ -1,3 +1,9 @@
+
+std::list is a doubly linked list that provides O(1) insertion and deletion
+when the iterator to the position is already known. It offers stable
+iterators but does not support random access and has poor cache locality.
+
+
 push_back()
 push_front()
 
