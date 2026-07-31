@@ -159,6 +159,24 @@ stack<T, list<T>>
 ✔ Expression evaluation
 ✔ Backtracking problems
 
+Difference between push() and emplace()? ⭐⭐⭐⭐⭐
+----------------------------------------------------
+
+push():
+
+Creates object first and inserts it.
+
+emplace():
+
+Constructs object directly inside the stack.
+
+Example:
+
+stack<pair<int,string>> st;
+
+st.push({1,"A"});
+
+st.emplace(1,"A");
 -----------------------------------------
 
 13. Most Used Functions
