@@ -338,6 +338,8 @@ int main()
     }
     cout<<endl;
     cout<<"size is "<<lst.size();
+
+  lst.sort(); //std sort woork here. 
     
     
 }
