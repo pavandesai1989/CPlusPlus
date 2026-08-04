@@ -1,1 +1,169 @@
+#include<iostream>
+#include<cstring>
+using namespace std;
 
+
+class MyString
+{
+private:
+
+    char* data;
+
+
+public:
+
+    // Constructor
+    explicit MyString(const char* str = "")
+    {
+        data = new char[strlen(str) + 1];
+        strcpy(data, str);
+    }
+
+
+    // Copy Constructor (Deep Copy)
+    MyString(const MyString& other)
+    {
+        data = new char[strlen(other.data) + 1];
+        strcpy(data, other.data);
+    }
+
+
+    // Copy Assignment Operator
+    MyString& operator=(const MyString& other)
+    {
+        if(this == &other)
+            return *this;
+
+        delete[] data;
+
+        data = new char[strlen(other.data) + 1];
+        strcpy(data, other.data);
+
+        return *this;
+    }
+
+
+    // Move Constructor
+    MyString(MyString&& other) noexcept
+        : data(other.data)
+    {
+        other.data = nullptr;
+    }
+
+
+    // Move Assignment Operator
+    MyString& operator=(MyString&& other) noexcept
+    {
+        if(this == &other)
+            return *this;
+
+        delete[] data;
+
+        data = other.data;
+        other.data = nullptr;
+
+        return *this;
+    }
+
+
+    // Length
+    size_t length() const
+    {
+        return data ? strlen(data) : 0;
+    }
+
+
+    // Access string
+    const char* c_str() const
+    {
+        return data ? data : "";
+    }
+
+
+    // Non-const operator[]
+    char& operator[](size_t index)
+    {
+        return data[index];
+    }
+
+
+    // Const operator[]
+    const char& operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+
+    // Destructor
+    ~MyString()
+    {
+        delete[] data;
+    }
+};
+
+
+
+int main()
+{
+    MyString s1("Hello");
+
+
+    cout << "s1: "
+         << s1.c_str()
+         << endl;
+
+
+    // Copy constructor
+    MyString s2 = s1;
+
+    cout << "s2(copy): "
+         << s2.c_str()
+         << endl;
+
+
+
+    // Copy assignment
+    MyString s3;
+
+    s3 = s1;
+
+    cout << "s3(copy assignment): "
+         << s3.c_str()
+         << endl;
+
+
+
+    // Move constructor
+    MyString s4 = std::move(s1);
+
+    cout << "s4(move): "
+         << s4.c_str()
+         << endl;
+
+
+
+    // Move assignment
+    MyString s5;
+
+    s5 = std::move(s2);
+
+    cout << "s5(move assignment): "
+         << s5.c_str()
+         << endl;
+
+
+
+    cout << "Length: "
+         << s4.length()
+         << endl;
+
+
+    s4[0] = 'h';
+
+    cout << "After modification: "
+         << s4.c_str()
+         << endl;
+
+
+    return 0;
+}
