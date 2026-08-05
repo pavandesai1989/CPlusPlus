@@ -1,3 +1,37 @@
+user defined object must have move or copy constructor else compilation eror 
+A user-defined object passed to push_back() must be either copyable or movable, depending on what you pass.
+
+push_back(lvalue) → Copy constructor required
+push_back(rvalue) → Move constructor required
+
+| Code                             | Required         |
+| -------------------------------- | ---------------- |
+| `vec.push_back(obj);`            | Copy constructor |
+| `vec.push_back(std::move(obj));` | Move constructor |
+| `vec.push_back(sample());`       | Move constructor |
+
+
+class sample
+{
+  public:
+  sample(){};
+  sample(const sample& ob)=delete;
+  
+};
+
+int main()
+{
+    vector<sample> vec;
+    sample ob;
+    vec.push_back(ob);
+    
+}
+
+Lvalue (ob) → push_back(const T&) → Copy constructor required.
+Rvalue (sample() or std::move(ob)) → push_back(T&&) → Move constructor required.
+emplace_back(args...) → Constructs the object directly in the vector, avoiding copy/move for the new element (though later reallocations may still require move or copy).
+
+
 =========================================
 C++ STL VECTOR – FINAL INTERVIEW MASTER NOTES
 =========================================
