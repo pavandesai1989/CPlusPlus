@@ -1,3 +1,13 @@
+
+
+When should you follow Rule of Three vs Rule of Five vs Rule of Zero?
+
+Rule of Three (C++03): If you define one of destructor, copy constructor, or copy assignment for a resource-managing class, you usually need all three.
+Rule of Five (C++11): If the class manages resources and you want efficient moves, implement the Rule of Three plus move constructor and move assignment.
+Rule of Zero (Modern C++): Prefer not to manage resources manually. Use RAII types like std::vector, std::string, or std::unique_ptr, and let the compiler 
+generate all special member functions. This is the preferred approach in modern C++.
+
+
 =========================================================
 Rule of 5 - Interview Ready Example
 =========================================================
