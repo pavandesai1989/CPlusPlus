@@ -1,0 +1,586 @@
+=========================================================
+TYPE TRAITS (C++11/14/17)
+Interview Notes
+=========================================================
+
+1. What are Type Traits?
+========================
+
+Type Traits are compile-time utilities that provide information about types
+or transform types.
+
+They allow templates to make decisions during compilation instead of runtime.
+
+Header File
+
+#include <type_traits>
+
+---------------------------------------------------------
+
+Why are Type Traits Needed?
+
+Generic code often needs to know properties of a type.
+
+Examples
+
+• Is this type an integer?
+• Is it a pointer?
+• Is it const?
+• Is it a reference?
+• Are two types the same?
+
+Instead of checking these at runtime, Type Traits perform the checks at
+compile time.
+
+=========================================================
+2. Categories of Type Traits
+============================
+
+1. Type Property Traits
+   • is_same
+   • is_integral
+   • is_floating_point
+   • is_pointer
+   • is_reference
+   • is_const
+   • is_array
+   • is_class
+   • is_enum
+
+----------------------------------------
+
+2. Type Transformation Traits
+
+   • remove_const
+   • remove_reference
+   • remove_pointer
+   • decay
+   • add_const
+   • add_pointer
+
+----------------------------------------
+
+3. Conditional Traits
+
+   • enable_if (C++11)
+   • conditional
+   • common_type
+
+=========================================================
+3. std::is_same
+===============
+
+Checks whether two types are identical.
+
+Syntax
+
+std::is_same<T,U>::value
+
+Example
+
+#include <iostream>
+#include <type_traits>
+
+using namespace std;
+
+int main()
+{
+    cout << is_same<int,int>::value << endl;
+
+    cout << is_same<int,double>::value << endl;
+}
+
+Output
+
+1
+0
+
+=========================================================
+4. std::is_integral
+===================
+
+Checks whether a type is an integral type.
+
+Example
+
+cout << is_integral<int>::value << endl;
+
+cout << is_integral<char>::value << endl;
+
+cout << is_integral<double>::value << endl;
+
+Output
+
+1
+1
+0
+
+=========================================================
+5. std::is_floating_point
+=========================
+
+Checks whether a type is floating point.
+
+Example
+
+cout << is_floating_point<float>::value << endl;
+
+cout << is_floating_point<double>::value << endl;
+
+cout << is_floating_point<int>::value << endl;
+
+Output
+
+1
+1
+0
+
+=========================================================
+6. std::is_pointer
+==================
+
+Checks whether a type is a pointer.
+
+Example
+
+cout << is_pointer<int*>::value << endl;
+
+cout << is_pointer<int>::value << endl;
+
+Output
+
+1
+0
+
+=========================================================
+7. std::is_reference
+====================
+
+Checks whether a type is a reference.
+
+Example
+
+cout << is_reference<int&>::value << endl;
+
+cout << is_reference<int>::value << endl;
+
+Output
+
+1
+0
+
+=========================================================
+8. std::is_const
+================
+
+Checks whether a type is const.
+
+Example
+
+cout << is_const<const int>::value << endl;
+
+cout << is_const<int>::value << endl;
+
+Output
+
+1
+0
+
+=========================================================
+9. std::is_array
+================
+
+Checks whether a type is an array.
+
+Example
+
+cout << is_array<int[5]>::value << endl;
+
+cout << is_array<int>::value << endl;
+
+Output
+
+1
+0
+
+=========================================================
+10. std::is_class
+=================
+
+Checks whether a type is a class.
+
+Example
+
+class Test
+{
+};
+
+cout << is_class<Test>::value << endl;
+
+cout << is_class<int>::value << endl;
+
+Output
+
+1
+0
+
+=========================================================
+11. std::remove_const
+=====================
+
+Removes const qualifier.
+
+Example
+
+using T = remove_const<const int>::type;
+
+Result
+
+T becomes
+
+int
+
+=========================================================
+12. std::remove_reference
+=========================
+
+Removes reference.
+
+Example
+
+using T = remove_reference<int&>::type;
+
+Result
+
+int
+
+=========================================================
+13. std::remove_pointer
+=======================
+
+Removes pointer.
+
+Example
+
+using T = remove_pointer<int*>::type;
+
+Result
+
+int
+
+=========================================================
+14. std::decay
+==============
+
+Converts a type to the form used when passing by value.
+
+Example
+
+using T1 = decay<int&>::type;
+
+using T2 = decay<const int>::type;
+
+Results
+
+T1 = int
+
+T2 = int
+
+Used heavily in STL and template libraries.
+
+=========================================================
+15. std::enable_if (C++11)
+==========================
+
+Used to enable or disable functions at compile time based on conditions.
+
+Example
+
+template<typename T>
+typename enable_if<is_integral<T>::value, void>::type
+print(T value)
+{
+    cout << value << endl;
+}
+
+Usage
+
+print(10);
+
+Works
+
+--------------------------------
+
+print(3.14);
+
+Compilation Error
+
+Reason
+
+The function is enabled only for integral types.
+
+=========================================================
+16. std::conditional
+====================
+
+Compile-time if-else.
+
+Syntax
+
+conditional<condition, TrueType, FalseType>::type
+
+Example
+
+using T = conditional<true,int,double>::type;
+
+Result
+
+T = int
+
+=========================================================
+17. std::common_type
+====================
+
+Finds a common type between multiple types.
+
+Example
+
+using T = common_type<int,double>::type;
+
+Result
+
+double
+
+=========================================================
+18. if constexpr (C++17)
+========================
+
+Type Traits are often used with if constexpr.
+
+Example
+
+template<typename T>
+void check()
+{
+    if constexpr(is_integral<T>::value)
+    {
+        cout << "Integral";
+    }
+    else
+    {
+        cout << "Not Integral";
+    }
+}
+
+Usage
+
+check<int>();
+
+check<double>();
+
+Output
+
+Integral
+
+Not Integral
+
+=========================================================
+19. Advantages
+==============
+
+✓ Compile-time decisions
+
+✓ Type safety
+
+✓ Generic programming
+
+✓ Better template code
+
+✓ Zero runtime overhead
+
+=========================================================
+20. Real STL Usage
+==================
+
+Type Traits are used internally by STL in
+
+• std::vector
+
+• std::sort
+
+• std::move
+
+• std::forward
+
+• std::optional
+
+• std::variant
+
+• std::tuple
+
+=========================================================
+21. Interview Questions
+=======================
+
+Q1. What are Type Traits?
+
+Compile-time utilities that inspect or transform types.
+
+---------------------------------------------------------
+
+Q2. Which header file contains Type Traits?
+
+#include <type_traits>
+
+---------------------------------------------------------
+
+Q3. Are Type Traits compile-time or runtime?
+
+Compile-time.
+
+---------------------------------------------------------
+
+Q4. What does std::is_same do?
+
+Checks whether two types are identical.
+
+---------------------------------------------------------
+
+Q5. What does std::is_integral check?
+
+Whether a type is an integral type.
+
+---------------------------------------------------------
+
+Q6. What does std::remove_reference do?
+
+Removes the reference qualifier from a type.
+
+---------------------------------------------------------
+
+Q7. What does std::decay do?
+
+Converts a type to its value type by removing references, cv-qualifiers,
+and converting arrays/functions to pointers when passed by value.
+
+---------------------------------------------------------
+
+Q8. What is std::enable_if?
+
+A compile-time mechanism that enables or disables template functions
+based on a condition (SFINAE).
+
+---------------------------------------------------------
+
+Q9. What is std::conditional?
+
+A compile-time if-else that selects one of two types.
+
+---------------------------------------------------------
+
+Q10. Why are Type Traits important?
+
+• Generic programming
+
+• Template metaprogramming
+
+• Compile-time optimization
+
+• Better type safety
+
+=========================================================
+22. Common Mistakes
+===================
+
+❌ Forgetting to include
+
+#include <type_traits>
+
+--------------------------------------
+
+❌ Using
+
+is_same<T,U>
+
+instead of
+
+is_same<T,U>::value
+
+(or is_same_v<T,U> in C++17).
+
+--------------------------------------
+
+❌ Confusing type transformation traits with type property traits.
+
+--------------------------------------
+
+❌ Using enable_if in the function body instead of the template declaration.
+
+=========================================================
+23. Frequently Asked Type Traits
+================================
+
+✓ std::is_same
+
+✓ std::is_integral
+
+✓ std::is_floating_point
+
+✓ std::is_pointer
+
+✓ std::is_reference
+
+✓ std::is_const
+
+✓ std::is_array
+
+✓ std::is_class
+
+✓ std::remove_const
+
+✓ std::remove_reference
+
+✓ std::remove_pointer
+
+✓ std::decay
+
+✓ std::enable_if
+
+✓ std::conditional
+
+✓ std::common_type
+
+=========================================================
+24. Quick Revision
+==================
+
+✓ Type Traits are compile-time utilities.
+
+✓ Header:
+   #include <type_traits>
+
+✓ Used for type inspection and transformation.
+
+✓ Property Traits:
+   • is_same
+   • is_integral
+   • is_pointer
+   • is_reference
+   • is_const
+
+✓ Transformation Traits:
+   • remove_const
+   • remove_reference
+   • remove_pointer
+   • decay
+
+✓ Conditional Traits:
+   • enable_if
+   • conditional
+   • common_type
+
+✓ Frequently combined with if constexpr (C++17).
+
+✓ Used extensively in STL and template metaprogramming.
+
+=========================================================
