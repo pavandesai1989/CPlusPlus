@@ -1,3 +1,11 @@
+array	<array>	C++11	Fixed-size array ⭐⭐⭐⭐⭐
+forward_list	<forward_list>	C++11	Singly linked list
+unordered_set	<unordered_set>	C++11	Hash set ⭐⭐⭐⭐⭐
+unordered_multiset	<unordered_set>	C++11	Hash multiset
+unordered_map	<unordered_map>	C++11	Hash map ⭐⭐⭐⭐⭐
+unordered_multimap	<unordered_map>	C++11	Hash multimap
+
+
 STL (Standard Template Library)
 
 STL is a library of reusable generic components that provides:
