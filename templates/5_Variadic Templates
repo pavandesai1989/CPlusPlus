@@ -1,0 +1,531 @@
+=========================================================
+VARIADIC TEMPLATES (C++11/14/17)
+Interview Notes
+=========================================================
+
+1. What are Variadic Templates?
+================================
+
+Variadic Templates allow a function or class template to accept **any number
+of template arguments** (zero or more).
+
+Introduced in **C++11**, they eliminate the need to write multiple overloaded
+functions for different numbers of arguments.
+
+---------------------------------------------------------
+
+Without Variadic Templates
+
+void print();
+void print(int);
+void print(int, int);
+void print(int, int, int);
+void print(int, int, int, int);
+...
+
+Problem
+-------
+
+• Too many overloads
+• Code duplication
+• Difficult to maintain
+
+---------------------------------------------------------
+
+With Variadic Templates
+
+template<typename... Args>
+void print(Args... args);
+
+One function handles any number of arguments.
+
+=========================================================
+2. Syntax
+==========
+
+Template Parameter Pack
+
+template<typename... Args>
+
+Function Parameter Pack
+
+Args... args
+
+Example
+
+template<typename... Args>
+void print(Args... args)
+{
+}
+
+Args...
+
+represents zero or more template types.
+
+=========================================================
+3. Parameter Pack
+=================
+
+A parameter pack is a collection of template arguments.
+
+Example
+
+template<typename... Args>
+void func(Args... args)
+{
+}
+
+Call
+
+func();
+
+Args = {}
+
+----------------------------
+
+func(10);
+
+Args = {int}
+
+----------------------------
+
+func(10, 3.5);
+
+Args = {int, double}
+
+----------------------------
+
+func(10, 3.5, "Hello");
+
+Args = {int, double, const char*}
+
+=========================================================
+4. Recursive Variadic Template
+==============================
+
+The most common implementation in C++11 uses recursion.
+
+Base Case
+
+void print()
+{
+    cout << endl;
+}
+
+Recursive Function
+
+template<typename T, typename... Args>
+void print(T first, Args... rest)
+{
+    cout << first << " ";
+
+    print(rest...);
+}
+
+Usage
+
+print(1);
+
+print(1, 2);
+
+print(1, 2.5, "Hello", 'A');
+
+Output
+
+1
+
+1 2
+
+1 2.5 Hello A
+
+---------------------------------------------------------
+
+How It Works
+
+print(1,2,3)
+
+↓
+
+print(1)
+
+↓
+
+print(2,3)
+
+↓
+
+print(2)
+
+↓
+
+print(3)
+
+↓
+
+print()
+
+(Base Case)
+
+=========================================================
+5. sizeof...
+=============
+
+sizeof...(Args)
+
+Returns the number of template arguments.
+
+Example
+
+template<typename... Args>
+void count(Args... args)
+{
+    cout << sizeof...(Args);
+}
+
+Usage
+
+count(1);
+
+Output
+
+1
+
+----------------------------
+
+count(1,2,3);
+
+Output
+
+3
+
+----------------------------
+
+count(1,2,3,4,5);
+
+Output
+
+5
+
+=========================================================
+6. Fold Expressions (C++17)
+===========================
+
+Before C++17, recursion was required.
+
+C++17 introduced Fold Expressions, making parameter pack operations much
+simpler.
+
+Example
+
+template<typename... Args>
+auto sum(Args... args)
+{
+    return (... + args);
+}
+
+Usage
+
+cout << sum(1,2,3,4);
+
+Output
+
+10
+
+---------------------------------------------------------
+
+Right Fold
+
+(args + ...)
+
+---------------------------------------------------------
+
+Left Fold
+
+(... + args)
+
+Most interview examples use a left fold.
+
+=========================================================
+7. Variadic Template Class
+==========================
+
+Class templates can also use parameter packs.
+
+Example
+
+template<typename... Types>
+class Tuple
+{
+};
+
+Usage
+
+Tuple<int>;
+
+Tuple<int, double>;
+
+Tuple<int, double, string>;
+
+=========================================================
+8. Perfect Forwarding (C++11)
+=============================
+
+Variadic templates are commonly used with perfect forwarding.
+
+Example
+
+template<typename... Args>
+void create(Args&&... args)
+{
+    // Forward arguments
+}
+
+Used by STL functions such as
+
+make_unique()
+
+make_shared()
+
+emplace_back()
+
+=========================================================
+9. Variadic Templates in STL
+============================
+
+Examples
+
+make_shared()
+
+template<typename T, typename... Args>
+
+--------------------------------
+
+make_unique()
+
+template<typename T, typename... Args>
+
+--------------------------------
+
+emplace_back()
+
+template<typename... Args>
+
+--------------------------------
+
+std::thread
+
+Constructor accepts a variable number of arguments.
+
+=========================================================
+10. Advantages
+==============
+
+✓ Accept unlimited arguments
+
+✓ Eliminates overloads
+
+✓ Generic programming
+
+✓ Foundation of perfect forwarding
+
+✓ Used heavily in STL
+
+=========================================================
+11. Disadvantages
+=================
+
+• Can be difficult to read
+
+• Recursive implementations increase complexity
+
+• Compiler error messages may be long
+
+=========================================================
+12. Common Use Cases
+====================
+
+• Logging functions
+
+• printf-like wrappers
+
+• Generic printing
+
+• Factory functions
+
+• Smart pointer creation
+
+• Tuple implementation
+
+• Forwarding constructors
+
+=========================================================
+13. Interview Questions
+=======================
+
+Q1. What are variadic templates?
+
+Templates that accept zero or more template arguments.
+
+---------------------------------------------------------
+
+Q2. When were variadic templates introduced?
+
+C++11
+
+---------------------------------------------------------
+
+Q3. What problem do they solve?
+
+They eliminate the need for multiple overloaded functions that differ only
+in the number of arguments.
+
+---------------------------------------------------------
+
+Q4. What is a parameter pack?
+
+A collection of template arguments.
+
+Example
+
+template<typename... Args>
+
+---------------------------------------------------------
+
+Q5. What is parameter pack expansion?
+
+Expanding the parameter pack using
+
+args...
+
+Example
+
+print(args...);
+
+---------------------------------------------------------
+
+Q6. What does sizeof...(Args) return?
+
+The number of template arguments.
+
+Example
+
+sizeof...(Args)
+
+---------------------------------------------------------
+
+Q7. Why is a base case required in recursive variadic templates?
+
+To stop the recursion once all arguments have been processed.
+
+---------------------------------------------------------
+
+Q8. What are fold expressions?
+
+A C++17 feature that applies an operator to all elements in a parameter pack,
+eliminating the need for recursion.
+
+Example
+
+(... + args)
+
+---------------------------------------------------------
+
+Q9. Difference between recursive variadic templates and fold expressions?
+
+Recursive Variadic Templates
+
+• Introduced in C++11
+
+• Require a base case
+
+• More code
+
+--------------------------------------
+
+Fold Expressions
+
+• Introduced in C++17
+
+• No recursion
+
+• Simpler and more efficient
+
+---------------------------------------------------------
+
+Q10. Where are variadic templates used in STL?
+
+• std::make_shared()
+
+• std::make_unique()
+
+• std::thread
+
+• vector::emplace_back()
+
+=========================================================
+14. Common Mistakes
+==================
+
+❌ Forgetting the base case in recursive templates.
+
+--------------------------------------
+
+❌ Confusing
+
+typename... Args
+
+with
+
+Args... args
+
+The first declares the template parameter pack.
+
+The second declares the function parameter pack.
+
+--------------------------------------
+
+❌ Forgetting to expand the parameter pack.
+
+Incorrect
+
+print(args);
+
+Correct
+
+print(args...);
+
+--------------------------------------
+
+❌ Using recursion in C++17 when a fold expression is simpler.
+
+=========================================================
+15. Quick Revision
+==================
+
+✓ Variadic templates were introduced in C++11.
+
+✓ They allow zero or more template arguments.
+
+✓ Parameter pack syntax:
+
+template<typename... Args>
+
+✓ Function parameter pack:
+
+Args... args
+
+✓ Recursive variadic templates require a base case.
+
+✓ sizeof...(Args) returns the number of template arguments.
+
+✓ Fold expressions (C++17) eliminate recursion.
+
+✓ Common STL examples:
+   • make_shared()
+   • make_unique()
+   • emplace_back()
+   • std::thread
+
+✓ Variadic templates are the foundation of perfect forwarding.
+
+=========================================================
