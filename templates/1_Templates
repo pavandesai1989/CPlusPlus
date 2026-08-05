@@ -1,0 +1,443 @@
+=========================================================
+C++ TEMPLATES (C++11/14/17)
+Interview Notes
+=========================================================
+
+1. INTRODUCTION TO TEMPLATES
+============================
+
+What are Templates?
+-------------------
+Templates are a compile-time feature that allows writing generic code that
+works with different data types without duplicating code.
+
+Instead of writing separate functions/classes for int, double, string, etc.,
+write a single generic implementation.
+
+Templates provide:
+• Code reusability
+• Type safety
+• Compile-time polymorphism
+• Better maintainability
+
+---------------------------------------------------------
+
+Without Templates
+
+int max(int a, int b)
+{
+    return (a > b) ? a : b;
+}
+
+double max(double a, double b)
+{
+    return (a > b) ? a : b;
+}
+
+string max(string a, string b)
+{
+    return (a > b) ? a : b;
+}
+
+Same logic repeated multiple times.
+
+---------------------------------------------------------
+
+With Templates
+
+template<typename T>
+T max(T a, T b)
+{
+    return (a > b) ? a : b;
+}
+
+Works for:
+
+max(10,20);
+max(5.5,3.2);
+max(string("ABC"), string("XYZ"));
+
+---------------------------------------------------------
+
+How Templates Work?
+
+Templates are NOT actual functions/classes.
+
+They are blueprints.
+
+When a template is used, the compiler generates the required function/class
+for that specific type. This process is called:
+
+Template Instantiation
+
+Example
+
+template<typename T>
+T square(T x)
+{
+    return x * x;
+}
+
+Calls
+
+square(5);      // T = int
+square(2.5);    // T = double
+
+Compiler generates:
+
+int square(int);
+
+double square(double);
+
+---------------------------------------------------------
+
+Advantages
+
+✓ Eliminates duplicate code
+✓ Compile-time type checking
+✓ Better performance (resolved at compile time)
+✓ Easier maintenance
+✓ Works with user-defined classes
+✓ Foundation of STL (vector, map, list, etc.)
+
+---------------------------------------------------------
+
+Disadvantages
+
+• Longer compilation time
+• Larger executable (code bloat)
+• Complex compiler error messages
+• Implementation usually kept in header files
+
+---------------------------------------------------------
+
+Types of Templates
+
+1. Function Templates
+2. Class Templates
+3. Variable Templates (C++14)
+4. Alias Templates (C++11)
+5. Variadic Templates (C++11)
+
+Interview Focus:
+✓ Function Templates
+✓ Class Templates
+✓ Template Specialization
+✓ Variadic Templates
+✓ Type Traits
+
+=========================================================
+2. FUNCTION TEMPLATES
+=========================================================
+
+Definition
+----------
+A function template allows one function to work with multiple data types.
+
+Syntax
+
+template<typename T>
+ReturnType functionName(parameters)
+{
+    // implementation
+}
+
+---------------------------------------------------------
+
+Example
+
+template<typename T>
+T add(T a, T b)
+{
+    return a + b;
+}
+
+Usage
+
+cout << add(10,20);          // int
+cout << add(3.5,4.2);        // double
+cout << add('A','B');        // char
+
+Compiler automatically deduces T.
+
+---------------------------------------------------------
+
+Template Type Deduction
+
+template<typename T>
+void print(T value)
+{
+    cout << value;
+}
+
+print(10);        // T = int
+print(3.14);      // T = double
+print("Hello");   // T = const char*
+
+Compiler deduces the template type from arguments.
+
+---------------------------------------------------------
+
+Using 'class' vs 'typename'
+
+Both are equivalent.
+
+template<class T>
+void func(T);
+
+template<typename T>
+void func(T);
+
+Modern C++ style generally prefers:
+
+template<typename T>
+
+---------------------------------------------------------
+
+Multiple Template Parameters
+
+template<typename T, typename U>
+auto add(T a, U b)
+{
+    return a + b;
+}
+
+Usage
+
+cout << add(10,5.5);
+
+T = int
+U = double
+
+Return type = double
+
+---------------------------------------------------------
+
+Explicit Template Arguments
+
+Normally compiler deduces the type.
+
+add(10,20);
+
+Equivalent to
+
+add<int>(10,20);
+
+Sometimes explicit specification is required.
+
+Example
+
+template<typename T>
+void display(T value)
+{
+    cout << value;
+}
+
+display<int>(100);
+
+---------------------------------------------------------
+
+Function Template with Non-Type Parameter
+
+template<typename T, int SIZE>
+void printArray(T (&arr)[SIZE])
+{
+    for(const auto& x : arr)
+        cout << x << " ";
+}
+
+Usage
+
+int arr[] = {1,2,3,4};
+
+printArray(arr);
+
+Compiler deduces
+
+T = int
+SIZE = 4
+
+---------------------------------------------------------
+
+Templates with Default Parameters
+
+template<typename T = int>
+T multiply(T a, T b)
+{
+    return a * b;
+}
+
+multiply(2,3);
+
+Compiler uses T = int.
+
+---------------------------------------------------------
+
+Template Function Overloading
+
+Templates can be overloaded.
+
+template<typename T>
+void print(T value)
+{
+    cout << value;
+}
+
+template<typename T>
+void print(T a, T b)
+{
+    cout << a << " " << b;
+}
+
+Calls
+
+print(5);
+print(5,10);
+
+---------------------------------------------------------
+
+Normal Function vs Template Function
+
+void print(int)
+{
+    cout << "Normal";
+}
+
+template<typename T>
+void print(T)
+{
+    cout << "Template";
+}
+
+Calls
+
+print(10);      // Normal function
+
+print(2.5);     // Template
+
+Rule:
+A non-template function is preferred over a template if both match equally well.
+
+---------------------------------------------------------
+
+Function Template Instantiation
+
+template<typename T>
+T square(T x)
+{
+    return x*x;
+}
+
+Calls
+
+square(5);
+
+Compiler creates
+
+int square(int);
+
+Call
+
+square(2.5);
+
+Compiler creates
+
+double square(double);
+
+---------------------------------------------------------
+
+Limitations
+
+Templates require operations used inside them to be valid.
+
+Example
+
+template<typename T>
+T add(T a, T b)
+{
+    return a + b;
+}
+
+Fails if '+' is not defined for T.
+
+---------------------------------------------------------
+
+Common Interview Questions
+
+Q1. What is a function template?
+Answer:
+A generic function that works with multiple data types.
+
+---------------------------------------------------------
+
+Q2. Why use templates?
+Answer:
+• Code reuse
+• Compile-time polymorphism
+• Type safety
+• Eliminates duplicate code
+
+---------------------------------------------------------
+
+Q3. Difference between function overloading and function templates?
+
+Function Overloading
+--------------------
+• Multiple implementations
+• Different parameter types
+• More code duplication
+
+Function Templates
+------------------
+• One generic implementation
+• Compiler generates required versions
+• Less code duplication
+
+---------------------------------------------------------
+
+Q4. Can templates be overloaded?
+
+Yes.
+
+---------------------------------------------------------
+
+Q5. Can normal functions and template functions coexist?
+
+Yes.
+
+The compiler prefers the normal function when both are equally good matches.
+
+---------------------------------------------------------
+
+Q6. When is a template instantiated?
+
+Only when it is used (called or instantiated).
+
+---------------------------------------------------------
+
+Q7. Are templates runtime or compile-time?
+
+Templates are a compile-time feature.
+
+---------------------------------------------------------
+
+Q8. Why are template implementations usually placed in header files?
+
+Because the compiler must see the complete template definition during
+instantiation. If only the declaration is visible, template instantiation
+fails, leading to linker errors.
+
+=========================================================
+Quick Revision
+=========================================================
+
+✓ Templates provide generic programming.
+✓ Compiler generates code during compilation.
+✓ Function templates eliminate duplicate functions.
+✓ 'typename' and 'class' are equivalent in template parameters.
+✓ Compiler usually deduces template arguments.
+✓ Templates support multiple type parameters.
+✓ Non-template functions are preferred over templates.
+✓ Templates are instantiated only when used.
+✓ Templates are compile-time polymorphism.
+✓ Template implementations are generally kept in header files.
