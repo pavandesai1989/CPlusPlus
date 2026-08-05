@@ -1,0 +1,334 @@
+=========================================================
+C++ TEMPLATES - MUST DO INTERVIEW QUESTIONS & ANSWERS
+=========================================================
+
+1. What are Templates? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Templates are a compile-time feature that allows writing generic code.
+They enable a function or class to work with different data types without
+rewriting the same logic.
+
+Example:
+template<typename T>
+T add(T a, T b)
+{
+    return a + b;
+}
+
+---------------------------------------------------------
+
+2. Why do we need Templates? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Templates eliminate code duplication and improve code reusability by allowing
+the same implementation to work with multiple data types.
+
+Benefits:
+✔ Generic programming
+✔ Code reuse
+✔ Type safety
+✔ Compile-time polymorphism
+
+---------------------------------------------------------
+
+3. What is a Function Template? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+A function template allows a single function to operate on different data
+types. The compiler generates the appropriate function during compilation.
+
+Example:
+template<typename T>
+T maxValue(T a, T b)
+{
+    return (a > b) ? a : b;
+}
+
+---------------------------------------------------------
+
+4. What is a Class Template? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+A class template allows creating generic classes that can work with different
+data types.
+
+Example:
+template<typename T>
+class Stack
+{
+    T data[100];
+};
+
+---------------------------------------------------------
+
+5. What is Template Instantiation? ⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Template instantiation is the process where the compiler generates a concrete
+function or class from a template when it is used with a specific type.
+
+Example:
+maxValue<int>(10, 20);
+maxValue<double>(3.5, 8.2);
+
+---------------------------------------------------------
+
+6. What is Template Type Deduction? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+The compiler automatically deduces the template type from the function
+arguments.
+
+Example:
+maxValue(10,20);       // T = int
+maxValue(2.5,3.8);     // T = double
+
+---------------------------------------------------------
+
+7. What is Template Specialization? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Template specialization allows providing a custom implementation for a
+specific type when the generic implementation is not suitable.
+
+Example:
+template<>
+void print<bool>(bool b)
+{
+    cout << "Boolean: " << b;
+}
+
+---------------------------------------------------------
+
+8. What is Partial Template Specialization? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Partial Template Specialization is the process of providing a specialized implementation of a class template
+for a category of types, while leaving the remaining template parameters generic.
+
+Why is it called "Partial" Specialization?
+Because you are not specializing one exact type.
+You're saying:
+"Whenever the type is a pointer, use this version."
+You're specializing a category of types, not a single type.
+Answer:
+Partial specialization customizes a class template for a group of types
+instead of one exact type.
+
+Step 1: Generic Template
+This works for every type.
+
+template<typename T>
+class Test
+{
+public:
+    void display()
+    {
+        cout << "Generic";
+    }
+};
+
+Now create objects:
+
+Test<int> t1;
+Test<double> t2;
+Test<string> t3;
+
+Step 2: Suppose you want all pointer types to behave differently
+
+Instead of writing:
+
+Test<int*>
+Test<double*>
+Test<char*>
+Test<float*>
+
+one by one, you write one specialization that matches any pointer.
+
+template<typename T>
+class Test<T*>
+{
+public:
+    void display()
+    {
+        cout << "Pointer Version";
+    }
+};
+
+
+
+Note:
+Function templates do NOT support partial specialization.
+
+---------------------------------------------------------
+
+9. Why don't Function Templates support Partial Specialization? ⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Function overloading already provides similar functionality, making partial
+specialization unnecessary and potentially ambiguous.
+
+---------------------------------------------------------
+
+10. What is a Non-Type Template Parameter? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+A non-type template parameter accepts a compile-time constant value instead
+of a type.
+
+Example:
+template<typename T, int SIZE>
+class Array
+{
+    T arr[SIZE];
+};
+
+---------------------------------------------------------
+
+11. Difference between 'typename' and 'class'? ⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+In template parameter lists, both 'typename' and 'class' are equivalent.
+
+Example:
+template<typename T>
+template<class T>
+
+Both are valid.
+
+Use 'typename' when referring to nested dependent types.
+
+---------------------------------------------------------
+
+12. What are Variadic Templates? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Variadic templates allow functions or classes to accept any number of
+template arguments.
+
+Example:
+template<typename... Args>
+void print(Args... args);
+
+Introduced in C++11.
+
+---------------------------------------------------------
+
+13. What is Perfect Forwarding? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Perfect forwarding preserves the value category (lvalue/rvalue) of arguments
+when forwarding them to another function.
+
+It is implemented using:
+✔ Universal reference (T&&)
+✔ std::forward
+
+---------------------------------------------------------
+
+14. Difference between std::move and std::forward? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+
+std::move
+---------
+Always converts an object to an rvalue.
+
+std::forward
+------------
+Conditionally preserves the original value category and is mainly used in
+templates for perfect forwarding.
+
+---------------------------------------------------------
+
+15. What is SFINAE? ⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+SFINAE stands for "Substitution Failure Is Not An Error".
+
+If substituting template arguments makes a template invalid, the compiler
+removes that template from overload resolution instead of producing an error.
+
+---------------------------------------------------------
+
+16. What is if constexpr? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Introduced in C++17.
+
+It performs compile-time conditional branching. The branch whose condition is
+false is discarded during compilation.
+
+Example:
+if constexpr(std::is_integral_v<T>)
+{
+    // Integral-specific code
+}
+
+---------------------------------------------------------
+
+17. What are Type Traits? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Type traits are compile-time utilities that provide information about types
+or transform types.
+
+Examples:
+std::is_same
+std::is_integral
+std::is_pointer
+std::remove_reference
+
+---------------------------------------------------------
+
+18. What is Compile-time Polymorphism? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+Compile-time polymorphism is achieved when the compiler resolves function or
+class behavior during compilation.
+
+Examples:
+✔ Function overloading
+✔ Operator overloading
+✔ Templates
+
+---------------------------------------------------------
+
+19. What are the advantages of Templates? ⭐⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+✔ Code reuse
+✔ Type safety
+✔ Better maintainability
+✔ Compile-time polymorphism
+✔ No runtime overhead
+✔ Generic programming
+
+---------------------------------------------------------
+
+20. What are the disadvantages of Templates? ⭐⭐⭐⭐
+---------------------------------------------------------
+Answer:
+✘ Longer compilation time
+✘ Code bloat due to multiple instantiations
+✘ Complex compiler error messages
+✘ Increased binary size
+
+=========================================================
+MOST IMPORTANT QUESTIONS
+=========================================================
+
+★★★★★
+✓ What are Templates?
+✓ Why Templates?
+✓ Function Templates
+✓ Class Templates
+✓ Template Type Deduction
+✓ Template Specialization
+✓ Partial Template Specialization
+✓ Variadic Templates
+✓ Non-Type Template Parameters
+✓ Perfect Forwarding
+✓ std::move vs std::forward
+✓ if constexpr
+✓ Type Traits
