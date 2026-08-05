@@ -1,0 +1,560 @@
+=========================================================
+TEMPLATE SPECIALIZATION (C++11/14/17)
+Interview Notes
+=========================================================
+
+1. What is Template Specialization?
+===================================
+
+Template Specialization allows providing a custom implementation of a template
+for a specific data type.
+
+Most types use the generic implementation, while selected types can have
+special behavior.
+
+---------------------------------------------------------
+
+Why is it Needed?
+
+Sometimes the generic implementation is not suitable for every type.
+
+Example
+
+• Different printing format
+• Optimized implementation
+• Special handling for bool, char*, etc.
+
+Template specialization solves this problem.
+
+---------------------------------------------------------
+
+Generic Template
+
+template<typename T>
+class Printer
+{
+public:
+
+    void print()
+    {
+        cout << "Generic Printer";
+    }
+};
+
+Usage
+
+Printer<int> p1;
+
+p1.print();
+
+Output
+
+Generic Printer
+
+=========================================================
+2. Full Template Specialization
+=========================================================
+
+A full specialization provides a completely different implementation for one
+specific type.
+
+Syntax
+
+template<>
+class ClassName<SpecificType>
+{
+    // specialized implementation
+};
+
+---------------------------------------------------------
+
+Example
+
+template<typename T>
+class Printer
+{
+public:
+
+    void print()
+    {
+        cout << "Generic Printer";
+    }
+};
+
+template<>
+class Printer<bool>
+{
+public:
+
+    void print()
+    {
+        cout << "Boolean Printer";
+    }
+};
+
+Usage
+
+Printer<int> p1;
+
+Printer<bool> p2;
+
+p1.print();
+
+p2.print();
+
+Output
+
+Generic Printer
+
+Boolean Printer
+
+---------------------------------------------------------
+
+Compiler Behavior
+
+Printer<int>
+
+↓
+
+Uses Generic Template
+
+----------------------------
+
+Printer<bool>
+
+↓
+
+Uses Specialized Version
+
+=========================================================
+3. Function Template Specialization
+=========================================================
+
+Function templates can also be fully specialized.
+
+Example
+
+template<typename T>
+void display(T value)
+{
+    cout << "Generic";
+}
+
+template<>
+void display<char>(char value)
+{
+    cout << "Character";
+}
+
+Usage
+
+display(100);
+
+display('A');
+
+Output
+
+Generic
+
+Character
+
+=========================================================
+4. Partial Template Specialization
+=========================================================
+
+Partial specialization customizes only part of a template.
+
+Only Class Templates support partial specialization.
+
+---------------------------------------------------------
+
+Example
+
+template<typename T, typename U>
+class Pair
+{
+public:
+
+    void info()
+    {
+        cout << "Generic";
+    }
+};
+
+Partial Specialization
+
+template<typename T>
+class Pair<T,int>
+{
+public:
+
+    void info()
+    {
+        cout << "Second Type is int";
+    }
+};
+
+Usage
+
+Pair<double,int> p1;
+
+Pair<float,float> p2;
+
+Output
+
+Second Type is int
+
+Generic
+
+=========================================================
+5. More Partial Specialization Examples
+=======================================
+
+Pointer Specialization
+
+template<typename T>
+class Storage
+{
+};
+
+template<typename T>
+class Storage<T*>
+{
+};
+
+Works For
+
+Storage<int*>
+
+Storage<double*>
+
+---------------------------------------------------------
+
+Reference Specialization
+
+template<typename T>
+class Test
+{
+};
+
+template<typename T>
+class Test<T&>
+{
+};
+
+=========================================================
+6. Why Function Templates Cannot Be Partially Specialized?
+===========================================================
+
+Function templates support:
+
+✓ Generic Template
+
+✓ Full Specialization
+
+But NOT
+
+✗ Partial Specialization
+
+Example (Not Allowed)
+
+template<typename T>
+void print(T);
+
+template<typename T>
+void print<T*>(T*);
+
+Compilation Error
+
+---------------------------------------------------------
+
+Reason
+
+Function overloading already provides similar functionality.
+
+Instead of partial specialization, overload the function.
+
+Example
+
+template<typename T>
+void print(T value)
+{
+    cout << "Generic";
+}
+
+template<typename T>
+void print(T* value)
+{
+    cout << "Pointer";
+}
+
+=========================================================
+7. Specialization Selection
+===========================
+
+The compiler chooses the most specialized version.
+
+Example
+
+Generic Template
+
+↓
+
+Partial Specialization
+
+↓
+
+Full Specialization
+
+Highest priority wins.
+
+=========================================================
+8. Member Function Specialization
+=================================
+
+Member functions of class templates can also be specialized.
+
+Example
+
+template<typename T>
+class Demo
+{
+public:
+
+    void show()
+    {
+        cout << "Generic";
+    }
+};
+
+template<>
+void Demo<int>::show()
+{
+    cout << "Integer";
+}
+
+=========================================================
+9. Advantages
+=============
+
+✓ Customized implementation
+
+✓ Better performance
+
+✓ Optimized code
+
+✓ Type-specific behavior
+
+✓ Reuse generic code where possible
+
+=========================================================
+10. Disadvantages
+=================
+
+• Increases code complexity
+
+• Harder to maintain
+
+• Can make template code difficult to understand
+
+=========================================================
+11. Real STL Examples
+=====================
+
+std::vector<bool>
+
+is a specialized implementation instead of a normal vector.
+
+Reason
+
+Stores bits efficiently instead of full bytes.
+
+---------------------------------------------------------
+
+std::hash<T>
+
+Provides specialized implementations for many built-in types.
+
+=========================================================
+12. Full vs Partial Specialization
+==================================
+
+Full Specialization
+
+• Specializes all template parameters
+
+• Exact type match
+
+Example
+
+Printer<bool>
+
+--------------------------------------
+
+Partial Specialization
+
+• Specializes only some template parameters
+
+• Remaining parameters stay generic
+
+Example
+
+Pair<T,int>
+
+=========================================================
+13. Template Specialization vs Function Overloading
+===================================================
+
+Function Overloading
+
+• Different parameter lists
+
+• Runtime selection not involved
+• Compile-time overload resolution
+
+---------------------------------------
+
+Template Specialization
+
+• Same interface
+
+• Different implementation for specific types
+
+• Compile-time selection
+
+=========================================================
+14. Interview Questions
+=======================
+
+Q1. What is template specialization?
+
+Providing a custom implementation of a template for specific data types.
+
+---------------------------------------------------------
+
+Q2. Why do we need specialization?
+
+To optimize or customize behavior for particular types.
+
+---------------------------------------------------------
+
+Q3. What is full specialization?
+
+A specialization for one exact type.
+
+Example
+
+Printer<bool>
+
+---------------------------------------------------------
+
+Q4. What is partial specialization?
+
+Specializing only some template parameters.
+
+Example
+
+Pair<T,int>
+
+---------------------------------------------------------
+
+Q5. Which templates support partial specialization?
+
+✓ Class Templates
+
+✗ Function Templates
+
+---------------------------------------------------------
+
+Q6. Why can't function templates be partially specialized?
+
+Because function overloading provides the required functionality.
+
+---------------------------------------------------------
+
+Q7. Which specialization has the highest priority?
+
+Priority Order
+
+1. Full Specialization
+
+2. Partial Specialization
+
+3. Generic Template
+
+---------------------------------------------------------
+
+Q8. Can member functions be specialized?
+
+Yes.
+
+---------------------------------------------------------
+
+Q9. Is specialization decided at compile time?
+
+Yes.
+
+---------------------------------------------------------
+
+Q10. Give STL examples of template specialization.
+
+• std::vector<bool>
+
+• std::hash<T>
+
+=========================================================
+15. Common Mistakes
+==================
+
+❌ Forgetting template<>
+
+Incorrect
+
+class Printer<bool>
+
+Correct
+
+template<>
+class Printer<bool>
+
+--------------------------------------
+
+❌ Trying to partially specialize function templates.
+
+Not Allowed
+
+--------------------------------------
+
+❌ Assuming specialization happens at runtime.
+
+It is selected entirely at compile time.
+
+--------------------------------------
+
+❌ Confusing specialization with inheritance.
+
+Specialization customizes templates.
+
+Inheritance extends classes.
+
+=========================================================
+16. Quick Revision
+==================
+
+✓ Template specialization customizes templates for specific types.
+
+✓ Full specialization works for both function and class templates.
+
+✓ Partial specialization works only for class templates.
+
+✓ Function templates cannot be partially specialized.
+
+✓ Use function overloading instead of partial specialization for functions.
+
+✓ Compiler chooses the most specialized implementation.
+
+✓ Template specialization happens at compile time.
+
+✓ Common STL examples: std::vector<bool>, std::hash<T>.
+
+=========================================================
