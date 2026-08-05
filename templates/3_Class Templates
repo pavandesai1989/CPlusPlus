@@ -1,37 +1,13 @@
 =========================================================
-CLASS TEMPLATES (C++11/14/17)
-Interview Notes
+CLASS TEMPLATES (Interview Revision)
 =========================================================
 
-1. What is a Class Template?
-============================
+What is a Class Template?
+-------------------------
+A class template allows writing one generic class that works with multiple
+data types.
 
-A class template allows writing a single generic class that can work with
-different data types.
-
-Instead of creating separate classes for int, double, string, etc., one
-generic class can be written.
-
-Example (Without Templates)
-
-class IntBox
-{
-    int value;
-};
-
-class DoubleBox
-{
-    double value;
-};
-
-Problem
--------
-• Duplicate code
-• Difficult to maintain
-
----------------------------------------------------------
-
-Using Class Templates
+Syntax
 
 template<typename T>
 class Box
@@ -39,7 +15,7 @@ class Box
     T value;
 
 public:
-    Box(T val) : value(val) {}
+    Box(T v) : value(v) {}
 
     T getValue() const
     {
@@ -50,131 +26,42 @@ public:
 Usage
 
 Box<int> b1(10);
-
 Box<double> b2(3.14);
-
 Box<string> b3("Hello");
 
 ---------------------------------------------------------
 
-2. Syntax
-=========
-
-template<typename T>
-class ClassName
-{
-    // members
-};
-
----------------------------------------------------------
-
-3. How Class Templates Work
-===========================
-
-A class template is only a blueprint.
-
-The compiler generates the required class when it is instantiated.
-
-Example
-
-Box<int> box1;
-
-Compiler Generates
-
-class Box<int>
-{
-    int value;
-};
-
-Similarly,
-
-Box<double> box2;
-
-Compiler Generates
-
-class Box<double>
-{
-    double value;
-};
-
-This process is called
-
 Template Instantiation
+----------------------
 
----------------------------------------------------------
+A class template is a blueprint.
 
-4. Multiple Template Parameters
-===============================
-
-A class template can have multiple template parameters.
+The compiler generates the required class only when it is instantiated.
 
 Example
 
-template<typename K, typename V>
+Box<int>      -> Generates Box<int>
+
+Box<double>   -> Generates Box<double>
+
+---------------------------------------------------------
+
+Multiple Template Parameters
+----------------------------
+
+template<typename T, typename U>
 class Pair
 {
-public:
-
-    K key;
-    V value;
-
-    Pair(K k, V v)
-        : key(k), value(v)
-    {
-    }
+    T first;
+    U second;
 };
 
-Usage
-
-Pair<int,string> p(10,"Apple");
+Pair<int,string> p;
 
 ---------------------------------------------------------
 
-5. Member Functions Inside Class
-================================
-
-template<typename T>
-class Box
-{
-public:
-
-    void print()
-    {
-        cout << "Value";
-    }
-};
-
----------------------------------------------------------
-
-6. Member Functions Outside Class
-=================================
-
-Syntax
-
-template<typename T>
-ReturnType ClassName<T>::FunctionName()
-
-Example
-
-template<typename T>
-class Box
-{
-public:
-
-    Box(T value);
-
-    T getValue();
-
-private:
-
-    T value;
-};
-
-template<typename T>
-Box<T>::Box(T val)
-    : value(val)
-{
-}
+Member Function Outside Class
+-----------------------------
 
 template<typename T>
 T Box<T>::getValue()
@@ -182,475 +69,113 @@ T Box<T>::getValue()
     return value;
 }
 
-Important
+Always use
 
-Always write
-
-Box<T>::
-
-instead of
-
-Box::
+ClassName<T>::
 
 ---------------------------------------------------------
 
-7. Multiple Template Parameters Outside Class
-=============================================
-
-template<typename K, typename V>
-class Pair
-{
-public:
-
-    Pair(K,V);
-
-private:
-
-    K key;
-    V value;
-};
-
-template<typename K, typename V>
-Pair<K,V>::Pair(K k, V v)
-    : key(k), value(v)
-{
-}
-
----------------------------------------------------------
-
-8. Default Template Arguments
-=============================
-
-Template parameters can have default types.
-
-Example
+Default Template Arguments
+--------------------------
 
 template<typename T = int>
 class Box
 {
-    T value;
 };
 
-Usage
-
-Box<> b1;
-
-Equivalent to
-
-Box<int> b1;
+Box<> b;      // Box<int>
 
 ---------------------------------------------------------
 
-9. Non-Type Template Parameters
-===============================
-
-A class template can also accept constant values.
-
-Example
+Non-Type Template Parameters
+----------------------------
 
 template<typename T, int SIZE>
 class Array
 {
-private:
-
     T data[SIZE];
 };
 
-Usage
-
 Array<int,10> arr;
-
-Compiler Knows
-
-Type = int
-
-Size = 10
 
 ---------------------------------------------------------
 
-10. Static Members in Class Templates
-=====================================
+Static Members
+--------------
 
 Each template instantiation has its own static member.
 
-Example
-
-template<typename T>
-class Counter
-{
-public:
-
-    static int count;
-};
-
-template<typename T>
-int Counter<T>::count = 0;
-
-Usage
-
-Counter<int>::count++;
-
-Counter<double>::count++;
-
-These are DIFFERENT variables.
-
----------------------------------------------------------
-
-11. Static Member Functions
-===========================
-
-template<typename T>
-class Counter
-{
-public:
-
-    static void display()
-    {
-        cout << "Counter";
-    }
-};
-
-Usage
-
-Counter<int>::display();
-
----------------------------------------------------------
-
-12. Friend Functions
-====================
-
-Friend functions can also be templates.
-
-Example
-
-template<typename T>
-class Box
-{
-    T value;
-
-public:
-
-    Box(T v)
-        : value(v)
-    {
-    }
-
-    template<typename U>
-    friend void show(Box<U>);
-};
-
-template<typename U>
-void show(Box<U> obj)
-{
-    cout << obj.value;
-}
-
----------------------------------------------------------
-
-13. Template Class Objects
-==========================
-
-Every object must specify a template argument.
-
-Example
-
-Box<int> b1;
-
-Box<double> b2;
-
-Box<string> b3;
-
----------------------------------------------------------
-
-14. Why Template Implementations are in Header Files?
-=====================================================
-
-Templates are instantiated during compilation.
-
-The compiler must see the complete implementation.
-
-If implementation is kept only in .cpp files,
-
-Linker errors occur.
-
-Therefore,
-
-Templates are usually implemented completely inside header (.h/.hpp) files.
-
----------------------------------------------------------
-
-15. Advantages
-==============
-
-✓ Generic programming
-
-✓ Eliminates duplicate code
-
-✓ Compile-time type safety
-
-✓ Better code reuse
-
-✓ Used heavily in STL
-
----------------------------------------------------------
-
-16. Disadvantages
-=================
-
-• Longer compilation time
-
-• Code bloat
-
-• Complex compiler errors
-
----------------------------------------------------------
-
-17. STL Examples of Class Templates
-===================================
-
-vector<T>
-
-vector<int>
-
-vector<string>
-
-----------------------------------
-
-list<T>
-
-list<double>
-
-----------------------------------
-
-stack<T>
-
-stack<int>
-
-----------------------------------
-
-queue<T>
-
-queue<string>
-
-----------------------------------
-
-pair<T,U>
-
-pair<int,string>
-
-----------------------------------
-
-map<Key,Value>
-
-map<int,string>
-
-All STL containers are class templates.
-
----------------------------------------------------------
-
-18. Interview Questions
-=======================
-
-Q1. What is a class template?
-
-A generic class that works with multiple data types using one implementation.
-
----------------------------------------------------------
-
-Q2. Difference between function template and class template?
-
-Function Template
------------------
-
-• Generic function
-
-• Type often deduced automatically
-
-• Compiler generates function
-
----------------------------------
-
-Class Template
---------------
-
-• Generic class
-
-• Type must usually be specified explicitly
-
-• Compiler generates class
-
----------------------------------------------------------
-
-Q3. Why does Box<int> require <int>?
-
-Unlike function templates, class template arguments are generally not deduced
-during object creation (before C++17 CTAD).
-
----------------------------------------------------------
-
-Q4. What is template instantiation?
-
-The compiler generates an actual class from a template for a specific type.
-
----------------------------------------------------------
-
-Q5. Can class templates have multiple template parameters?
-
-Yes.
-
-Example
-
-template<typename T, typename U>
-
----------------------------------------------------------
-
-Q6. Can class templates have default template arguments?
-
-Yes.
-
-Example
-
-template<typename T = int>
-
----------------------------------------------------------
-
-Q7. Can class templates have static members?
-
-Yes.
-
-Each template instantiation has its own copy of static members.
-
----------------------------------------------------------
-
-Q8. Can constructors be templates?
-
-Yes.
-
-A class template can also contain template constructors.
-
----------------------------------------------------------
-
-Q9. Why are class template implementations kept in header files?
-
-Because the compiler needs the complete implementation during template
-instantiation.
-
----------------------------------------------------------
-
-Q10. Are STL containers class templates?
-
-Yes.
-
-Examples
-
-vector<T>
-
-list<T>
-
-map<K,V>
-
-set<T>
-
-queue<T>
-
-stack<T>
-
----------------------------------------------------------
-
-Q11. Can class templates be inherited?
-
-Yes.
-
-Example
-
-template<typename T>
-class Base
-{
-};
-
-template<typename T>
-class Derived : public Base<T>
-{
-};
-
----------------------------------------------------------
-
-Q12. Can a class template contain normal (non-template) member functions?
-
-Yes.
-
-Not every member function needs to be a template.
-
----------------------------------------------------------
-
-19. Common Mistakes
-==================
-
-❌ Forgetting <T> while defining member functions outside the class.
-
-Incorrect
-
-Box::getValue()
-
-Correct
-
-Box<T>::getValue()
-
----------------------------------
-
-❌ Implementing templates only in .cpp files.
-
----------------------------------
-
-❌ Assuming static members are shared across all template types.
-
 Counter<int>::count
-
-and
 
 Counter<double>::count
 
 are different variables.
 
----------------------------------
+---------------------------------------------------------
 
-❌ Forgetting to specify template arguments.
+Header Files
+------------
 
-Incorrect
-
-Box b;
-
-Correct
-
-Box<int> b;
-
-(CTAD in C++17 is an exception.)
+Template definitions are usually placed in .h/.hpp files because the compiler
+must see the complete definition during template instantiation.
 
 ---------------------------------------------------------
 
-20. Quick Revision
-==================
+Common STL Class Templates
+--------------------------
 
-✓ Class templates create generic classes.
+vector<T>
 
-✓ Defined using
+list<T>
 
-template<typename T>
+map<Key,Value>
 
-✓ Compiler generates class during instantiation.
+pair<T,U>
 
-✓ Multiple template parameters are supported.
+queue<T>
 
-✓ Default template parameters are supported.
+stack<T>
 
-✓ Non-type template parameters are supported.
+---------------------------------------------------------
 
-✓ Static members are separate for each template instantiation.
+Interview Questions
+-------------------
 
-✓ Template implementations are generally placed in header files.
+Q. What is a class template?
+A generic class that works with multiple data types.
 
-✓ STL containers like vector, list, map, queue and stack are class templates.
+Q. Difference between function template and class template?
 
-✓ Class templates provide compile-time polymorphism.
+Function Template
+• Generates functions
+• Type usually deduced
 
+Class Template
+• Generates classes
+• Type usually specified explicitly
+
+Q. What is template instantiation?
+Compiler generates the actual class from the template.
+
+Q. Why are template definitions kept in header files?
+The compiler needs the complete definition during instantiation.
+
+Q. Can class templates have multiple template parameters?
+Yes.
+
+Q. Can class templates have static members?
+Yes. Each template instantiation gets its own copy.
+
+=========================================================
+Quick Revision
+=========================================================
+
+✓ Generic class
+✓ Compiler performs template instantiation
+✓ Multiple template parameters supported
+✓ Default template arguments supported
+✓ Non-type template parameters supported
+✓ Static members are per template instantiation
+✓ Implement in header (.h/.hpp)
+✓ STL containers are class templates
 =========================================================
