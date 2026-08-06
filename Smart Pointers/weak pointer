@@ -1,3 +1,44 @@
+Case 2: Just a reference
+
+A Child knows its Parent.
+
+Does the child own the parent?
+No.
+
+The parent exists independently of the child.
+So the child should only refer to the parent, not own it.
+
+Using weak_ptr
+class Child
+{
+public:
+    std::weak_ptr<Parent> parent;
+};
+
+Now:
+
+Parent ---> Child
+   ^
+   |
+ weak_ptr
+
+The weak_ptr says:
+
+"I know where the Parent is, but I do not keep it alive."
+
+When the last shared_ptr<Parent> is destroyed, the Parent is destroyed normally.
+
+Think of it like this
+shared_ptr
+
+I own this object. Don't destroy it while I exist.
+
+weak_ptr
+
+I only know about this object. Destroy it whenever the real owners are gone.
+
+
+
 =========================================
 CIRCULAR DEPENDENCY (shared_ptr PROBLEM)
 =========================================
