@@ -149,7 +149,8 @@ destroy child
 =========================================
 10. ONE-LINE INTERVIEW ANSWER
 -----------------------------------------
-Circular dependency occurs when two shared_ptr objects reference each other, preventing reference count from reaching zero, and is resolved using weak_ptr which breaks ownership without increasing reference count.
+Circular dependency occurs when two shared_ptr objects reference each other, preventing reference count
+from reaching zero, and is resolved using weak_ptr which breaks ownership without increasing reference count.
 =========================================
 
 
