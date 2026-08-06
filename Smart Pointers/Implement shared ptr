@@ -160,15 +160,16 @@ public:
     //-------------------------------------------------------
     // Replace managed object.
     //-------------------------------------------------------
-    void reset(T* p = nullptr)
+    void reset(int* p = nullptr)
     {
         release();
-
-        if (p)
-        {
-            ptr = p;
-            refCount = new int(1);
-        }
+    
+        ptr = p;
+    
+        if(ptr)
+            refcount = new int(1);
+        else
+            refcount = nullptr;
     }
 
     //-------------------------------------------------------
