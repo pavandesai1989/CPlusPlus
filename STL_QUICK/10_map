@@ -1,3 +1,40 @@
+map iterator invalidation
+insert()
+→ existing iterators remain valid ✅
+
+erase()
+→ only iterator pointing to erased element becomes invalid ❌
+
+other iterators remain valid ✅
+
+map<int, string> m;
+
+m[1] = "A";
+m[2] = "B";
+m[3] = "C";
+
+auto it = m.find(2);
+
+m[4] = "D";
+
+cout << it->second;   // ✅ still valid
+Inserting 4 does not invalidate the existing iterator.
+
+Erase case
+auto it = m.find(2);
+
+m.erase(it);
+
+cout << it->second;   // ❌ undefined behavior
+Because it pointed to the element that was erased.
+
+"For std::map, insertion does not invalidate existing iterators. 
+Erasing an element invalidates only the iterator referring to that erased element; other iterators remain valid."
+
+"unordered_map insertion or emplace does not invalidate existing iterators unless it causes a rehash. 
+If rehash occurs, all iterators are invalidated. Erasing an element invalidates only the iterator to that element."
+
+
 =========================================
 C++ STL MAP - FINAL INTERVIEW NOTES
 =========================================
