@@ -320,4 +320,5 @@ QUICK REVISION
 
 ONE-LINE ANSWER
 ----------------
-std::priority_queue is a heap-based container adaptor that returns the highest priority element first and supports O(log n) insertion and deletion using a binary heap structure.
+std::priority_queue is a heap-based container adaptor that returns the highest priority element first and supports 
+O(log n) insertion and deletion using a binary heap structure.
